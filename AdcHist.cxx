@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include "TH2F.h"
+#include "TSystem.h"
 
 using std::string;
 using std::cout;
@@ -34,7 +35,9 @@ bool stuck(Index iadc) {
 AdcHist::AdcHist(string ssam, int chan, double cfac)
 : pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0) {
   const string myname = "AdcHist::ctor: ";
-  const string stopdir = "/users/davidadams/data/dune/adc";
+  const string homedir = gSystem->Getenv("HOME");
+  //const string stopdir = "/users/davidadams/data/dune/adc";
+  const string stopdir = homedir + "/data/dune/adc";
   string fname;
   string dirname;
   double zmax = 0;
@@ -246,11 +249,13 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
     ph->SetContour(20);
     if ( zmax > 0 ) ph->SetMaximum(zmax); 
     ph->GetXaxis()->SetTitle("ADC count");
+    ph->SetLineWidth(2);
   }
   vector<TH1*> dhists = {phdn, phdr, phds, phdsb};
   for ( TH1* ph : dhists ) {
     //ph->SetStats(0);
     ph->GetYaxis()->SetTitle("# ADC bins");
+    ph->SetLineWidth(2);
   }
   phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
   phdr->GetXaxis()->SetTitle("RMS [mV]");

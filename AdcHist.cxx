@@ -185,7 +185,7 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
       schanPrefix = "LN_2MHz_chn";
       isRaw = true;
       dvdt = 200.0;
-      nomVinPerAdc = 0.33;
+      nomVinPerAdc = 0.34;
     } else bad = 1;
   } else {
     bad = 999;

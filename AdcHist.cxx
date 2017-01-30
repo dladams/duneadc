@@ -1,6 +1,6 @@
 // AdcHist.cxx
 
-#include "adchist.h"
+#include "AdcHist.h"
 #include <string>
 #include <iostream>
 #include <fstream>

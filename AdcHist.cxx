@@ -189,6 +189,9 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
       isRaw = true;
       dvdt = 200.0;
       nomVinPerAdc = 0.34;
+      iadcfitmin = 130;
+      iadcfitmax = 4094;
+      vinfitmax = 10000;
     } else bad = 1;
   } else {
     bad = 999;

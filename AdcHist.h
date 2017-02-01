@@ -8,6 +8,7 @@
 #ifndef adchist_H
 #define adchist_H
 
+#include "AdcChannelCalibration.h"
 #include "FileDirectory.h"
 #include <string>
 #include "TH2.h"
@@ -16,6 +17,8 @@
 class AdcHist {
 
 public:
+
+  using AdcChannelCalibrationVector = std::vector<AdcChannelCalibration>;
 
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
@@ -38,6 +41,7 @@ public:
   TF1* pfit = nullptr;
   double fitVinPerAdc;
   double fitped;
+  AdcChannelCalibrationVector calibs;
 
   // Build histograms from a sample name.
   AdcHist(std::string ssam, int chan, double cfac =0.0);

@@ -68,8 +68,10 @@ void makeplot(string ssam, Index icha1, Index ncha) {
   }
   string hgtitl = ssam + " fit Vin/ADC; Gain [mV/ADC]; # channels";
   TH1* phg = new TH1F("hg", hgtitl.c_str(), 60, 0, 0.6);
+  phg->SetDirectory(0);   // Don't delete this
   string hptitl = ssam + " fit offset; Offset [mV]; # channels";
   TH1* php = new TH1F("hp", hptitl.c_str(), 40, -100, 100);
+  php->SetDirectory(0);   // Don't delete this
   vector<TH1*> fhists = {phg, php};
   vector<string> flabs = {"fitgain", "fitped"};
   map<string, TH1*> hsums;  // Channels will be summed for these types.
@@ -119,12 +121,12 @@ void makeplot(string ssam, Index icha1, Index ncha) {
            stype == "fmea" ) {
         double xmin = ph->GetXaxis()->GetXmin();
         double xmax = ph->GetXaxis()->GetXmax();
-        ph->Draw("colz");
+        ph->DrawCopy("colz");
         TLine* pline = new TLine(xmin, 0.0, xmax, 0.0);
         pline->Draw();
-        ph->Draw("colz same");
+        ph->DrawCopy("colz same");
       } else {
-        ph->Draw("colz");
+        ph->DrawCopy("colz");
       }
       if ( hsums.find(stype) != hsums.end() ) {
         TH1*& phs = hsums[stype];
@@ -135,6 +137,7 @@ void makeplot(string ssam, Index icha1, Index ncha) {
           htitl = htitl.substr(0, ipos);
           hname += "_sum";
           phs = dynamic_cast<TH1*>(ph->Clone(hname.c_str()));
+          phs->SetDirectory(nullptr);
           phs->SetTitle(htitl.c_str());
           fhists.push_back(phs);
           string slab = stype + "_sum";
@@ -146,6 +149,7 @@ void makeplot(string ssam, Index icha1, Index ncha) {
     }
     phg->Fill(adchist.fitVinPerAdc);
     php->Fill(adchist.fitped);
+    gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
   }
   string schan;
   if ( npad < 16 ) {
@@ -172,6 +176,7 @@ void makeplot(string ssam, Index icha1, Index ncha) {
     ph->Draw();
     string fname = flabs[ihst] + fnamesuff; 
     pcan->Print(fname.c_str());
+    delete ph;
   }
 }
 

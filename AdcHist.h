@@ -18,7 +18,7 @@ class AdcHist {
 
 public:
 
-  std::string dataset;   // Nmae of the dataset holding this ADC.
+  std::string dataset;   // Name of the dataset holding this ADC.
   unsigned int chip;     // ADC chip number in the datset.
   unsigned int channel;  // ADC channel number.
   unsigned int adcUnderflow = 0;

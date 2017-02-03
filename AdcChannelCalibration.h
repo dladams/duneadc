@@ -29,14 +29,18 @@ public:
   using FloatVector = std::vector<Float>;
 
   // Ctors.
-  AdcChannelCalibration() = default;
+  AdcChannelCalibration();
+  AdcChannelCalibration(AdcChannelId aid);
   AdcChannelCalibration(AdcChannelId aid, Float again, Float aoffset,
                         const FloatVector& acalMeans,
                         const FloatVector& acalRmss,
                         const IndexVector& acalCounts);
 
   // This object is valid if it holds a valid ID.
-  bool isValid() const { return id.isValid(); }
+  bool isValid() const { return id().isValid(); }
+
+  // Return the ADC channel ID.
+  AdcChannelId id() const { return AdcChannelId(chip, chan); }
 
   // Full calibration for each ADC code.
   Float calMean(Index code) const;
@@ -45,7 +49,8 @@ public:
 
 public:
 
-  AdcChannelId id;
+  Index chip;
+  Index chan;
   Float gain;
   Float offset;
   FloatVector calMeans;

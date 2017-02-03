@@ -33,7 +33,7 @@ bool stuck(Index iadc) {
 //**********************************************************************
 
 AdcHist::AdcHist(string ssam, int chan, double cfac)
-: pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0) {
+: chip(999), channel(chan), pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0) {
   const string myname = "AdcHist::ctor: ";
   const string homedir = gSystem->Getenv("HOME");
   //const string stopdir = "/users/davidadams/data/dune/adc";
@@ -180,7 +180,10 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
     string subdir;
     string schp;
     if ( ssam.size() == 9 ) {
+      dataset = ssam.substr(0, 6);
       schp = ssam.substr(7,2);
+      istringstream sschp(schp);
+      sschp >> chip;
       dirname = stopdir + "/201701/P1_S7_" + schp;
       vinmin = -300.0;
       vinmax = 1700;
@@ -213,6 +216,8 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
       return;
     }
   }
+  calib.chip = chip;
+  calib.chan = chan;
   if ( cfac > 0.0 ) nomVinPerAdc = cfac;
   cout << myname << "File: " << fname << endl;
   string stitle = ssam + " channel " + schan;
@@ -238,6 +243,7 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
   phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+  phdw = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -10*dmax, 10*dmax);
   phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -ndmax, ndmax);
   phm = new TH1F(hnamm.c_str(), stitle.c_str(), npadc, 0, padcmax);
   phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
@@ -254,7 +260,7 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
     ph->GetXaxis()->SetTitle("ADC count");
     ph->SetLineWidth(2);
   }
-  vector<TH1*> dhists = {phdn, phdr, phds, phdsb};
+  vector<TH1*> dhists = {phdn, phdr, phds, phdsb, phdw};
   for ( TH1* ph : dhists ) {
     //ph->SetStats(0);
     ph->GetYaxis()->SetTitle("# ADC bins");
@@ -270,6 +276,7 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
   phs->GetYaxis()->SetTitle("V_{in} diff standard deviation [mV]");
   phm->SetStats(0);
   phd->SetStats(0);
+  phdw->SetStats(0);
   phr->SetStats(0);
   phs->SetStats(0);
   phm->SetMaximum(dmax);
@@ -377,15 +384,19 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
     }
   }
   // Fit the response histogram.
-  phf->Fit("pol1");
+  cout << "Fitting..." << endl;
+  phf->Fit("pol1", "Q");
   pfit = phf->GetFunction("pol1");
   fitped = pfit->GetParameter(0);
   fitVinPerAdc = pfit->GetParameter(1);
+  calib.gain = fitVinPerAdc;
+  calib.offset = fitped;
   cout << "Fit gain: " << fitVinPerAdc << " mV/ADC, pedestal: " << fitped << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
   ssdif << "(" << fitVinPerAdc << " ADC + " << fitped << ") - V_{in} [mV]";
   phd->GetYaxis()->SetTitle(ssdif.str().c_str());
+  phdw->GetYaxis()->SetTitle(ssdif.str().c_str());
   // Find the nominal pedestal.
   Index adc_nom = 750;
   nomped = fitped + (fitVinPerAdc - nomVinPerAdc)*adc_nom;
@@ -402,19 +413,28 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
       double evin_nom = nomped + iadc*nomVinPerAdc;
       Index count = vcount[iadc][ivin];
       phd->Fill(iadc, evin - vin, count);
+      phdw->Fill(iadc, evin - vin, count);
       phn->Fill(iadc, evin_nom - vin, count);
     }
   }
   // Fill diff stat histograms.
+  calib.calMeans.resize(nadc);
+  calib.calRmss.resize(nadc);
+  calib.calCounts.resize(nadc);
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
-    TH1* ph = hdiff(iadc);
+    TH1* ph = hdiffcalib(iadc);
     if ( ph == nullptr ) continue;
     double xm = -99999.;
     double xs = -99.;
-    if ( ph->GetEntries() >= minCountForStats ) {
+    unsigned int count = ph->Integral();
+    if ( count >= minCountForStats ) {
       xm = ph->GetMean();
       xs = ph->GetRMS();
     }
+    double xm0 = fitVinPerAdc*iadc + fitped;
+    calib.calCounts[iadc] = count;
+    calib.calMeans[iadc] = xm + xm0;
+    calib.calRmss[iadc] = xs;
     bool isStuck = stuck(iadc);
     double xsg = isStuck ? 0 : xs;
     double xsb = !isStuck ? 0 : xs;
@@ -446,6 +466,19 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
 
 //**********************************************************************
 
+TH1* AdcHist::hcalib(Index iadc) const {
+  if ( phc == nullptr ) return nullptr;
+  ostringstream sshnam;
+  sshnam << phc->GetName() << "_adc" << iadc;
+  string hnam = sshnam.str();
+  Index bin = iadc + 1;
+  TH1* ph = phc->ProjectionY(hnam.c_str(), bin, bin);
+  int nbin = ph->GetNbinsX();
+  return ph;
+}
+
+//**********************************************************************
+
 TH1* AdcHist::hdiff(Index iadc) const {
   if ( phd == nullptr ) return nullptr;
   ostringstream sshnam;
@@ -465,6 +498,22 @@ TH1* AdcHist::hdiffn(Index iadc) const {
   string hnam = sshnam.str();
   Index bin = iadc + 1;
   TH1* ph = phn->ProjectionY(hnam.c_str(), bin, bin);
+  return ph;
+}
+
+//**********************************************************************
+
+TH1* AdcHist::hdiffcalib(Index iadc) const {
+  if ( phd == nullptr ) return nullptr;
+  TH1* ph = hdiff(iadc);
+  unsigned int nbin = ph->GetNbinsX();
+  if ( ph->GetBinContent(0) || ph->GetBinContent(nbin+1) ) {
+    ostringstream sshnam;
+    sshnam << phdw->GetName() << "_adc" << iadc;
+    string hnam = sshnam.str();
+    Index bin = iadc + 1;
+    TH1* ph = phdw->ProjectionY(hnam.c_str(), bin, bin);
+  }
   return ph;
 }
 

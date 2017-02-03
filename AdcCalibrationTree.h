@@ -27,11 +27,17 @@ public:
   //   opt = Option for opening file: READ, NEW, RECREATE, UPDATE
   AdcCalibrationTree(Name fname, Name tname ="adccalib", Name opt ="READ");
 
+  // Dtor. Closes file.
+  ~AdcCalibrationTree();
+
   // Add a calibration.
-  int insert(const AdcChannelCalibration cal);
+  int insert(const AdcChannelCalibration& cal);
 
   // Add the current buffered calibration.
   int insert();
+
+  // Close the file.
+  int close();
 
   // Find a calibration by entry number.
   const AdcChannelCalibration* find(Index ient) const;
@@ -43,7 +49,7 @@ public:
   int status() const { return m_status; }
   TFile* file() const { return m_pfile; }
   TTree* tree() const { return m_ptree; }
-  AdcChannelCalibration& buffer() { return m_buff; }
+  AdcChannelCalibration& buffer() { return *m_pcal; }
 
 private:
 
@@ -59,7 +65,7 @@ private:
   TTree* m_ptree;
 
   // Data buffer
-  AdcChannelCalibration m_buff;
+  AdcChannelCalibration* m_pcal;
 
 };
 

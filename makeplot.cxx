@@ -1,6 +1,7 @@
 // makeplot.cxx
 
 #include "makeplot.h"
+#include "AdcCalibrationTree.h"
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -20,7 +21,7 @@ using std::vector;
 using std::map;
 typedef unsigned int Index;
 
-void makeplot(string ssam, Index icha1, Index ncha) {
+void makeplot(string ssam, Index icha1, Index ncha, bool savecalib) {
   string myname = "responseplots: ";
   gStyle->SetOptStat(110111);
   vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb"};
@@ -149,6 +150,18 @@ void makeplot(string ssam, Index icha1, Index ncha) {
     }
     phg->Fill(adchist.fitVinPerAdc);
     php->Fill(adchist.fitped);
+    if ( savecalib ) {
+      if ( adchist.calib.isValid() && adchist.dataset.size() ) {
+        cout << "Adding channel " << adchist.channel << " to calib DB." << endl;
+        string calibName = "calib_" + adchist.dataset;
+        string fname = calibName + ".root";
+        AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
+        int istat = calibdb.insert(adchist.calib);
+        cout << "Insertion returned " << istat << endl;
+      } else {
+        cout << "Not adding channel " << adchist.channel << " to calib DB." << endl;
+      }
+    }
     gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
   }
   string schan;

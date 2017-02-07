@@ -5,8 +5,8 @@
 //
 // Class to create histograms and calibration data for one ADC channel.
 
-#ifndef adchist_H
-#define adchist_H
+#ifndef AdcHist_H
+#define AdcHist_H
 
 #include "AdcChannelCalibration.h"
 #include "FileDirectory.h"

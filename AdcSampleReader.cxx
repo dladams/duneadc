@@ -29,7 +29,8 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
   m_vinmin(0.0),
   m_samplingFrequency(2.e6),
   m_dvdt(0.0),
-  m_nomVinPerAdc(0.0) {
+  m_nomVinPerAdc(0.0),
+  m_nsample(0) {
   const string myname = "AdcSampleReader::ctor: ";
   string fname;
   string dirname;
@@ -185,7 +186,6 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
   // Fetch the count for each ADC-Vin bin
   Index maxvin = 0;
   Index nline = 0;
-  Index fullcount = 0;
   ifstream fin(fname.c_str());
   if ( ! fin ) {
     cout << myname << "Unable to open file " << fname << endl;
@@ -257,7 +257,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     }
     maxvin = nvin();
     nline = isam;
-    fullcount = isam;
+    m_nsample = isam;
     cout << myname << "Waveform tick count: " << isam << endl;
   } else {
     cout << "Reading table data." << endl;
@@ -273,7 +273,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       Index ivin;
       for ( Index ivin=0; ivin<nvin(); ++ivin ) {
         ssline >> m_table[iadc][ivin];
-        fullcount += m_table[iadc][ivin];
+        m_nsample += m_table[iadc][ivin];
         if ( ! ssline ) {
           break;
         }
@@ -283,14 +283,19 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       ++nline;
     }
   }
-  double countPerVinBin = double(fullcount)/nadc();
   cout << myname << "# ADC: " << nadc() << endl;
   cout << myname << "# Vin: " << nvin() << endl;
   cout << myname << "# lines: " << nline << endl;
-  cout << "Total count: " << fullcount << endl;
-  cout << "Total count/nvin: " << fullcount/nvin() << endl;
-  cout << "Total count/nadc: " << fullcount/nadc() << endl;
+  cout << "Total count: " << nsample() << endl;
+  cout << "Total count/nvin: " << nsample()/nvin() << endl;
+  cout << "Total count/nadc: " << nsample()/nadc() << endl;
   return;
+}
+
+//**********************************************************************
+
+double AdcSampleReader::vin(Index ivin) const {
+  return vinmin() + dvin()*ivin;
 }
 
 //**********************************************************************

@@ -68,9 +68,13 @@ public:
   // There are nvin() input voltage bins. Bin ivin starts at
   //   vinmin() + dvin()*ivin  mV
   Index nvin() const { return m_nvin; }
-  double dvin() { return m_dvin; }
-  double vinmin() { return m_vinmin; }
-  double vinmax() { return m_vinmin + nvin()*dvin(); }
+  double dvin() const { return m_dvin; }
+  double vinmin() const { return m_vinmin; }
+  double vinmax() const { return m_vinmin + nvin()*dvin(); }
+
+  // The total number of samples.
+  // Same as data.size() for a waveform.
+  Index nsample() const { return m_nsample; }
 
   // Count table.
   // The # samples for ADC code iadc and input voltage bin ivin is count[iadc][ivin];
@@ -78,6 +82,9 @@ public:
 
   // Waveform.
   const CodeVector& data() const { return m_data; }
+
+  // Return the low edge of an input voltage bin.
+  double vin(Index ivin) const;
 
 private:
 
@@ -93,6 +100,7 @@ private:
   double m_samplingFrequency;
   double m_dvdt;
   double m_nomVinPerAdc;
+  Index m_nsample;
 
   CountTable m_table;
   CodeVector m_data;

@@ -8,8 +8,9 @@
 #ifndef adchist_H
 #define adchist_H
 
-#include "AdcChannelCalibration.h"
 #include "AdcSampleReader.h"
+#include "AdcChannelCalibration.h"
+#include "AdcVoltageResponse.h"
 #include "FileDirectory.h"
 #include <string>
 #include "TH2.h"
@@ -27,15 +28,7 @@ public:
 
   using Code = unsigned short;
   using CodeVector = std::vector<Code>;
-
-public:
-
-  // Read in the data.
-  //  asample - sample name
-  //  achan - channel #
-  //  maxsam - maximum # samples to read from a waveform (0 for all)
-  //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
-  AdcSampleAnalyzer(Name asample, Index achan, Index maxsam =0, double nomGain =0.0);
+  using AdcVoltageResponseVector = std::vector<AdcVoltageResponse>;
 
 public:
 
@@ -63,9 +56,14 @@ public:
   double fitVinPerAdc;
   double fitped;
   AdcChannelCalibration calib;
+  AdcVoltageResponseVector voltageResponses;
 
-  // Build histograms and calibrations for one ADC channel.
-  AdcSampleAnalyzer(std::string ssam, int chan, double cfac =0.0);
+  // Read in the data.
+  //  asample - sample name
+  //  achan - channel #
+  //  maxsam - maximum # samples to read from a waveform (0 for all)
+  //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
+  AdcSampleAnalyzer(Name asample, Index achan, Index maxsam =0, double nomGain =0.0);
 
   // Return the distribution of Vin for an ADC count.
   // This projects phc onto the X axis.
@@ -85,6 +83,9 @@ public:
   // This is the same as hdiff except when there are underflows or overflows,
   // it uses the wider range and coarser bins from phdw.
   TH1* hdiffcalib(unsigned int chan) const;
+
+  // Evaluate voltage responses.
+  AdcVoltageResponseVector& evaluateVoltageReponses(double vmin, double vmax, Index nv);
 
 };
 

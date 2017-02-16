@@ -146,33 +146,42 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   cout << "Min count for stats: " << minCountForStats << endl;
   if ( zmax == 0 ) {
     zmax = 4*nsample/nvin;
-    cout << "zmax = " << zmax << endl;
+    cout << myname << "zmax = " << zmax << endl;
     for ( TH1* ph : hists ) ph->SetMaximum(zmax); 
   }
   // Create the fit and response histograms.
+  Index nfill = 0;
+  Index nskip = 0;
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = reader.vin(ivin);
       Index count = reader.countTable()[iadc][ivin];
       phc->Fill(iadc, vin, count);
-      //if ( iadc == 500 && ivin < 700) cout << "XXX: " << iadc << ", " << vin << ": " << count << endl;
+      //if ( iadc == 500 && ivin < 700) cout << myname << "XXX: " << iadc << ", " << vin << ": " << count << endl;
       if ( iadc >= iadcfitmin && iadc < iadcfitmax && vin < vinfitmax ) {
         Index rem = iadc%64;
         bool skip = false;
         if ( ! usestuck ) skip = rem == 0 || rem == 63;
-        if ( ! skip ) phf->Fill(iadc, vin, count);
+        if ( skip ) {
+          ++nskip;
+        } else {
+          ++nfill;
+          phf->Fill(iadc, vin, count);
+        }
       }
     }
   }
+  cout << myname << "Response fit histogram nfill=" << nfill << ", nskip=" << nskip << endl;
+  if ( nfill == 0 ) return;
   // Fit the response histogram.
-  cout << "Fitting..." << endl;
+  cout << myname << "Fitting..." << endl;
   phf->Fit("pol1", "Q");
   pfit = phf->GetFunction("pol1");
   fitped = pfit->GetParameter(0);
   fitVinPerAdc = pfit->GetParameter(1);
   calib.gain = fitVinPerAdc;
   calib.offset = fitped;
-  cout << "Fit gain: " << fitVinPerAdc << " mV/ADC, pedestal: " << fitped << " mV" << endl;
+  cout << myname << "Fit gain: " << fitVinPerAdc << " mV/ADC, pedestal: " << fitped << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
   ssdif << "(" << fitVinPerAdc << " ADC + " << fitped << ") - V_{in} [mV]";
@@ -181,7 +190,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   // Find the nominal pedestal.
   Index adc_nom = 750;
   nomped = fitped + (fitVinPerAdc - nomVinPerAdc)*adc_nom;
-  cout << "Nominal gain: " << nomVinPerAdc << " mV/ADC, pedestal: " << nomped << " mV" << endl;
+  cout << myname << "Nominal gain: " << nomVinPerAdc << " mV/ADC, pedestal: " << nomped << " mV" << endl;
   ostringstream ssdifn;
   ssdifn.precision(3);
   ssdifn << "(" << nomVinPerAdc << " ADC + " << nomped << " ) - V_{in} [mV]";
@@ -255,6 +264,10 @@ TH1* AdcSampleAnalyzer::hcalib(Index iadc) const {
   Index bin = iadc + 1;
   TH1* ph = phc->ProjectionY(hnam.c_str(), bin, bin);
   int nbin = ph->GetNbinsX();
+  ostringstream sshtitl;
+  sshtitl << phc->GetTitle() << " bin " << iadc;
+  string shtitl = sshtitl.str();
+  ph->SetTitle(shtitl.c_str());
   return ph;
 }
 
@@ -267,6 +280,10 @@ TH1* AdcSampleAnalyzer::hdiff(Index iadc) const {
   string hnam = sshnam.str();
   Index bin = iadc + 1;
   TH1* ph = phd->ProjectionY(hnam.c_str(), bin, bin);
+  ostringstream sshtitl;
+  sshtitl << phd->GetTitle() << " bin " << iadc;
+  string shtitl = sshtitl.str();
+  ph->SetTitle(shtitl.c_str());
   return ph;
 }
 
@@ -279,12 +296,17 @@ TH1* AdcSampleAnalyzer::hdiffn(Index iadc) const {
   string hnam = sshnam.str();
   Index bin = iadc + 1;
   TH1* ph = phn->ProjectionY(hnam.c_str(), bin, bin);
+  ostringstream sshtitl;
+  sshtitl << phn->GetTitle() << " bin " << iadc;
+  string shtitl = sshtitl.str();
+  ph->SetTitle(shtitl.c_str());
   return ph;
 }
 
 //**********************************************************************
 
 TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
+  bool zeroerrs = 0;
   if ( phd == nullptr ) return nullptr;
   TH1* ph = hdiff(iadc);
   unsigned int nbin = ph->GetNbinsX();
@@ -293,10 +315,39 @@ TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
     sshnam << phdw->GetName() << "_adc" << iadc;
     string hnam = sshnam.str();
     Index bin = iadc + 1;
-    TH1* ph = phdw->ProjectionY(hnam.c_str(), bin, bin);
+    ph = phdw->ProjectionY(hnam.c_str(), bin, bin);
+    ostringstream sshtitl;
+    sshtitl << phdw->GetTitle() << " bin " << iadc;
+    string shtitl = sshtitl.str();
+    ph->SetTitle(shtitl.c_str());
+  }
+  if ( zeroerrs ) {
+    for ( int ich=0; ich<=ph->GetNbinsX()+1; ++ich ) {
+      ph->SetBinError(ich, 0.0);
+    }
   }
   return ph;
 }
 
 //**********************************************************************
 
+AdcSampleAnalyzer::AdcVoltageResponseVector&
+AdcSampleAnalyzer::evaluateVoltageReponses(double vmin, double vmax, Index nv) {
+  if ( nv == 0 ) return voltageResponses;
+  if ( vmin >= vmax ) return voltageResponses;
+  float dv = (vmax - vmin)/nv;
+  float v1 = vmin;
+  float v2 = v1 + dv;
+  AdcChannelId id(reader.chip(), reader.channel());
+  for ( Index iv=0; iv<nv; ++iv ) {
+    if ( iv > 0 ) {
+      v1 = v2;
+      v2 += dv;
+    }
+    voltageResponses.push_back(AdcVoltageResponse(id, v1, v2));
+  }
+  // Still must add code to fill voltage responses!!
+  return voltageResponses;
+}
+
+//**********************************************************************

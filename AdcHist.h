@@ -4,6 +4,8 @@
 // November 2016
 //
 // Class to create histograms and calibration data for one ADC channel.
+//
+// Obsolete. This is now replaced by AdcSampleAnalyzer.
 
 #ifndef AdcHist_H
 #define AdcHist_H

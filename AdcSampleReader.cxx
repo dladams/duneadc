@@ -248,7 +248,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       }
       m_data.push_back(iadc);
       ++m_table[iadc][ivin];
-      //if ( iadc == 500 ) cout << myname << "  ... " << iadc << ", " << ivin << ": " << m_table[iadc][ivin] << endl;
+      //if ( iadc == 3500 ) cout << myname << "  ... " << iadc << ", " << ivin << ": " << m_table[iadc][ivin] << endl;
       ++isam;
       if ( maxsam > 0 && isam >= maxsam ) {
         cout << myname << "Reached maximum sample count of " << maxsam << endl;
@@ -260,7 +260,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_nsample = isam;
     cout << myname << "Waveform tick count: " << isam << endl;
   } else {
-    cout << "Reading table data." << endl;
+    cout << myname << "Reading table data." << endl;
     for ( Index iadc=0; iadc<nadc(); ++iadc ) {
       m_table[iadc].resize(nvin(), 0);
       string sline;
@@ -286,9 +286,9 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
   cout << myname << "# ADC: " << nadc() << endl;
   cout << myname << "# Vin: " << nvin() << endl;
   cout << myname << "# lines: " << nline << endl;
-  cout << "Total count: " << nsample() << endl;
-  cout << "Total count/nvin: " << nsample()/nvin() << endl;
-  cout << "Total count/nadc: " << nsample()/nadc() << endl;
+  cout << myname << "Total count: " << nsample() << endl;
+  cout << myname << "Total count/nvin: " << nsample()/nvin() << endl;
+  cout << myname << "Total count/nadc: " << nsample()/nadc() << endl;
   return;
 }
 

@@ -76,6 +76,7 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
   // The following should either put the file name in fname or the directory name in dirname.
   // In the latter case, the file is found by searching for schanPrefix followed by aschan[chan];
   cout << endl;
+  cout << "AdcHist is obsolete. Please use AdcSampleAnalyzer instead." << endl;
   cout << "Sample " << ssam << " channel " << chan << endl;
   if ( ssam == "201610_vstar" ) {
     fname = stopdir + "/201610/VSTAR_1S/LN2_vstar_1s_200MHz_vstar_adc_09_28_2016_15_03_35/";

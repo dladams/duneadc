@@ -16,7 +16,7 @@ class AdcVoltageResponse {
 
 public:
 
-  using Index = unsigned short;
+  using Index = unsigned int;
   using Float = float;
   using IndexVector = std::vector<Index>;
   using FloatVector = std::vector<Float>;
@@ -41,7 +41,7 @@ public:
   // Add an ADC sample.
   // 0 for success.
   // 1 if closed (sample is ignored).
-  int addSample(Index adcbin);
+  int addSample(Index adcbin, Index nsam =1);
 
   // Close. Removes leading empty bins, sets bin0 and calculates fractions.
   // 0 for success.

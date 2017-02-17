@@ -57,6 +57,8 @@ public:
   double fitped;
   AdcChannelCalibration calib;
   AdcVoltageResponseVector voltageResponses;
+  std::vector<double> voltageEfficiencies;
+  TH1* phveff = nullptr;
 
   // Read in the data.
   //  asample - sample name
@@ -84,8 +86,16 @@ public:
   // it uses the wider range and coarser bins from phdw.
   TH1* hdiffcalib(unsigned int chan) const;
 
+  // Return the ultimate calibration (mean and RMS/sigma) for a bin.
+  double calMean(Index iadc) const;
+  double calRms(Index iadc) const;
+
   // Evaluate voltage responses.
-  AdcVoltageResponseVector& evaluateVoltageReponses(double vmin, double vmax, Index nv);
+  AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);
+
+  // Evaluate the voltage efficiencies.
+  // This is the fraction of samples that have RMS < rmsmax for each voltage bin.
+  const std::vector<double>& evaluateVoltageEfficiencies(double rmsmax);
 
 };
 

@@ -23,10 +23,10 @@ typedef unsigned int Index;
 
 AdcChipAnalyzer::
 AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
-                float vmin, float vmax, Index nv) {
+                float vmin, float vmax, Index nv, double vrmsmax) {
   string myname = "AdcChipAnalyzer::ctor: ";
   gStyle->SetOptStat(110111);
-  vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb"};
+  vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
   //vector<string> stypes = {"fdn", "fdr", "fds", "fdsb"};
   Index maxchan = 16;
   if ( ssam.substr(0,6) == "201610" ) maxchan = 15;
@@ -88,7 +88,9 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
     if ( npad ) cans[0]->cd(ipad);
     AdcSampleAnalyzer asa(ssam, icha);
     // Create array of voltage responses.
-    asa.evaluateVoltageReponses(vmin, vmax, nv);
+    asa.evaluateVoltageResponses(vmin, vmax, nv);
+    // Create efficiency histogram.
+    asa.evaluateVoltageEfficiencies(vrmsmax);
     // Create histogram plots.
     if ( asa.phc == nullptr ) {
       cout << "No response plot for " << ssam << " channel " << icha << endl;
@@ -101,6 +103,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
       TVirtualPad* ppad = pcan->cd(ipad);
       ppad->SetGridy();
       TH1* ph = nullptr;
+      string sarg = "colz";
       if ( stype == "resp" ) ph = asa.phc;
       if ( stype == "diff" ) ph = asa.phd;
       if ( stype == "difn" ) ph = asa.phn;
@@ -121,18 +124,24 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
         ph->GetXaxis()->SetRangeUser(0.0, 300.0);
         ph->GetYaxis()->SetRangeUser(-50.0, 150.0);
       }
+      if ( stype == "veff" ) {
+        ph = asa.phveff;
+        ppad->SetGridx();
+        sarg = "h";
+      }
       if ( ph == nullptr ) continue;
       if ( stype == "diff" ||
            stype == "difn" ||
            stype == "fmea" ) {
         double xmin = ph->GetXaxis()->GetXmin();
         double xmax = ph->GetXaxis()->GetXmax();
-        ph->DrawCopy("colz");
+        ph->DrawCopy(sarg.c_str());
         TLine* pline = new TLine(xmin, 0.0, xmax, 0.0);
         pline->Draw();
-        ph->DrawCopy("colz same");
+        string sarg2 = sarg + " same";
+        ph->DrawCopy(sarg2.c_str());
       } else {
-        ph->DrawCopy("colz");
+        ph->DrawCopy(sarg.c_str());
       }
       if ( hsums.find(stype) != hsums.end() ) {
         TH1*& phs = hsums[stype];

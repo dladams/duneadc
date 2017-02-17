@@ -39,10 +39,11 @@ float AdcVoltageResponse::fraction(AdcVoltageResponse::Index ibin) const {
 
 //**********************************************************************
 
-int AdcVoltageResponse::addSample(AdcVoltageResponse::Index ibin) {
+int AdcVoltageResponse::
+addSample(AdcVoltageResponse::Index ibin, AdcVoltageResponse::Index nsam) {
   if ( fractions.size() ) return 1;
   if ( ibin >= counts.size() ) counts.resize(ibin+1, 0);
-  ++counts[ibin];
+  counts[ibin] += nsam;
   return 0;
 }
 

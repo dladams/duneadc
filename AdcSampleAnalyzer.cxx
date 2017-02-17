@@ -260,9 +260,9 @@ TH1* AdcSampleAnalyzer::hcalib(Index iadc) const {
   if ( phc == nullptr ) return nullptr;
   ostringstream sshnam;
   sshnam << phc->GetName() << "_adc" << iadc;
-  string hnam = sshnam.str();
+  string shnam = sshnam.str();
   Index bin = iadc + 1;
-  TH1* ph = phc->ProjectionY(hnam.c_str(), bin, bin);
+  TH1* ph = phc->ProjectionY(shnam.c_str(), bin, bin);
   int nbin = ph->GetNbinsX();
   ostringstream sshtitl;
   sshtitl << phc->GetTitle() << " bin " << iadc;
@@ -331,10 +331,30 @@ TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
 
 //**********************************************************************
 
+double AdcSampleAnalyzer::calMean(Index iadc) const {
+  if ( phm == nullptr ) return 0.0;
+  if ( int(iadc) >= phm->GetNbinsX() ) return 0.0;
+  double mean0 = fitVinPerAdc*iadc + fitped;
+  double dmean = phm->GetBinContent(iadc+1);
+  return mean0 + dmean;
+}
+
+//**********************************************************************
+
+double AdcSampleAnalyzer::calRms(Index iadc) const {
+  if ( phs == nullptr ) return 0.0;
+  if ( int(iadc) >= phs->GetNbinsX() ) return 0.0;
+  return phs->GetBinContent(iadc+1);
+}
+
+//**********************************************************************
+
 AdcSampleAnalyzer::AdcVoltageResponseVector&
-AdcSampleAnalyzer::evaluateVoltageReponses(double vmin, double vmax, Index nv) {
+AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) {
+  const string myname = "AdcSampleAnalyzer::evaluateVoltageResponses: ";
   if ( nv == 0 ) return voltageResponses;
   if ( vmin >= vmax ) return voltageResponses;
+  voltageResponses.resize(0);
   float dv = (vmax - vmin)/nv;
   float v1 = vmin;
   float v2 = v1 + dv;
@@ -345,9 +365,77 @@ AdcSampleAnalyzer::evaluateVoltageReponses(double vmin, double vmax, Index nv) {
       v2 += dv;
     }
     voltageResponses.push_back(AdcVoltageResponse(id, v1, v2));
+    AdcVoltageResponse& avr = voltageResponses.back();
+    TH2* ph = phc;     // Input voltage vs ADC bin
+    int nadc = ph->GetNbinsX();
+    int nhv = ph->GetNbinsY();
+    TAxis* paxv = ph->GetYaxis();
+    int ihv1 = paxv->FindFixBin(v1);
+    int ihv2 = paxv->FindFixBin(v2);
+    //cout << myname << "Processing voltage bin " << iv << endl;
+    //cout << myname << "  V bins: " << ihv1 << ", " << ihv2 << endl;
+    //cout << myname << "   N ADC: " << nadc << endl;
+    double sum = 0;
+    for ( int ihv=ihv1; ihv<ihv2; ++ihv ) {
+      for ( int iadc=0; iadc<nadc; ++iadc ) {
+        int iha = iadc + 1;
+        int ibin = ph->GetBin(iha, ihv);
+        double nsam = ph->GetBinContent(ibin);
+        if ( nsam > 0 ) avr.addSample(iadc, nsam);
+        sum += nsam;
+      }
+    }
+    avr.close();
+    //cout << myname << "  # ADC bins for " << iv << ": " << avr.fractions.size()
+    //     << " (" << sum << ")"
+    //     << endl;
   }
-  // Still must add code to fill voltage responses!!
   return voltageResponses;
+}
+
+//**********************************************************************
+
+const std::vector<double>&
+AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
+  const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
+  unsigned int nvr = voltageResponses.size();
+  voltageEfficiencies.resize(nvr);
+  if ( nvr < 1 ) return voltageEfficiencies;
+  double v1 = voltageResponses[0].vmin;
+  double v2 = voltageResponses[nvr-1].vmax;
+  ostringstream sstitl;
+  if ( phc ==  nullptr ) return voltageEfficiencies;
+  sstitl << phc->GetTitle();
+  sstitl << " efficiency for RMS < " << rmsmax << " mV";
+  sstitl << ";V_{in} [mV]";
+  sstitl << ";Efficiency";
+  string stitl = sstitl.str();
+  ostringstream sshnam;
+  sshnam << "hveff" << rmsmax;
+  string shnam = sshnam.str();
+  for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
+  phveff = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
+  phveff->SetStats(0);
+  phveff->SetMinimum(0.0);
+  phveff->SetMaximum(1.03);
+  for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
+    AdcVoltageResponse& avr = voltageResponses[ivr];
+    Index iadc1 = avr.bin0;
+    Index iadc2 = iadc1 + avr.fractions.size();
+    double eff = 0.0;
+    double count = 0.0;
+    for ( unsigned int iadc=iadc1; iadc<iadc2; ++iadc ) {
+      count += avr.count(iadc);
+      if ( calRms(iadc) < rmsmax ) eff += avr.fraction(iadc);
+    }
+    voltageEfficiencies[ivr] = eff;
+    phveff->SetBinContent(ivr+1, eff);
+    double aeff = 1.0 - eff;
+    double deff = 0.0;
+    if ( eff > 1.e-10 && aeff > 1.e-10 ) deff = sqrt(eff*(1.0-eff)/count);
+    phveff->SetBinError(ivr+1, deff);
+  }
+  return voltageEfficiencies;
 }
 
 //**********************************************************************

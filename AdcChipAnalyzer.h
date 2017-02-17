@@ -26,7 +26,8 @@ public:
                    float vmin = 0.0,
                    float vmax = 0.0,
                    unsigned int nv = 0,
-                   double vrmsmax = 1.0);
+                   double vrmsmax = 1.0,
+                   bool saveperf =false);
 
 };
 

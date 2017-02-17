@@ -2,6 +2,7 @@
 
 #include "AdcChipAnalyzer.h"
 #include "AdcCalibrationTree.h"
+#include "AdcPerformanceTree.h"
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -23,7 +24,7 @@ typedef unsigned int Index;
 
 AdcChipAnalyzer::
 AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
-                float vmin, float vmax, Index nv, double vrmsmax) {
+                float vmin, float vmax, Index nv, double vrmsmax, bool saveperf) {
   string myname = "AdcChipAnalyzer::ctor: ";
   gStyle->SetOptStat(110111);
   vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
@@ -69,12 +70,15 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
     if ( npadx ) pcan->Divide(npadx, npadx);
     cans.push_back(pcan);
   }
+  // Create linear-fit gain summary histogram.
   string hgtitl = ssam + " fit Vin/ADC; Gain [mV/ADC]; # channels";
   TH1* phg = new TH1F("hg", hgtitl.c_str(), 60, 0, 0.6);
   phg->SetDirectory(0);   // Don't delete this
+  // Create linear-fit offset summary histogram.
   string hptitl = ssam + " fit offset; Offset [mV]; # channels";
   TH1* php = new TH1F("hp", hptitl.c_str(), 40, -100, 100);
   php->SetDirectory(0);   // Don't delete this
+  // Record local histograms.
   vector<TH1*> fhists = {phg, php};
   vector<string> flabs = {"fitgain", "fitped"};
   map<string, TH1*> hsums;  // Channels will be summed for these types.
@@ -174,6 +178,20 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
         cout << "Insertion returned " << istat << endl;
       } else {
         cout << "Not adding channel " << asa.calib.chan << " to calib DB." << endl;
+      }
+    }
+    if ( saveperf ) {
+      if ( asa.vperfs.size() && asa.reader.dataset().size() ) {
+        cout << "Adding channel " << asa.channel() << " to calib DB." << endl;
+        string perfName = "perf_" + asa.reader.dataset();
+        string fname = perfName + ".root";
+        AdcPerformanceTree perfdb(fname, "adcperf", "UPDATE");
+        for ( const AdcVoltagePerformance& vperf : asa.vperfs ) {
+          int istat = perfdb.insert(vperf);
+          cout << "Insertion returned " << istat << endl;
+        }
+      } else {
+        cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
       }
     }
     gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.

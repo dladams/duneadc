@@ -22,7 +22,7 @@ using Index = AdcSampleReader::Index;
 AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
 : m_topdir(gSystem->ExpandPathName("$HOME/data/dune/adc")),
   m_chip(999),
-  m_chan(999),
+  m_chan(chan),
   m_nadc(4096),
   m_nvin(0),
   m_dvin(0.1),

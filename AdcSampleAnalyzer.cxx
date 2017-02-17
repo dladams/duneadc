@@ -57,8 +57,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   Index nvin = reader.nvin();
   Index npadc = 4100*nadc/4096;
   Index padcmax = npadc;
-  int pvinmin = -100;
-  int pvinmax = 1900;
+  int pvinmin = reader.vinmin();
+  int pvinmax = reader.vinmax();
   Index npvin = pvinmax - pvinmin;
   adcUnderflow = 64;  // This and below are considered underflow
   if ( ssam.find("ltc") != string::npos ) {
@@ -395,16 +395,18 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
 
 //**********************************************************************
 
-const std::vector<double>&
+const AdcVoltagePerformance::FloatVector&
 AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
+  static AdcVoltagePerformance::FloatVector empty;
   const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
   unsigned int nvr = voltageResponses.size();
-  voltageEfficiencies.resize(nvr);
-  if ( nvr < 1 ) return voltageEfficiencies;
+  if ( phc ==  nullptr ) return empty;
+  if ( nvr < 1 ) return empty;
   double v1 = voltageResponses[0].vmin;
   double v2 = voltageResponses[nvr-1].vmax;
+  vperfs.emplace_back(chip(), channel(), rmsmax, nvr, v1, v2);
+  AdcVoltagePerformance& vperf = vperfs.back();
   ostringstream sstitl;
-  if ( phc ==  nullptr ) return voltageEfficiencies;
   sstitl << phc->GetTitle();
   sstitl << " efficiency for RMS < " << rmsmax << " mV";
   sstitl << ";V_{in} [mV]";
@@ -418,6 +420,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
   phveff->SetStats(0);
   phveff->SetMinimum(0.0);
   phveff->SetMaximum(1.03);
+  phveff->SetLineWidth(2);
   for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
     AdcVoltageResponse& avr = voltageResponses[ivr];
     Index iadc1 = avr.bin0;
@@ -428,14 +431,13 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
       count += avr.count(iadc);
       if ( calRms(iadc) < rmsmax ) eff += avr.fraction(iadc);
     }
-    voltageEfficiencies[ivr] = eff;
+    vperf.vinCounts[ivr] = count;
+    vperf.vinEffs[ivr] = eff;
+    double deff = vperf.deff(ivr);
     phveff->SetBinContent(ivr+1, eff);
-    double aeff = 1.0 - eff;
-    double deff = 0.0;
-    if ( eff > 1.e-10 && aeff > 1.e-10 ) deff = sqrt(eff*(1.0-eff)/count);
     phveff->SetBinError(ivr+1, deff);
   }
-  return voltageEfficiencies;
+  return vperf.vinEffs;
 }
 
 //**********************************************************************

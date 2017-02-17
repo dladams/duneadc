@@ -9,6 +9,8 @@
   gROOT->ProcessLine(".L AdcCalibrationTree.cxx+");
   gROOT->ProcessLine(".L AdcSampleReader.cxx+");
   gROOT->ProcessLine(".L AdcVoltageResponse.cxx+");
+  gROOT->ProcessLine(".L AdcVoltagePerformance.cxx+");
+  gROOT->ProcessLine(".L AdcPerformanceTree.cxx+");
   gROOT->ProcessLine(".L AdcSampleAnalyzer.cxx+");
   gROOT->ProcessLine(".L AdcChipAnalyzer.cxx+");
   //gROOT->ProcessLine(".L processChip.cxx+");

@@ -11,6 +11,7 @@
 #include "AdcSampleReader.h"
 #include "AdcChannelCalibration.h"
 #include "AdcVoltageResponse.h"
+#include "AdcVoltagePerformance.h"
 #include "FileDirectory.h"
 #include <string>
 #include "TH2.h"
@@ -29,6 +30,8 @@ public:
   using Code = unsigned short;
   using CodeVector = std::vector<Code>;
   using AdcVoltageResponseVector = std::vector<AdcVoltageResponse>;
+
+  using AdcVoltagePerformanceVector = std::vector<AdcVoltagePerformance>;
 
 public:
 
@@ -57,7 +60,8 @@ public:
   double fitped;
   AdcChannelCalibration calib;
   AdcVoltageResponseVector voltageResponses;
-  std::vector<double> voltageEfficiencies;
+  //std::vector<double> voltageEfficiencies;
+  AdcVoltagePerformanceVector vperfs;
   TH1* phveff = nullptr;
 
   // Read in the data.
@@ -66,6 +70,10 @@ public:
   //  maxsam - maximum # samples to read from a waveform (0 for all)
   //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
   AdcSampleAnalyzer(Name asample, Index achan, Index maxsam =0, double nomGain =0.0);
+
+  // Return the id.
+  Index chip() const { return reader.chip(); }
+  Index channel() const { return reader.channel(); }
 
   // Return the distribution of Vin for an ADC count.
   // This projects phc onto the X axis.
@@ -95,7 +103,8 @@ public:
 
   // Evaluate the voltage efficiencies.
   // This is the fraction of samples that have RMS < rmsmax for each voltage bin.
-  const std::vector<double>& evaluateVoltageEfficiencies(double rmsmax);
+  // This adds an entry to vperfs.
+  const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax);
 
 };
 

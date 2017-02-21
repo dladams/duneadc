@@ -1,23 +1,44 @@
 void drawChipBounds(TH1* phin, bool off =false, bool dolabs =false, bool drawhist =false) {
-cout << "XXXXXXXXXXXXXXXXXXXXXXX" << endl;
-  vector<unsigned int> goodchips = { 0, 4, 8, 10, 16, 24, 31, 18, 15, 33, 30, 5};
+  vector<unsigned int> badchips = { 2, 6, 7, 14, 21, 29, 33, 35, 15, 18, 25, 3, 17};
   TH1* ph = nullptr;
+  string darg = "";
   if ( drawhist ) {
-    ph = (TH1*) phin->Clone();
+    ph = phin;
+    //ph = (TH1*) phin->Clone();
     if ( dolabs ) {
       ph->GetXaxis()->SetLabelColor(0);
       ph->GetXaxis()->SetTitle("Chip");
       ph->GetXaxis()->SetTickSize(0);
     }
-    ph->DrawCopy();
+    TH2* ph2 = dynamic_cast<TH2*>(ph);
+    if ( ph2 == nullptr ) {
+      ph->DrawCopy();
+    } else {
+      darg = "colz";
+      ph2->Draw("colz");
+      double palx1 = 0.941;
+      double palx2 = 0.960;
+      gPad->Update();
+      TPaletteAxis* ppalax = dynamic_cast<TPaletteAxis*>(ph2->GetListOfFunctions()->FindObject("palette"));
+      if ( ppalax != nullptr ) {
+        ppalax->SetX1NDC(palx1);
+        ppalax->SetX2NDC(palx2);
+        //ppalax->SetTitleOffset(0.20);
+        ph2->GetZaxis()->SetTickSize(0.015);
+        ph2->GetZaxis()->SetTitle("Efficiency");
+        ph2->GetZaxis()->SetTitleOffset(0.55);
+      }
+      ph2->Draw("colz");
+    }
   }
   // Find vertical limits of the histogram display.
-  double ymin = phin->GetMinimum();
-  double ymax = phin->GetMaximum();
-  if ( ymax == ymin ) {
-    ymin = phin->GetYaxis()->GetXmin();
-    ymax = phin->GetYaxis()->GetXmax();
+  double ymin = phin->GetYaxis()->GetXmin();
+  double ymax = phin->GetYaxis()->GetXmax();
+  if ( ymax == ymin || ( ymin == 0.0 && ymax == 1.0 ) ) {
+    ymin = phin->GetMinimum();
+    ymax = phin->GetMaximum();
   }
+  vector<TLine*> lines;
   for ( int ichp=0; ichp<25; ++ichp ) {
     // Left boundary of this chip.
     double x = 16*ichp - 0.5*off;
@@ -25,7 +46,17 @@ cout << "XXXXXXXXXXXXXXXXXXXXXXX" << endl;
     unsigned int chip = ichp;
     TTree* ptree = dynamic_cast<TTree*>(gDirectory->Get("adccalib"));
     if ( ptree == nullptr ) {
-      cout << "drawChipBounds: Unable to find tree adccalib." << endl;
+      ptree = dynamic_cast<TTree*>(gDirectory->Get("adcperf"));
+      if ( ptree == nullptr ) {
+        cout << "drawChipBounds: Unable to find tree adccalib or adcperf." << endl;
+      } else {
+        AdcVoltagePerformance* pavp = new AdcVoltagePerformance;
+        char* pavpold = ptree->GetBranch("perf")->GetAddress();
+        ptree->GetBranch("perf")->SetAddress(&pavp);
+        ptree->GetEntry(16*ichp);
+        chip = pavp->chip;
+        ptree->GetBranch("perf")->SetAddress(pavpold);
+      }
     } else {
       AdcChannelCalibration* pacc = new AdcChannelCalibration;
       char* paccold = ptree->GetBranch("cal")->GetAddress();
@@ -35,11 +66,10 @@ cout << "XXXXXXXXXXXXXXXXXXXXXXX" << endl;
       ptree->GetBranch("cal")->SetAddress(paccold);
     }
     // Display shaded box for bad channels.
-    if ( find(goodchips.begin(), goodchips.end(), chip) == goodchips.end() ) {
+    if ( find(badchips.begin(), badchips.end(), chip) != badchips.end() ) {
       TBox* pbox = new TBox(x, ymin, x+16, 0.997*ymax);
       pbox->SetLineStyle(0);
-      pbox->SetFillColor(18);
-      //pbox->SetFillStyle(4000);
+      pbox->SetFillColor(17);
       pbox->Draw();
     }
     // Draw lines between chips.
@@ -47,6 +77,7 @@ cout << "XXXXXXXXXXXXXXXXXXXXXXX" << endl;
       TLine* pline = new TLine(x, ymin, x, ymax);
       pline->SetLineStyle(3);
       pline->Draw();
+      lines.push_back(pline);
     }
     // Show chip numbers.
     if ( dolabs ) {
@@ -66,6 +97,11 @@ cout << "XXXXXXXXXXXXXXXXXXXXXXX" << endl;
     }
     // Create histogram of bad channels.
   }
-  if ( ph != nullptr ) ph->DrawCopy("same");
+  darg += " same";
+  if ( ph != nullptr ) ph->Draw(darg.c_str());
+  // Redraw lines.
+  for ( TLine* pline : lines ) pline->Draw();
+  // Redraw histogram axis and grid.
+  if ( ph != nullptr ) ph->Draw("axis same");
 }
 

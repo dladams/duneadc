@@ -1,7 +1,7 @@
 void drawbad() {
   vector<string> slims = {"0.8", "1.2"};
   vector<string> hnams = {"hb0p8", "hb1p2"};
-  vector<int> cols = {4, 2};
+  vector<int> cols = {kBlue, kRed-3};
   vector<int> lwids = {2, 1};
   vector<int> fstys = {0, 1001};
   vector<TH1*> hists;
@@ -35,11 +35,11 @@ void drawbad() {
     cout << "Too few counts: " << 1 - selfrac << endl;
   }
   TCanvas* pcan = new TCanvas("cbad", "cbad", 1500, 500);
-  pcan->SetRightMargin(0.02);
+  pcan->SetRightMargin(0.06);
   pcan->SetLeftMargin(0.05);
   pcan->cd();
   drawChipBounds(hists[0], true, true, true);
-  for ( unsigned int ih=1; ih<slims.size(); ++ih ) hists[ih]->Draw("same");
+  for ( unsigned int ih=0; ih<slims.size(); ++ih ) hists[ih]->Draw("same");
   TLine* pline = new TLine(0, 5*40.3, 400, 5*40.3);
   pline->SetLineStyle(3);
   pline->Draw();
@@ -56,7 +56,7 @@ void drawbad() {
   ptlab->SetTextSize(0.04);
   ptlab->SetTextFont(42);
   ptlab->Draw();
-  TLegend* pleg = new TLegend(0.85, 0.76, 0.93, 0.88);
+  TLegend* pleg = new TLegend(0.79, 0.76, 0.87, 0.88);
   for ( unsigned int ih=0; ih<slims.size(); ++ih ) {
     string slab = "RMS > " + slims[ih];
     pleg->AddEntry(hists[ih], slab.c_str(), "f");

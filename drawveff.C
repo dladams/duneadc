@@ -40,17 +40,25 @@ void drawveff() {
       return;
     }
     for ( unsigned int iv=0; iv<nv; ++iv ) {
-      unsigned int bin = ph->GetBin(icha, iv);
-      ph->SetBinContent(bin, pavp->eff(iv));
+      unsigned int bin = ph->GetBin(icha+1, iv+1);
+      double eff = pavp->eff(iv);
+      if ( eff > 0.50 ) {
+        ph->SetBinContent(bin, pavp->eff(iv));
+      }
     }
   }
   // Draw histogram.
+  palette(41);
   TCanvas* pcan = new TCanvas("veff", "veff", 1500, 500);
   pcan->SetGridy();
-  pcan->SetRightMargin(0.07);
+  pcan->SetRightMargin(0.06);
   pcan->SetLeftMargin(0.05);
   ph->SetTitleOffset(0.7, "y");
-  //drawChipBounds(ph, true, true, true);
-  ph->DrawCopy("colz");
-  //pcan->Print("vlimits.png");
+  drawChipBounds(ph, true, true, true);
+  //ph->DrawCopy("colz");
+  if ( 1 ) {
+    TFile::Open("calib_201701.root");
+    gROOT->ProcessLine(".X drawvlimits.C(true)");
+  }
+  pcan->Print("veff.png");
 }

@@ -2,6 +2,7 @@
 
 #include "AdcSampleReader.h"
 #include <string>
+#include <set>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -135,15 +136,33 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0;
-  } else if ( ssam.substr(0, 6) == "201701" ) {     // 201701_AA  AA=die # (00, 02, 03, ...)
+  // January 2017. a is the original files, b is after 20feb fix for offsets
+  } else if ( ssam.substr(0, 6) == "201701" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
     string subdir;
     string schp;
-    if ( ssam.size() == 9 ) {
+    string topsubdir;
+    if ( ssam.size() == 10 ) {
+      schp = ssam.substr(8,2);
+      if ( ssam[6] == 'a' ) {
+        topsubdir = "/201701/P1_ADC_Data";
+      } else if ( ssam[6] == 'b' ) {
+        static std::set<string> update_schps = {"03", "06", "07", "17", "21", "22", "25", "26", "29", "32", "35"};
+        if ( update_schps.find(schp) == update_schps.end() ) {
+          topsubdir = "/201701/P1_ADC_Data";
+        } else {
+          topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps";
+        }
+      } else {
+        bad = 1;
+      }
+    } else {
+      bad = 1;
+    }
+    if ( bad == 0 ) {
+      dirname = m_topdir + topsubdir + "/P1_S7_" + schp;
       m_dataset = ssam.substr(0, 6);
-      schp = ssam.substr(7,2);
       istringstream sschp(schp);
       sschp >> m_chip;
-      dirname = m_topdir + "/201701/P1_S7_" + schp;
       m_vinmin = -300.0;
       vinmax = 1700;
       m_nomVinPerAdc = 1.0;
@@ -151,7 +170,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       isRaw = true;
       m_dvdt = 200.0;
       m_nomVinPerAdc = 0.34;
-    } else bad = 1;
+    }
   } else {
     bad = 999;
   }

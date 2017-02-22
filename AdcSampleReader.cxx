@@ -136,7 +136,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0;
-  // January 2017. a is the original files, b is after 20feb fix for offsets
+  // January 2017. a is the original files, b is after 20feb fix for offsets (chip 6 is now broken)
   } else if ( ssam.substr(0, 6) == "201701" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
     string subdir;
     string schp;
@@ -146,11 +146,18 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       if ( ssam[6] == 'a' ) {
         topsubdir = "/201701/P1_ADC_Data";
       } else if ( ssam[6] == 'b' ) {
-        static std::set<string> update_schps = {"03", "06", "07", "17", "21", "22", "25", "26", "29", "32", "35"};
-        if ( update_schps.find(schp) == update_schps.end() ) {
+        static std::set<string> update_schps_part1 =   {"03", "07", "21", "25", "26", "32", "35"};
+        static std::set<string> update_schps_part2 =   {"17", "22", "29"};
+        static std::set<string> update_schps_missing = {"06"};
+        if        ( update_schps_part1.find(schp) != update_schps_part1.end() ) {
+          topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps";
+        } else if ( update_schps_part2.find(schp) != update_schps_part2.end() ) {
+          topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps_part2";
+        } else if ( update_schps_missing.find(schp) != update_schps_missing.end() ) {
+          cout << myname << "WARNING: Chip 6 is now broken. Using old data." << endl;
           topsubdir = "/201701/P1_ADC_Data";
         } else {
-          topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps";
+          topsubdir = "/201701/P1_ADC_Data";
         }
       } else {
         bad = 1;

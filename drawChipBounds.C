@@ -1,9 +1,13 @@
-void drawChipBounds(TH1* phin, bool off =false, bool dolabs =false, bool drawhist =false) {
-  vector<unsigned int> badchips = { 2, 6, 7, 14, 21, 29, 33, 35, 15, 18, 25, 3, 17};
+void drawChipBounds(TH1* phin, bool off, bool dolabs, bool drawhist, vector<unsigned int> chips) {
+  const string myname = "drawChipBounds: ";
+  //vector<unsigned int> badchips = { 2, 6, 7, 14, 21, 29, 33, 35, 15, 18, 25, 3, 17};
+  AdcChipStatus acs;
   TH1* ph = nullptr;
   string darg = "";
+  unsigned int nchp = 25;
   if ( drawhist ) {
     ph = phin;
+    nchp = (phin->GetNbinsX()+15)/16;
     //ph = (TH1*) phin->Clone();
     if ( dolabs ) {
       ph->GetXaxis()->SetLabelColor(0);
@@ -31,6 +35,9 @@ void drawChipBounds(TH1* phin, bool off =false, bool dolabs =false, bool drawhis
       ph2->Draw("colz");
     }
   }
+  // Find horizontal limits of the histogram display.
+  double xmin = phin->GetXaxis()->GetXmin();
+  double xmax = phin->GetXaxis()->GetXmax();
   // Find vertical limits of the histogram display.
   double ymin = phin->GetYaxis()->GetXmin();
   double ymax = phin->GetYaxis()->GetXmax();
@@ -39,34 +46,39 @@ void drawChipBounds(TH1* phin, bool off =false, bool dolabs =false, bool drawhis
     ymax = phin->GetMaximum();
   }
   vector<TLine*> lines;
-  for ( int ichp=0; ichp<25; ++ichp ) {
+  for ( int ichp=0; ichp<nchp; ++ichp ) {
     // Left boundary of this chip.
     double x = 16*ichp - 0.5*off;
     // Find the chip number.
     unsigned int chip = ichp;
-    TTree* ptree = dynamic_cast<TTree*>(gDirectory->Get("adccalib"));
-    if ( ptree == nullptr ) {
-      ptree = dynamic_cast<TTree*>(gDirectory->Get("adcperf"));
-      if ( ptree == nullptr ) {
-        cout << "drawChipBounds: Unable to find tree adccalib or adcperf." << endl;
-      } else {
-        AdcVoltagePerformance* pavp = new AdcVoltagePerformance;
-        char* pavpold = ptree->GetBranch("perf")->GetAddress();
-        ptree->GetBranch("perf")->SetAddress(&pavp);
-        ptree->GetEntry(16*ichp);
-        chip = pavp->chip;
-        ptree->GetBranch("perf")->SetAddress(pavpold);
-      }
+    if ( chips.size() > ichp ) {
+      chip = chips[ichp];
     } else {
-      AdcChannelCalibration* pacc = new AdcChannelCalibration;
-      char* paccold = ptree->GetBranch("cal")->GetAddress();
-      ptree->GetBranch("cal")->SetAddress(&pacc);
-      ptree->GetEntry(16*ichp);
-      chip = pacc->chip;
-      ptree->GetBranch("cal")->SetAddress(paccold);
+      TTree* ptree = dynamic_cast<TTree*>(gDirectory->Get("adccalib"));
+      if ( ptree == nullptr ) {
+        ptree = dynamic_cast<TTree*>(gDirectory->Get("adcperf"));
+        if ( ptree == nullptr ) {
+          cout << "drawChipBounds: Unable to find tree adccalib or adcperf." << endl;
+        } else {
+          AdcVoltagePerformance* pavp = new AdcVoltagePerformance;
+          char* pavpold = ptree->GetBranch("perf")->GetAddress();
+          ptree->GetBranch("perf")->SetAddress(&pavp);
+          ptree->GetEntry(16*ichp);
+          chip = pavp->chip;
+          ptree->GetBranch("perf")->SetAddress(pavpold);
+        }
+      } else {
+        AdcChannelCalibration* pacc = new AdcChannelCalibration;
+        char* paccold = ptree->GetBranch("cal")->GetAddress();
+        ptree->GetBranch("cal")->SetAddress(&pacc);
+        ptree->GetEntry(16*ichp);
+        chip = pacc->chip;
+        ptree->GetBranch("cal")->SetAddress(paccold);
+      }
     }
+cout << myname << "chip[" << ichp << "] = " << chip << endl;
     // Display shaded box for bad channels.
-    if ( find(badchips.begin(), badchips.end(), chip) != badchips.end() ) {
+    if ( acs.isBad(chip) ) {
       TBox* pbox = new TBox(x, ymin, x+16, 0.997*ymax);
       pbox->SetLineStyle(0);
       pbox->SetFillColor(17);
@@ -96,6 +108,11 @@ void drawChipBounds(TH1* phin, bool off =false, bool dolabs =false, bool drawhis
       ptxt->Draw();
     }
     // Create histogram of bad channels.
+  }
+  // Add line for eff = 0;
+  if ( ymin < 0.0 && ymax > 0.0 ) {
+    TLine* pline = new TLine(xmin, 0.0, xmax, 0.0);
+    lines.push_back(pline);
   }
   darg += " same";
   if ( ph != nullptr ) ph->Draw(darg.c_str());

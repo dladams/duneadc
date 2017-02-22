@@ -13,10 +13,12 @@
   gROOT->ProcessLine(".L AdcPerformanceTree.cxx+");
   gROOT->ProcessLine(".L AdcSampleAnalyzer.cxx+");
   gROOT->ProcessLine(".L AdcChipAnalyzer.cxx+");
+  gROOT->ProcessLine(".L AdcChipStatus.cxx+");
   //gROOT->ProcessLine(".L processChip.cxx+");
   gROOT->ProcessLine(".L AdcHist.cxx+");   // obsolete
   gROOT->ProcessLine(".L makeplot.cxx+");   // obsolete
   gROOT->ProcessLine(".L drawChipBounds.C");
+  gROOT->ProcessLine(".L drawvlimits.C");
   palette(0);
   int chan = 0;
 }

@@ -1,8 +1,10 @@
-void drawveff() {
+void drawveff(bool skipbad =false) {
   string myname = "drawveff: ";
+  AdcChipStatus acs;
   TTree* ptree = dynamic_cast<TTree*>(gDirectory->Get("adcperf"));
   if ( ptree == nullptr ) {
     cout << myname << "Performance tree not found." << endl;
+    gDirectory->ls();
     return;
   }
   AdcVoltagePerformance* pavp = nullptr;
@@ -19,11 +21,37 @@ void drawveff() {
   cout << myname << "# voltages: " << nv << endl;
   cout << myname << "Voltage range: (" << vmin << ", " << vmax << ") mV" << endl;
   cout << myname << "Voltage limit: " << vrmsmax << " mV" << endl;
-  unsigned int ncha = ptree->GetEntries();
-  cout << myname << "# channels: " << ncha << endl;
+  unsigned int nent = ptree->GetEntries();
+  cout << myname << "# tree entries: " << nent << endl;
+  // Create vector of entries to display.
+  vector<unsigned int> ents;
+  unsigned chip = 99999;
+  vector<unsigned int> chips;
+  for ( unsigned int ient=0; ient<nent; ++ient ) {
+    ptree->GetEntry(ient);
+    if ( pavp->nv != nv ) {
+      cout << myname << "Entry " << ient << " is inconsistent." << endl;
+      return;
+    }
+    unsigned int newchip = pavp->chip;
+    if ( skipbad ) {
+      if ( acs.isBad(newchip) ) {
+        cout << myname << "Skipping bad chip " << newchip << ", channel " << pavp->chan << endl;
+        continue;
+      }
+    }
+    ents.push_back(ient);
+    if ( chip != newchip ) {
+      chip = newchip;
+      chips.push_back(chip);
+    }
+    chiplast = chip;
+  }
+  cout << myname << "# selected channels: " << ents.size() << "/" << nent << endl;
   // Create histogram.
+  unsigned int ncha = ents.size();
   ostringstream sstitl;
-  sstitl << "Input voltage efficiency for V_{in} RMS < " << vrmsmax << " mV; Channel; V_{in} [mV]";
+  sstitl << "Input voltage efficiency for RMS(V_{in}) < " << vrmsmax << " mV; Channel; V_{in} [mV]";
   string stitl = sstitl.str();
   TH2* ph = new TH2F("hveffsum", stitl.c_str(), ncha, 0, ncha, nv, vmin, vmax);
   ph->SetStats(0);
@@ -31,17 +59,15 @@ void drawveff() {
   ph->SetStats(0);
   ph->GetYaxis()->SetTickLength(0.01);
   // Fill histogram.
-  unsigned int icha1 = 0;
-  unsigned int icha2 = ncha;
-  for ( unsigned int icha=icha1; icha<icha2; ++icha ) {
-    ptree->GetEntry(icha);
-    if ( pavp->nv != nv ) {
-      cout << myname << "Entry " << icha << " is inconsistent." << endl;
-      return;
-    }
+  int xbin = 0;
+  for ( unsigned int ient : ents ) {
+    ++xbin;
+    ptree->GetEntry(ient);
+    //cout << myname << "Entry: " << ient << "; chip " << pavp->chip << ", channel " << pavp->chan << endl;
     for ( unsigned int iv=0; iv<nv; ++iv ) {
-      unsigned int bin = ph->GetBin(icha+1, iv+1);
+      unsigned int bin = ph->GetBin(xbin, iv+1);
       double eff = pavp->eff(iv);
+      //cout << "   " << ient << ", " << iv << ": " << eff << endl;
       if ( eff > 0.50 ) {
         ph->SetBinContent(bin, pavp->eff(iv));
       }
@@ -49,16 +75,23 @@ void drawveff() {
   }
   // Draw histogram.
   palette(41);
-  TCanvas* pcan = new TCanvas("veff", "veff", 1500, 500);
+  string cname = "veffall";
+  if ( skipbad ) cname = "veffgood";
+  TCanvas* pcan = new TCanvas(cname.c_str(), cname.c_str(), 1500, 500);
   pcan->SetGridy();
   pcan->SetRightMargin(0.06);
   pcan->SetLeftMargin(0.05);
   ph->SetTitleOffset(0.7, "y");
-  drawChipBounds(ph, true, true, true);
+  drawChipBounds(ph, false, true, true, chips);
   //ph->DrawCopy("colz");
   if ( 1 ) {
-    TFile::Open("calib_201701.root");
-    gROOT->ProcessLine(".X drawvlimits.C(true)");
+    TDirectory* psavedir = gDirectory;
+    TFile* pfile = TFile::Open("calib_201701.root");
+    drawvlimits(true, chips);
+    delete pfile;
+    psavedir->cd();
   }
-  pcan->Print("veff.png");
+  string fname = pcan->GetName();
+  fname +=".png";
+  pcan->Print(fname.c_str());
 }

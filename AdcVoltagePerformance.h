@@ -9,6 +9,7 @@
 // and includes the following
 //   vinCounts - # samples in each bin
 //   vinEffs - Efficiency in each bin for RMS < vrmsmax
+//   vinRmsMeans - Mean RMS in each bin for RMS < vrmsmax
 
 #ifndef AdcVoltagePerformance_H
 #define AdcVoltagePerformance_H
@@ -44,8 +45,9 @@ public:
 
   // Performance for each voltage bin.
   Count count(Index iv) const;
-  Float eff(Index iv) const;
+  Float eff(Index iv) const;      // Effieince = fraction good
   Float deff(Index iv) const;     // Uncertainty on efficiency
+  Float rmsMean(Index iv) const;  // Mean good RMS
 
 public:
 
@@ -57,6 +59,7 @@ public:
   Float vmax;
   CountVector vinCounts;
   FloatVector vinEffs;
+  FloatVector vinRmsMeans;
 
 };
 

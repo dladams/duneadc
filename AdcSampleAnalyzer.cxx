@@ -13,6 +13,7 @@ using std::ostringstream;
 
 using Name = AdcSampleReader::Name;
 using Index = AdcSampleReader::Index;
+using FloatVector = AdcVoltagePerformance::FloatVector;
 
 //**********************************************************************
 
@@ -48,7 +49,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   double lmax = 0.6;
   double vinfitmax = 1700;
   Index nadc = reader.nadc();
-  Index iadcfitmin = nadc==4096 ? 65 : 1;
+  Index iadcfitmin = nadc==4096 ? 129 : 1;
   Index iadcfitmax = nadc - 1;
   bool usestuck = false;
   double nomVinPerAdc = cfac == 0.0 ? reader.nomVinPerAdc() : cfac;
@@ -176,6 +177,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   // Fit the response histogram.
   cout << myname << "Fitting..." << endl;
   phf->Fit("pol1", "Q");
+  cout << myname << "  usestuck: " << usestuck << endl;
+  cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
   pfit = phf->GetFunction("pol1");
   fitped = pfit->GetParameter(0);
   fitVinPerAdc = pfit->GetParameter(1);
@@ -395,48 +398,121 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
 
 //**********************************************************************
 
-const AdcVoltagePerformance::FloatVector&
+const FloatVector&
 AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
-  static AdcVoltagePerformance::FloatVector empty;
+  static FloatVector empty;
   const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
   unsigned int nvr = voltageResponses.size();
   if ( phc ==  nullptr ) return empty;
   if ( nvr < 1 ) return empty;
+  // Create voltage performance object.
   double v1 = voltageResponses[0].vmin;
   double v2 = voltageResponses[nvr-1].vmax;
   vperfs.emplace_back(chip(), channel(), rmsmax, nvr, v1, v2);
   AdcVoltagePerformance& vperf = vperfs.back();
+  // Create efficiency hisogram.
+  ostringstream sshnam;
+  sshnam << "hveff" << rmsmax;
+  string shnam = sshnam.str();
   ostringstream sstitl;
   sstitl << phc->GetTitle();
   sstitl << " efficiency for RMS < " << rmsmax << " mV";
   sstitl << ";V_{in} [mV]";
   sstitl << ";Efficiency";
   string stitl = sstitl.str();
-  ostringstream sshnam;
-  sshnam << "hveff" << rmsmax;
-  string shnam = sshnam.str();
   for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
   phveff = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
   phveff->SetStats(0);
   phveff->SetMinimum(0.0);
   phveff->SetMaximum(1.03);
   phveff->SetLineWidth(2);
+  // Create mean RMS histogram.
+  sshnam.str("");
+  sshnam << "hvrms" << rmsmax;
+  shnam = sshnam.str();
+  sstitl.str("");
+  sstitl << phc->GetTitle();
+  sstitl << " mean RMS for RMS < " << rmsmax << " mV";
+  sstitl << ";V_{in} [mV]";
+  sstitl << ";RMS(V_{in}) [mV]";
+  stitl = sstitl.str();
+  phvrms = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
+  phvrms->SetStats(0);
+  phvrms->SetMinimum(0.0);
+  phvrms->SetMaximum(1.03);
+  phvrms->SetLineWidth(2);
+  // Fill voltage performance and histograms.
+  double dv = (v2 - v1)/nvr;
+  double dvhalf = 0.5*dv;
+  FloatVector gx(nvr, 0.0);
+  FloatVector gy(nvr, 0.0);
+  FloatVector gexlo(nvr, dvhalf);
+  FloatVector gexhi(nvr, dvhalf);
+  FloatVector geylo(nvr, 0.0);
+  FloatVector geyhi(nvr, 0.0);
   for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
     AdcVoltageResponse& avr = voltageResponses[ivr];
     Index iadc1 = avr.bin0;
     Index iadc2 = iadc1 + avr.fractions.size();
     double eff = 0.0;
     double count = 0.0;
-    for ( unsigned int iadc=iadc1; iadc<iadc2; ++iadc ) {
-      count += avr.count(iadc);
-      if ( calRms(iadc) < rmsmax ) eff += avr.fraction(iadc);
+    double rmsSum = 0.0;
+    double rms2Sum = 0.0;
+    double losum = 0.0;
+    double hisum = 0.0;
+    double drmslo2Sum = 0.0;
+    double drmshi2Sum = 0.0;
+    double rmsMean = 0.0;
+    // Loop twice finding the mean on the first pass.
+    for ( int haveMean=0; haveMean<2; ++haveMean ) {
+      for ( unsigned int iadc=iadc1; iadc<iadc2; ++iadc ) {
+        count += avr.count(iadc);
+        double rms = calRms(iadc);
+        if ( rms >= 0.0 && rms < rmsmax ) {      // RMS < 0 is uncalibrated bin treated here as bad
+          double frac = avr.fraction(iadc);
+          if ( ! haveMean ) {
+            eff += frac;
+            rmsSum += frac*rms;
+            rms2Sum += frac*rms*rms;
+          } else {
+            double drms = rms - rmsMean;
+            double drms2 = drms*drms;
+            if ( drms < 0.0 ) {
+              losum += frac;
+              drmslo2Sum += frac*drms2;
+            } else if ( drms > 0.0 ) {
+              hisum += frac;
+              drmshi2Sum += frac*drms2;
+            } else {
+              double wt = 0.5*frac;
+              losum += wt;
+              hisum += wt;
+              drmslo2Sum += wt*drms2;
+              drmshi2Sum += wt*drms2;
+            }
+          }
+        }
+      }
+      if ( ! haveMean ) rmsMean = eff > 0.0 ? rmsSum/eff : 0.0;
     }
+    double rms2Mean = eff > 0.0 ? rms2Sum/eff : 0.0;
+    double diff = rms2Mean - rmsMean*rmsMean;
+    if ( diff < 0.0 ) diff = 0.0;
+    double rmsRms = sqrt(diff);
     vperf.vinCounts[ivr] = count;
     vperf.vinEffs[ivr] = eff;
+    vperf.vinRmsMeans[ivr] = rmsMean;
     double deff = vperf.deff(ivr);
     phveff->SetBinContent(ivr+1, eff);
     phveff->SetBinError(ivr+1, deff);
+    phvrms->SetBinContent(ivr+1, rmsMean);
+    phvrms->SetBinError(ivr+1, rmsRms);
+    gx[ivr] = v1 + dvhalf + ivr*dv;
+    gy[ivr] = rmsMean;
+    geylo[ivr] = losum > 0 ? sqrt(drmslo2Sum/losum) : 0.0;
+    geyhi[ivr] = hisum > 0 ? sqrt(drmshi2Sum/hisum) : 0.0;
   }
+  pgvrms = new TGraphAsymmErrors(nvr, &gx[0], &gy[0], &gexlo[0], &gexhi[0], &geylo[0], &geyhi[0]);
   return vperf.vinEffs;
 }
 

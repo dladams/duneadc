@@ -18,7 +18,8 @@ AdcVoltagePerformance(Index achip, Index achan, Float avrmsmax,
 : chip(achip), chan(achan), vrmsmax(avrmsmax),
   nv(anv), vmin(avmin), vmax(avmax),
   vinCounts(nv, 0),
-  vinEffs(nv, 0.0) { }
+  vinEffs(nv, 0.0),
+  vinRmsMeans(nv, 0.0) { }
 
 //**********************************************************************
 
@@ -46,6 +47,13 @@ Count AdcVoltagePerformance::count(Index iv) const {
 Float AdcVoltagePerformance::eff(Index iv) const {
   if ( iv >= nv ) return 0.0;
   return vinEffs[iv];
+}
+
+//**********************************************************************
+
+Float AdcVoltagePerformance::rmsMean(Index iv) const {
+  if ( iv >= nv ) return 0.0;
+  return vinRmsMeans[iv];
 }
 
 //**********************************************************************

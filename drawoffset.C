@@ -1,5 +1,5 @@
 void drawoffset() {
-  TH1* ph = new TH1F("ho", "V_{in}:ADC fit offset;Offset [mV];# channels [/(5 mV]", 70, -50, 300);
+  TH1* ph = new TH1F("ho", "V_{in}:ADC fit offset;Offset [mV];# channels [/(5 mV]",  90, -150, 300);
   adccalib->Draw("offset>>ho");
   ph->SetStats(0);
   ph->SetLineWidth(2);

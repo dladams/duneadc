@@ -16,6 +16,7 @@
 #include <string>
 #include "TH2.h"
 #include "TF1.h"
+#include "TGraphAsymmErrors.h"
 
 class AdcSampleAnalyzer {
 
@@ -62,7 +63,9 @@ public:
   AdcVoltageResponseVector voltageResponses;
   //std::vector<double> voltageEfficiencies;
   AdcVoltagePerformanceVector vperfs;
-  TH1* phveff = nullptr;
+  TH1* phveff = nullptr;   // Efficiency vs Vin.
+  TH1* phvrms = nullptr;   // Mean good RMS vs Vin.
+  TGraphAsymmErrors* pgvrms = nullptr;
 
   // Read in the data.
   //  asample - sample name

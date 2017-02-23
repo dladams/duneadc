@@ -513,6 +513,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
     geyhi[ivr] = hisum > 0 ? sqrt(drmshi2Sum/hisum) : 0.0;
   }
   pgvrms = new TGraphAsymmErrors(nvr, &gx[0], &gy[0], &gexlo[0], &gexhi[0], &geylo[0], &geyhi[0]);
+  pgvrms->SetLineWidth(2);
   return vperf.vinEffs;
 }
 

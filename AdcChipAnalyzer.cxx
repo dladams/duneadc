@@ -102,6 +102,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
       continue;
     }
     for ( unsigned int ityp=0; ityp<stypes.size(); ++ityp ) {
+      bool addvrms = false;
       string stype = stypes[ityp];
       TCanvas* pcan = cans[ityp];
       TVirtualPad* ppad = pcan->cd(ipad);
@@ -132,6 +133,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
         ph = asa.phveff;
         ppad->SetGridx();
         sarg = "h";
+        addvrms = true;
       }
       if ( ph == nullptr ) continue;
       if ( stype == "diff" ||
@@ -146,6 +148,9 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
         ph->DrawCopy(sarg2.c_str());
       } else {
         ph->DrawCopy(sarg.c_str());
+        if ( addvrms ) {
+          asa.pgvrms->Draw("Z");
+        }
       }
       if ( hsums.find(stype) != hsums.end() ) {
         TH1*& phs = hsums[stype];

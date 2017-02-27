@@ -8,18 +8,21 @@ using Float = AdcVoltagePerformance::Float;
 //**********************************************************************
 
 AdcVoltagePerformance::AdcVoltagePerformance()
-: chip(0), chan(999), vrmsmax(0.0), nv(0), vmin(0.0), vmax(0.0) { }
+: chip(0), chan(999), vuncmax(0.0), nv(0), vmin(0.0), vmax(0.0) { }
 
 //**********************************************************************
 
 AdcVoltagePerformance::
-AdcVoltagePerformance(Index achip, Index achan, Float avrmsmax,
+AdcVoltagePerformance(Index achip, Index achan, Float avuncmax,
                       Index anv, Float avmin, Float avmax)
-: chip(achip), chan(achan), vrmsmax(avrmsmax),
+: chip(achip), chan(achan), vuncmax(avuncmax),
   nv(anv), vmin(avmin), vmax(avmax),
   vinCounts(nv, 0),
   vinEffs(nv, 0.0),
-  vinRmsMeans(nv, 0.0) { }
+  vinResMeans(nv, 0.0),
+  vinResRmss(nv, 0.0),
+  vinResRmslos(nv, 0.0),
+  vinResRmshis(nv, 0.0) { }
 
 //**********************************************************************
 
@@ -51,9 +54,30 @@ Float AdcVoltagePerformance::eff(Index iv) const {
 
 //**********************************************************************
 
-Float AdcVoltagePerformance::rmsMean(Index iv) const {
+Float AdcVoltagePerformance::resMean(Index iv) const {
   if ( iv >= nv ) return 0.0;
-  return vinRmsMeans[iv];
+  return vinResMeans[iv];
+}
+
+//**********************************************************************
+
+Float AdcVoltagePerformance::resRms(Index iv) const {
+  if ( iv >= nv ) return 0.0;
+  return vinResRmss[iv];
+}
+
+//**********************************************************************
+
+Float AdcVoltagePerformance::resRmslo(Index iv) const {
+  if ( iv >= nv ) return 0.0;
+  return vinResRmslos[iv];
+}
+
+//**********************************************************************
+
+Float AdcVoltagePerformance::resRmshi(Index iv) const {
+  if ( iv >= nv ) return 0.0;
+  return vinResRmshis[iv];
 }
 
 //**********************************************************************

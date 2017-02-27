@@ -11,12 +11,12 @@ void filldb() {
   unsigned int nv = 90;
   double vmin = -200.0;
   double vmax = 1600.0;
-  double vrmsmax = 1.0;
+  double vresmax = 1.0;
   bool fillPerfTree = true;
   for ( string schip : schips ) {
     string dataset = "201701b_" + schip;
     cout << endl;
     cout << "*************  " << dataset << "  *****************" << endl;
-    AdcChipAnalyzer chipper(dataset, 0, 16, fillCalTree, vmin, vmax, nv, vrmsmax, fillPerfTree);
+    AdcChipAnalyzer chipper(dataset, 0, 16, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);
   }
 }

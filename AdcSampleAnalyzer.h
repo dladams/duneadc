@@ -57,6 +57,11 @@ public:
   TH1* phds = nullptr;  // Mean ADC fitted sigma distribution for ADC > 64, non stuck
   TH1* phdsb = nullptr; // Mean ADC fitted sigma distribution for ADC > 64, stuck
   TF1* pfit = nullptr;
+  Index iadcfitmin = 0;      // Min adc code for linear reponse fit
+  Index iadcfitmax = 0;      // Max adc code for linear reponse fit
+  double vinfitmin = 0.0;    // Min Vin for linear reponse fit
+  double vinfitmax = 0.0;    // Max Vin for linear reponse fit
+  bool fitusestuck = false;  // If true, classic stuck codes (LSB6=0,63) are excluded from linear response fit.
   double fitVinPerAdc;
   double fitped;
   AdcChannelCalibration calib;

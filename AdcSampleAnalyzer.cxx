@@ -47,11 +47,12 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   double gmax = 4.0;
   double lmin = 0.2;
   double lmax = 0.6;
-  double vinfitmax = 1700;
   Index nadc = reader.nadc();
-  Index iadcfitmin = nadc==4096 ? 129 : 1;
-  Index iadcfitmax = nadc - 1;
-  bool usestuck = false;
+  iadcfitmin = nadc==4096 ? 64 : 1;
+  iadcfitmax = nadc - 1;
+  vinfitmin = 0.0;
+  vinfitmax = 1600.0;
+  fitusestuck = false;
   double nomVinPerAdc = cfac == 0.0 ? reader.nomVinPerAdc() : cfac;
   double nomped = 0.0;
   Index adcmax = nadc;
@@ -63,7 +64,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   Index npvin = pvinmax - pvinmin;
   adcUnderflow = 64;  // This and below are considered underflow
   if ( ssam.find("ltc") != string::npos ) {
-    usestuck = true;
+    fitusestuck = true;
     nomVinPerAdc = 0.1151;
     adcUnderflow = 0;
   }
@@ -159,10 +160,10 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
       Index count = reader.countTable()[iadc][ivin];
       phc->Fill(iadc, vin, count);
       //if ( iadc == 500 && ivin < 700) cout << myname << "XXX: " << iadc << ", " << vin << ": " << count << endl;
-      if ( iadc >= iadcfitmin && iadc < iadcfitmax && vin < vinfitmax ) {
+      if ( iadc > iadcfitmin && iadc < iadcfitmax && vin > vinfitmin && vin < vinfitmax ) {
         Index rem = iadc%64;
         bool skip = false;
-        if ( ! usestuck ) skip = rem == 0 || rem == 63;
+        if ( ! fitusestuck ) skip = rem == 0 || rem == 63;
         if ( skip ) {
           ++nskip;
         } else {
@@ -177,8 +178,9 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   // Fit the response histogram.
   cout << myname << "Fitting..." << endl;
   phf->Fit("pol1", "Q");
-  cout << myname << "  usestuck: " << usestuck << endl;
+  cout << myname << "  fitusestuck: " << fitusestuck << endl;
   cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
+  cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
   pfit = phf->GetFunction("pol1");
   fitped = pfit->GetParameter(0);
   fitVinPerAdc = pfit->GetParameter(1);
@@ -238,7 +240,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
     phsb->SetBinContent(iadc+1, xsb);
     phr->SetBinContent(iadc+1, xr);
     if ( iadc > adcUnderflow && iadc < adcOverflow ) {
-      bool bad = !usestuck && isStuck;
+      bool bad = !fitusestuck && isStuck;
       phdr->Fill(xr);
       if ( bad ) {
         phdsb->Fill(xs);
@@ -499,9 +501,14 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
     double diff = rms2Mean - rmsMean*rmsMean;
     if ( diff < 0.0 ) diff = 0.0;
     double rmsRms = sqrt(diff);
+    double rmsRmslo = losum > 0 ? sqrt(drmslo2Sum/losum) : 0.0;
+    double rmsRmshi = hisum > 0 ? sqrt(drmshi2Sum/hisum) : 0.0;
     vperf.vinCounts[ivr] = count;
     vperf.vinEffs[ivr] = eff;
-    vperf.vinRmsMeans[ivr] = rmsMean;
+    vperf.vinResMeans[ivr] = rmsMean;
+    vperf.vinResRmss[ivr] = rmsRms;
+    vperf.vinResRmslos[ivr] = rmsRmslo;
+    vperf.vinResRmshis[ivr] = rmsRmshi;
     double deff = vperf.deff(ivr);
     phveff->SetBinContent(ivr+1, eff);
     phveff->SetBinError(ivr+1, deff);
@@ -509,8 +516,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
     phvrms->SetBinError(ivr+1, rmsRms);
     gx[ivr] = v1 + dvhalf + ivr*dv;
     gy[ivr] = rmsMean;
-    geylo[ivr] = losum > 0 ? sqrt(drmslo2Sum/losum) : 0.0;
-    geyhi[ivr] = hisum > 0 ? sqrt(drmshi2Sum/hisum) : 0.0;
+    geylo[ivr] = rmsRmslo;
+    geyhi[ivr] = rmsRmshi;
   }
   pgvrms = new TGraphAsymmErrors(nvr, &gx[0], &gy[0], &gexlo[0], &gexhi[0], &geylo[0], &geyhi[0]);
   pgvrms->SetLineWidth(2);

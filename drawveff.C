@@ -13,14 +13,14 @@ void drawveff(bool skipbad =false) {
   unsigned int nv = pavp->nv;
   float vmin = pavp->vmin;
   float vmax = pavp->vmax;
-  float vrmsmax = pavp->vrmsmax;
+  float vuncmax = pavp->vuncmax;
   if ( nv == 0 ) {
     cout << myname << "First performance object has no voltages." << endl;
     return;
   }
   cout << myname << "# voltages: " << nv << endl;
   cout << myname << "Voltage range: (" << vmin << ", " << vmax << ") mV" << endl;
-  cout << myname << "Voltage limit: " << vrmsmax << " mV" << endl;
+  cout << myname << "Voltage limit: " << vuncmax << " mV" << endl;
   unsigned int nent = ptree->GetEntries();
   cout << myname << "# tree entries: " << nent << endl;
   // Create vector of entries to display.
@@ -45,13 +45,12 @@ void drawveff(bool skipbad =false) {
       chip = newchip;
       chips.push_back(chip);
     }
-    chiplast = chip;
   }
   cout << myname << "# selected channels: " << ents.size() << "/" << nent << endl;
   // Create histogram.
   unsigned int ncha = ents.size();
   ostringstream sstitl;
-  sstitl << "Input voltage efficiency for RMS(V_{in}) < " << vrmsmax << " mV; Channel; V_{in} [mV]";
+  sstitl << "Input voltage efficiency for RMS(V_{in}) < " << vuncmax << " mV; Channel; V_{in} [mV]";
   string stitl = sstitl.str();
   TH2* ph = new TH2F("hveffsum", stitl.c_str(), ncha, 0, ncha, nv, vmin, vmax);
   ph->SetStats(0);

@@ -13,6 +13,7 @@
 #include "TH1F.h"
 #include "TLine.h"
 #include "TStyle.h"
+#include "TLegend.h"
 
 using std::string;
 using std::cout;
@@ -136,6 +137,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
         addvrms = true;
       }
       if ( ph == nullptr ) continue;
+      if ( dynamic_cast<TH2*>(ph) == nullptr ) ppad->SetRightMargin(0.04);
       if ( stype == "diff" ||
            stype == "difn" ||
            stype == "fmea" ) {
@@ -146,11 +148,26 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
         pline->Draw();
         string sarg2 = sarg + " same";
         ph->DrawCopy(sarg2.c_str());
+      } else if ( addvrms ) {
+        string hnam = ph->GetName();
+        hnam += "_vrms";
+        TH1* phax = dynamic_cast<TH1*>(ph->Clone(hnam.c_str()));
+        string ylab = phax->GetYaxis()->GetTitle();
+        ylab += ", V_{in} resolution [mV]";
+        phax->GetYaxis()->SetTitle(ylab.c_str());
+        //phax->SetLineColor(kBlue+1);
+        //phax->SetLineWidth(2);
+        phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
+        phax->DrawCopy("h");
+        asa.pgvrms->Draw("Z");
+        TLegend* pleg = new TLegend(0.5, 0.15, 0.65, 0.25);
+        pleg->SetBorderSize(0);
+        pleg->SetFillStyle(0);
+        pleg->AddEntry(phax, "Efficiency", "l");
+        pleg->AddEntry(asa.pgvrms, "Resolution", "le");
+        pleg->Draw();
       } else {
         ph->DrawCopy(sarg.c_str());
-        if ( addvrms ) {
-          asa.pgvrms->Draw("Z");
-        }
       }
       if ( hsums.find(stype) != hsums.end() ) {
         TH1*& phs = hsums[stype];

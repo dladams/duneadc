@@ -5,6 +5,7 @@
 //   ssam: chip sample name, e.g. 201701_14
 //   icha1: First channel to process
 //   ncha: # channels to process
+//   datasetCalib: name of dataset holding the reference calibration
 //   savecalib: If true, the calibration tree is updated for these channels
 //   vmin, vmax, nv: if nv>0 and vmax > vmin, then evalute voltage responses
 //                   (fraction of samples populating each ADC bin)
@@ -20,15 +21,15 @@ class AdcChipAnalyzer {
 public:
 
   AdcChipAnalyzer(std::string ssam,
-                   unsigned int icha1 =0,
-                   unsigned int ncha =0,
-                   bool savecalib =false,
-                   float vmin = 0.0,
-                   float vmax = 0.0,
-                   unsigned int nv = 0,
-                   double vrmsmax = 1.0,
-                   bool saveperf =false);
-
+                  unsigned int icha1 =0,
+                  unsigned int ncha =0,
+                  std::string datasetCalib ="",
+                  bool savecalib =false,
+                  float vmin = 0.0,
+                  float vmax = 0.0,
+                  unsigned int nv = 0,
+                  double vrmsmax = 1.0,
+                  bool saveperf =false);
 };
 
 #endif

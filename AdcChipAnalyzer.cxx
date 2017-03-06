@@ -24,7 +24,7 @@ using std::map;
 typedef unsigned int Index;
 
 AdcChipAnalyzer::
-AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
+AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool savecalib,
                 float vmin, float vmax, Index nv, double vrmsmax, bool saveperf) {
   string myname = "AdcChipAnalyzer::ctor: ";
   gStyle->SetOptStat(110111);
@@ -91,7 +91,11 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, bool savecalib,
     Index icha = chans[kcha];
     Index ipad = npad ? pads[kcha] : 0;
     if ( npad ) cans[0]->cd(ipad);
-    AdcSampleAnalyzer asa(ssam, icha);
+    AdcSampleAnalyzer asa(ssam, icha, datasetCalib);
+    if ( asa.phc == nullptr ) {
+      cout << myname << "ADC analysis failed." << endl;
+      return;
+    }
     // Create array of voltage responses.
     asa.evaluateVoltageResponses(vmin, vmax, nv);
     // Create efficiency histogram.

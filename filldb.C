@@ -7,6 +7,7 @@ void filldb() {
                             "10", "14", "15", "16", "17", "18",
                             "21", "22", "24", "25", "26", "29",
                             "30", "31", "32", "33", "35" };
+  string datasetCalib;
   bool fillCalTree = true;
   unsigned int nv = 90;
   double vmin = -200.0;
@@ -17,6 +18,6 @@ void filldb() {
     string dataset = "201701b_" + schip;
     cout << endl;
     cout << "*************  " << dataset << "  *****************" << endl;
-    AdcChipAnalyzer chipper(dataset, 0, 16, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);
+    AdcChipAnalyzer chipper(dataset, 0, 16, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);
   }
 }

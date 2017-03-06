@@ -37,6 +37,7 @@ public:
 public:
 
   AdcSampleReader reader;
+  std::string datasetCalib;
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
   unsigned int minCountForStats = 2;
@@ -44,7 +45,8 @@ public:
   TH2* phc = nullptr;   // Vin vs ADC
   TH2* phd = nullptr;   // ADC diff from linear fit
   TH2* phdw = nullptr;  // ADC diff from linear fit with broader range and coarser binning
-  TH2* phn = nullptr;   // ADC diff from fixed-gain
+  TH2* phn = nullptr;   // ADC diff from calibration
+  TH2* phnw = nullptr;  // ADC diff from calibration with broader range and coarser binning
   // Following are the stat histograms. One entry for each ADC code bin.
   // Bins with fewer than minCountForStats entries are recorded as underflows.
   TH1* phm = nullptr;   // Mean ADC diff
@@ -62,8 +64,14 @@ public:
   double vinfitmin = 0.0;    // Min Vin for linear reponse fit
   double vinfitmax = 0.0;    // Max Vin for linear reponse fit
   bool fitusestuck = false;  // If true, classic stuck codes (LSB6=0,63) are excluded from linear response fit.
+  // Nominal calibration.
+  const AdcChannelCalibration* pcalNominal = nullptr;
+  double nomVinPerAdc;
+  double nomped;
+  // Linear fit.
   double fitVinPerAdc;
   double fitped;
+  // Output calibration and response.
   AdcChannelCalibration calib;
   AdcVoltageResponseVector voltageResponses;
   //std::vector<double> voltageEfficiencies;
@@ -72,12 +80,16 @@ public:
   TH1* phvrms = nullptr;   // Mean good RMS vs Vin.
   TGraphAsymmErrors* pgvrms = nullptr;
 
-  // Read in the data.
+  // Read in and process the data using nominal calibration from adatasetCalib.
+  // If the latter is blank, the gain is taken from nomGain.
+  // If that is zero, the gain is obtained from the reader.
+  // In either of the latter two cases, the offset is obtained from the data at ADC=500.
   //  asample - sample name
   //  achan - channel #
+  //  adatasetCalib - Name of the calibration dataset (e.g. "201701b").
   //  maxsam - maximum # samples to read from a waveform (0 for all)
   //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
-  AdcSampleAnalyzer(Name asample, Index achan, Index maxsam =0, double nomGain =0.0);
+  AdcSampleAnalyzer(Name asample, Index achan, Name adatasetCalib ="", Index maxsam =0, double nomGain =0.0);
 
   // Return the id.
   Index chip() const { return reader.chip(); }
@@ -105,6 +117,9 @@ public:
   // Return the ultimate calibration (mean and RMS/sigma) for a bin.
   double calMean(Index iadc) const;
   double calRms(Index iadc) const;
+
+  // Nominal calibration.
+  double vinCalib(Index iadc) const;
 
   // Evaluate voltage responses.
   AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);

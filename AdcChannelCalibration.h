@@ -28,6 +28,10 @@ public:
   using IndexVector = std::vector<Index>;
   using FloatVector = std::vector<Float>;
 
+  // Load an existing calibration from a Root TTree.
+  static const AdcChannelCalibration* find(std::string dataset, AdcChannelId aid);
+  static const AdcChannelCalibration* find(std::string dataset, Index chip, Index chan);
+
   // Ctors.
   AdcChannelCalibration();
   AdcChannelCalibration(AdcChannelId aid);

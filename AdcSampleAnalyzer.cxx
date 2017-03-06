@@ -30,8 +30,9 @@ bool sticky(Index iadc) {
 
 //**********************************************************************
 
-AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double cfac)
+AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib, Index maxsam, double cfac)
 : reader(ssam, chan, maxsam),
+  datasetCalib(adatasetCalib),
   pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0) {
   const string myname = "AdcSampleAnalyzer::ctor: ";
   if ( reader.countTable().size() == 0 ) {
@@ -41,20 +42,20 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   double zmax = 0;
   double dmax = 20;
   Index nd = 40;
-  double ndmax = 10*dmax;
+  double wdmax = 10*dmax;
   double smax = 0.1*dmax;
   double gmin = 1.0;
   double gmax = 4.0;
   double lmin = 0.2;
   double lmax = 0.6;
   Index nadc = reader.nadc();
-  iadcfitmin = nadc==4096 ? 64 : 1;
+  iadcfitmin = nadc==4096 ? 128 : 1;
   iadcfitmax = nadc - 1;
   vinfitmin = 0.0;
   vinfitmax = 1600.0;
   fitusestuck = false;
-  double nomVinPerAdc = cfac == 0.0 ? reader.nomVinPerAdc() : cfac;
-  double nomped = 0.0;
+  nomVinPerAdc = cfac == 0.0 ? reader.nomVinPerAdc() : cfac;
+  nomped = 0.0;
   Index adcmax = nadc;
   Index nvin = reader.nvin();
   Index npadc = 4100*nadc/4096;
@@ -79,7 +80,9 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   string hnamf = hnambase + "fit";
   string hnamc = hnambase + "cor";
   string hnamd = hnambase + "dif";
+  string hnamdw = hnambase + "difw";
   string hnamn = hnambase + "dfn";
+  string hnamnw = hnambase + "dfnw";
   string hnamg = hnambase + "gai";
   string hnaml = hnambase + "lga";
   string hnamm = hnambase + "fmm";
@@ -97,16 +100,17 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
-  phdw = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -10*dmax, 10*dmax);
-  phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -ndmax, ndmax);
+  phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+  phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+  phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
   phm = new TH1F(hnamm.c_str(), stitle.c_str(), npadc, 0, padcmax);
   phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
   phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
-  phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, ndmax);
+  phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
   phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
   phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
   phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
-  vector<TH1*> hists = {phf, phc, phd, phn};
+  vector<TH1*> hists = {phf, phc, phd, phn, phnw};
   for ( TH1* ph : hists ) {
     ph->SetStats(0);
     ph->SetContour(20);
@@ -131,6 +135,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   phm->SetStats(0);
   phd->SetStats(0);
   phdw->SetStats(0);
+  phn->SetStats(0);
+  phnw->SetStats(0);
   phr->SetStats(0);
   phs->SetStats(0);
   phm->SetMaximum(dmax);
@@ -189,27 +195,49 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
   cout << myname << "Fit gain: " << fitVinPerAdc << " mV/ADC, pedestal: " << fitped << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
-  ssdif << "(" << fitVinPerAdc << " ADC + " << fitped << ") - V_{in} [mV]";
+  ssdif << "V_{in} - (" << fitVinPerAdc << " ADC + " << fitped << ") [mV]";
   phd->GetYaxis()->SetTitle(ssdif.str().c_str());
   phdw->GetYaxis()->SetTitle(ssdif.str().c_str());
-  // Find the nominal pedestal.
-  Index adc_nom = 750;
-  nomped = fitped + (fitVinPerAdc - nomVinPerAdc)*adc_nom;
-  cout << myname << "Nominal gain: " << nomVinPerAdc << " mV/ADC, pedestal: " << nomped << " mV" << endl;
-  ostringstream ssdifn;
-  ssdifn.precision(3);
-  ssdifn << "(" << nomVinPerAdc << " ADC + " << nomped << " ) - V_{in} [mV]";
-  phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+  // Find the nominal calibration.
+  // If datasetCalib is set, use its calibration for this channel.
+  // Otherwise, use the gain from the reader and the pedestal from data at ADC = 500.
+  bool useNomGain = datasetCalib.size() == 0;
+  if ( ! useNomGain ) {
+    cout << myname << "Taking nominal calibration from dataset " << datasetCalib << endl;
+    pcalNominal = AdcChannelCalibration::find(datasetCalib, reader.chip(), reader.channel());
+    if ( pcalNominal == nullptr ) {
+      cout << myname << "Nominal calibration not found!" << endl;
+      useNomGain = true;
+    } else {
+      ostringstream ssdifn;
+      ssdifn.precision(3);
+      ssdifn << "V_{in} - V_{in}(" << datasetCalib << ") [mV]";
+      phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+      phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    }
+  }
+  if ( useNomGain ) {
+    Index adc_nom = 500;
+    cout << myname << "Nominal gain taken from reader, offset from data at ADC = " << adc_nom << endl;
+    nomped = fitped + (fitVinPerAdc - nomVinPerAdc)*adc_nom;
+    cout << myname << "Nominal gain: " << nomVinPerAdc << " mV/ADC, pedestal: " << nomped << " mV" << endl;
+    ostringstream ssdifn;
+    ssdifn.precision(3);
+    ssdifn << "V_{in} - (" << nomVinPerAdc << " ADC + " << nomped << ") [mV]";
+    phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
+  }
   // Fill the remaining histograms.
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = reader.vin(ivin);
-      double evin = fitped + iadc*fitVinPerAdc;
-      double evin_nom = nomped + iadc*nomVinPerAdc;
+      double evinLinear = fitped + iadc*fitVinPerAdc;
+      double evinCalib  = vinCalib(iadc);
       Index count = reader.countTable()[iadc][ivin];
-      phd->Fill(iadc, evin - vin, count);
-      phdw->Fill(iadc, evin - vin, count);
-      phn->Fill(iadc, evin_nom - vin, count);
+      phd->Fill( iadc, vin - evinLinear, count);
+      phdw->Fill(iadc, vin - evinLinear, count);
+      phn->Fill( iadc, vin - evinCalib,  count);
+      phnw->Fill(iadc, vin - evinCalib,  count);
     }
   }
   // Fill diff stat histograms.
@@ -226,9 +254,9 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, Index maxsam, double
       xm = ph->GetMean();
       xs = ph->GetRMS();
     }
-    double xm0 = fitVinPerAdc*iadc + fitped;
+    double xmLinear = fitVinPerAdc*iadc + fitped;
     calib.calCounts[iadc] = count;
-    calib.calMeans[iadc] = xm + xm0;
+    calib.calMeans[iadc] = xm + xmLinear;
     calib.calRmss[iadc] = xs;
     bool isStuck = sticky(iadc);
     double xsg = isStuck ? 0 : xs;
@@ -350,6 +378,15 @@ double AdcSampleAnalyzer::calRms(Index iadc) const {
   if ( phs == nullptr ) return 0.0;
   if ( int(iadc) >= phs->GetNbinsX() ) return 0.0;
   return phs->GetBinContent(iadc+1);
+}
+
+//**********************************************************************
+
+double AdcSampleAnalyzer::vinCalib(Index iadc) const {
+  if ( pcalNominal != nullptr ) {
+    return pcalNominal->calMean(iadc);
+  }
+  return nomped + iadc*nomVinPerAdc;
 }
 
 //**********************************************************************

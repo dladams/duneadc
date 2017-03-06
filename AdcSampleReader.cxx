@@ -99,6 +99,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_nadc = 16384;
     isRaw = true;
     m_nomVinPerAdc = 0.1151;
+    m_dvdt = 2400.0/(1.0/0.06);
   } else if ( ssam.substr(0, 10) == "201612_p1-" ) {     // 201612_p1-CB_clkTTT_FFFF_f3X
     string subdir;
     string schp;
@@ -136,29 +137,52 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0;
-  // January 2017. a is the original files, b is after 20feb fix for offsets (chip 6 is now broken)
-  } else if ( ssam.substr(0, 6) == "201701" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
+  // 201701a_CC - January 2017 chip CC original files
+  // 201701b_CC - Same after 20feb fix for offsets (chip 6 is now broken)
+  // 201701c_CC - Same after mod to match feb data (chips 2 and 4 only)
+  // 201702DD_CC - Long-term data taken on day DD for chip CC=02
+  } else if ( ssam.substr(0, 6) == "201701" || ssam.substr(0, 6) == "201702" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
     string subdir;
     string schp;
     string topsubdir;
-    if ( ssam.size() == 10 ) {
-      schp = ssam.substr(8,2);
-      if ( ssam[6] == 'a' ) {
-        topsubdir = "/201701/P1_ADC_Data";
-      } else if ( ssam[6] == 'b' ) {
-        static std::set<string> update_schps_part1 =   {"03", "07", "21", "25", "26", "32", "35"};
-        static std::set<string> update_schps_part2 =   {"17", "22", "29"};
-        static std::set<string> update_schps_missing = {"06"};
-        if        ( update_schps_part1.find(schp) != update_schps_part1.end() ) {
-          topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps";
-        } else if ( update_schps_part2.find(schp) != update_schps_part2.end() ) {
-          topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps_part2";
-        } else if ( update_schps_missing.find(schp) != update_schps_missing.end() ) {
-          cout << myname << "WARNING: Chip 6 is now broken. Using old data." << endl;
+    if ( ssam.substr(0, 6) == "201701" ) {;
+      if ( ssam.size() == 10 ) {
+        m_dataset = ssam.substr(0, 7);
+        schp = ssam.substr(8,2);
+        if ( ssam[6] == 'a' ) {
           topsubdir = "/201701/P1_ADC_Data";
+        } else if ( ssam[6] == 'b' ) {
+          static std::set<string> update_schps_part1 =   {"03", "07", "21", "25", "26", "32", "35"};
+          static std::set<string> update_schps_part2 =   {"17", "22", "29"};
+          static std::set<string> update_schps_missing = {"06"};
+          if        ( update_schps_part1.find(schp) != update_schps_part1.end() ) {
+            topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps";
+          } else if ( update_schps_part2.find(schp) != update_schps_part2.end() ) {
+            topsubdir = "/201701/P1_ADC_Data_update_LN_2Msps_part2";
+          } else if ( update_schps_missing.find(schp) != update_schps_missing.end() ) {
+            cout << myname << "WARNING: Chip 6 is now broken. Using old data." << endl;
+            topsubdir = "/201701/P1_ADC_Data";
+          } else {
+            topsubdir = "/201701/P1_ADC_Data";
+          }
+        } else if ( ssam[6] == 'c' ) {
+          string sday = "01";
+          if ( schp == "02" ) sday = "0119";
+          if ( schp == "04" ) sday = "0124";
+          dirname = m_topdir + "/201702/P1_ADC_Long_Term_Test_Data/P1_S7_" + schp + "_" + sday;
         } else {
-          topsubdir = "/201701/P1_ADC_Data";
+          bad = 1;
         }
+        if ( dirname.size() == 0 ) dirname = m_topdir + topsubdir + "/P1_S7_" + schp;
+      } else {
+        bad = 1;
+      }
+    } else if ( ssam.substr(0, 6) == "201702" ) {
+      if ( ssam.size() == 11 ) {
+        string sday = ssam.substr(4,4);
+        m_dataset = ssam.substr(0, 8);
+        schp = ssam.substr(9,2);
+        dirname = m_topdir + "/201702/P1_ADC_Long_Term_Test_Data/P1_S7_" + schp + "_" + sday;
       } else {
         bad = 1;
       }
@@ -166,8 +190,6 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       bad = 1;
     }
     if ( bad == 0 ) {
-      dirname = m_topdir + topsubdir + "/P1_S7_" + schp;
-      m_dataset = ssam.substr(0, 6);
       istringstream sschp(schp);
       sschp >> m_chip;
       m_vinmin = -300.0;

@@ -10,7 +10,8 @@
 // where code is the ADC code (0-4095) and V and offset are in mV.
 //
 // Full calibrations is calMean(code) with RMS calRms(code). It is based
-// on calCount(code) meausurements with that code.
+// on calCount(code) meausurements with that code. Fraction in the tail
+// of the distribution (e.g. pull > 5) is calTail(code).
 
 
 #ifndef AdcChannelCalibration_H
@@ -49,6 +50,7 @@ public:
   // Full calibration for each ADC code.
   Float calMean(Index code) const;
   Float calRms(Index code) const;
+  Float calTail(Index code) const;
   Index calCount(Index code) const;
 
 public:
@@ -59,6 +61,7 @@ public:
   Float offset;
   FloatVector calMeans;
   FloatVector calRmss;
+  FloatVector calTails;
   IndexVector calCounts;
 
 };

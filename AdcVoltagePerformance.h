@@ -16,6 +16,8 @@
 // where Vres is the input voltage resolution defined as the ultimate
 // resolution for each sample bin. Vres is good if Vres < vuncmax.
 // The lo and hi RMS each include half of the samples that have Vres = <Vres>
+//
+// The calculations of these values are performed in AdcSampleAnalyzer.cxx.
 
 #ifndef AdcVoltagePerformance_H
 #define AdcVoltagePerformance_H

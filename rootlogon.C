@@ -2,6 +2,7 @@
   gSystem->SetBuildDir(".aclic");
   gROOT->ProcessLine(".L palette.cxx+");
   gROOT->ProcessLine(".L EffNBit.cxx+");
+  gROOT->ProcessLine(".L TH1Props.cxx+");
   gROOT->ProcessLine(".L histNSigma.cxx+");
   gROOT->ProcessLine(".L drawNSigma.cxx+");
   gROOT->ProcessLine(".L ErrorCount.cxx+");
@@ -22,6 +23,7 @@
   gROOT->ProcessLine(".L makeplot.cxx+");   // obsolete
   gROOT->ProcessLine(".L drawChipBounds.C");
   gROOT->ProcessLine(".L drawvlimits.C");
+  gROOT->ProcessLine(".L datasetAnalyze.C");
   palette(0);
   int chan = 0;
 }

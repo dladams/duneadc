@@ -54,6 +54,7 @@ public:
   TH2Vector hres;    // Resolution vs. dataset vs. ADC bin
   TH2Vector hresj;   // Resolution vs. dataset vs. ADC bin for jumping bins
   TH2Vector hcnt;    // Sample count vs. dataset vs. ADC bin
+  TH2Vector hcntj;   // Sample count vs. dataset vs. ADC bin for jumping bins.
   // Stats. One entry for each channel.
   IndexVector    chanNLowStat;   // # bins with low stats
   IndexVector  chanNAlwaysBad;   // # bins always bad

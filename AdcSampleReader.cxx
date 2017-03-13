@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include "TSystem.h"
+#include "TH1F.h"
 
 using std::string;
 using std::cout;
@@ -141,7 +142,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
   // 201701b_CC - Same after 20feb fix for offsets (chip 6 is now broken)
   // 201701c_CC - Same after mod to match feb data (chips 2 and 4 only)
   // 201702DD_CC - Long-term data taken on day DD for chip CC=02
-  } else if ( ssam.substr(0, 6) == "201701" || ssam.substr(0, 6) == "201702" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
+  } else if ( ssam.substr(0, 4) == "2017" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
     string subdir;
     string schp;
     string topsubdir;
@@ -186,6 +187,14 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       } else {
         bad = 1;
       }
+    } else if ( ssam.substr(0, 8) == "20170306" ) {        // 20170306_CC
+      m_dataset = ssam.substr(0, 8);
+      schp = ssam.substr(9,2);
+      dirname = m_topdir + "/20170307/P1_ADC_Long_Term_0306/P1_S7_02_1";
+    } else if ( ssam.substr(0, 8) == "20170307" ) {        // 20170307_CC,
+      m_dataset = ssam.substr(0, 8);
+      schp = ssam.substr(9,2);
+      dirname = m_topdir + "/20170307/P1_ADC_Long_Term_0306/P1_S7_02_2";
     } else {
       bad = 1;
     }
@@ -200,6 +209,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       m_dvdt = 200.0;
       m_nomVinPerAdc = 0.34;
     }
+  
   } else {
     bad = 999;
   }
@@ -344,6 +354,30 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
 
 double AdcSampleReader::vin(Index ivin) const {
   return vinmin() + dvin()*ivin;
+}
+
+//**********************************************************************
+
+TH1* AdcSampleReader::histdata(unsigned int idat0, unsigned int ndatin, unsigned int show) {
+  if ( idat0 >= data().size() ) return 0;
+  if ( samplingFrequency() <= 0.0 ) return 0;
+  if ( show < 1 ) return 0;
+  string hname = "hwf";
+  string htitl = "Waveform; t [sec]; ADC code";
+  unsigned int ndat = ndatin;
+  if ( ndat == 0 ) ndat = data().size() - idat0;
+  unsigned int npt = ndat/show;
+  double samper = 1.0/samplingFrequency();
+  double t1 = idat0*samper;
+  double t2 = (idat0+ndat)*samper;
+  TH1* ph = new TH1F(hname.c_str(), htitl.c_str(), npt, t1, t2);
+  ph->SetStats(0);
+  for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
+    unsigned int idat = show*ipt;
+    Code adc = data()[idat];
+    ph->SetBinContent(ipt+1, adc);
+  }
+  return ph;
 }
 
 //**********************************************************************

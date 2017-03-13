@@ -47,11 +47,14 @@ public:
   TH2* phdw = nullptr;  // ADC diff from linear fit with broader range and coarser binning
   TH2* phn = nullptr;   // ADC diff from calibration
   TH2* phnw = nullptr;  // ADC diff from calibration with broader range and coarser binning
+  TH2* phvn = nullptr;  // ADC diff from calibration vs Vin
   // Following are the stat histograms. One entry for each ADC code bin.
   // Bins with fewer than minCountForStats entries are recorded as underflows.
   TH1* phm = nullptr;   // Mean ADC diff
   TH1* phr = nullptr;   // Mean ADC RMS
   TH1* phs = nullptr;   // Mean ADC standard deviation
+  TH1* phsx = nullptr;  // ADC expanded standard deviation (so pull <5)
+  TH1* phst = nullptr;  // Tail fraction for ADC standard deviation
   TH1* phsg = nullptr;  // Mean ADC standard deviation for non-stuck codes
   TH1* phsb = nullptr;  // Mean ADC standard deviation for stuck codes
   TH1* phdn = nullptr;  // Mean ADC nominal RMS distribution
@@ -78,7 +81,10 @@ public:
   AdcVoltagePerformanceVector vperfs;
   TH1* phveff = nullptr;   // Efficiency vs Vin.
   TH1* phvrms = nullptr;   // Mean good RMS vs Vin.
+  TH1* phvtail = nullptr;   // Tail fraction vs Vin.
   TGraphAsymmErrors* pgvrms = nullptr;
+  // Threshold for pull fractions.
+  double pullthresh =5.0;
 
   // Read in and process the data using nominal calibration from adatasetCalib.
   // If the latter is blank, the gain is taken from nomGain.
@@ -92,34 +98,38 @@ public:
   AdcSampleAnalyzer(Name asample, Index achan, Name adatasetCalib ="", Index maxsam =0, double nomGain =0.0);
 
   // Return the id.
+  Name dataset() const { return reader.dataset(); }
   Index chip() const { return reader.chip(); }
   Index channel() const { return reader.channel(); }
 
   // Return the distribution of Vin for an ADC count.
   // This projects phc onto the X axis.
-  TH1* hcalib(unsigned int chan) const;
+  TH1* hcalib(unsigned int iadc) const;
 
   // Return the nominal difference histogram for an ADC count.
   // This is the difference between the actual and common gain values for Vin.
   // This projects phn onto the X axis.
-  TH1* hdiffn(unsigned int chan) const;
+  TH1* hdiffn(unsigned int iadc) const;
 
   // Return the difference histogram for an ADC count.
   // This is the difference between the actual and linear fit for Vin.
   // This projects phd onto the X axis.
-  TH1* hdiff(unsigned int chan) const;
+  TH1* hdiff(unsigned int iadc) const;
 
   // Return the distribution of Vin for an ADC count.
   // This is the same as hdiff except when there are underflows or overflows,
   // it uses the wider range and coarser bins from phdw.
-  TH1* hdiffcalib(unsigned int chan) const;
+  TH1* hdiffcalib(unsigned int iadc) const;
 
   // Return the ultimate calibration (mean and RMS/sigma) for a bin.
   double calMean(Index iadc) const;
   double calRms(Index iadc) const;
+  double calTail(Index iadc) const;
+  double calExpandedRms(Index iadc) const;
 
   // Nominal calibration.
   double vinCalib(Index iadc) const;
+  double rmsCalib(Index iadc) const;
 
   // Evaluate voltage responses.
   AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);
@@ -128,6 +138,9 @@ public:
   // This is the fraction of samples that have RMS < rmsmax for each voltage bin.
   // This adds an entry to vperfs.
   const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax);
+
+  // Overlay efficiency, resolution and tail all vs. Vin.
+  void drawperf(bool dolabtail =false) const;
 
 };
 

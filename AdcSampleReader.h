@@ -18,6 +18,7 @@
 
 #include "FileDirectory.h"
 #include <string>
+class TH1;
 
 class AdcSampleReader {
 
@@ -85,6 +86,10 @@ public:
 
   // Return the low edge of an input voltage bin.
   double vin(Index ivin) const;
+
+  // Return a histogram of the waveform from sample idat to idat+ndat.
+  // Every nshow'th point is shown.
+  TH1* histdata(unsigned int idat =0, unsigned int ndat =0, unsigned int nshow =1);
 
 private:
 

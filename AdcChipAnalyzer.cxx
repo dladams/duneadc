@@ -28,7 +28,8 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
                 float vmin, float vmax, Index nv, double vrmsmax, bool saveperf) {
   string myname = "AdcChipAnalyzer::ctor: ";
   gStyle->SetOptStat(110111);
-  vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
+  vector<string> stypes = {"resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
+  //vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
   //vector<string> stypes = {"fdn", "fdr", "fds", "fdsb"};
   Index maxchan = 16;
   if ( ssam.substr(0,6) == "201610" ) maxchan = 15;
@@ -86,7 +87,6 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
   hsums["fdn"] = nullptr;
   hsums["fdr"] = nullptr;
   hsums["fds"] = nullptr;
-  hsums["fdsb"] = nullptr;
   for ( Index kcha=0; kcha<ncha; ++kcha ) {
     Index icha = chans[kcha];
     Index ipad = npad ? pads[kcha] : 0;
@@ -108,6 +108,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     }
     for ( unsigned int ityp=0; ityp<stypes.size(); ++ityp ) {
       bool addvrms = false;
+      bool drawvrms = false;  // Let ASA draw the performance.
       string stype = stypes[ityp];
       TCanvas* pcan = cans[ityp];
       TVirtualPad* ppad = pcan->cd(ipad);
@@ -119,6 +120,11 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
       if ( stype == "difn" ) ph = asa.phn;
       if ( stype == "frms" ) ph = asa.phr;
       if ( stype == "fsdv" ) ph = asa.phs;
+      if ( stype == "fsdx" ) ph = asa.phsx;
+      if ( stype == "fsdt" ) {
+        ph = asa.phst;
+        ppad->SetLogy();
+      }
       if ( stype == "fsdg" ) ph = asa.phsg;
       if ( stype == "fsdz" ) {
         ph = dynamic_cast<TH1*>(asa.phs->Clone("fsdv"));
@@ -140,8 +146,14 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
         sarg = "h";
         addvrms = true;
       }
+      if ( stype == "veffall" ) {
+        ph = asa.phveff;
+        ppad->SetGridx();
+        sarg = "h";
+        drawvrms = true;
+      }
       if ( ph == nullptr ) continue;
-      if ( dynamic_cast<TH2*>(ph) == nullptr ) ppad->SetRightMargin(0.04);
+      if ( dynamic_cast<TH2*>(ph) == nullptr ) ppad->SetRightMargin(0.05);
       if ( stype == "diff" ||
            stype == "difn" ||
            stype == "fmea" ) {
@@ -152,6 +164,8 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
         pline->Draw();
         string sarg2 = sarg + " same";
         ph->DrawCopy(sarg2.c_str());
+      } else if ( drawvrms ) {
+        asa.drawperf(true);
       } else if ( addvrms ) {
         string hnam = ph->GetName();
         hnam += "_vrms";
@@ -195,9 +209,9 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     phg->Fill(asa.fitVinPerAdc);
     php->Fill(asa.fitped);
     if ( savecalib ) {
-      if ( asa.calib.isValid() && asa.reader.dataset().size() ) {
+      if ( asa.calib.isValid() && asa.dataset().size() ) {
         cout << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
-        string calibName = "calib_" + asa.reader.dataset();
+        string calibName = "calib_" + asa.dataset();
         string fname = calibName + ".root";
         AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
         int istat = calibdb.insert(asa.calib);
@@ -207,9 +221,9 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
       }
     }
     if ( saveperf ) {
-      if ( asa.vperfs.size() && asa.reader.dataset().size() ) {
+      if ( asa.vperfs.size() && asa.dataset().size() ) {
         cout << "Adding channel " << asa.channel() << " to calib DB." << endl;
-        string perfName = "perf_" + asa.reader.dataset();
+        string perfName = "perf_" + asa.dataset();
         string fname = perfName + ".root";
         AdcPerformanceTree perfdb(fname, "adcperf", "UPDATE");
         for ( const AdcVoltagePerformance& vperf : asa.vperfs ) {

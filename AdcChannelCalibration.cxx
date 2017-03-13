@@ -92,6 +92,13 @@ Float AdcChannelCalibration::calRms(Index code) const {
 
 //**********************************************************************
 
+Float AdcChannelCalibration::calTail(Index code) const {
+  if ( code >= calTails.size() ) return -999.0;
+  return calTails[code];
+}
+
+//**********************************************************************
+
 AdcChannelCalibration::Index AdcChannelCalibration::calCount(Index code) const {
   if ( code >= calCounts.size() ) return 0;
   return calCounts[code];

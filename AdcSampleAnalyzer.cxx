@@ -5,6 +5,11 @@
 #include <iostream>
 #include <sstream>
 #include "TH2F.h"
+#include "TH1Props.h"
+#include "TCanvas.h"
+#include "TLatex.h"
+#include "TLegend.h"
+#include "TLine.h"
 
 using std::string;
 using std::cout;
@@ -83,10 +88,13 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   string hnamdw = hnambase + "difw";
   string hnamn = hnambase + "dfn";
   string hnamnw = hnambase + "dfnw";
+  string hnamvn = hnambase + "vdfn";
   string hnamg = hnambase + "gai";
   string hnaml = hnambase + "lga";
   string hnamm = hnambase + "fmm";
   string hnams = hnambase + "fms";
+  string hnamsx = hnambase + "fmsx";
+  string hnamst = hnambase + "fmst";
   string hnamsg = hnambase + "fmsg";
   string hnamsb = hnambase + "fmsb";
   string hnamr = hnambase + "fmr";
@@ -96,33 +104,43 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   string hnamdsb = hnambase + "fmdsb";
   string stitlr = stitle + " fit RMS";
   string stitls = stitle + " fit sigma";
+  string stitlsx = stitle + " expanded fit sigma";
+  string stitlst = stitle + " fit sigma tail";
   string stitldsb = stitle + " stuck";
+  Index nvinperf = 80;
+  double vinperfmin = 0.0;
+  double vinperfmax = 1600.0;
   phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
   phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
   phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
   phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+  phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
   phm = new TH1F(hnamm.c_str(), stitle.c_str(), npadc, 0, padcmax);
   phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
   phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
+  phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
+  phst = new TH1F(hnamst.c_str(), stitlst.c_str(), npadc, 0, padcmax);
   phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
   phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
   phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
   phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
-  vector<TH1*> hists = {phf, phc, phd, phn, phnw};
+  vector<TH1*> hists = {phf, phc, phd, phn, phnw, phvn};
   for ( TH1* ph : hists ) {
     ph->SetStats(0);
     ph->SetContour(20);
     if ( zmax > 0 ) ph->SetMaximum(zmax); 
     ph->GetXaxis()->SetTitle("ADC count");
     ph->SetLineWidth(2);
+    ph->SetBit(TH1::kIsNotW);    // Turn off weights.
   }
   vector<TH1*> dhists = {phdn, phdr, phds, phdsb, phdw};
   for ( TH1* ph : dhists ) {
     //ph->SetStats(0);
     ph->GetYaxis()->SetTitle("# ADC bins");
     ph->SetLineWidth(2);
+    ph->SetBit(TH1::kIsNotW);    // Turn off weights.
   }
   phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
   phdr->GetXaxis()->SetTitle("RMS [mV]");
@@ -132,19 +150,28 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   phm->GetYaxis()->SetTitle("V_{in} diff mean [mV]");
   phr->GetYaxis()->SetTitle("V_{in} diff RMS [mV]");
   phs->GetYaxis()->SetTitle("V_{in} diff standard deviation [mV]");
+  phsx->GetYaxis()->SetTitle("V_{in} diff expanded standard deviation [mV]");
+  phst->GetYaxis()->SetTitle("Tail fraction");
   phm->SetStats(0);
   phd->SetStats(0);
   phdw->SetStats(0);
   phn->SetStats(0);
   phnw->SetStats(0);
+  phvn->SetStats(0);
   phr->SetStats(0);
   phs->SetStats(0);
+  phsx->SetStats(0);
+  phst->SetStats(0);
   phm->SetMaximum(dmax);
   phm->SetMinimum(-dmax);
   phr->SetMaximum(dmax);
   phr->SetMinimum(0.0);
   phs->SetMaximum(0.1*dmax);
+  phsx->SetMaximum(0.1*dmax);
+  phst->SetMaximum(1.0);
   phs->SetMinimum(0.0);
+  phsx->SetMinimum(0.0);
+  phst->SetMinimum(1.e-6);
   phsg = dynamic_cast<TH1*>(phs->Clone(hnamsg.c_str()));
   phsb = dynamic_cast<TH1*>(phs->Clone(hnamsb.c_str()));
   double countPerVinBin = double(nsample)/nadc;
@@ -214,6 +241,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
       ssdifn << "V_{in} - V_{in}(" << datasetCalib << ") [mV]";
       phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
       phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
+      phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
     }
   }
   if ( useNomGain ) {
@@ -226,44 +254,58 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
     ssdifn << "V_{in} - (" << nomVinPerAdc << " ADC + " << nomped << ") [mV]";
     phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
     phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
   }
   // Fill the remaining histograms.
+  vector<Index> nsamtot;
+  vector<Index> nsamkeep;
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
+    double evinCalib  = vinCalib(iadc);
+    double ermsCalib  = rmsCalib(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = reader.vin(ivin);
       double evinLinear = fitped + iadc*fitVinPerAdc;
-      double evinCalib  = vinCalib(iadc);
       Index count = reader.countTable()[iadc][ivin];
       phd->Fill( iadc, vin - evinLinear, count);
       phdw->Fill(iadc, vin - evinLinear, count);
       phn->Fill( iadc, vin - evinCalib,  count);
       phnw->Fill(iadc, vin - evinCalib,  count);
+      if ( ermsCalib < 1.0 ) phvn->Fill(vin, vin - evinCalib,  count);
     }
   }
   // Fill diff stat histograms.
   calib.calMeans.resize(nadc);
   calib.calRmss.resize(nadc);
   calib.calCounts.resize(nadc);
+  calib.calTails.resize(nadc);
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     TH1* ph = hdiffcalib(iadc);
     if ( ph == nullptr ) continue;
     double xm = -99999.;
     double xs = -99.;
+    double xsx = -99.;
     unsigned int count = ph->Integral();
+    double tailfrac = 0.0;
     if ( count >= minCountForStats ) {
       xm = ph->GetMean();
       xs = ph->GetRMS();
+      TH1Props hp(ph);
+      xsx = hp.expandedRMS(pullthresh);
+      tailfrac = hp.tailFrac(pullthresh);
     }
     double xmLinear = fitVinPerAdc*iadc + fitped;
     calib.calCounts[iadc] = count;
     calib.calMeans[iadc] = xm + xmLinear;
     calib.calRmss[iadc] = xs;
+    calib.calTails[iadc] = tailfrac;
     bool isStuck = sticky(iadc);
     double xsg = isStuck ? 0 : xs;
     double xsb = !isStuck ? 0 : xs;
     double xr = sqrt(xm*xm+xs*xs);
     phm->SetBinContent(iadc+1, xm);
     phs->SetBinContent(iadc+1, xs);
+    phsx->SetBinContent(iadc+1, xsx);
+    phst->SetBinContent(iadc+1, tailfrac);
     phsg->SetBinContent(iadc+1, xsg);
     phsb->SetBinContent(iadc+1, xsb);
     phr->SetBinContent(iadc+1, xr);
@@ -317,6 +359,7 @@ TH1* AdcSampleAnalyzer::hdiff(Index iadc) const {
   sshtitl << phd->GetTitle() << " bin " << iadc;
   string shtitl = sshtitl.str();
   ph->SetTitle(shtitl.c_str());
+  ph->SetLineWidth(2);
   return ph;
 }
 
@@ -333,6 +376,7 @@ TH1* AdcSampleAnalyzer::hdiffn(Index iadc) const {
   sshtitl << phn->GetTitle() << " bin " << iadc;
   string shtitl = sshtitl.str();
   ph->SetTitle(shtitl.c_str());
+  ph->SetLineWidth(2);
   return ph;
 }
 
@@ -353,6 +397,7 @@ TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
     sshtitl << phdw->GetTitle() << " bin " << iadc;
     string shtitl = sshtitl.str();
     ph->SetTitle(shtitl.c_str());
+    ph->SetLineWidth(2);
   }
   if ( zeroerrs ) {
     for ( int ich=0; ich<=ph->GetNbinsX()+1; ++ich ) {
@@ -382,11 +427,36 @@ double AdcSampleAnalyzer::calRms(Index iadc) const {
 
 //**********************************************************************
 
+double AdcSampleAnalyzer::calExpandedRms(Index iadc) const {
+  if ( phsx == nullptr ) return 0.0;
+  if ( int(iadc) >= phsx->GetNbinsX() ) return 0.0;
+  return phsx->GetBinContent(iadc+1);
+}
+
+//**********************************************************************
+
+double AdcSampleAnalyzer::calTail(Index iadc) const {
+  if ( phst == nullptr ) return 0.0;
+  if ( int(iadc) >= phst->GetNbinsX() ) return 0.0;
+  return phst->GetBinContent(iadc+1);
+}
+
+//**********************************************************************
+
 double AdcSampleAnalyzer::vinCalib(Index iadc) const {
   if ( pcalNominal != nullptr ) {
     return pcalNominal->calMean(iadc);
   }
   return nomped + iadc*nomVinPerAdc;
+}
+
+//**********************************************************************
+
+double AdcSampleAnalyzer::rmsCalib(Index iadc) const {
+  if ( pcalNominal != nullptr ) {
+    return pcalNominal->calRms(iadc);
+  }
+  return 0.0;
 }
 
 //**********************************************************************
@@ -449,7 +519,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
   double v2 = voltageResponses[nvr-1].vmax;
   vperfs.emplace_back(chip(), channel(), rmsmax, nvr, v1, v2);
   AdcVoltagePerformance& vperf = vperfs.back();
-  // Create efficiency hisogram.
+  // Create efficiency histogram.
   ostringstream sshnam;
   sshnam << "hveff" << rmsmax;
   string shnam = sshnam.str();
@@ -480,6 +550,22 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
   phvrms->SetMinimum(0.0);
   phvrms->SetMaximum(1.03);
   phvrms->SetLineWidth(2);
+  // Create tail histogram.
+  sshnam.str("");
+  sshnam << "hvtail" << rmsmax;
+  shnam = sshnam.str();
+  sstitl.str("");
+  sstitl << phc->GetTitle();
+  sstitl << " tail fraction for RMS < " << rmsmax << " mV";
+  sstitl << ";V_{in} [mV]";
+  sstitl << ";Tail fraction";
+  stitl = sstitl.str();
+  for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
+  phvtail = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
+  phvtail->SetStats(0);
+  phvtail->SetMinimum(1.e-6);
+  phvtail->SetMaximum(1.0);
+  phvtail->SetLineWidth(2);
   // Fill voltage performance and histograms.
   double dv = (v2 - v1)/nvr;
   double dvhalf = 0.5*dv;
@@ -502,7 +588,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
     double drmslo2Sum = 0.0;
     double drmshi2Sum = 0.0;
     double rmsMean = 0.0;
-    // Loop twice finding the mean on the first pass.
+    double tailFracSum = 0.0;
+    // Loop twice over ADC bins finding the mean on the first pass.
     for ( int haveMean=0; haveMean<2; ++haveMean ) {
       for ( unsigned int iadc=iadc1; iadc<iadc2; ++iadc ) {
         count += avr.count(iadc);
@@ -513,6 +600,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
             eff += frac;
             rmsSum += frac*rms;
             rms2Sum += frac*rms*rms;
+            double tailFrac = calTail(iadc);
+            tailFracSum += frac*tailFrac;
           } else {
             double drms = rms - rmsMean;
             double drms2 = drms*drms;
@@ -551,6 +640,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
     phveff->SetBinError(ivr+1, deff);
     phvrms->SetBinContent(ivr+1, rmsMean);
     phvrms->SetBinError(ivr+1, rmsRms);
+    phvtail->SetBinContent(ivr+1, tailFracSum);
     gx[ivr] = v1 + dvhalf + ivr*dv;
     gy[ivr] = rmsMean;
     geylo[ivr] = rmsRmslo;
@@ -559,6 +649,79 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
   pgvrms = new TGraphAsymmErrors(nvr, &gx[0], &gy[0], &gexlo[0], &gexhi[0], &geylo[0], &geyhi[0]);
   pgvrms->SetLineWidth(2);
   return vperf.vinEffs;
+}
+
+//**********************************************************************
+
+void AdcSampleAnalyzer::drawperf(bool dolabtail) const {
+  if ( phveff == nullptr ) return;
+  if ( phvtail == nullptr ) return;
+  if ( pgvrms == nullptr ) return;
+  TH1* ph = phveff;
+  string hnam;
+  // Build scaled tail plot.
+  hnam = phvtail->GetName();
+  hnam += "_scaled";
+  TH1* phts = dynamic_cast<TH1*>(phvtail->Clone(hnam.c_str()));
+  int tcol = 46;
+  phts->SetLineColor(0);
+  phts->SetFillColor(tcol);
+  phts->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
+  for ( int bin=1; bin<=phts->GetNbinsX(); ++bin ) {
+    double val = phvtail->GetBinContent(bin);
+    double sval = val > 0.0 ? 0.6 + 0.1*log10(val) : 0.0;
+    phts->SetBinContent(bin, sval);
+    phts->SetBinError(bin, 0.0);
+  }
+  // Build labels for the tail plot.
+  double x1 = phts->GetXaxis()->GetXmin();
+  double x2 = phts->GetXaxis()->GetXmax();
+  double xlab = x2 + 0.010*(x2-x1);
+  double dylab = -0.005;
+  vector<TLatex*> labs;
+  labs.push_back(new TLatex(xlab, 0.0+dylab, "10^{-6}"));
+  labs.push_back(new TLatex(xlab, 0.2+dylab, "10^{-4}"));
+  labs.push_back(new TLatex(xlab, 0.4+dylab, "10^{-2}"));
+  double xtitl = x2 + 0.09*(x2-x1);
+  double ytitl = 0.1;
+  TLatex* pttitl = new TLatex(xtitl, ytitl, "Tail fraction");
+  pttitl->SetTextAngle(90);
+  pttitl->SetTextFont(42);
+  pttitl->SetTextSize(0.04);
+  pttitl->SetTextColor(tcol);
+  // Clone and draw efficiency.
+  hnam = ph->GetName();
+  hnam += "_vrms_vtail";
+  TH1* phax = dynamic_cast<TH1*>(ph->Clone(hnam.c_str()));
+  string ylab = phax->GetYaxis()->GetTitle();
+  ylab += ", V_{in} resolution [mV]";
+  phax->GetYaxis()->SetTitle(ylab.c_str());
+  phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
+  //TCanvas* pcan = new TCanvas;
+  gPad->SetGridx();
+  gPad->SetGridy();
+  phax->DrawCopy("h");
+  // Add labels for tail fraction.
+  for ( TLatex* plab : labs ) {
+    plab->SetTextSize(0.035);
+    plab->SetTextFont(42);
+    plab->SetTextColor(tcol);
+    plab->Draw();
+  }
+  if ( dolabtail ) pttitl->Draw();
+  // Add tail, eff again and rms.
+  phts->DrawCopy("same");
+  phax->DrawCopy("hist same");
+  pgvrms->Draw("Z");
+  TLegend* pleg = new TLegend(0.3, 0.73, 0.45, 0.87);
+  pleg->SetBorderSize(0);
+  pleg->SetFillStyle(0);
+  pleg->AddEntry(phax, "Efficiency", "l");
+  pleg->AddEntry(pgvrms, "Resolution", "le");
+  pleg->AddEntry(phts, "Tail fraction", "f");
+  pleg->Draw();
+  TLine* pline = new TLine(x1, 0.0, x2, 0.0);
+  pline->Draw();
 }
 
 //**********************************************************************

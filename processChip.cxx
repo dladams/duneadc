@@ -151,9 +151,9 @@ void processChip(string ssam, Index icha1, Index ncha, bool savecalib) {
     phg->Fill(asa.fitVinPerAdc);
     php->Fill(asa.fitped);
     if ( savecalib ) {
-      if ( asa.calib.isValid() && asa.reader.dataset().size() ) {
+      if ( asa.calib.isValid() && asa.dataset().size() ) {
         cout << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
-        string calibName = "calib_" + asa.reader.dataset();
+        string calibName = "calib_" + asa.dataset();
         string fname = calibName + ".root";
         AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
         int istat = calibdb.insert(asa.calib);

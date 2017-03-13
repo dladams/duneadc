@@ -48,6 +48,7 @@ AdcDatasetAnalyzer(const NameVector& adsts, Index achip, Index aibin1, Index aib
   hres.resize(maxchan, nullptr);
   hresj.resize(maxchan, nullptr);
   hcnt.resize(maxchan, nullptr);
+  hcntj.resize(maxchan, nullptr);
   chanNLowStat.resize(maxchan, 0);
   chanNAlwaysBad.resize(maxchan, 0);
   chanNAlwaysGood.resize(maxchan, 0);
@@ -66,7 +67,7 @@ int AdcDatasetAnalyzer::fill(Index chan) {
     Name dst = dsts[idst];
     AdcChannelCalibrationPtr pcal(AdcChannelCalibration::find(dst, chip, chan));
     if ( pcal == nullptr ) {
-      cout << myname << "Unable to find calibration for " << dst << " channel " << chan << endl;
+      cout << myname << "Unable to find calibration for " << dst << " chip " << chip << " channel " << chan << endl;
       return 3;
     }
     cals[idst] = std::move(pcal);
@@ -89,15 +90,15 @@ int AdcDatasetAnalyzer::fill(Index chan) {
   sshtitl.str("");
   sshname << "hcnt_" << chip << "_" << chan << "_" << ibin1 << "_" << ibin2;
   sshtitl << "ADC bin count for all bins: chip " << chip << " channel " << chan;
-  sshtitl << ";ADC bin; Dataset; # samples";
-  hname = sshname.str();
-  htitl = sshtitl.str();
-  TH2* phc = new TH2F(hname.c_str(), htitl.c_str(), 4100, 0, 4100, ndst, 0, ndst);
+  sshtitl << ";ADC bin; Dataset; log_{10}(# samples)";
+  string hnamec = sshname.str();
+  string htitlc = sshtitl.str();
+  TH2* phc = new TH2F(hnamec.c_str(), htitlc.c_str(), 4100, 0, 4100, ndst, 0, ndst);
   hcnt[chan] = phc;
   phc->SetContour(20);
   phc->SetStats(0);
   phc->SetMinimum(0.0);
-  phc->SetMaximum(10000);
+  phc->SetMaximum(5);
   phc->GetYaxis()->SetLabelSize(0.05);
   phr->GetYaxis()->SetLabelSize(0.05);
   for ( unsigned int idst=0; idst<ndst; ++idst ) {
@@ -115,7 +116,7 @@ int AdcDatasetAnalyzer::fill(Index chan) {
       const AdcChannelCalibrationPtr& pcal = cals[idst];
       unsigned short cnt = pcal->calCount(ibin);
       float res = pcal->calRms(ibin);
-      phc->SetBinContent(bin, cnt);
+      if ( cnt > 0 ) phc->SetBinContent(bin, log10(cnt));
       if ( res > 0.0 && cnt > 100 ) {     // res < 0 is insufficient stats
         phr->SetBinContent(bin, res);
         if ( resLast > 0.0 ) {
@@ -148,24 +149,37 @@ int AdcDatasetAnalyzer::fill(Index chan) {
     string::size_type ipos = htitl.find("all");
     htitl.replace(ipos, 3, "jumping");
     TH2* phj = new TH2F(hname.c_str(), htitl.c_str(), njmp, 0, njmp, ndst, 0, ndst);
+    hnamec.replace(0, 4, "hresj");
+    ipos = htitlc.find("all");
+    htitlc.replace(ipos, 3, "jumping");
+    TH2* phcj = new TH2F(hnamec.c_str(), htitlc.c_str(), njmp, 0, njmp, ndst, 0, ndst);
     hresj[chan] = phj;
+    hcntj[chan] = phcj;
     phj->GetXaxis()->SetLabelSize(0.05);
+    phcj->GetXaxis()->SetLabelSize(0.05);
     for ( unsigned int ijmp=0; ijmp<njmp; ++ijmp ) {
       ostringstream ssbin;
       ssbin << jumpbins[ijmp];
       string sbin = ssbin.str();
       phj->GetXaxis()->SetBinLabel(ijmp+1, sbin.c_str());
+      phcj->GetXaxis()->SetBinLabel(ijmp+1, sbin.c_str());
     }
     if ( njmp > 40 ) phj->GetXaxis()->LabelsOption("v");
     phj->GetYaxis()->SetLabelSize(0.05);
+    phcj->GetYaxis()->SetLabelSize(0.05);
     //phj->GetYaxis()->SetTitle("");
     for ( unsigned int idst=0; idst<ndst; ++idst ) {
       phj->GetYaxis()->SetBinLabel(idst+1, dsts[idst].c_str());
+      phcj->GetYaxis()->SetBinLabel(idst+1, dsts[idst].c_str());
     }
     phj->SetContour(20);
     phj->SetStats(0);
     phj->SetMinimum(0.0);
     phj->SetMaximum(1.2);
+    phcj->SetContour(20);
+    phcj->SetStats(0);
+    phcj->SetMinimum(0.0);
+    phcj->SetMaximum(5);
     for ( unsigned int ijmp=0; ijmp<njmp; ++ijmp ) {
       unsigned int ibin = jumpbins[ijmp];
       if ( dbg ) cout << myname << "Bin " << ibin << endl;
@@ -173,6 +187,8 @@ int AdcDatasetAnalyzer::fill(Index chan) {
         const AdcChannelCalibrationPtr& pcal = cals[idst];
         unsigned int bin = phj->GetBin(ijmp+1, idst+1);
         float res = pcal->calRms(ibin);
+        unsigned short cnt = pcal->calCount(ibin);
+        if ( cnt > 0 ) phcj->SetBinContent(bin, log10(cnt));
         if ( dbg ) cout << myname << "  Count " << pcal->calCount(ibin) << endl;
         if ( res > 0.0 ) {
           phj->SetBinContent(bin, res);
@@ -192,6 +208,7 @@ void AdcDatasetAnalyzer::draw(Name name, Index chan) {
   if ( name == "res" )  ph = hres[chan];
   if ( name == "resj" ) ph = hresj[chan];
   if ( name == "cnt" )  ph = hcnt[chan];
+  if ( name == "cntj" ) ph = hcntj[chan];
   if ( ph == nullptr ) return;
   ostringstream sscname;
   sscname << name << "dst_" << chip << "_" << chan;

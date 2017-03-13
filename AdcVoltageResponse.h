@@ -5,6 +5,7 @@
 //
 // Class that records the ADC response to an input voltage range:
 //    vmin <= Vin < vmax
+// The response is the fraction of samples that fall into each ADC bin.
 
 #ifndef AdcVoltageResponse_H
 #define AdcVoltageResponse_H

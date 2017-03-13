@@ -134,7 +134,7 @@ public:
   // Evaluate voltage responses.
   AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);
 
-  // Evaluate the voltage efficiencies.
+  // Evaluate the expected performance.
   // This is the fraction of samples that have RMS < rmsmax for each voltage bin.
   // This adds an entry to vperfs.
   const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax);

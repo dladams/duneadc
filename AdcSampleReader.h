@@ -85,7 +85,10 @@ public:
   const CodeVector& data() const { return m_data; }
 
   // Return the low edge of an input voltage bin.
-  double vin(Index ivin) const;
+  double vinLow(Index ivin) const;
+
+  // Return the center of an input voltage bin.
+  double vinCenter(Index ivin) const;
 
   // Return a histogram of the waveform from sample idat to idat+ndat.
   // Every nshow'th point is shown.

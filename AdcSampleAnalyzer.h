@@ -85,6 +85,7 @@ public:
   TGraphAsymmErrors* pgvrms = nullptr;
   // Threshold for pull fractions.
   double pullthresh =5.0;
+  bool evaluateReadData =false;   // Flag indicating if data was read for performance evaluation.
 
   // Read in and process the data using nominal calibration from adatasetCalib.
   // If the latter is blank, the gain is taken from nomGain.
@@ -134,10 +135,13 @@ public:
   // Evaluate voltage responses.
   AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);
 
-  // Evaluate the expected performance.
-  // This is the fraction of samples that have RMS < rmsmax for each voltage bin.
+  // Evaluate the expected performance including
+  //   efficiency = the fraction of samples that have RMS < rmsmax for each voltage bin.
+  //   resolution = expected or actual deviation between input voltage and its calibration
+  //   tail fraction = expected or actual fraction of samples with pull > 5.0
   // This adds an entry to vperfs.
-  const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax);
+  // If readData is true, the data is reread and used to calculate resolution and tail fraction
+  const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax, bool readData);
 
   // Overlay efficiency, resolution and tail all vs. Vin.
   void drawperf(bool dolabtail =false) const;

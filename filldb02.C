@@ -1,9 +1,13 @@
 void filldb02() {
   vector<string> schips = {"02", "04"};
-  //vector<string> sdays = {"jan", "16", "17", "18", "19", "20", "21", "22", "23"};
-  //vector<string> sdays = {"16"}; // For reference
-  vector<string> sdays = {"janb"}; // For reference
+#if 1
+  //vector<string> sdays = {"jan"}; // For reference
+  vector<string> sdays = {"16"}; // For reference
+  string datasetCalib;
+#else
+  vector<string> sdays = {"jan", "16", "17", "18", "19", "20", "21", "22", "23"};
   string datasetCalib = "20170216ref";
+#endif
   bool fillCalTree = true;
   unsigned int nv = 90;
   double vmin = -200.0;

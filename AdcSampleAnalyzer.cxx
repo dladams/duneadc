@@ -189,7 +189,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   Index nskip = 0;
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
-      double vin = reader.vin(ivin);
+      double vin = reader.vinCenter(ivin);
       Index count = reader.countTable()[iadc][ivin];
       phc->Fill(iadc, vin, count);
       //if ( iadc == 500 && ivin < 700) cout << myname << "XXX: " << iadc << ", " << vin << ": " << count << endl;
@@ -263,7 +263,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
     double evinCalib  = vinCalib(iadc);
     double ermsCalib  = rmsCalib(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
-      double vin = reader.vin(ivin);
+      double vin = reader.vinCenter(ivin);
       double evinLinear = fitped + iadc*fitVinPerAdc;
       Index count = reader.countTable()[iadc][ivin];
       phd->Fill( iadc, vin - evinLinear, count);
@@ -508,7 +508,8 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
 //**********************************************************************
 
 const FloatVector&
-AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
+AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
+  evaluateReadData = readData;
   static FloatVector empty;
   const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
   unsigned int nvr = voltageResponses.size();
@@ -575,61 +576,136 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
   FloatVector gexhi(nvr, dvhalf);
   FloatVector geylo(nvr, 0.0);
   FloatVector geyhi(nvr, 0.0);
+  Index ictvin = 0;                 // Voltage index for the reader count table
+  Index nctvin = reader.nvin();     // Maximum voltage index for the reader count table
+  // Loop over performance voltage bins.
   for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
     AdcVoltageResponse& avr = voltageResponses[ivr];
+    double vin1 = avr.vmin;
+    double vin2 = avr.vmax;
     Index iadc1 = avr.bin0;
     Index iadc2 = iadc1 + avr.fractions.size();
+    double countSum = 0.0;
     double eff = 0.0;
-    double count = 0.0;
-    double rmsSum = 0.0;
-    double rms2Sum = 0.0;
-    double losum = 0.0;
-    double hisum = 0.0;
-    double drmslo2Sum = 0.0;
-    double drmshi2Sum = 0.0;
     double rmsMean = 0.0;
-    double tailFracSum = 0.0;
-    // Loop twice over ADC bins finding the mean on the first pass.
-    for ( int haveMean=0; haveMean<2; ++haveMean ) {
-      for ( unsigned int iadc=iadc1; iadc<iadc2; ++iadc ) {
-        count += avr.count(iadc);
-        double rms = calRms(iadc);
-        if ( rms >= 0.0 && rms < rmsmax ) {      // RMS < 0 is uncalibrated bin treated here as bad
-          double frac = avr.fraction(iadc);
-          if ( ! haveMean ) {
-            eff += frac;
-            rmsSum += frac*rms;
-            rms2Sum += frac*rms*rms;
-            double tailFrac = calTail(iadc);
-            tailFracSum += frac*tailFrac;
-          } else {
-            double drms = rms - rmsMean;
-            double drms2 = drms*drms;
-            if ( drms < 0.0 ) {
-              losum += frac;
-              drmslo2Sum += frac*drms2;
-            } else if ( drms > 0.0 ) {
-              hisum += frac;
-              drmshi2Sum += frac*drms2;
+    double rmsRms = 0.0;
+    double rmsRmslo = 0.0;
+    double rmsRmshi = 0.0;
+    double tailFrac = 0.0;
+    // Evaluate efficiency, resolution and tail fraction using the input data.
+    if ( readData ) {
+      bool remhist = true;
+      double effSum = 0.0;
+      double devSum = 0.0;
+      double dev2Sum = 0.0;
+      ostringstream sshnam;
+      sshnam << "hdvin2_" << ivr;
+      string shnam = sshnam.str();
+      TH1* phdvin2 = new TH1F(shnam.c_str(), "", 1000, 0, 1.0);   // Histogram used to get RMS and RMS extent
+      if ( remhist ) phdvin2->SetDirectory(0);
+      double tailFracSum = 0.0;
+      // Skip reader voltage bins below the current range.
+      while ( reader.vinCenter(ictvin) < vin1 && ictvin < nctvin ) ++ictvin;
+      // Loop over reader voltage bins in the current range.
+      while ( reader.vinCenter(ictvin) < vin2 && ictvin < nctvin ) {
+        double vinTrue = reader.vinCenter(ictvin);
+        if ( vinTrue >= vin2 ) break;    // We have reached the next voltage bin.
+        // Loop over reader ADC bins.
+        for ( Index iadc=0; iadc<reader.countTable().size(); ++iadc ) {
+          Index count = reader.countTable()[iadc][ictvin];
+          if ( count == 0 ) continue;
+          countSum += count;
+          double vinMeasured = calMean(iadc);
+          double rmsMeasured = calRms(iadc);
+          double dvin = vinMeasured - vinTrue;
+          double dvin2 = dvin*dvin;
+          double apull = fabs(dvin/rmsMeasured);
+          if ( rmsMeasured >= 0.0 && rmsMeasured < rmsmax ) {      // RMS < 0 is uncalibrated bin treated here as bad
+            //phdvin2->Fill(dvin2, count);
+            phdvin2->Fill(rmsMeasured, count);
+            effSum += count;
+            devSum += count*dvin;
+            dev2Sum += count*dvin2;
+            if ( apull > 5.0 ) tailFracSum += count;
+          }
+        }
+        ++ictvin;
+      }
+      if ( effSum > 0.0 ) {
+        double sum = 0.0;
+        double dvin2_10 = 0.0;
+        double dvin2_90 = 0.0;
+        for ( int bin=0; bin<phdvin2->GetNbinsX()+1; ++bin ) {
+          sum += phdvin2->GetBinContent(bin);
+          double x = phdvin2->GetXaxis()->GetBinCenter(bin);
+          if ( sum <= 0.1*effSum ) dvin2_10 = x;
+          if ( sum <= 0.9*effSum ) dvin2_90 = x;
+        }
+        eff = effSum/countSum;
+        double devMean = devSum/effSum;
+        double dev2Mean = dev2Sum/effSum;
+        double diff = dev2Mean - devMean*devMean;
+        if ( diff < 0.0 ) diff = 0.0;
+        rmsMean = sqrt(diff);
+        rmsRms = phdvin2->GetMean();     // Store the expected mean RMS
+        rmsRmslo = rmsMean - dvin2_10;
+        rmsRmshi = dvin2_90 - rmsMean;
+        tailFrac = tailFracSum/effSum;
+      }
+      if ( remhist ) delete phdvin2;
+    // Evaluate efficiency, resolution and tail fraction using the calibration.
+    } else {
+      double rmsSum = 0.0;
+      double rms2Sum = 0.0;
+      double losum = 0.0;
+      double hisum = 0.0;
+      double drmslo2Sum = 0.0;
+      double drmshi2Sum = 0.0;
+      // Loop twice over ADC bins finding the mean on the first pass.
+      for ( int haveMean=0; haveMean<2; ++haveMean ) {
+        for ( unsigned int iadc=iadc1; iadc<iadc2; ++iadc ) {
+          countSum += avr.count(iadc);
+          double rms = calRms(iadc);
+          if ( rms >= 0.0 && rms < rmsmax ) {      // RMS < 0 is uncalibrated bin treated here as bad
+            double frac = avr.fraction(iadc);
+            if ( ! haveMean ) {
+              eff += frac;
+              rmsSum += frac*rms;
+              rms2Sum += frac*rms*rms;
+              double tFrac = calTail(iadc);
+              tailFrac += frac*tFrac;
             } else {
-              double wt = 0.5*frac;
-              losum += wt;
-              hisum += wt;
-              drmslo2Sum += wt*drms2;
-              drmshi2Sum += wt*drms2;
+              double drms = rms - rmsMean;
+              double drms2 = drms*drms;
+              if ( drms < 0.0 ) {
+                losum += frac;
+                drmslo2Sum += frac*drms2;
+              } else if ( drms > 0.0 ) {
+                hisum += frac;
+                drmshi2Sum += frac*drms2;
+              } else {
+                double wt = 0.5*frac;
+                losum += wt;
+                hisum += wt;
+                drmslo2Sum += wt*drms2;
+                drmshi2Sum += wt*drms2;
+              }
             }
           }
         }
+        if ( ! haveMean ) {
+          rmsMean = eff > 0.0 ? rmsSum/eff : 0.0;
+        } else {
+          double rms2Mean = eff > 0.0 ? rms2Sum/eff : 0.0;
+          double diff = rms2Mean - rmsMean*rmsMean;
+          if ( diff < 0.0 ) diff = 0.0;
+          rmsRms = sqrt(diff);
+          rmsRmslo = losum > 0 ? sqrt(drmslo2Sum/losum) : 0.0;
+          rmsRmshi = hisum > 0 ? sqrt(drmshi2Sum/hisum) : 0.0;
+        }
       }
-      if ( ! haveMean ) rmsMean = eff > 0.0 ? rmsSum/eff : 0.0;
     }
-    double rms2Mean = eff > 0.0 ? rms2Sum/eff : 0.0;
-    double diff = rms2Mean - rmsMean*rmsMean;
-    if ( diff < 0.0 ) diff = 0.0;
-    double rmsRms = sqrt(diff);
-    double rmsRmslo = losum > 0 ? sqrt(drmslo2Sum/losum) : 0.0;
-    double rmsRmshi = hisum > 0 ? sqrt(drmshi2Sum/hisum) : 0.0;
-    vperf.vinCounts[ivr] = count;
+    vperf.vinCounts[ivr] = countSum;
     vperf.vinEffs[ivr] = eff;
     vperf.vinResMeans[ivr] = rmsMean;
     vperf.vinResRmss[ivr] = rmsRms;
@@ -640,7 +716,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax) {
     phveff->SetBinError(ivr+1, deff);
     phvrms->SetBinContent(ivr+1, rmsMean);
     phvrms->SetBinError(ivr+1, rmsRms);
-    phvtail->SetBinContent(ivr+1, tailFracSum);
+    phvtail->SetBinContent(ivr+1, tailFrac);
     gx[ivr] = v1 + dvhalf + ivr*dv;
     gy[ivr] = rmsMean;
     geylo[ivr] = rmsRmslo;
@@ -693,6 +769,14 @@ void AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   hnam = ph->GetName();
   hnam += "_vrms_vtail";
   TH1* phax = dynamic_cast<TH1*>(ph->Clone(hnam.c_str()));
+  string htitl = phax->GetTitle();
+  string::size_type ipos = htitl.find("efficiency");
+  if ( ipos != string::npos ) {
+    string newlab = evaluateReadData ? "actual" : "expected";
+    newlab += " performance";
+    htitl.replace(ipos, 10, newlab);
+    phax->SetTitle(htitl.c_str());
+  }
   string ylab = phax->GetYaxis()->GetTitle();
   ylab += ", V_{in} resolution [mV]";
   phax->GetYaxis()->SetTitle(ylab.c_str());

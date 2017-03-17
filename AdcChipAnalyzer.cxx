@@ -99,7 +99,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     // Create array of voltage responses.
     asa.evaluateVoltageResponses(vmin, vmax, nv);
     // Create efficiency histogram.
-    asa.evaluateVoltageEfficiencies(vrmsmax);
+    asa.evaluateVoltageEfficiencies(vrmsmax, true);
     // Create histogram plots.
     if ( asa.phc == nullptr ) {
       cout << "No response plot for " << ssam << " channel " << icha << endl;

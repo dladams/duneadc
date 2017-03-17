@@ -352,8 +352,14 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
 
 //**********************************************************************
 
-double AdcSampleReader::vin(Index ivin) const {
+double AdcSampleReader::vinLow(Index ivin) const {
   return vinmin() + dvin()*ivin;
+}
+
+//**********************************************************************
+
+double AdcSampleReader::vinCenter(Index ivin) const {
+  return vinmin() + dvin()*(ivin+0.5);
 }
 
 //**********************************************************************

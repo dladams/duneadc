@@ -644,9 +644,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
         eff = effSum/countSum;
         double devMean = devSum/effSum;
         double dev2Mean = dev2Sum/effSum;
-        double diff = dev2Mean - devMean*devMean;
-        if ( diff < 0.0 ) diff = 0.0;
-        rmsMean = sqrt(diff);
+        rmsMean = sqrt(dev2Mean);        // RMS deviation
         rmsRms = phdvin2->GetMean();     // Store the expected mean RMS
         rmsRmslo = rmsMean - dvin2_10;
         rmsRmshi = dvin2_90 - rmsMean;

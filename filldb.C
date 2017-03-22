@@ -1,4 +1,4 @@
-void filldb() {
+void filldb(string datagroup ="201701b") {
   vector<string> schips = {"00", "02", "03", "04", "05", "06", "07", "08",
                            "10", "14", "15", "16", "17", "18",
                            "21", "22", "24", "25", "26", "29",
@@ -15,7 +15,7 @@ void filldb() {
   double vresmax = 1.0;
   bool fillPerfTree = true;
   for ( string schip : schips ) {
-    string dataset = "201701b_" + schip;
+    string dataset = datagroup + "_" + schip;
     cout << endl;
     cout << "*************  " << dataset << "  *****************" << endl;
     AdcChipAnalyzer chipper(dataset, 0, 16, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);

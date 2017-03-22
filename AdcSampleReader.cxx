@@ -139,6 +139,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     vinmax = 1750;
     m_nomVinPerAdc = 1.0;
   // 201701a_CC - January 2017 chip CC original files
+  // 201701d_CC - January 2017 chip CC original files 1 MHz
   // 201701b_CC - Same after 20feb fix for offsets (chip 6 is now broken)
   // 201701c_CC - Same after mod to match feb data (chips 2 and 4 only)
   // 201702DD_CC - Long-term data taken on day DD for chip CC=02
@@ -146,12 +147,18 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     string subdir;
     string schp;
     string topsubdir;
+    schanPrefix = "LN_2MHz_chn";
+    m_dvdt = 200.0;
     if ( ssam.substr(0, 6) == "201701" ) {;
       if ( ssam.size() == 10 ) {
         m_dataset = ssam.substr(0, 7);
         schp = ssam.substr(8,2);
         if ( ssam[6] == 'a' ) {
           topsubdir = "/201701/P1_ADC_Data";
+        } else if ( ssam[6] == 'd' ) {
+          topsubdir = "/201701/P1_ADC_Data";
+          schanPrefix = "LN_1MHz_chn";
+          m_dvdt = 400.0;
         } else if ( ssam[6] == 'b' ) {
           static std::set<string> update_schps_part1 =   {"03", "07", "21", "25", "26", "32", "35"};
           static std::set<string> update_schps_part2 =   {"17", "22", "29"};
@@ -204,9 +211,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       m_vinmin = -300.0;
       vinmax = 1700;
       m_nomVinPerAdc = 1.0;
-      schanPrefix = "LN_2MHz_chn";
       isRaw = true;
-      m_dvdt = 200.0;
       m_nomVinPerAdc = 0.34;
     }
   

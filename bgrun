@@ -1,0 +1,6 @@
+. setup_ups.sh
+. setup_root.sh
+#COM='root.exe -b -q bgrun.C("testing")'
+#COM="pwd"
+COM='root.exe -b -q filldb.C("201701d")'
+nohup $COM 2>&1 1>bgrun.log &

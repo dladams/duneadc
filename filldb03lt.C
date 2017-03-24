@@ -1,4 +1,4 @@
-void filldb03() {
+void filldb03lt() {
   vector<string> schips = {"02"};
 #if 0
   vector<string> sdays = {"06"};

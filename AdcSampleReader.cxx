@@ -138,17 +138,20 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0;
-  // 201701a_CC - January 2017 chip CC original files
-  // 201701d_CC - January 2017 chip CC original files 1 MHz
-  // 201701b_CC - Same after 20feb fix for offsets (chip 6 is now broken)
-  // 201701c_CC - Same after mod to match feb data (chips 2 and 4 only)
+  // 201701a_CC - January 2017 chip CC original files for 25 chips CC=00-35
+  // 201701b_CC - Same as a after 20feb fix for voltage calibration offsets (chip 6 is now broken and remains unclaibrated)
+  // 201701c_CC - Same as b after mod to match feb data (chips 2 and 4 only)
+  // 201701d_CC - January 2017 chip CC original files 1 MHz (voltage offsets  not fixed)
   // 201702DD_CC - Long-term data taken on day DD for chip CC=02
+  // 201703a_DCC - March 2017 chip DCC calibrated files D00-D479 for 77 new chips
   } else if ( ssam.substr(0, 4) == "2017" ) {     // 201701x_AA  x=a,b AA=die # (00, 02, 03, ...)
     string subdir;
     string schp;
     string topsubdir;
     schanPrefix = "LN_2MHz_chn";
     m_dvdt = 200.0;
+    m_vinmin = -300.0;
+    vinmax = 1700;
     if ( ssam.substr(0, 6) == "201701" ) {;
       if ( ssam.size() == 10 ) {
         m_dataset = ssam.substr(0, 7);
@@ -202,15 +205,23 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
       m_dataset = ssam.substr(0, 8);
       schp = ssam.substr(9,2);
       dirname = m_topdir + "/20170307/P1_ADC_Long_Term_0306/P1_S7_02_2";
+    } else if ( ssam.substr(0, 7) == "201703a" ) {
+      m_vinmin = -200.0;
+      vinmax = 1800;
+      m_dvdt = 400.0;
+      if ( ssam.size() == 11 ) {
+        m_dataset = ssam.substr(0, 7);
+        schp = ssam.substr(9,2);
+        dirname = m_topdir + "/201703/P1_ADC_ScreeningData_03222017/P1_S7_D" + schp;
+      } else {
+        bad = 1;
+      }
     } else {
       bad = 1;
     }
     if ( bad == 0 ) {
       istringstream sschp(schp);
       sschp >> m_chip;
-      m_vinmin = -300.0;
-      vinmax = 1700;
-      m_nomVinPerAdc = 1.0;
       isRaw = true;
       m_nomVinPerAdc = 0.34;
     }
@@ -352,6 +363,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
   cout << myname << "Total count: " << nsample() << endl;
   cout << myname << "Total count/nvin: " << nsample()/nvin() << endl;
   cout << myname << "Total count/nadc: " << nsample()/nadc() << endl;
+  cout << myname << "Ramp rate: " << dvdt() << " mV/sec" << endl;
   return;
 }
 

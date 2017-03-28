@@ -39,12 +39,16 @@ public:
   // Close the file.
   int close();
 
+  // Return the number of entries.
+  Index size() const;
+
   // Find a performance by entry number.
   const AdcVoltagePerformance* find(Index ient) const;
 
   // Find a performance by ID and voltage threshold.
   // The latter is not used if it is zero.
   const AdcVoltagePerformance* find(AdcChannelId id, float vrmsmax =0) const;
+  const AdcVoltagePerformance* find(Index chip, Index chan, float vrmsmax =0) const;
 
   // Accessors.
   int status() const { return m_status; }
@@ -67,6 +71,7 @@ private:
 
   // Data buffer
   AdcVoltagePerformance* m_pperf;
+  bool m_writetree;
 
 };
 

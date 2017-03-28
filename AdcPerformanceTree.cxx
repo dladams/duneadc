@@ -9,13 +9,16 @@ using std::string;
 using std::cout;
 using std::endl;
 
+using Index=AdcPerformanceTree::Index;
+
 //**********************************************************************
 
 AdcPerformanceTree::
 AdcPerformanceTree(Name fname, Name tname, Name opt)
 : m_status(1), m_fname(fname), m_tname(tname),
   m_pfile(nullptr), m_ptree(nullptr),
-  m_pperf(new AdcVoltagePerformance) {
+  m_pperf(new AdcVoltagePerformance),
+  m_writetree(false) {
   const string myname = "AdcPerformanceTree::ctor: ";
   TDirectory* thisdir = gDirectory;
   m_pfile = TFile::Open(fname.c_str(), opt.c_str());
@@ -30,6 +33,7 @@ AdcPerformanceTree(Name fname, Name tname, Name opt)
     cout << myname << "Creating tree " << m_tname << endl;
     m_ptree = new TTree(m_tname.c_str(), "ADC performance tree");
     m_ptree->Branch("perf", m_pperf);
+    m_writetree = true;
   } else {
     m_ptree->SetBranchAddress("perf", &m_pperf);
     m_ptree->GetEntry(0);
@@ -53,7 +57,7 @@ int AdcPerformanceTree::close() {
     bool cdback = thisdir != m_pfile;
     m_pfile->cd();
     if ( m_ptree != nullptr ) {
-      m_ptree->Write();
+      if ( m_writetree ) m_ptree->Write();
       m_ptree = nullptr;
     }
     m_pfile->Purge();
@@ -64,6 +68,13 @@ int AdcPerformanceTree::close() {
     m_ptree = nullptr;
   }
   return 0;
+}
+
+//**********************************************************************
+
+Index AdcPerformanceTree::size() const {
+  if ( m_ptree == nullptr ) return 0;
+  return m_ptree->GetEntries();
 }
 
 //**********************************************************************
@@ -93,9 +104,27 @@ const AdcVoltagePerformance* AdcPerformanceTree::find(Index ient) const {
 
 //**********************************************************************
 
-const AdcVoltagePerformance* AdcPerformanceTree::find(AdcChannelId, float) const {
+const AdcVoltagePerformance* AdcPerformanceTree::find(AdcChannelId id, float vuncmax) const {
   if ( status() ) return nullptr;
+  for ( Index ient=0; ient<size(); ++ient ) {
+    find(ient);
+    if ( m_pperf == nullptr ) continue;
+    if ( m_pperf->id() == id ) {
+      float vdiff = 0.0;
+      if ( vuncmax > 0.0 ) {
+        vdiff = fabs(m_pperf->vuncmax - vuncmax);
+      }
+      if ( vdiff < 1.e-5 ) return m_pperf;
+    }
+  }
   return nullptr;
+}
+
+//**********************************************************************
+
+const AdcVoltagePerformance* AdcPerformanceTree::
+find(Index chip, Index chan, float vuncmax) const {
+  return find (AdcChannelId(chip, chan), vuncmax);
 }
 
 //**********************************************************************

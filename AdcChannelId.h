@@ -25,5 +25,6 @@ public:
 };
 
 bool operator<(const AdcChannelId& lhs, const AdcChannelId& rhs);
+bool operator==(const AdcChannelId& lhs, const AdcChannelId& rhs);
 
 #endif

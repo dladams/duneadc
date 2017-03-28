@@ -18,6 +18,7 @@
   gROOT->ProcessLine(".L AdcChipAnalyzer.cxx+");
   gROOT->ProcessLine(".L AdcChipStatus.cxx+");
   gROOT->ProcessLine(".L AdcDatasetAnalyzer.cxx+");
+  gROOT->ProcessLine(".L AdcChipMetric.cxx+");
   //gROOT->ProcessLine(".L processChip.cxx+");
   gROOT->ProcessLine(".L AdcHist.cxx+");   // obsolete
   gROOT->ProcessLine(".L makeplot.cxx+");   // obsolete

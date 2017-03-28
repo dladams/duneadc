@@ -9,6 +9,30 @@ TH1Props::TH1Props(TH1* a_ph) : ph(a_ph) { }
 
 //**********************************************************************
 
+unsigned int TH1Props::findBinCenterBelow(double x) const {
+  unsigned int bin = ph->FindFixBin(x);
+  if ( bin == 0 ) return 0;
+  unsigned int nbin = ph->GetNbinsX();
+  if ( bin == nbin+1 ) return nbin;
+  double xc = ph->GetXaxis()->GetBinCenter(bin);
+  if ( xc <= x ) return bin;
+  return bin - 1;
+}
+
+//**********************************************************************
+
+unsigned int TH1Props::findBinCenterAbove(double x) const {
+  unsigned int bin = ph->FindFixBin(x);
+  if ( bin == 0 ) return 1;
+  unsigned int nbin = ph->GetNbinsX();
+  if ( bin == nbin+1 ) return nbin+1;
+  double xc = ph->GetXaxis()->GetBinCenter(bin);
+  if ( xc <= x ) return bin + 1;
+  return bin;
+}
+
+//**********************************************************************
+
 double TH1Props::pullMin() const {
   int bin = ph->FindFirstBinAbove(0);
   if ( bin < 0 ) return 0;
@@ -75,6 +99,36 @@ double TH1Props::tailFrac(double apullthresh) const {
   double tailSum = tailFracLo(apullthresh) + tailFracHi(apullthresh);
   if ( tailSum > 1.0 ) tailSum = 1.0;
   return tailSum;
+}
+
+//**********************************************************************
+
+double TH1Props::fracBelowMean(double dist) const {
+  double x = ph->GetMean() - dist;
+  int bin = findBinCenterBelow(x);
+  int nbin = ph->GetNbinsX();
+  double countTail = ph->Integral(0,bin);
+  double countTotal = ph->Integral(0, nbin+1);
+  double frac = countTotal > 0.0 ? countTail/countTotal : 0.0;
+  return frac;
+}
+
+//**********************************************************************
+
+double TH1Props::fracAboveMean(double dist) const {
+  double x = ph->GetMean() + dist;
+  int bin = findBinCenterAbove(x);
+  int nbin = ph->GetNbinsX();
+  double countTail = ph->Integral(bin, nbin+1);
+  double countTotal = ph->Integral(0, nbin+1);
+  double frac = countTotal > 0.0 ? countTail/countTotal : 0.0;
+  return frac;
+}
+
+//**********************************************************************
+
+double TH1Props::fracOutsideMean(double dist) const {
+  return fracBelowMean(dist) + fracAboveMean(dist);
 }
 
 //**********************************************************************

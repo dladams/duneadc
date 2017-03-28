@@ -17,6 +17,12 @@ public:
   // Ctor from histogram.
   TH1Props(TH1* ph);
 
+  // Find the bin whose center is below or at the specified value.
+  unsigned int findBinCenterBelow(double x) const;
+
+  // Find the bin whose center is above the specified value.
+  unsigned int findBinCenterAbove(double x) const;
+
   // Return the minimum pull, i.e. the pull for the first bin with > 0 entries.
   double pullMin() const;
 
@@ -36,6 +42,15 @@ public:
 
   // Return the fraction of entries with |pull| > apullthresh.
   double tailFrac(double apullthresh) const;
+
+  // Return the fraction of entries the specified distance below the mean.
+  double fracBelowMean(double dist) const;
+
+  // Return the fraction of entries the specified distance above the mean.
+  double fracAboveMean(double dist) const;
+
+  // Return the fraction of entries the specified distance above or below the mean.
+  double fracOutsideMean(double dist) const;
 
   TH1* ph;
 

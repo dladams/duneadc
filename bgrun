@@ -1,6 +1,6 @@
 . setup_ups.sh
 . setup_root.sh
-#COM='root.exe -b -q bgrun.C(3, 4)'
+#COM='root.exe -b -q bgrun.C(3,4)'
 #COM="pwd"
 #COM='root.exe -b -q filldb.C("201701d")'
 COM='root.exe -b -q filldb03.C("201703a",0,80)'

@@ -41,6 +41,7 @@ public:
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
   unsigned int minCountForStats = 2;
+  bool tailFracUsesPull = false;
   TH2* phf = nullptr;   // Vin vs ADC without under, over and stuck bits
   TH2* phc = nullptr;   // Vin vs ADC
   TH2* phd = nullptr;   // ADC diff from linear fit
@@ -50,9 +51,10 @@ public:
   TH2* phvn = nullptr;  // ADC diff from calibration vs Vin
   // Following are the stat histograms. One entry for each ADC code bin.
   // Bins with fewer than minCountForStats entries are recorded as underflows.
-  TH1* phm = nullptr;   // Mean ADC diff
-  TH1* phr = nullptr;   // Mean ADC RMS
-  TH1* phs = nullptr;   // Mean ADC standard deviation
+  TH1* phm = nullptr;   // Mean ADC diff vs ADC bin
+  TH1* phr = nullptr;   // Mean ADC RMS vs ADC bin
+  TH1* phs = nullptr;   // Mean ADC standard deviation vs ADC bin
+  TH1* pht = nullptr;   // Tail fraction vs ADC bin
   TH1* phsx = nullptr;  // ADC expanded standard deviation (so pull <5)
   TH1* phst = nullptr;  // Tail fraction for ADC standard deviation
   TH1* phsg = nullptr;  // Mean ADC standard deviation for non-stuck codes
@@ -84,7 +86,9 @@ public:
   TH1* phvtail = nullptr;   // Tail fraction vs Vin.
   TGraphAsymmErrors* pgvrms = nullptr;
   // Threshold for pull fractions.
-  double pullthresh =5.0;
+  double pullthresh = 5.0;
+  // Threshold [mV] for tail window.
+  double tailWindow = 5.0;
   bool evaluateReadData =false;   // Flag indicating if data was read for performance evaluation.
 
   // Read in and process the data using nominal calibration from adatasetCalib.

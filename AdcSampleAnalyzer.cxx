@@ -10,6 +10,7 @@
 #include "TLatex.h"
 #include "TLegend.h"
 #include "TLine.h"
+#include "TDirectory.h"
 
 using std::string;
 using std::cout;
@@ -93,6 +94,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   string hnaml = hnambase + "lga";
   string hnamm = hnambase + "fmm";
   string hnams = hnambase + "fms";
+  string hnamt = hnambase + "fmt";
   string hnamsx = hnambase + "fmsx";
   string hnamst = hnambase + "fmst";
   string hnamsg = hnambase + "fmsg";
@@ -104,6 +106,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   string hnamdsb = hnambase + "fmdsb";
   string stitlr = stitle + " fit RMS";
   string stitls = stitle + " fit sigma";
+  string stitlt = stitle + " tail fraction";
   string stitlsx = stitle + " expanded fit sigma";
   string stitlst = stitle + " fit sigma tail";
   string stitldsb = stitle + " stuck";
@@ -120,6 +123,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   phm = new TH1F(hnamm.c_str(), stitle.c_str(), npadc, 0, padcmax);
   phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
   phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
+  pht = new TH1F(hnamt.c_str(), stitlt.c_str(), npadc, 0, padcmax);
   phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
   phst = new TH1F(hnamst.c_str(), stitlst.c_str(), npadc, 0, padcmax);
   phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
@@ -150,6 +154,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   phm->GetYaxis()->SetTitle("V_{in} diff mean [mV]");
   phr->GetYaxis()->SetTitle("V_{in} diff RMS [mV]");
   phs->GetYaxis()->SetTitle("V_{in} diff standard deviation [mV]");
+  pht->GetYaxis()->SetTitle("Tail fraction");
   phsx->GetYaxis()->SetTitle("V_{in} diff expanded standard deviation [mV]");
   phst->GetYaxis()->SetTitle("Tail fraction");
   phm->SetStats(0);
@@ -160,6 +165,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   phvn->SetStats(0);
   phr->SetStats(0);
   phs->SetStats(0);
+  pht->SetStats(0);
   phsx->SetStats(0);
   phst->SetStats(0);
   phm->SetMaximum(dmax);
@@ -167,6 +173,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   phr->SetMaximum(dmax);
   phr->SetMinimum(0.0);
   phs->SetMaximum(0.1*dmax);
+  pht->SetMinimum(1.e-6);
+  pht->SetMaximum(1.0);
   phsx->SetMaximum(0.1*dmax);
   phst->SetMaximum(1.0);
   phs->SetMinimum(0.0);
@@ -278,6 +286,12 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   calib.calRmss.resize(nadc);
   calib.calCounts.resize(nadc);
   calib.calTails.resize(nadc);
+  cout << myname << "Tail fraction uses pull: " << tailFracUsesPull << endl;
+  if ( tailFracUsesPull ) {
+    cout << myname << "Tail is pull > " <<  pullthresh << endl;
+  } else {
+    cout << myname << "Tail is deviation > " << tailWindow << " mV" << endl;
+  }
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     TH1* ph = hdiffcalib(iadc);
     if ( ph == nullptr ) continue;
@@ -291,7 +305,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
       xs = ph->GetRMS();
       TH1Props hp(ph);
       xsx = hp.expandedRMS(pullthresh);
-      tailfrac = hp.tailFrac(pullthresh);
+      if ( tailFracUsesPull ) tailfrac = hp.tailFrac(pullthresh);
+      else tailfrac = hp.fracOutsideMean(tailWindow);
     }
     double xmLinear = fitVinPerAdc*iadc + fitped;
     calib.calCounts[iadc] = count;
@@ -304,6 +319,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
     double xr = sqrt(xm*xm+xs*xs);
     phm->SetBinContent(iadc+1, xm);
     phs->SetBinContent(iadc+1, xs);
+    pht->SetBinContent(iadc+1, tailfrac);
     phsx->SetBinContent(iadc+1, xsx);
     phst->SetBinContent(iadc+1, tailfrac);
     phsg->SetBinContent(iadc+1, xsg);
@@ -509,9 +525,9 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
 
 const FloatVector&
 AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
+  const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
   evaluateReadData = readData;
   static FloatVector empty;
-  const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
   unsigned int nvr = voltageResponses.size();
   if ( phc ==  nullptr ) return empty;
   if ( nvr < 1 ) return empty;
@@ -549,7 +565,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
   phvrms = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
   phvrms->SetStats(0);
   phvrms->SetMinimum(0.0);
-  phvrms->SetMaximum(1.03);
+  phvrms->SetMaximum(rmsmax);
   phvrms->SetLineWidth(2);
   // Create tail histogram.
   sshnam.str("");
@@ -579,6 +595,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
   Index ictvin = 0;                 // Voltage index for the reader count table
   Index nctvin = reader.nvin();     // Maximum voltage index for the reader count table
   // Loop over performance voltage bins.
+  bool remhist = false;
+  if ( ! remhist ) cout << myname << "WARNING: Histograms are not being removed." << endl;
   for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
     AdcVoltageResponse& avr = voltageResponses[ivr];
     double vin1 = avr.vmin;
@@ -594,14 +612,13 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
     double tailFrac = 0.0;
     // Evaluate efficiency, resolution and tail fraction using the input data.
     if ( readData ) {
-      bool remhist = true;
       double effSum = 0.0;
       double devSum = 0.0;
       double dev2Sum = 0.0;
       ostringstream sshnam;
       sshnam << "hdvin2_" << ivr;
       string shnam = sshnam.str();
-      TH1* phdvin2 = new TH1F(shnam.c_str(), "", 1000, 0, 1.0);   // Histogram used to get RMS and RMS extent
+      TH1* phdvin2 = new TH1F(shnam.c_str(), "", 1000, 0, rmsmax);   // Histogram used to get RMS and RMS extent
       if ( remhist ) phdvin2->SetDirectory(0);
       double tailFracSum = 0.0;
       // Skip reader voltage bins below the current range.
@@ -620,34 +637,44 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
           double dvin = vinMeasured - vinTrue;
           double dvin2 = dvin*dvin;
           double apull = fabs(dvin/rmsMeasured);
+          double advin = fabs(dvin);
           if ( rmsMeasured >= 0.0 && rmsMeasured < rmsmax ) {      // RMS < 0 is uncalibrated bin treated here as bad
             //phdvin2->Fill(dvin2, count);
             phdvin2->Fill(rmsMeasured, count);
             effSum += count;
             devSum += count*dvin;
             dev2Sum += count*dvin2;
-            if ( apull > 5.0 ) tailFracSum += count;
+            if ( tailFracUsesPull && apull > pullthresh ) tailFracSum += count;
+            if ( !tailFracUsesPull && advin > tailWindow ) tailFracSum += count;
           }
         }
         ++ictvin;
       }
       if ( effSum > 0.0 ) {
         double sum = 0.0;
+        double dvin2_0 = 0.0;
         double dvin2_10 = 0.0;
         double dvin2_90 = 0.0;
-        for ( int bin=0; bin<phdvin2->GetNbinsX()+1; ++bin ) {
-          sum += phdvin2->GetBinContent(bin);
+        double dvin2_100 = 0.0;
+        int lastbin = phdvin2->GetNbinsX()+1;
+        for ( int bin=0; bin<=lastbin; ++bin ) {
+          double count = phdvin2->GetBinContent(bin);
+          sum += count;
           double x = phdvin2->GetXaxis()->GetBinCenter(bin);
+          if ( bin == 0 ) x = 0.0;
+          if ( bin == lastbin ) x = rmsmax;
+          if ( sum == count ) dvin2_0 = x;
           if ( sum <= 0.1*effSum ) dvin2_10 = x;
           if ( sum <= 0.9*effSum ) dvin2_90 = x;
+          if ( count > 0 ) dvin2_100 = x;
         }
         eff = effSum/countSum;
         double devMean = devSum/effSum;
         double dev2Mean = dev2Sum/effSum;
         rmsMean = sqrt(dev2Mean);        // RMS deviation
         rmsRms = phdvin2->GetMean();     // Store the expected mean RMS
-        rmsRmslo = rmsMean - dvin2_10;
-        rmsRmshi = dvin2_90 - rmsMean;
+        rmsRmslo = rmsMean - dvin2_0;
+        rmsRmshi = dvin2_100 - rmsMean;
         tailFrac = tailFracSum/effSum;
       }
       if ( remhist ) delete phdvin2;
@@ -731,6 +758,9 @@ void AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   if ( phveff == nullptr ) return;
   if ( phvtail == nullptr ) return;
   if ( pgvrms == nullptr ) return;
+  double ymax = 1.03;
+  double rmsmax = phvrms->GetMaximum();
+  if ( rmsmax > ymax ) ymax = rmsmax;
   TH1* ph = phveff;
   string hnam;
   // Build scaled tail plot.
@@ -778,6 +808,7 @@ void AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   string ylab = phax->GetYaxis()->GetTitle();
   ylab += ", V_{in} resolution [mV]";
   phax->GetYaxis()->SetTitle(ylab.c_str());
+  phax->SetMaximum(ymax);
   phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
   //TCanvas* pcan = new TCanvas;
   gPad->SetGridx();

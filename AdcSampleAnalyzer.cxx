@@ -595,7 +595,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
   Index ictvin = 0;                 // Voltage index for the reader count table
   Index nctvin = reader.nvin();     // Maximum voltage index for the reader count table
   // Loop over performance voltage bins.
-  bool remhist = false;
+  bool remhist = true;
   if ( ! remhist ) cout << myname << "WARNING: Histograms are not being removed." << endl;
   for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
     AdcVoltageResponse& avr = voltageResponses[ivr];

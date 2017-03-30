@@ -16,6 +16,8 @@
 
 #include <string>
 
+class AdcSampleAnalyzer;
+
 class AdcChipAnalyzer {
 
 public:
@@ -30,6 +32,13 @@ public:
                   unsigned int nv = 0,
                   double vrmsmax = 1.0,
                   bool saveperf =false);
+
+  ~AdcChipAnalyzer();
+
+  // Pointer to the analyzer for each channel.
+  // Null or absent if channel was not analyzed.
+  std::vector<AdcSampleAnalyzer*> asas;
+
 };
 
 #endif

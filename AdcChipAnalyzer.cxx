@@ -23,9 +23,12 @@ using std::vector;
 using std::map;
 typedef unsigned int Index;
 
+//**********************************************************************
+//
 AdcChipAnalyzer::
 AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool savecalib,
-                float vmin, float vmax, Index nv, double vrmsmax, bool saveperf) {
+                float vmin, float vmax, Index nv, double vrmsmax, bool saveperf)
+: asas(icha1+ncha, nullptr) {
   string myname = "AdcChipAnalyzer::ctor: ";
   gStyle->SetOptStat(110111);
   vector<string> stypes = {"resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
@@ -91,7 +94,8 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     Index icha = chans[kcha];
     Index ipad = npad ? pads[kcha] : 0;
     if ( npad ) cans[0]->cd(ipad);
-    AdcSampleAnalyzer asa(ssam, icha, datasetCalib);
+    asas[icha] = new AdcSampleAnalyzer(ssam, icha, datasetCalib);
+    AdcSampleAnalyzer& asa = *asas[icha];
     if ( asa.phc == nullptr ) {
       cout << myname << "ADC analysis failed." << endl;
       return;
@@ -222,13 +226,17 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     }
     if ( saveperf ) {
       if ( asa.vperfs.size() && asa.dataset().size() ) {
-        cout << "Adding channel " << asa.channel() << " to calib DB." << endl;
+        cout << "Adding channel " << asa.channel() << " to performance DB." << endl;
         string perfName = "perf_" + asa.dataset();
         string fname = perfName + ".root";
         AdcPerformanceTree perfdb(fname, "adcperf", "UPDATE");
         for ( const AdcVoltagePerformance& vperf : asa.vperfs ) {
+          unsigned int oldsize = perfdb.size();
           int istat = perfdb.insert(vperf);
-          cout << "Insertion returned " << istat << endl;
+          unsigned int newsize = perfdb.size();
+          cout << "Insertion returned " << istat << ".";
+          cout << " Old-->new size = " << oldsize << "-->" << newsize << "." << endl;
+          cout << endl;
         }
       } else {
         cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
@@ -265,3 +273,13 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
   }
 }
 
+//**********************************************************************
+
+AdcChipAnalyzer::~AdcChipAnalyzer() {
+  for ( AdcSampleAnalyzer*& pasa : asas ) {
+    delete pasa;
+    pasa = nullptr;
+  }
+}
+
+//**********************************************************************

@@ -90,6 +90,7 @@ int AdcPerformanceTree::insert(const AdcVoltagePerformance& perf) {
 int AdcPerformanceTree::insert() {
   if ( status() ) return status();
   m_ptree->Fill();
+  m_writetree = true;
   return 0;
 }
 

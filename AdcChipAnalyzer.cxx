@@ -27,7 +27,7 @@ typedef unsigned int Index;
 //
 AdcChipAnalyzer::
 AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool savecalib,
-                float vmin, float vmax, Index nv, double vrmsmax, bool saveperf)
+                float vmin, float vmax, Index nv, double vrmsmax, bool dropTails, bool saveperf)
 : asas(icha1+ncha, nullptr) {
   string myname = "AdcChipAnalyzer::ctor: ";
   gStyle->SetOptStat(110111);
@@ -103,7 +103,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     // Create array of voltage responses.
     asa.evaluateVoltageResponses(vmin, vmax, nv);
     // Create efficiency histogram.
-    asa.evaluateVoltageEfficiencies(vrmsmax, true);
+    asa.evaluateVoltageEfficiencies(vrmsmax, true, dropTails);
     // Create histogram plots.
     if ( asa.phc == nullptr ) {
       cout << "No response plot for " << ssam << " channel " << icha << endl;

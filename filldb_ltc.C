@@ -5,9 +5,10 @@ void filldb_ltc() {
   double vmin = -200.0;
   double vmax = 1600.0;
   double vresmax = 1.0;
+  bool dropTails = false;
   bool fillPerfTree = true;
   string dataset = "201612_ltc2314";
   cout << endl;
   cout << "*************  " << dataset << "  *****************" << endl;
-  AdcChipAnalyzer chipper(dataset, 0, 4, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);
+  AdcChipAnalyzer chipper(dataset, 0, 4, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
 }

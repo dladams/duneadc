@@ -18,6 +18,8 @@
 #include "TF1.h"
 #include "TGraphAsymmErrors.h"
 
+class TLine;
+
 class AdcSampleAnalyzer {
 
 public:
@@ -33,6 +35,8 @@ public:
   using AdcVoltageResponseVector = std::vector<AdcVoltageResponse>;
 
   using AdcVoltagePerformanceVector = std::vector<AdcVoltagePerformance>;
+
+  using TLineVector = std::vector<TLine*>;
 
 public:
 
@@ -85,6 +89,7 @@ public:
   TH1* phvrms = nullptr;   // Mean good RMS vs Vin.
   TH1* phvtail = nullptr;   // Tail fraction vs Vin.
   TGraphAsymmErrors* pgvrms = nullptr;
+  TLineVector g80bars;
   // Threshold for pull fractions.
   double pullthresh = 5.0;
   // Threshold [mV] for tail window.
@@ -145,7 +150,7 @@ public:
   //   tail fraction = expected or actual fraction of samples with pull > 5.0
   // This adds an entry to vperfs.
   // If readData is true, the data is reread and used to calculate resolution and tail fraction
-  const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax, bool readData);
+  const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax, bool readData, bool dropTails =false);
 
   // Overlay efficiency, resolution and tail all vs. Vin.
   void drawperf(bool dolabtail =false) const;

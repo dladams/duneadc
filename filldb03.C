@@ -29,6 +29,7 @@ void filldb03(string datagroup ="201703a", int chip1=0, int chip2=80) {
   double vmin = -200.0;
   double vmax = 1600.0;
   double vresmax = 1.0;
+  bool dropTails = false;
   bool fillPerfTree = true;
   cout << "Dataset count: " << schips.size() << endl;
   for ( string schip : schips ) {
@@ -43,7 +44,7 @@ void filldb03(string datagroup ="201703a", int chip1=0, int chip2=80) {
     cout << "*************  " << dataset << "  *****************" << endl;
     TDatime dt1;
     dt1.Print();
-    AdcChipAnalyzer chipper(dataset, 0, 16, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);
+    AdcChipAnalyzer chipper(dataset, 0, 16, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
     TDatime dt2;
     dt2.Print();
     cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;

@@ -14,6 +14,7 @@ void filldb02() {
   double vmax = 1600.0;
   double vresmax = 1.0;
   bool fillPerfTree = true;
+  bool dropTails = false;
   for ( string schip : schips ) {
     for ( string sday : sdays ) {
       string dataset = "201702" + sday + "_" + schip;
@@ -21,7 +22,7 @@ void filldb02() {
       if ( sday == "janb" ) dataset = "201701b_" + schip;
       cout << endl;
       cout << "*************  " << dataset << "  *****************" << endl;
-      AdcChipAnalyzer chipper(dataset, 0, 16, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, fillPerfTree);
+      AdcChipAnalyzer chipper(dataset, 0, 16, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
     }
   }
 }

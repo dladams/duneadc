@@ -40,7 +40,9 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
   const string aschan[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
   string schan = aschanold[chan];
   cout << myname << "Sample " << ssam << " channel " << chan << endl;
-  bool isRaw = false;   // True if the input data is a waveform instead of a table
+  bool isRawCsv = false;   // True if the input data is a CSV waveform
+  bool isRawBin = false;   // True if the input data is a binary waveform
+  bool isTable = false;    // True if input data is a CSV table.
   double vinmax = 0.0;  // If nvin==0 and vinmax>0, then nvin is calculated from vinmax
   int bad = 0;
   string schanPrefix;
@@ -48,6 +50,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     fname = m_topdir + "/201610/VSTAR_1S/LN2_vstar_1s_200MHz_vstar_adc_09_28_2016_15_03_35/";
     fname += "LN2_vstar_1s_200MHz_vstar_adc_09_28_2016_15_03_35_chn" + aschanold[chan] + ".csv";
     m_nomVinPerAdc = 1.0/2.346;
+    isTable = true;
   } else if ( ssam == "201610_p1" ) {
     fname = m_topdir + "/201610/P1_ADC_DIE1/LN2_die1_200MHz_p1_adc_09_27_2016_19_18_27/";
     fname += "LN2_die1_200MHz_p1_adc_09_27_2016_19_18_27_chn" + aschanold[chan] + ".csv";
@@ -60,6 +63,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 0.343;
+    isTable = true;
   } else if ( ssam == "201611_p1_clklvd" ) {
     string smin[16] = {"11", "11", "12", "12", "12", "13", "13", "13",
                        "14", "14", "14", "15", "15", "15", "16", "16"};
@@ -68,6 +72,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0/2.933;
+    isTable = true;
   } else if ( ssam == "201611_p1_clkfac" ) {
     string smin[16] = {"23", "23", "23", "24", "24", "24", "25", "25",
                        "25", "26", "26", "27", "27", "27", "28", "28"};
@@ -76,6 +81,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 0.342;
+    isTable = true;
   } else if ( ssam == "201611_p1_old" ) {
     string smin[16] = {"17", "18", "18", "19", "19", "19", "20", "20",
                        "20", "21", "21", "21", "22", "22", "22", "23"};
@@ -83,6 +89,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     fname += "P1_die1_extClk_factory_full_LN_2MHz_chn" + aschan[chan] + "_11_02_20_" + smin[chan] + "_data.csv";
     m_vinmin = -50.0;
     vinmax = 1750;
+    isTable = true;
   } else if ( ssam == "201611_vstar" ) {
     string smin[16] = {"20", "20", "21", "21", "22", "22", "22", "23",
                        "23", "23", "24", "24", "24", "25", "25", "25"};
@@ -91,6 +98,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0/2.316;
+    isTable = true;
   } else if ( ssam == "201612_ltc2314" ) {
     if ( chan!=0 && chan!=1 && chan !=8 && chan!=11 ) return;
     fname = m_topdir + "/201612/ltc2314/LTC2314_raw_data/";
@@ -98,7 +106,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -100.0;
     vinmax = 2300;
     m_nadc = 16384;
-    isRaw = true;
+    isRawCsv = true;
     m_nomVinPerAdc = 0.1151;
     m_dvdt = 2400.0/(1.0/0.06);
   } else if ( ssam.substr(0, 10) == "201612_p1-" ) {     // 201612_p1-CB_clkTTT_FFFF_f3X
@@ -138,6 +146,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     m_vinmin = -50.0;
     vinmax = 1750;
     m_nomVinPerAdc = 1.0;
+    isTable = true;
   // 201701a_CC - January 2017 chip CC original files for 25 chips CC=00-35
   // 201701b_CC - Same as a after 20feb fix for voltage calibration offsets (chip 6 is now broken and remains unclaibrated)
   // 201701c_CC - Same as b after mod to match feb data (chips 2 and 4 only)
@@ -222,10 +231,10 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     if ( bad == 0 ) {
       istringstream sschp(schp);
       sschp >> m_chip;
-      isRaw = true;
+      isRawCsv = true;
       m_nomVinPerAdc = 0.34;
     }
-  
+
   } else {
     bad = 999;
   }
@@ -278,7 +287,7 @@ AdcSampleReader::AdcSampleReader(Name ssam, Index chan, Index maxsam)
     return;
   }
   m_table.resize(nadc());
-  if ( isRaw ) {
+  if ( isRawCsv ) {
     cout << myname << "Reading raw data." << endl;
     if ( samplingFrequency() <= 0.0 ) {
       cout << myname << "Invalid sampling frequency: " << samplingFrequency() << endl;

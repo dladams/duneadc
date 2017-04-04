@@ -524,7 +524,7 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
 //**********************************************************************
 
 const FloatVector&
-AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
+AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, bool dropTails) {
   const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
   evaluateReadData = readData;
   static FloatVector empty;
@@ -592,6 +592,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
   FloatVector gexhi(nvr, dvhalf);
   FloatVector geylo(nvr, 0.0);
   FloatVector geyhi(nvr, 0.0);
+  FloatVector gey10(nvr, 0.0);
+  FloatVector gey90(nvr, 0.0);
   Index ictvin = 0;                 // Voltage index for the reader count table
   Index nctvin = reader.nvin();     // Maximum voltage index for the reader count table
   // Loop over performance voltage bins.
@@ -609,6 +611,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
     double rmsRms = 0.0;
     double rmsRmslo = 0.0;
     double rmsRmshi = 0.0;
+    double rmsRms10 = 0.0;
+    double rmsRms90 = 0.0;
     double tailFrac = 0.0;
     // Evaluate efficiency, resolution and tail fraction using the input data.
     if ( readData ) {
@@ -634,11 +638,16 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
           countSum += count;
           double vinMeasured = calMean(iadc);
           double rmsMeasured = calRms(iadc);
+          double tailFrac = calTail(iadc);
           double dvin = vinMeasured - vinTrue;
           double dvin2 = dvin*dvin;
           double apull = fabs(dvin/rmsMeasured);
           double advin = fabs(dvin);
-          if ( rmsMeasured >= 0.0 && rmsMeasured < rmsmax ) {      // RMS < 0 is uncalibrated bin treated here as bad
+          bool skipBin = false;
+          skipBin |= rmsMeasured < 0.0;             // Bin has too few measurements
+          skipBin |= rmsMeasured >= rmsmax;         // Bin RMS is too large
+          skipBin |= dropTails && tailFrac > 0.0;   // Drop bins with tails
+          if ( ! skipBin ) {      // RMS < 0 is uncalibrated bin treated here as bad
             //phdvin2->Fill(dvin2, count);
             phdvin2->Fill(rmsMeasured, count);
             effSum += count;
@@ -673,8 +682,10 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
         double dev2Mean = dev2Sum/effSum;
         rmsMean = sqrt(dev2Mean);        // RMS deviation
         rmsRms = phdvin2->GetMean();     // Store the expected mean RMS
-        rmsRmslo = rmsMean - dvin2_0;
-        rmsRmshi = dvin2_100 - rmsMean;
+        rmsRmslo = dvin2_0;
+        rmsRmshi = dvin2_100;
+        rmsRms10 = dvin2_10;
+        rmsRms90 = dvin2_90;
         tailFrac = tailFracSum/effSum;
       }
       if ( remhist ) delete phdvin2;
@@ -744,11 +755,19 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData) {
     phvtail->SetBinContent(ivr+1, tailFrac);
     gx[ivr] = v1 + dvhalf + ivr*dv;
     gy[ivr] = rmsMean;
-    geylo[ivr] = rmsRmslo;
-    geyhi[ivr] = rmsRmshi;
+    geylo[ivr] = rmsMean - rmsRmslo;
+    geyhi[ivr] = rmsRmshi - rmsMean;
+    gey10[ivr] = rmsRms10;
+    gey90[ivr] = rmsRms90;
   }
   pgvrms = new TGraphAsymmErrors(nvr, &gx[0], &gy[0], &gexlo[0], &gexhi[0], &geylo[0], &geyhi[0]);
-  pgvrms->SetLineWidth(2);
+  g80bars.clear();
+  for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
+    TLine* pline = new TLine(gx[ivr], gey10[ivr], gx[ivr], gey90[ivr]);
+    pline->SetLineWidth(3);
+    g80bars.push_back(pline);
+  }
+  //pgvrms->SetLineWidth(2);
   return vperf.vinEffs;
 }
 
@@ -826,6 +845,9 @@ void AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   phts->DrawCopy("same");
   phax->DrawCopy("hist same");
   pgvrms->Draw("Z");
+  //pgvrms->SetLineWidth(2);
+  //pgvrms->Draw("XL");
+  for ( TLine* pline : g80bars ) pline->Draw();
   TLegend* pleg = new TLegend(0.3, 0.73, 0.45, 0.87);
   pleg->SetBorderSize(0);
   pleg->SetFillStyle(0);

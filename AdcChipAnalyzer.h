@@ -31,6 +31,7 @@ public:
                   float vmax = 0.0,
                   unsigned int nv = 0,
                   double vrmsmax = 1.0,
+                  bool dropTails = false,
                   bool saveperf =false);
 
   ~AdcChipAnalyzer();

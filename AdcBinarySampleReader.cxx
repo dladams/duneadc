@@ -1,4 +1,4 @@
-// AdcBinarySampleReader
+// AdcBinarySampleReader.cxx
 
 #include "AdcBinarySampleReader.h"
 #include <fstream>
@@ -52,7 +52,8 @@ AdcBinarySampleReader::AdcBinarySampleReader(Name fname, SampleIndex afence)
   m_nsample(0),
   m_haveReadFile(false),
   m_channel(0),
-  m_ptree(nullptr)
+  m_ptree(nullptr),
+  m_avgBins("peak averages", true)
   {
   std::ifstream* pin = new std::ifstream;
   m_pin = pin;
@@ -68,8 +69,8 @@ AdcBinarySampleReader::~AdcBinarySampleReader() {
 
 //**********************************************************************
 
-int AdcBinarySampleReader::read() {
-  const Name myname = "AdcBinarySampleReader::read: ";
+int AdcBinarySampleReader::readBorders() {
+  const Name myname = "AdcBinarySampleReader::readBorders: ";
   if ( m_pin == nullptr ) return 1;
   if ( m_haveReadFile ) return 2;
   istream& fin = *m_pin;
@@ -81,8 +82,8 @@ int AdcBinarySampleReader::read() {
   fin.seekg(0, fin.end);
   m_nsample = fin.tellg()/2;
   fin.seekg(0, fin.beg);
-  cout << "Buffer size: " << setw(10) << nsambuf << endl;
-  cout << "  # samples: " << setw(10) << nsample() << endl;
+  cout << myname << "  # samples: " << setw(10) << nsample() << endl;
+  cout << myname << "Buffer size: " << setw(10) << nsambuf << endl;
   // Loop over block reads.
   SampleIndex ksam = 0;     // sample position in the stream
   SampleIndex isam = 0;     // sample position in the buffer.
@@ -187,12 +188,14 @@ int AdcBinarySampleReader::read() {
 
 //**********************************************************************
 
-TTree* AdcBinarySampleReader::tree() {
-  Name myname = "AdcBinarySampleReader::tree: ";
-  if ( m_ptree != nullptr ) return m_ptree;
+int AdcBinarySampleReader::read(AdcCodeVector* pdat) {
+  Name myname = "AdcBinarySampleReader::read: ";
+  bool doBins = m_doBins && m_abrs.size() == 0;
+  bool doTree = m_doTree && m_ptree == nullptr;
+  bool doData = pdat != nullptr;
   if ( m_pin == nullptr ) {
     cout << myname << "No input stream." << endl;
-    return nullptr;
+    return 1;
   }
   istream& fin = *m_pin;
   fin.seekg(0, fin.end);
@@ -200,28 +203,43 @@ TTree* AdcBinarySampleReader::tree() {
   fin.seekg(0, fin.beg);
   if ( nsample() == 0 ) {
     cout << myname << "Input stream is empty." << endl;
-    return nullptr;
+    return 2;
   }
-  TDirectory* olddir = gDirectory;
+  cout << myname << "  # samples: " << setw(10) << nsample() << endl;
+  SampleIndex maxCount = m_nsample;
+  if ( !doBins && !doTree && !doData ) maxCount = m_nDump;
+  cout << myname << "  # to read: " << setw(10) << maxCount << endl;
+  if ( maxCount == 0 ) return 0;
   Name fname = "AdcBinaryTree.root";
-  TFile* pfile = TFile::Open(fname.c_str(), "RECREATE");
-  if ( pfile == nullptr || !pfile->IsOpen() ) {
-    cout << myname << "Unable to open tree file " << fname << endl;
-    return nullptr;
-  }
-  TTree* ptree = new TTree("adcdata", "ADC data tree");
+  TDirectory* olddir = gDirectory;
+  TFile* ptreeFile = 0;
   AdcCode code;
-  ptree->Branch("code", &code, "code/s");
-  // Fill tree.
+  Index chan;
+  if ( doTree ) {
+    ptreeFile = TFile::Open(fname.c_str(), "RECREATE");
+    if ( ptreeFile == nullptr || !ptreeFile->IsOpen() ) {
+      cout << myname << "Unable to open tree file " << fname << endl;
+      return 3;
+    }
+    m_ptree = new TTree("adcdata", "ADC data tree");
+    m_ptree->Branch("code", &code, "code/s");
+  }
+  if ( doBins ) {
+    m_abrs.resize(4096);
+  }
+  if ( doData ) {
+    pdat->clear();
+    pdat->resize(maxCount);
+  }
+  // Loop over block reads.
   SampleIndex l1 = 1;
   const int nsambuf = l1 << 19;
   AdcCode buff[nsambuf];
-  cout << "Buffer size: " << setw(10) << nsambuf << endl;
-  // Loop over block reads.
+  cout << myname << "Buffer size: " << setw(10) << nsambuf << endl;
   SampleIndex ksam = 0;     // sample position in the stream
   SampleIndex isam = 0;     // sample position in the buffer.
   SampleIndex count = 0;    // Counter to check each sample is read.
-  while ( true ) {
+  while ( count < maxCount ) {
     fin.seekg(2*ksam);
     SampleIndex ksamNext = ksam + nsambuf;
     if ( ksamNext > nsample() ) ksamNext = nsample();
@@ -232,25 +250,71 @@ TTree* AdcBinarySampleReader::tree() {
          << " (size = " << nsamRead << ")" << endl;
     SampleIndex isamMax = isam + nsamRead;
     for ( SampleIndex isam=0; isam<isamMax; (++isam, ++ksam) ) {
-      ++count;
+      if ( count >= maxCount ) break;
       AdcCode chancode = buff[isam];
       code = chancode&chanMask();
       Index chan = chancode>>chanShift();
-      if ( ksam == 0 ) {
-        m_channel = chan;
+      if ( ksam == 0 ) m_channel = chan;
+      if ( m_nDump > 0 ) {
+        cout << setw(10) << count << ": channel= " << setw(2) << chan << ", code="
+             << setw(4) << code << endl;
+      } else if ( ksam == 0 ) {
         cout << "Channel number is " << channel() << endl;
       }
-      ptree->Fill();
+      if ( doTree ) m_ptree->Fill();
+      if ( doBins ) {
+        if ( code >= m_abrs.size() ) m_abrs.resize(code+1);
+        m_abrs[code].addSample(ksam);
+      }
+      if ( doData ) (*pdat)[ksam] = code;
+      ++count;
     }
   }
-  if ( count != nsample() ) {
-    cout << "Error counting samples." << endl;
+  if ( doBins || doTree ) {
+    if ( count != nsample() ) {
+      cout << "WARNING: Error counting samples: " << count << " != " << nsample() << endl;
+    }
   }
-  if ( ksam != nsample() ) {
-    cout << "Error indexing samples." << endl;
+  if ( ksam != count ) {
+    cout << "ERROR: Sample index and count are inconsistent: " << ksam << " != " << count << endl;
   }
-  m_ptree= ptree;
-  olddir->cd();
+  if ( doBins ) {
+    multiset<SampleIndex> peakAvgs;
+    for ( AdcBinRecorder& abr : m_abrs ) {
+      abr.findPeaks(fence());
+      // Record the average of each adjacent pair of peaks.
+      if ( abr.npeak() > 1 ) {
+        for ( Index ipea=0; ipea<abr.npeak()-1; ++ipea ) {
+          SampleIndex avg = (abr.peak(ipea).truncMean + abr.peak(ipea+1).truncMean)/2;
+          peakAvgs.insert(avg);
+        }
+      }
+    }
+    // Find peaks in the average distribution.
+    for ( SampleIndex avg : peakAvgs ) {
+      m_avgBins.addSample(avg);
+    }
+    m_avgBins.findPeaks(10);
+  }
+  if ( doTree ) {
+    m_ptree->Write();
+    // Closing and opening the file prevents a crash in draw().
+    ptreeFile->Close();
+    ptreeFile = TFile::Open(fname.c_str(), "EXIST");
+    m_ptree = dynamic_cast<TTree*>(ptreeFile->Get("adcdata"));
+    olddir->cd();
+  }
+  return 0;
+}
+
+//**********************************************************************
+
+TTree* AdcBinarySampleReader::tree() {
+  Name myname = "AdcBinarySampleReader::tree: ";
+  if ( m_ptree == nullptr ) {
+    m_doTree = true;
+    read();
+  }
   return m_ptree;
 }
 
@@ -286,6 +350,7 @@ TCanvas* AdcBinarySampleReader::draw() {
     pline->SetLineStyle(3);
     pline->Draw();
   }
+cout << 90 << endl;
   return pcan;
 }
 

@@ -8,11 +8,16 @@
 #ifndef AdcBinRecorder_H
 #define AdcBinRecorder_H
 
+#include <string>
+
+class TH1;
+
 class AdcBinRecorder {
 
 public:
 
   using AdcCode = unsigned short;
+  using Name = std::string;
   using Index = unsigned int;
   using SampleIndex = unsigned long;
   using SampleVector = std::vector<SampleIndex>;
@@ -26,16 +31,29 @@ public:
     SampleIndex high =0;
     double meanOffset =0.0;    // mean = low + meanOffset
     SampleIndex truncMean =0;  // mean truncated to sample index
+    double rms = 0.0;          // RMS (from mean) of the distribution
+    double mean() const { return low + meanOffset; }
+    SampleIndex width() const { return high - low; }
   };
 
   using PeakVector = std::vector<Peak>;
+  using HistVector = std::vector<TH1*>;
 
-  // Ctor.
-  // a_code - ADC code for this bin.
-  AdcBinRecorder(AdcCode a_code =0);
+  // Ctor from ADC bin (code).
+  //   a_code - ADC code for this bin.
+  //   doHist - If true a histogram is filled for each peak.
+  AdcBinRecorder(AdcCode a_code =0, bool doHist =false);
 
-  // Add a sample to the bin.
-  // Samples are rejected if they are not in order.
+  // Ctor from string label.
+  //   slab - Label for this bin.
+  //   doHist - If true a histogram is filled for each peak.
+  AdcBinRecorder(Name slab, bool doHist =false);
+
+  // Dtor. Deletes histos.
+  ~AdcBinRecorder();
+
+  // Add a sample index (tick) to the bin.
+  // Samples must be added in order.
   // Returns nonzero for this or other error.
   int addSample(SampleIndex isam);
 
@@ -56,14 +74,20 @@ public:
   // Return the number of peaks and the peaks.
   Index npeak() const { return m_peaks.size(); };
   const Peak& peak(Index ipeak) const;
-  const PeakVector& peaks() { return m_peaks; }
+  const PeakVector& peaks() const { return m_peaks; }
+
+  // Return the peask histograms.
+  const HistVector& peakHists() const { return m_peakHists; }
 
 private:
 
   AdcCode m_code;
+  Name m_slab;
+  bool m_doHist;
   SampleVector m_samples;
   SampleIndex m_minGap;
   PeakVector m_peaks;
+  HistVector m_peakHists;
   
 };
 

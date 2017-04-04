@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "AdcBinRecorder.h"
 
 class TTree;
 class TCanvas;
@@ -20,6 +21,8 @@ public:
   using AdcCode = unsigned short;
   using Index = unsigned int;
   using SampleIndex = unsigned long;
+  using AdcCodeVector = std::vector<short>;
+  using AdcBinRecorderVector = std::vector<AdcBinRecorder>;
 
   // State for sample ranges.
   enum State {UNKNOWN, UNDER, RISING, OVER, FALLING };
@@ -79,7 +82,7 @@ public:  // non-static members
   // Shift extract channel number.
   Index chanShift() const { return m_chanShift; }
 
-  // Fence for deteriming under and overflow regions.
+  // Fence for determining under and overflow regions.
   // There must be at least this many non-underflow/overflow
   // samples on either side of the region.
   SampleIndex fence() const { return m_fence; }
@@ -90,23 +93,46 @@ public:  // non-static members
   // Input stream.
   std::istream* inputStream() { return m_pin; }
 
-  // Read the stream.
-  int read();
-
   // Return the number of samples.
   SampleIndex nsample() const { return m_nsample; }
-
-  // Return all the borders (under and overflow ranges).
-  const SampleRangeVector& borders() const { return m_borders; }
 
   // Return the channel number retrieved from the high bits of the codes.
   Index channel() const { return m_channel; }
 
-  // Return the data as a Root tree.
+  // Return all the borders (under and overflow ranges).
+  const SampleRangeVector& borders() const { return m_borders; }
+
+  // Return the bin recorders. There is one for each ADC bin.
+  const AdcBinRecorderVector& binRecorders() const { return m_abrs; }
+
+  // Return the bin recorder holding the ADC bin peak averages.
+  // These give the ticks about which the ADC counts are symmetric.
+  const AdcBinRecorder& avgBinRecorder() const { return m_avgBins; }
+
+  // Read the data and fill the bin recorders or tree.
+  //   doBins - Fill the bin recorders if not already filled
+  //   doTree - Fill the tree if not already filled
+  // If both flags are false only # samples is filled.
+  // If pdat is provided, that vector is cleared and filled with the ADC data.
+  // Returns the tree.
+  int read(AdcCodeVector* pdat =nullptr);
+
+  // Read the stream to find the borders.
+  int readBorders();
+
+  // Return the tree. Non-const builds tree if needed.
   TTree* tree();
+  TTree* tree() const { return m_ptree; }
 
   // Draw the data. First creates a tree.
   TCanvas* draw();
+
+public:  // Flags
+
+  SampleIndex m_maxSample = 0;  // maximum # of samples to read (0 = all)
+  SampleIndex m_nDump = 0;      // # of samples to display when reading file (0 = none)
+  bool m_doBins = false;
+  bool m_doTree = false;
 
 private:
 
@@ -121,6 +147,8 @@ private:
   bool m_haveReadFile;
   SampleIndex m_nsample;
   SampleRangeVector m_borders;
+  AdcBinRecorderVector m_abrs;
+  AdcBinRecorder m_avgBins;
   Index m_channel;
   TTree* m_ptree;
 

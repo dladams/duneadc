@@ -39,6 +39,9 @@ public:
   // Close the file.
   int close();
 
+  // Return the number of entries.
+  Index size() const;
+
   // Find a calibration by entry number.
   const AdcChannelCalibration* find(Index ient) const;
 

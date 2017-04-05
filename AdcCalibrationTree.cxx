@@ -9,6 +9,8 @@ using std::string;
 using std::cout;
 using std::endl;
 
+using Index = AdcCalibrationTree::Index;
+
 //**********************************************************************
 
 AdcCalibrationTree::
@@ -64,6 +66,13 @@ int AdcCalibrationTree::close() {
     m_ptree = nullptr;
   }
   return 0;
+}
+
+//**********************************************************************
+
+Index AdcCalibrationTree::size() const {
+  if ( m_ptree == nullptr ) return 0;
+  return m_ptree->GetEntries();
 }
 
 //**********************************************************************

@@ -11,6 +11,7 @@
 #include "TLegend.h"
 #include "TLine.h"
 #include "TDirectory.h"
+#include "TSystem.h"
 
 using std::string;
 using std::cout;
@@ -186,7 +187,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   minCountForStats = 2 + countPerVinBin/1000;
   cout << myname << "# ADC: " << nadc << endl;
   cout << myname << "# Vin: " << nvin << endl;
-  cout << "Min count for stats: " << minCountForStats << endl;
+  cout << myname << "Min count for stats: " << minCountForStats << endl;
   if ( zmax == 0 ) {
     zmax = 4*nsample/nvin;
     cout << myname << "zmax = " << zmax << endl;
@@ -341,6 +342,11 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
     if ( iadc > 64 && !isStuck ) {
       phdn->Fill(xr);
     }
+  }
+  if ( true ) {
+    ProcInfo_t info;
+    gSystem->GetProcInfo(&info);
+    cout << myname << "Virtual memory at end of ctor is " << info.fMemVirtual/1000000.0 << " GB" << endl;
   }
   return;
 }

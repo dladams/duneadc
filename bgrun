@@ -4,5 +4,6 @@
 #COM="pwd"
 #COM='root.exe -b -q filldb.C("201701d")'
 COM='root.exe -b -q filldb03.C("201703a",0,80)'
-COM='root.exe -b -q filldb03.C("201703a",12,80)'
 nohup $COM 2>&1 1>bgrun.log &
+sleep 1
+tail -f bgrun.log

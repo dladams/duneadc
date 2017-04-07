@@ -1,4 +1,4 @@
-// AdcChipAnalyzer.h
+// AdcChipAnalyzer.cxx
 
 #include "AdcChipAnalyzer.h"
 #include "AdcCalibrationTree.h"
@@ -14,6 +14,7 @@
 #include "TLine.h"
 #include "TStyle.h"
 #include "TLegend.h"
+#include "TSystem.h"
 
 using std::string;
 using std::cout;
@@ -95,7 +96,8 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     Index ipad = npad ? pads[kcha] : 0;
     if ( npad ) cans[0]->cd(ipad);
     asas[icha] = new AdcSampleAnalyzer(ssam, icha, datasetCalib);
-    AdcSampleAnalyzer& asa = *asas[icha];
+    AdcSampleAnalyzer*& pasa = asas[icha];
+    AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc == nullptr ) {
       cout << myname << "ADC analysis failed." << endl;
       return;
@@ -106,7 +108,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     asa.evaluateVoltageEfficiencies(vrmsmax, true, dropTails);
     // Create histogram plots.
     if ( asa.phc == nullptr ) {
-      cout << "No response plot for " << ssam << " channel " << icha << endl;
+      cout << myname << "No response plot for " << ssam << " channel " << icha << endl;
       return;
       continue;
     }
@@ -214,19 +216,19 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     php->Fill(asa.fitped);
     if ( savecalib ) {
       if ( asa.calib.isValid() && asa.dataset().size() ) {
-        cout << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
+        cout << myname << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
         string calibName = "calib_" + asa.dataset();
         string fname = calibName + ".root";
         AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
         int istat = calibdb.insert(asa.calib);
-        cout << "Insertion returned " << istat << endl;
+        cout << myname << "Insertion returned " << istat << endl;
       } else {
-        cout << "Not adding channel " << asa.calib.chan << " to calib DB." << endl;
+        cout << myname << "Not adding channel " << asa.calib.chan << " to calib DB." << endl;
       }
     }
     if ( saveperf ) {
       if ( asa.vperfs.size() && asa.dataset().size() ) {
-        cout << "Adding channel " << asa.channel() << " to performance DB." << endl;
+        cout << myname << "Adding channel " << asa.channel() << " to performance DB." << endl;
         string perfName = "perf_" + asa.dataset();
         string fname = perfName + ".root";
         AdcPerformanceTree perfdb(fname, "adcperf", "UPDATE");
@@ -234,15 +236,27 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
           unsigned int oldsize = perfdb.size();
           int istat = perfdb.insert(vperf);
           unsigned int newsize = perfdb.size();
-          cout << "Insertion returned " << istat << ".";
+          cout << myname << "Insertion returned " << istat << ".";
           cout << " Old-->new size = " << oldsize << "-->" << newsize << "." << endl;
-          cout << endl;
+          cout << myname << endl;
         }
       } else {
         cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
       }
     }
-    gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
+    if ( true ) {
+      ProcInfo_t info;
+      gSystem->GetProcInfo(&info);
+      cout << myname << "Virtual memory after channel " << asa.channel() << " is "
+           << info.fMemVirtual/1000000.0 << " GB" << endl;
+    }
+    if ( true ) {
+      gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
+    }
+    if ( true ) {
+      delete pasa;
+      pasa = nullptr;
+    }
   }
   string schan;
   if ( npad < 16 ) {
@@ -270,6 +284,11 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     string fname = flabs[ihst] + fnamesuff; 
     pcan->Print(fname.c_str());
     delete ph;
+  }
+  if ( true ) {
+    ProcInfo_t info;
+    gSystem->GetProcInfo(&info);
+    cout << myname << "Virtual memory at exit is " << info.fMemVirtual/1000000.0 << " GB" << endl;
   }
 }
 

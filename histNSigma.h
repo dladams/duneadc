@@ -8,4 +8,4 @@
 //   nrange - if >= than zero, user range is nrange bins around the nonzero
 //            region of the input plot.
 
-TH1* histNSigma(TH1* ph, double nsig, int nrange =0);
+TH1* histNSigma(TH1* ph, double nsig, int nrange);

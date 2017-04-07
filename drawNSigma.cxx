@@ -2,6 +2,7 @@
 
 #include "histNSigma.h"
 #include "TCanvas.h"
+#include "TH1.h"
 
 void drawNSigma(TH1* ph, double nsig, int nrange) {
   TH1* ph0 = histNSigma(ph, 0.0, nrange);

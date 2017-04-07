@@ -37,8 +37,8 @@ bool sticky(Index iadc) {
 
 //**********************************************************************
 
-AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib, Index maxsam, double cfac)
-: reader(ssam, chan, maxsam),
+AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adatasetCalib, double cfac)
+: reader(areader),
   datasetCalib(adatasetCalib),
   pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0) {
   const string myname = "AdcSampleAnalyzer::ctor: ";
@@ -61,7 +61,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   vinfitmin = 0.0;
   vinfitmax = 1600.0;
   fitusestuck = false;
-  nomVinPerAdc = cfac == 0.0 ? reader.nomVinPerAdc() : cfac;
+  nomVinPerAdc = cfac;
   nomped = 0.0;
   Index adcmax = nadc;
   Index nvin = reader.nvin();
@@ -71,6 +71,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   int pvinmax = reader.vinmax();
   Index npvin = pvinmax - pvinmin;
   adcUnderflow = 64;  // This and below are considered underflow
+  Name ssam = reader.sample();
   if ( ssam.find("ltc") != string::npos ) {
     fitusestuck = true;
     nomVinPerAdc = 0.1151;
@@ -78,9 +79,9 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(Name ssam, Index chan, string adatasetCalib
   }
   Index nsample = reader.nsample();
   calib.chip = reader.chip();
-  calib.chan = chan;
+  calib.chan = channel();
   ostringstream sschan;
-  sschan << chan;
+  sschan << channel();
   string schan = sschan.str();
   string stitle = ssam + " channel " + schan;
   string hnambase = "h" + ssam + "_" + schan + "_";
@@ -492,7 +493,7 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
   float dv = (vmax - vmin)/nv;
   float v1 = vmin;
   float v2 = v1 + dv;
-  AdcChannelId id(reader.chip(), reader.channel());
+  AdcChannelId id(chip(), channel());
   for ( Index iv=0; iv<nv; ++iv ) {
     if ( iv > 0 ) {
       v1 = v2;

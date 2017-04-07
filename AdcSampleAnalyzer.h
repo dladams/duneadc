@@ -40,7 +40,7 @@ public:
 
 public:
 
-  AdcSampleReader reader;
+  const AdcSampleReader& reader;
   std::string datasetCalib;
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
@@ -105,7 +105,7 @@ public:
   //  adatasetCalib - Name of the calibration dataset (e.g. "201701b").
   //  maxsam - maximum # samples to read from a waveform (0 for all)
   //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
-  AdcSampleAnalyzer(Name asample, Index achan, Name adatasetCalib ="", Index maxsam =0, double nomGain =0.0);
+  AdcSampleAnalyzer(const AdcSampleReader& areader, Name adatasetCalib ="", double nomGain =0.0);
 
   // Return the id.
   Name dataset() const { return reader.dataset(); }

@@ -29,7 +29,7 @@ typedef unsigned int Index;
 //**********************************************************************
 //
 AdcChipAnalyzer::
-AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool savecalib,
+AdcChipAnalyzer(AdcSampleReader& reader, Index icha1, Index ncha, string datasetCalib, bool savecalib,
                 float vmin, float vmax, Index nv, double vrmsmax, bool dropTails, bool saveperf)
 : asas(icha1+ncha, nullptr) {
   string myname = "AdcChipAnalyzer::ctor: ";
@@ -37,7 +37,8 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
   vector<string> stypes = {"resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
   //vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
   //vector<string> stypes = {"fdn", "fdr", "fds", "fdsb"};
-  Index maxchan = 16;
+  Index maxchan = reader.nchannel();
+  string ssam = reader.sample();
   if ( ssam.substr(0,6) == "201610" ) maxchan = 15;
   if ( ncha == 0 ) ncha = maxchan - icha1;
   // Assign the channel numbers to include.
@@ -97,7 +98,11 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     Index icha = chans[kcha];
     Index ipad = npad ? pads[kcha] : 0;
     if ( npad ) cans[0]->cd(ipad);
-    asas[icha] = new AdcSampleAnalyzer(ssam, icha, datasetCalib);
+    if ( reader.setChannel(icha) != 0 || reader.channel() != icha ) {
+      cout << myname << "Unable to set channel " << icha << endl;
+      return;
+    };
+    asas[icha] = new AdcSampleAnalyzer(reader, datasetCalib);
     AdcSampleAnalyzer*& pasa = asas[icha];
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc == nullptr ) {

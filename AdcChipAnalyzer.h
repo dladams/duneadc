@@ -15,6 +15,7 @@
 #define AdcChipAnalyzer_H
 
 #include <string>
+#include "AdcSampleReader.h"
 
 class AdcSampleAnalyzer;
 
@@ -22,7 +23,7 @@ class AdcChipAnalyzer {
 
 public:
 
-  AdcChipAnalyzer(std::string ssam,
+  AdcChipAnalyzer(AdcSampleReader& reader,
                   unsigned int icha1 =0,
                   unsigned int ncha =0,
                   std::string datasetCalib ="",

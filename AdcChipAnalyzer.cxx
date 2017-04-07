@@ -5,6 +5,7 @@
 #include "AdcPerformanceTree.h"
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <vector>
 #include <map>
 #include "AdcSampleAnalyzer.h"
@@ -20,6 +21,7 @@ using std::string;
 using std::cout;
 using std::endl;
 using std::ostringstream;
+using std::setw;
 using std::vector;
 using std::map;
 typedef unsigned int Index;
@@ -238,7 +240,6 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
           unsigned int newsize = perfdb.size();
           cout << myname << "Insertion returned " << istat << ".";
           cout << " Old-->new size = " << oldsize << "-->" << newsize << "." << endl;
-          cout << myname << endl;
         }
       } else {
         cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
@@ -247,7 +248,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
     if ( true ) {
       ProcInfo_t info;
       gSystem->GetProcInfo(&info);
-      cout << myname << "Virtual memory after channel " << asa.channel() << " is "
+      cout << myname << "Virtual memory after channel " << setw(2) << asa.channel() << " is "
            << info.fMemVirtual/1000000.0 << " GB" << endl;
     }
     if ( true ) {
@@ -257,6 +258,7 @@ AdcChipAnalyzer(string ssam, Index icha1, Index ncha, string datasetCalib, bool 
       delete pasa;
       pasa = nullptr;
     }
+    cout << myname << endl;
   }
   string schan;
   if ( npad < 16 ) {

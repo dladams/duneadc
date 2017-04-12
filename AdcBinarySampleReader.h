@@ -79,7 +79,7 @@ public:  // non-static members
   // Mask to remove channel number.
   AdcCode chanMask() const { return m_chanMask; }
 
-  // Shift extract channel number.
+  // Shift to extract channel number.
   Index chanShift() const { return m_chanShift; }
 
   // Fence for determining under and overflow regions.

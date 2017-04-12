@@ -31,10 +31,16 @@ class AdcTestSampleReader : public AdcSampleReader {
 public:
 
   // Construct a reader that can handle any channel.
+  // Call setChannel to read data for  channel.
+  //  asample - sample name, e.g. "201703a_D20"
+  explicit AdcTestSampleReader(Name asample);
+
+  // Construct a reader for a particular channel.
   // Read in the data.
   //  asample - sample name, e.g. "201703a_D20"
+  //  icha - channel number
   //  maxsam - maximum # samples to read from a waveform (0 for all)
-  AdcTestSampleReader(Name asample, Index maxsam =0);
+  AdcTestSampleReader(Name asample, Index icha, Index maxsam =0);
 
   // Dtor;
   ~AdcTestSampleReader() = default;
@@ -63,6 +69,9 @@ public:
 
 public:  // Waveform info.
 
+  // Maximum # samples to read. 0 for all.
+  Index maxSample() const { return m_maxSample; }
+
   // The total number of samples.
   // Same as data.size() for a waveform.
   Index nsample() const { return m_nsample; }
@@ -89,6 +98,12 @@ public:  // Table info
   // The # samples for ADC code iadc and input voltage bin ivin is count[iadc][ivin];
   const CountTable& countTable() const { return m_table; }
 
+  // Return the low edge of an input voltage bin.
+  double vinLow(Index ivin) const;
+
+  // Return the center of an input voltage bin.
+  double vinCenter(Index ivin) const;
+
 public:  // Methods specific to this class
 
   // Read (or reread) the data for this channel.
@@ -114,6 +129,7 @@ private:
   Index m_chip;
   Index m_chan;
   Code m_nadc;
+  Index m_maxSample;
   Index m_nsample;
   Index m_nvin;
   double m_dvin;

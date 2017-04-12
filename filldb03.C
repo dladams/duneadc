@@ -44,7 +44,8 @@ void filldb03(string datagroup ="201703a", int chip1=0, int chip2=80, int chan1=
     cout << "*************  " << dataset << "  *****************" << endl;
     TDatime dt1;
     dt1.Print();
-    AdcChipAnalyzer chipper(dataset, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
+    AdcTestSampleReader atsr(dataset);
+    AdcChipAnalyzer chipper(atsr, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
     TDatime dt2;
     dt2.Print();
     cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;

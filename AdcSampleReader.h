@@ -33,8 +33,8 @@ public:  // General
   // Dtor.
   virtual ~AdcSampleReader() =default;
 
-  // Set the channel number.
-  // Returns nonzero for error.
+  // Set the channel number and read data for that channel.
+  // Returns nonzero for error e.g. this sample does not hhave data for that channel.
   virtual int setChannel(Index icha) =0;
 
   // Sample name.
@@ -58,7 +58,11 @@ public:  // General
 
 public:  // For waveforms
 
-  // The total number of samples.
+  // Maximum # samples to read. Zero for all.
+  // If this is nonzero, some data may not be read.
+  virtual Index maxSample() const =0;
+
+  // The total number of samples read.
   virtual Index nsample() const =0;
 
   // Waveform. The ADC bin for tick isam.

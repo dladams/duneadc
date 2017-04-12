@@ -8,6 +8,7 @@
 #include <sstream>
 #include "TSystem.h"
 #include "TH1F.h"
+#include "FileDirectory.h"
 
 using std::string;
 using std::cout;
@@ -21,12 +22,13 @@ using Index = AdcTestSampleReader::Index;
 
 //**********************************************************************
 
-AdcTestSampleReader::AdcTestSampleReader(Name ssam, Index maxsam)
+AdcTestSampleReader::AdcTestSampleReader(Name ssam)
 : m_topdir(gSystem->ExpandPathName("$HOME/data/dune/adc")),
   m_sample(ssam),
   m_chip(badChip()),
   m_chan(badChannel()),
   m_nadc(4096),
+  m_maxSample(0),
   m_nsample(0),
   m_nvin(0),
   m_dvin(0.1),
@@ -38,46 +40,18 @@ AdcTestSampleReader::AdcTestSampleReader(Name ssam, Index maxsam)
 
 //**********************************************************************
 
+AdcTestSampleReader::AdcTestSampleReader(Name ssam, Index icha, Index maxsam)
+: AdcTestSampleReader(ssam) {
+  m_maxSample = maxsam;
+  setChannel(icha);
+}
+
+//**********************************************************************
+
 int AdcTestSampleReader::setChannel(Index icha) {
-  const string myname = "AdcTestSampleReader::setChannel: ";
-  if ( channel == icha ) return;
-  read();
-}
-
-//**********************************************************************
-
-double vinTestSampleReader::vinLow(Index ivin) const {
-  return vinmin() + dvin()*ivin;
-}
-
-//**********************************************************************
-
-double AdcTestSampleReader::vinCenter(Index ivin) const {
-  return vinmin() + dvin()*(ivin+0.5);
-}
-
-//**********************************************************************
-
-TH1* AdcTestSampleReader::histdata(unsigned int idat0, unsigned int ndatin, unsigned int show) {
-  if ( idat0 >= data().size() ) return 0;
-  if ( samplingFrequency() <= 0.0 ) return 0;
-  if ( show < 1 ) return 0;
-  string hname = "hwf";
-  string htitl = "Waveform; t [sec]; ADC code";
-  unsigned int ndat = ndatin;
-  if ( ndat == 0 ) ndat = data().size() - idat0;
-  unsigned int npt = ndat/show;
-  double samper = 1.0/samplingFrequency();
-  double t1 = idat0*samper;
-  double t2 = (idat0+ndat)*samper;
-  TH1* ph = new TH1F(hname.c_str(), htitl.c_str(), npt, t1, t2);
-  ph->SetStats(0);
-  for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
-    unsigned int idat = show*ipt;
-    Code adc = data()[idat];
-    ph->SetBinContent(ipt+1, adc);
-  }
-  return ph;
+  if ( icha == m_chan ) return 0;
+  m_chan = icha;
+  return read();
 }
 
 //**********************************************************************
@@ -88,6 +62,7 @@ int AdcTestSampleReader::read() {
   string dirname;
   const string aschanold[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
   const string aschan[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
+  Index chan = channel();
   string schan = aschanold[chan];
   string ssam = sample();
   cout << myname << "Sample " << ssam << " channel " << chan << endl;
@@ -151,7 +126,7 @@ int AdcTestSampleReader::read() {
     m_nomVinPerAdc = 1.0/2.316;
     isTable = true;
   } else if ( ssam == "201612_ltc2314" ) {
-    if ( chan!=0 && chan!=1 && chan !=8 && chan!=11 ) return;
+    if ( chan!=0 && chan!=1 && chan !=8 && chan!=11 ) return 1;
     fname = m_topdir + "/201612/ltc2314/LTC2314_raw_data/";
     fname += "ch" + aschan[chan] + "_360v_ltc2314_1_LN2_2M_006Hz_ramp_n01_23_sps_sps.csv";
     m_vinmin = -100.0;
@@ -293,11 +268,11 @@ int AdcTestSampleReader::read() {
     if ( dirname.size() == 0 ) {
       cout << myname << "Invalid sample name: " << ssam << endl;
       cout << myname << "Bad flag: " << bad << endl;
-      return;
+      return 1;
     }
     if ( gSystem->AccessPathName(dirname.c_str()) ) {
       cout << myname << "Unable to find directory " << dirname << endl;
-      return;
+      return 1;
     }
     FileDirectory filedir(dirname);
     string spat = schanPrefix + aschan[chan];
@@ -307,7 +282,7 @@ int AdcTestSampleReader::read() {
     } else {
       cout << myname << "Unable to find file with pattern " << spat
            << " in directory " << filedir.dirname << endl;
-      return;
+      return 1;
     }
   }
   if ( m_nvin == 0 && vinmax > 0.0 ) m_nvin = (vinmax - m_vinmin + 0.01)/m_dvin;
@@ -323,44 +298,39 @@ int AdcTestSampleReader::read() {
   ifstream fin(fname.c_str());
   if ( ! fin ) {
     cout << myname << "Unable to open file " << fname << endl;
-    return;
+    return 1;
   }
   if ( nadc() <= 0.0 ) {
     cout << myname << "Invalid ADC code size " << nadc() << endl;
-    return;
+    return 1;
   }
   if ( nvin() <= 0 ) {
     cout << myname << "Invalid voltage bin count: " << nvin() << endl;
-    return;
+    return 1;
   }
   if ( dvin() <= 0.0 ) {
     cout << myname << "Invalid Vin bin size: " << dvin() << endl;
-    return;
+    return 1;
   }
   m_table.resize(nadc());
   if ( isRawCsv ) {
     cout << myname << "Reading raw data." << endl;
     if ( samplingFrequency() <= 0.0 ) {
       cout << myname << "Invalid sampling frequency: " << samplingFrequency() << endl;
-      return;
+      return 1;
     }
     if ( dvdt() <= 0.0 ) {
       cout << myname << "Invalid dVin/dt: " << dvdt() << endl;
-      return;
+      return 1;
     }
+    Index maxsam = maxSample();
+    cout << myname << "Max # samples: " << maxsam << endl;
     double dv = 0.0;
     double dt = 1.0/samplingFrequency();  // sec
     Index isam = 0;
-    for ( CountVector& vec : m_table ) vec.resize(nvin());
+    // Read waveform.
     while ( fin && ! fin.eof() ) {
-      double iadc = 0.0;
-      double t = isam*dt;
-      double vin = dvdt()*t;
-      Index ivin = vin/dvin();
-      if ( ivin > nvin() ) {
-        cout << myname << "Vin is too large: " << vin << endl;
-        return;
-      }
+      Code iadc = 0.0;
       string sline;
       getline(fin, sline);
       if ( ! fin ) {
@@ -370,17 +340,28 @@ int AdcTestSampleReader::read() {
       istringstream ssline(sline);
       ssline >> iadc;
       //cout << myname << "  ... " << isam << ": Vin=" << vin << ", ADC=" << iadc << endl;
+      m_data.push_back(iadc);
+    }
+    // Construct table from waveform.
+    for ( CountVector& vec : m_table ) vec.resize(nvin());
+    for ( Code iadc : m_data ) {
+      double t = isam*dt;
+      double vin = dvdt()*t;
+      Index ivin = vin/dvin();
+      if ( ivin > nvin() ) {
+        cout << myname << "Vin is too large: " << vin << endl;
+        return 1;
+      }
       if ( iadc >= m_table.size() ) {
         cout << myname << "Table is too small for index " << iadc << endl;
-        return;
+        return 1;
       }
       if ( ivin >= m_table[iadc].size() ) {
         cout << myname << "Table row " << iadc << " is too small for index " << ivin << endl;
         cout << myname << "  Row size is " << m_table[iadc].size() << endl;
         cout << myname << "  Vin = " << vin << endl;
-        return;
+        return 1;
       }
-      m_data.push_back(iadc);
       ++m_table[iadc][ivin];
       //if ( iadc == 3500 ) cout << myname << "  ... " << iadc << ", " << ivin << ": " << m_table[iadc][ivin] << endl;
       ++isam;
@@ -418,7 +399,7 @@ int AdcTestSampleReader::read() {
     }
   }
   m_dvds = m_dvdt;
-  if ( samplingFrequency > 0.0 ) {
+  if ( samplingFrequency() > 0.0 ) {
     m_dvds /= samplingFrequency();
   }
   cout << myname << "# ADC: " << nadc() << endl;
@@ -428,7 +409,19 @@ int AdcTestSampleReader::read() {
   cout << myname << "Total count/nvin: " << nsample()/nvin() << endl;
   cout << myname << "Total count/nadc: " << nsample()/nadc() << endl;
   cout << myname << "Ramp rate: " << dvdt() << " mV/sec" << endl;
-  return;
+  return 0;
+}
+
+//**********************************************************************
+
+double AdcTestSampleReader::vinLow(Index ivin) const {
+  return vinmin() + dvin()*ivin;
+}
+
+//**********************************************************************
+
+double AdcTestSampleReader::vinCenter(Index ivin) const {
+  return vinmin() + dvin()*(ivin+0.5);
 }
 
 //**********************************************************************

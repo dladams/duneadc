@@ -98,9 +98,13 @@ AdcChipAnalyzer(AdcSampleReader& reader, Index icha1, Index ncha, string dataset
     Index icha = chans[kcha];
     Index ipad = npad ? pads[kcha] : 0;
     if ( npad ) cans[0]->cd(ipad);
-    if ( reader.setChannel(icha) != 0 || reader.channel() != icha ) {
-      cout << myname << "Unable to set channel " << icha << endl;
+    int estat = reader.setChannel(icha);
+    if ( estat != 0 ) {
+      cout << myname << "Unable to set channel " << icha << ". Error code " << estat << "." << endl;
       return;
+    };
+    if ( reader.channel() != icha ) {
+      cout << myname << "Set channel differes from input: " << reader.channel() << " != " << icha << "." << endl;
     };
     asas[icha] = new AdcSampleAnalyzer(reader, datasetCalib);
     AdcSampleAnalyzer*& pasa = asas[icha];

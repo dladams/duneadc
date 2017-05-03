@@ -266,13 +266,13 @@ int AdcTestSampleReader::read() {
   }
   if ( fname.size() == 0 ) {
     if ( dirname.size() == 0 ) {
-      cout << myname << "Invalid sample name: " << ssam << endl;
-      cout << myname << "Bad flag: " << bad << endl;
-      return 1;
+      cout << myname << "ERROR: Invalid sample name: " << ssam << endl;
+      cout << myname << "ERROR: Bad flag: " << bad << endl;
+      return 2;
     }
     if ( gSystem->AccessPathName(dirname.c_str()) ) {
-      cout << myname << "Unable to find directory " << dirname << endl;
-      return 1;
+      cout << myname << "ERROR: Unable to find directory " << dirname << endl;
+      return 3;
     }
     FileDirectory filedir(dirname);
     string spat = schanPrefix + aschan[chan];
@@ -280,9 +280,9 @@ int AdcTestSampleReader::read() {
     if ( files.size() == 1 ) {
       fname = filedir.dirname + "/" + files.begin()->first;
     } else {
-      cout << myname << "Unable to find file with pattern " << spat
+      cout << myname << "ERROR: Unable to find file with pattern " << spat
            << " in directory " << filedir.dirname << endl;
-      return 1;
+      return 4;
     }
   }
   if ( m_nvin == 0 && vinmax > 0.0 ) m_nvin = (vinmax - m_vinmin + 0.01)/m_dvin;
@@ -297,31 +297,32 @@ int AdcTestSampleReader::read() {
   Index nline = 0;
   ifstream fin(fname.c_str());
   if ( ! fin ) {
-    cout << myname << "Unable to open file " << fname << endl;
-    return 1;
+    cout << myname << "ERROR: Unable to open file " << fname << endl;
+    return 5;
   }
   if ( nadc() <= 0.0 ) {
-    cout << myname << "Invalid ADC code size " << nadc() << endl;
-    return 1;
+    cout << myname << "ERROR: Invalid ADC code size " << nadc() << endl;
+    return 6;
   }
   if ( nvin() <= 0 ) {
-    cout << myname << "Invalid voltage bin count: " << nvin() << endl;
-    return 1;
+    cout << myname << "ERROR: Invalid voltage bin count: " << nvin() << endl;
+    return 7;
   }
   if ( dvin() <= 0.0 ) {
-    cout << myname << "Invalid Vin bin size: " << dvin() << endl;
-    return 1;
+    cout << myname << "ERROR: Invalid Vin bin size: " << dvin() << endl;
+    return 8;
   }
+  m_table.clear();
   m_table.resize(nadc());
   if ( isRawCsv ) {
     cout << myname << "Reading raw data." << endl;
     if ( samplingFrequency() <= 0.0 ) {
-      cout << myname << "Invalid sampling frequency: " << samplingFrequency() << endl;
-      return 1;
+      cout << myname << "ERROR: Invalid sampling frequency: " << samplingFrequency() << endl;
+      return 9;
     }
     if ( dvdt() <= 0.0 ) {
-      cout << myname << "Invalid dVin/dt: " << dvdt() << endl;
-      return 1;
+      cout << myname << "ERROR: Invalid dVin/dt: " << dvdt() << endl;
+      return 10;
     }
     Index maxsam = maxSample();
     cout << myname << "Max # samples: " << maxsam << endl;
@@ -329,6 +330,7 @@ int AdcTestSampleReader::read() {
     double dt = 1.0/samplingFrequency();  // sec
     Index isam = 0;
     // Read waveform.
+    m_data.clear();
     while ( fin && ! fin.eof() ) {
       Code iadc = 0.0;
       string sline;
@@ -342,6 +344,7 @@ int AdcTestSampleReader::read() {
       //cout << myname << "  ... " << isam << ": Vin=" << vin << ", ADC=" << iadc << endl;
       m_data.push_back(iadc);
     }
+    cout << myname << "Waveform tick count: " << m_data.size() << endl;
     // Construct table from waveform.
     for ( CountVector& vec : m_table ) vec.resize(nvin());
     for ( Code iadc : m_data ) {
@@ -349,18 +352,19 @@ int AdcTestSampleReader::read() {
       double vin = dvdt()*t;
       Index ivin = vin/dvin();
       if ( ivin > nvin() ) {
-        cout << myname << "Vin is too large: " << vin << endl;
-        return 1;
+        cout << myname << "ERROR: Vin is too large: " << vin << endl;
+        return 11;
       }
       if ( iadc >= m_table.size() ) {
-        cout << myname << "Table is too small for index " << iadc << endl;
-        return 1;
+        cout << myname << "ERROR: Table is too small for index " << iadc << endl;
+        return 12;
       }
       if ( ivin >= m_table[iadc].size() ) {
-        cout << myname << "Table row " << iadc << " is too small for index " << ivin << endl;
-        cout << myname << "  Row size is " << m_table[iadc].size() << endl;
-        cout << myname << "  Vin = " << vin << endl;
-        return 1;
+        cout << myname << "ERROR: Table row " << iadc << " is too small for index " << ivin << endl;
+        cout << myname << "ERROR:   Row size is " << m_table[iadc].size() << endl;
+        cout << myname << "ERROR:   isam = " << isam << endl;
+        cout << myname << "ERROR:   Vin = " << vin << endl;
+        return 13;
       }
       ++m_table[iadc][ivin];
       //if ( iadc == 3500 ) cout << myname << "  ... " << iadc << ", " << ivin << ": " << m_table[iadc][ivin] << endl;
@@ -373,7 +377,6 @@ int AdcTestSampleReader::read() {
     maxvin = nvin();
     nline = isam;
     m_nsample = isam;
-    cout << myname << "Waveform tick count: " << isam << endl;
   } else {
     cout << myname << "Reading table data." << endl;
     for ( Index iadc=0; iadc<nadc(); ++iadc ) {

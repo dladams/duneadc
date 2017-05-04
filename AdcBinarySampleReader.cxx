@@ -15,28 +15,7 @@
 using std::ostringstream;
 
 using Name = AdcBinarySampleReader::Name;
-
-//**********************************************************************
-// Subclass definitions.
-//**********************************************************************
-
-void AdcBinarySampleReader::SampleRange::print() const {
-  cout << "start=" << begin() << ", size=" << size() << ", state="
-       << stateName(state()) << endl;
-}
-
-//**********************************************************************
-// Class definitions.
-//**********************************************************************
-
-Name AdcBinarySampleReader::stateName(State state) {
-  if ( state == UNKNOWN ) return "UNKNOWN";
-  if ( state == UNDER ) return "UNDER";
-  if ( state == RISING ) return "RISING";
-  if ( state == OVER ) return "OVER";
-  if ( state == FALLING ) return "FALLING";
-  return "StateError";
-}
+using AdcCode = AdcBinarySampleReader::AdcCode;
 
 //**********************************************************************
 
@@ -69,130 +48,11 @@ AdcBinarySampleReader::~AdcBinarySampleReader() {
 
 //**********************************************************************
 
-int AdcBinarySampleReader::readBorders() {
-  const Name myname = "AdcBinarySampleReader::readBorders: ";
-  if ( m_pin == nullptr ) return 1;
-  if ( m_haveReadFile ) return 2;
-  istream& fin = *m_pin;
-  if ( sizeof(short) != 2 ) return 3;
-  if ( sizeof(SampleIndex) != 8 ) return 4;
-  SampleIndex l1 = 1;
-  const int nsambuf = l1 << 19;
-  AdcCode buff[nsambuf];
-  fin.seekg(0, fin.end);
-  m_nsample = fin.tellg()/2;
-  fin.seekg(0, fin.beg);
-  cout << myname << "  # samples: " << setw(10) << nsample() << endl;
-  cout << myname << "Buffer size: " << setw(10) << nsambuf << endl;
-  // Loop over block reads.
-  SampleIndex ksam = 0;     // sample position in the stream
-  SampleIndex isam = 0;     // sample position in the buffer.
-  State state = UNKNOWN;    // Current stream state.
-  SampleRange range;        // Current range
-  SampleIndex nsamGood = 0; // # contiguous good samples
-  SampleIndex count = 0;    // Counter to check each sample is read.
-  bool foundStartingFence = false; // Flag indicating initial block of good samples is found.
-  while ( true ) {
-    fin.seekg(2*ksam);
-    SampleIndex ksamNext = ksam + nsambuf;
-    if ( ksamNext > nsample() ) ksamNext = nsample();
-    SampleIndex nsamRead = ksamNext - ksam;
-    if ( nsamRead == 0 ) break;
-    fin.read((char*)buff, 2*nsamRead);
-    cout << "Read block at sample " << setw(8) << ksam << ": " << setw(6) << (buff[0]&chanMask())
-         << " (size = " << nsamRead << ")" << endl;
-    SampleIndex isamMax = isam + nsamRead;
-    for ( SampleIndex isam=0; isam<isamMax; (++isam, ++ksam) ) {
-      ++count;
-      AdcCode chancode = buff[isam];
-      AdcCode code = chancode&chanMask();
-      Index chan = chancode>>chanShift();
-      if ( ksam == 0 ) {
-        m_channel = chan;
-        cout << "Channel number is " << channel() << endl;
-      }
-      if ( chan != m_channel ) return 5;
-      bool sampleIsUnder = code == underflowCode();
-      bool sampleIsOver = code == overflowCode();
-      bool sampleIsGood = code > underflowCode() && code < overflowCode();
-      bool streamIsUnder = state == UNDER;
-      bool streamIsOver = state == OVER;
-      if ( !sampleIsUnder && !sampleIsOver && !sampleIsGood ) {
-        cout << "Unexpected ADC code: " << code << " for sample " << ksam << endl;
-        return 6;
-      }
-      // Still looking for starting fence.
-      if ( ! foundStartingFence ) {
-        if ( sampleIsGood ) {
-          ++nsamGood;
-          if ( nsamGood >= fence() ) {
-            SampleRange tmprange(ksam+1-fence(), ksam+1);
-            cout << myname << "Found starting fence: ";
-            tmprange.print();
-            cout << endl;
-            foundStartingFence = true;
-          }
-        } else {
-          nsamGood = 0;
-        }
-      // Stream is inside a candidate underflow or overflow region and we are looking
-      // for the trailing fence. Add range once that is found.
-      } else if ( streamIsUnder || streamIsOver ) {
-        if ( sampleIsGood ) {
-          ++nsamGood;
-          if ( nsamGood >= fence() ) {
-            cout << myname << "Ending " << stateName(state) << " at " << ksam << endl;
-            m_borders.push_back(range);
-            range.print();
-            borders().back().print();
-            range.reset();
-            if ( state == UNDER ) state = RISING;
-            if ( state ==  OVER ) state = FALLING;
-          }
-        } else {
-          if ( streamIsUnder && !sampleIsUnder ) return 7;
-          if ( streamIsOver && !sampleIsOver ) return 8;
-          nsamGood = 0;
-          range.setEnd(ksam + 1);
-        }
-      // Stream is between underflow and overflow regions.
-      // Look for the next such region flagged by one such sample.
-      } else {
-        if ( sampleIsUnder ) {
-          if ( nsamGood < fence() ) return 9;
-          cout << myname << "Starting underflow at " << ksam << endl;
-          range.set(ksam, ksam+1, UNDER);
-          range.print();
-          state = UNDER;
-          nsamGood = 0;
-        } else if ( sampleIsOver ) {
-          if ( nsamGood < fence() ) return 10;
-          cout << myname << "Starting overflow at " << ksam << endl;
-          range.set(ksam, ksam+1, OVER);
-          range.print();
-          state = OVER;
-          nsamGood = 0;
-        }
-      }
-    }
-  }
-  if ( count != nsample() ) {
-    cout << "Error counting samples." << endl;
-  }
-  if ( ksam != nsample() ) {
-    cout << "Error indexing samples." << endl;
-  }
-  m_haveReadFile = true;
-  return 0;
-}
-
-//**********************************************************************
-
-int AdcBinarySampleReader::read(AdcCodeVector* pdat) {
+int AdcBinarySampleReader::read() {
   Name myname = "AdcBinarySampleReader::read: ";
   bool doBins = m_doBins && m_abrs.size() == 0;
   bool doTree = m_doTree && m_ptree == nullptr;
-  bool doData = pdat != nullptr;
+  bool doData = m_doData && m_data.size() == 0;
   if ( m_pin == nullptr ) {
     cout << myname << "No input stream." << endl;
     return 1;
@@ -224,12 +84,13 @@ int AdcBinarySampleReader::read(AdcCodeVector* pdat) {
     m_ptree = new TTree("adcdata", "ADC data tree");
     m_ptree->Branch("code", &code, "code/s");
   }
-  if ( doBins ) {
-    m_abrs.resize(4096);
+  if ( doBins && m_abrs.size() == 0) {
+    m_abrs.reserve(4096);
+    for ( AdcCode code=0; code<4096; ++code ) m_abrs.emplace_back(code, false);
   }
   if ( doData ) {
-    pdat->clear();
-    pdat->resize(maxCount);
+    m_data.clear();
+    m_data.resize(maxCount);
   }
   // Loop over block reads.
   SampleIndex l1 = 1;
@@ -239,6 +100,7 @@ int AdcBinarySampleReader::read(AdcCodeVector* pdat) {
   SampleIndex ksam = 0;     // sample position in the stream
   SampleIndex isam = 0;     // sample position in the buffer.
   SampleIndex count = 0;    // Counter to check each sample is read.
+  unsigned int ndumped = 0;
   while ( count < maxCount ) {
     fin.seekg(2*ksam);
     SampleIndex ksamNext = ksam + nsambuf;
@@ -255,18 +117,19 @@ int AdcBinarySampleReader::read(AdcCodeVector* pdat) {
       code = chancode&chanMask();
       Index chan = chancode>>chanShift();
       if ( ksam == 0 ) m_channel = chan;
-      if ( m_nDump > 0 ) {
+      if ( m_nDump > ndumped ) {
         cout << setw(10) << count << ": channel= " << setw(2) << chan << ", code="
              << setw(4) << code << endl;
+         ++ndumped;
       } else if ( ksam == 0 ) {
         cout << "Channel number is " << channel() << endl;
       }
       if ( doTree ) m_ptree->Fill();
       if ( doBins ) {
-        if ( code >= m_abrs.size() ) m_abrs.resize(code+1);
+        if ( code >= m_abrs.size() ) abort();
         m_abrs[code].addSample(ksam);
       }
-      if ( doData ) (*pdat)[ksam] = code;
+      if ( doData ) m_data[ksam] = code;
       ++count;
     }
   }
@@ -305,6 +168,13 @@ int AdcBinarySampleReader::read(AdcCodeVector* pdat) {
     olddir->cd();
   }
   return 0;
+}
+
+//**********************************************************************
+
+AdcCode AdcBinarySampleReader::code(SampleIndex isam) const {
+  if ( isam >= m_data.size() ) return 0.0;
+  return m_data[isam];
 }
 
 //**********************************************************************

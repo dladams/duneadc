@@ -69,14 +69,14 @@ public:
   SampleIndex minGap() const { return m_minGap; }
 
   // Return the samples for this bin.
-  const SampleVector& samples() { return m_samples; }
+  const SampleVector& samples() const { return m_samples; }
 
   // Return the number of peaks and the peaks.
   Index npeak() const { return m_peaks.size(); };
   const Peak& peak(Index ipeak) const;
   const PeakVector& peaks() const { return m_peaks; }
 
-  // Return the peask histograms.
+  // Return the peak histograms.
   const HistVector& peakHists() const { return m_peakHists; }
 
 private:

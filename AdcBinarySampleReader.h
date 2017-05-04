@@ -8,12 +8,13 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "AdcSampleReader.h"
 #include "AdcBinRecorder.h"
 
 class TTree;
 class TCanvas;
 
-class AdcBinarySampleReader {
+class AdcBinarySampleReader : public AdcSampleReader {
 
 public:
 
@@ -24,43 +25,9 @@ public:
   using AdcCodeVector = std::vector<short>;
   using AdcBinRecorderVector = std::vector<AdcBinRecorder>;
 
-  // State for sample ranges.
-  enum State {UNKNOWN, UNDER, RISING, OVER, FALLING };
-
-public: // Subclass describing a range of samples.
-
-  class SampleRange {
-  public:
-    SampleRange(SampleIndex s1, SampleIndex s2 =0, State st =UNKNOWN)
-    : range(s1, s2), m_state(st) { }
-    SampleRange() : SampleRange(badSampleIndex(), 0) { }
-    void setBegin(SampleIndex sam) { range.first = sam; }
-    void setEnd(SampleIndex sam) { range.second = sam; }
-    void setState(State state) { m_state = state; }
-    void set(SampleIndex sambeg, SampleIndex samend, State state) {
-      setBegin(sambeg); setEnd(samend); setState(state);
-    }
-    void reset() { m_begin = badSampleIndex(); m_end = 0; m_state=UNKNOWN; }
-    SampleIndex begin() const { return range.first; }
-    SampleIndex end() const { return range.second; }
-    State state() const { return m_state; }
-    SampleIndex size() const { return end() > begin() ? end() - begin() : 0; }
-    void print() const;
-  private:
-    SampleIndex m_begin;
-    SampleIndex m_end; 
-    std::pair<SampleIndex, SampleIndex> range;
-    State m_state;
-  };
-
-  using SampleRangeVector = std::vector<SampleRange>;
-
 public:  // static members
 
-  static SampleIndex badSampleIndex() { return 1UL<<63; }
   static SampleIndex badAdcCode() { return 1<<15; }
-
-  static string stateName(State state);
 
 public:  // non-static members
 
@@ -94,13 +61,10 @@ public:  // non-static members
   std::istream* inputStream() { return m_pin; }
 
   // Return the number of samples.
-  SampleIndex nsample() const { return m_nsample; }
+  SampleIndex nsample() const override { return m_nsample; }
 
   // Return the channel number retrieved from the high bits of the codes.
-  Index channel() const { return m_channel; }
-
-  // Return all the borders (under and overflow ranges).
-  const SampleRangeVector& borders() const { return m_borders; }
+  Index channel() const override { return m_channel; }
 
   // Return the bin recorders. There is one for each ADC bin.
   const AdcBinRecorderVector& binRecorders() const { return m_abrs; }
@@ -109,16 +73,30 @@ public:  // non-static members
   // These give the ticks about which the ADC counts are symmetric.
   const AdcBinRecorder& avgBinRecorder() const { return m_avgBins; }
 
+  // Find the input voltage extrema, i.e. minima and maxima.
+  // Looks for peaks in the ADC bin peak average distribution with
+  // more than minSize entries (bins).
+  class Extremum {
+  public:
+    Extremum() = default;
+    Extremum(SampleIndex a_tick, bool a_isMin) : tick(a_tick), isMin(a_isMin) { }
+    SampleIndex tick;
+    bool isMin;
+  };
+  using Extrema = std::vector<Extremum>;
+  Extrema findExtrema(Index minSize) const;
+
   // Read the data and fill the bin recorders or tree.
   //   doBins - Fill the bin recorders if not already filled
   //   doTree - Fill the tree if not already filled
-  // If both flags are false only # samples is filled.
+  //   doData - Fill the data vactor
+  // If all flags are false only # samples is filled.
   // If pdat is provided, that vector is cleared and filled with the ADC data.
   // Returns the tree.
-  int read(AdcCodeVector* pdat =nullptr);
+  int read();
 
-  // Read the stream to find the borders.
-  int readBorders();
+  // Waveform.
+  AdcCode code(SampleIndex isam) const override;
 
   // Return the tree. Non-const builds tree if needed.
   TTree* tree();
@@ -133,6 +111,7 @@ public:  // Flags
   SampleIndex m_nDump = 0;      // # of samples to display when reading file (0 = none)
   bool m_doBins = false;
   bool m_doTree = false;
+  bool m_doData = true;
 
 private:
 
@@ -146,11 +125,11 @@ private:
   SampleIndex m_fence;
   bool m_haveReadFile;
   SampleIndex m_nsample;
-  SampleRangeVector m_borders;
   AdcBinRecorderVector m_abrs;
   AdcBinRecorder m_avgBins;
   Index m_channel;
   TTree* m_ptree;
+  AdcCodeVector m_data;
 
 };
 

@@ -46,63 +46,63 @@ public:
   ~AdcTestSampleReader() = default;
 
   // Set the channel and read the data for that channel.
-  int setChannel(Index icha);
+  int setChannel(Index icha) override;
 
   // Sample name.
-  Name sample() const { return m_sample; }
+  Name sample() const override { return m_sample; }
 
   // Dataset name.
   // Derived from sample name and typically excludes the chip number.
-  Name dataset() const { return m_dataset; }
+  Name dataset() const override { return m_dataset; }
 
   // Chip number.
-  Index chip() const { return m_chip; }
+  Index chip() const override { return m_chip; }
 
   // Channel number on the chip.
-  Index channel() const { return m_chan; }
+  Index channel() const override { return m_chan; }
 
-  // Channel number on the chip.
-  Index nchannel() const { return 16; }
+  // # channels on the chip.
+  Index nchannel() const override { return 16; }
 
   // Number of ADC codes (4096 for the typical 12-bits)
-  Code nadc() const { return m_nadc; }
+  Code nadc() const override { return m_nadc; }
 
 public:  // Waveform info.
 
   // Maximum # samples to read. 0 for all.
-  Index maxSample() const { return m_maxSample; }
+  Index maxSample() const override { return m_maxSample; }
 
   // The total number of samples.
   // Same as data.size() for a waveform.
-  Index nsample() const { return m_nsample; }
+  SampleIndex nsample() const override { return m_nsample; }
 
   // Return a sample.
-  Code code(Index isam) const { return data()[isam]; }
+  Code code(SampleIndex isam) const override { return data()[isam]; }
 
   // Return the voltage for a sample.
-  double vin(Index isam) const { return m_dvds*isam; }
+  double vin(Index isam) const override { return m_dvds*isam; }
 
   // Sampling frequency (Hz).
-  double samplingFrequency() const { return m_samplingFrequency; }
+  double samplingFrequency() const override { return m_samplingFrequency; }
 
 public:  // Table info
 
   // There are nvin() input voltage bins. Bin ivin starts at
   //   vinmin() + dvin()*ivin  mV
-  Index nvin() const { return m_nvin; }
-  double dvin() const { return m_dvin; }
-  double vinmin() const { return m_vinmin; }
-  double vinmax() const { return m_vinmin + nvin()*dvin(); }
+  Index nvin() const override { return m_nvin; }
+  double dvin() const override { return m_dvin; }
+  double vinmin() const override { return m_vinmin; }
+  double vinmax() const override { return m_vinmin + nvin()*dvin(); }
 
   // Count table.
   // The # samples for ADC code iadc and input voltage bin ivin is count[iadc][ivin];
-  const CountTable& countTable() const { return m_table; }
+  const CountTable& countTable() const override { return m_table; }
 
   // Return the low edge of an input voltage bin.
-  double vinLow(Index ivin) const;
+  double vinLow(Index ivin) const override;
 
   // Return the center of an input voltage bin.
-  double vinCenter(Index ivin) const;
+  double vinCenter(Index ivin) const override;
 
 public:  // Methods specific to this class
 
@@ -130,7 +130,7 @@ private:
   Index m_chan;
   Code m_nadc;
   Index m_maxSample;
-  Index m_nsample;
+  SampleIndex m_nsample;
   Index m_nvin;
   double m_dvin;
   double m_vinmin;

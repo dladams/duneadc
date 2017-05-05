@@ -19,10 +19,6 @@
 #include <iostream>
 #include <vector>
 #include "AdcSampleReader.h"
-#include "AdcBinRecorder.h"
-
-class TTree;
-class TCanvas;
 
 class AdcBorderFinder {
 
@@ -109,7 +105,7 @@ private:  // Configuration data.
 
 };
 
-#pragma link C++ class AdcBorderFinder::SampleRange;
+//#pragma link C++ class AdcBorderFinder::SampleRange;
 #pragma link C++ class AdcBorderFinder::SampleRangeVector;
 
 #endif

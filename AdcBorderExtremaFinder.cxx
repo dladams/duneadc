@@ -13,7 +13,7 @@ AdcBorderExtremaFinder(SampleIndex fenceWidth,
 //**********************************************************************
 
 int AdcBorderExtremaFinder::
-find(const AdcSampleReader& reader, Extrema& ext) const {
+find(const AdcSampleReader& reader, AdcExtrema& ext) const {
   const string myname = "AdcBorderExtremaFinder::find: ";
   ext.clear();
   AdcBorderFinder::SampleRangeVector borders;

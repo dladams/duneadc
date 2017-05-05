@@ -8,8 +8,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "AdcTypes.h"
 #include "AdcSampleReader.h"
-#include "AdcBinRecorder.h"
+#include "AdcBinRecord.h"
 
 class TTree;
 class TCanvas;
@@ -19,11 +20,6 @@ class AdcBinarySampleReader : public AdcSampleReader {
 public:
 
   using Name = std::string;
-  using AdcCode = unsigned short;
-  using Index = unsigned int;
-  using SampleIndex = unsigned long;
-  using AdcCodeVector = std::vector<short>;
-  using AdcBinRecorderVector = std::vector<AdcBinRecorder>;
 
 public:  // static members
 
@@ -60,42 +56,24 @@ public:  // non-static members
   // Input stream.
   std::istream* inputStream() { return m_pin; }
 
+  // Return the number of ADC bins.
+  SampleValue nadc() const override { return 4096; }
+
   // Return the number of samples.
-  SampleIndex nsample() const override { return m_nsample; }
+  SampleIndex nsample() const override;
 
   // Return the channel number retrieved from the high bits of the codes.
   Index channel() const override { return m_channel; }
 
-  // Return the bin recorders. There is one for each ADC bin.
-  const AdcBinRecorderVector& binRecorders() const { return m_abrs; }
-
-  // Return the bin recorder holding the ADC bin peak averages.
-  // These give the ticks about which the ADC counts are symmetric.
-  const AdcBinRecorder& avgBinRecorder() const { return m_avgBins; }
-
-  // Find the input voltage extrema, i.e. minima and maxima.
-  // Looks for peaks in the ADC bin peak average distribution with
-  // more than minSize entries (bins).
-  class Extremum {
-  public:
-    Extremum() = default;
-    Extremum(SampleIndex a_tick, bool a_isMin) : tick(a_tick), isMin(a_isMin) { }
-    SampleIndex tick;
-    bool isMin;
-  };
-  using Extrema = std::vector<Extremum>;
-  Extrema findExtrema(Index minSize) const;
-
-  // Read the data and fill the bin recorders or tree.
-  //   doBins - Fill the bin recorders if not already filled
-  //   doTree - Fill the tree if not already filled
-  //   doData - Fill the data vactor
-  // If all flags are false only # samples is filled.
+  // Read the data and fill data vector or tree if either of those flags is set.
+  //   m_doTree - Fill the tree
+  //   m_doData - Fill the data vactor
+  // If both flags are false only # samples is filled.
   // If pdat is provided, that vector is cleared and filled with the ADC data.
   // Returns the tree.
-  int read();
+  int read() const;
 
-  // Waveform.
+  // Return the waveform.
   AdcCode code(SampleIndex isam) const override;
 
   // Return the tree. Non-const builds tree if needed.
@@ -109,9 +87,8 @@ public:  // Flags
 
   SampleIndex m_maxSample = 0;  // maximum # of samples to read (0 = all)
   SampleIndex m_nDump = 0;      // # of samples to display when reading file (0 = none)
-  bool m_doBins = false;
   bool m_doTree = false;
-  bool m_doData = true;
+  mutable bool m_doData = true;
 
 private:
 
@@ -123,13 +100,11 @@ private:
   std::istream* m_pin;
   Name m_fname;
   SampleIndex m_fence;
-  bool m_haveReadFile;
-  SampleIndex m_nsample;
-  AdcBinRecorderVector m_abrs;
-  AdcBinRecorder m_avgBins;
-  Index m_channel;
-  TTree* m_ptree;
-  AdcCodeVector m_data;
+  mutable bool m_haveReadFile;
+  mutable SampleIndex m_nsample;
+  mutable Index m_channel;
+  mutable TTree* m_ptree;
+  mutable SampleVector m_data;
 
 };
 

@@ -1,18 +1,18 @@
-// test_AdcBinRecorder
+// test_AdcBinRecord
 
-#include "AdcBinRecorder.h"
+#include "AdcBinRecord.h"
 #include "ErrorCount.h"
 #include <iostream>
 
 using std::cout;
 using std::endl;
 
-int test_AdcBinRecorder() {
-  const string myname = "test_AdcBinRecorder: ";
+int test_AdcBinRecord() {
+  const string myname = "test_AdcBinRecord: ";
   ErrorCount ec(myname + "ERROR: Test failed: ");
   cout << myname << "Creating recorder." << endl;
-  AdcBinRecorder::AdcCode code = 1234;
-  AdcBinRecorder abr(code);
+  AdcBinRecord::AdcCode code = 1234;
+  AdcBinRecord abr(code);
   ec.check(abr.code() == code, "abr.code() == code");
   ec.check(abr.samples().size() == 0, "abr.samples().size() == 0");
   ec.check(abr.peaks().size() == 0, "abr.peaks().size() == 0");

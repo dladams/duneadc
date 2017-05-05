@@ -32,7 +32,7 @@ public:
 
   // Find all the extrema in a waveform.
   // The extremum vector is first cleared.
-  int find(const AdcSampleReader& reader, Extrema& ext) const override;
+  int find(const AdcSampleReader& reader, AdcExtrema& ext) const override;
 
   // Return the border finder.
   const AdcBorderFinder borderFinder() const { return m_borderFinder; }

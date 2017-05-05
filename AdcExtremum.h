@@ -10,7 +10,6 @@
 
 #include <string>
 #include <vector>
-#include "AdcBinRecorder.h"
 
 class AdcExtremum {
 
@@ -37,5 +36,7 @@ private:
   bool m_isMin;
 
 };
+
+using AdcExtrema = std::vector<AdcExtremum>;
 
 #endif

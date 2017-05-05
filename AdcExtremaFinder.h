@@ -5,19 +5,15 @@
 #ifndef AdcExtremaFinder_H
 #define AdcExtremaFinder_H
 
+#include "AdcTypes.h"
 #include "AdcSampleReader.h"
 #include "AdcExtremum.h"
-
-class TTree;
-class TCanvas;
 
 class AdcExtremaFinder {
 
 public:
 
   using AdcCode = unsigned short;
-  using AdcCodeVector = std::vector<short>;
-  using Extrema = std::vector<AdcExtremum>;
 
 public: // Subclass describing a range of samples.
 
@@ -26,7 +22,7 @@ public: // Subclass describing a range of samples.
 
   // Find all the extrema in a waveform.
   // The extremum vector is first cleared.
-  virtual int find(const AdcSampleReader& reader, Extrema& ext) const =0;
+  virtual int find(const AdcSampleReader& reader, AdcExtrema& ext) const =0;
 
 };
 

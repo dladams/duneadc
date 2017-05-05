@@ -1,6 +1,6 @@
-// AdcBinRecorder.cxx
+// AdcBinRecord.cxx
 
-#include "AdcBinRecorder.h"
+#include "AdcBinRecord.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -15,7 +15,7 @@ using std::ostringstream;
 // Subclass methods.
 //**********************************************************************
 
-AdcBinRecorder::Peak::Peak(const SampleVector& sams) {
+AdcBinRecord::Peak::Peak(const SampleIndexVector& sams) {
   if ( sams.size() == 0 ) return;
   size = sams.size();
   low = sams.front();
@@ -36,17 +36,17 @@ AdcBinRecorder::Peak::Peak(const SampleVector& sams) {
 // Class methods.
 //**********************************************************************
 
-AdcBinRecorder::AdcBinRecorder(AdcCode a_code, bool doHist)
+AdcBinRecord::AdcBinRecord(AdcCode a_code, bool doHist)
 : m_code(a_code), m_doHist(doHist), m_minGap(0) { }
 
 //**********************************************************************
 
-AdcBinRecorder::AdcBinRecorder(Name slab, bool doHist)
+AdcBinRecord::AdcBinRecord(Name slab, bool doHist)
 : m_code(0), m_slab(slab), m_doHist(doHist), m_minGap(0) { }
 
 //**********************************************************************
 
-AdcBinRecorder::~AdcBinRecorder() {
+AdcBinRecord::~AdcBinRecord() {
   for ( TH1*& ph : m_peakHists ) {
     delete ph;
     ph = nullptr;
@@ -55,8 +55,8 @@ AdcBinRecorder::~AdcBinRecorder() {
 
 //**********************************************************************
 
-int AdcBinRecorder::addSample(SampleIndex isam) {
-  string myname = "AdcBinRecorder::addSample: ";
+int AdcBinRecord::addSample(SampleIndex isam) {
+  string myname = "AdcBinRecord::addSample: ";
   if ( m_samples.size() && isam < m_samples.back() ) {
     cout << myname << "Sample is out of order. Skipping." << endl;
     return 1;
@@ -69,12 +69,12 @@ int AdcBinRecorder::addSample(SampleIndex isam) {
 
 //**********************************************************************
 
-int AdcBinRecorder::findPeaks(SampleIndex a_minGap) {
+int AdcBinRecord::findPeaks(SampleIndex a_minGap) {
   m_minGap = a_minGap;
   m_peaks.clear();
-  SampleVector peakSams;
+  SampleIndexVector peakSams;
   Index ipeak = 0;
-  for ( Index ksam=0; ksam<samples().size(); ++ksam ) {
+  for ( SampleIndex ksam=0; ksam<samples().size(); ++ksam ) {
     bool last = ksam+1 == samples().size();
     SampleIndex isam = samples()[ksam];
     // If this is the end of a peak, record it.
@@ -134,7 +134,7 @@ int AdcBinRecorder::findPeaks(SampleIndex a_minGap) {
 
 //**********************************************************************
 
-const AdcBinRecorder::Peak& AdcBinRecorder::peak(Index ipeak) const {
+const AdcBinRecord::Peak& AdcBinRecord::peak(Index ipeak) const {
   static Peak badPeak;
   if ( ipeak > npeak() ) return badPeak;
   return m_peaks[ipeak];

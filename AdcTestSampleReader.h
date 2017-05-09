@@ -58,6 +58,9 @@ public:
   // Chip number.
   Index chip() const override { return m_chip; }
 
+  // Chip label.
+  Name chipLabel() const override { return m_chipLabel; }
+
   // Channel number on the chip.
   Index channel() const override { return m_chan; }
 
@@ -127,6 +130,7 @@ private:
   Name m_sample;
   Name m_dataset;
   Index m_chip;
+  Name m_chipLabel;
   Index m_chan;
   Code m_nadc;
   Index m_maxSample;

@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include "AdcTypes.h"
 class TH1;
 
 class AdcSampleReader {
@@ -25,9 +26,6 @@ public:
 
   using Code = unsigned short;
   using CodeVector = std::vector<Code>;
-
-  static Index badChannel() { return -1; }
-  static Index badChip() { return -1; }
 
 public:  // General
 
@@ -45,8 +43,11 @@ public:  // General
   // Derived from sample name and typically excludes the chip number.
   virtual Name dataset() const { return ""; }
 
-  // Chip number.
+  // Chip number and label.
+  // The chip index should be unique within the dataset.
+  // The chip label should uniquely identify the chip.
   virtual Index chip() const { return badChip(); }
+  virtual Name chipLabel() const { return ""; }
 
   // Channel number on the chip.
   virtual Index channel() const { return badChannel(); }

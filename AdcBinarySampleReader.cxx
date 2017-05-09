@@ -18,7 +18,7 @@ using Name = AdcBinarySampleReader::Name;
 
 //**********************************************************************
 
-AdcBinarySampleReader::AdcBinarySampleReader(Name fname, SampleIndex afence)
+AdcBinarySampleReader::AdcBinarySampleReader(Name fname)
 : m_underflowCode(0),
   m_overflowCode(4095),
   m_chanMask(0xfff),
@@ -26,14 +26,32 @@ AdcBinarySampleReader::AdcBinarySampleReader(Name fname, SampleIndex afence)
   m_ownStream(true),
   m_pin(nullptr),
   m_fname(fname),
-  m_fence(afence),
   m_nsample(0),
   m_haveReadFile(false),
-  m_channel(0),
   m_ptree(nullptr) {
+  const string myname = "AdcBinarySampleReader::ctor: ";
   std::ifstream* pin = new std::ifstream;
   m_pin = pin;
   pin->open(fname.c_str(), ios::binary);
+  cout << myname << "       File: " << fname << endl;
+}
+
+//**********************************************************************
+
+AdcBinarySampleReader::
+AdcBinarySampleReader(Name fname, Name dsname, Index a_chip, Name a_chipLabel,
+                      Index icha, double fsamp)
+: AdcBinarySampleReader(fname) {
+  const string myname = "AdcBinarySampleReader::ctor: ";
+  m_dsname = dsname;
+  m_chip = a_chip;
+  m_chipLabel= a_chipLabel;
+  m_channel = icha;
+  m_fsamp = fsamp;
+  cout << myname << "    Dataset: " << dataset() << endl;
+  cout << myname << "       Chip: " << chip() << endl;
+  cout << myname << " Chip label: " << chipLabel() << endl;
+  cout << myname << "    Channel: " << channel() << endl;
 }
 
 //**********************************************************************
@@ -101,6 +119,9 @@ int AdcBinarySampleReader::read() const {
   SampleIndex isam = 0;     // sample position in the buffer.
   SampleIndex count = 0;    // Counter to check each sample is read.
   unsigned int ndumped = 0;
+  SampleIndex nbadChan = 0;
+  SampleIndex ngoodChan = 0;
+  SampleIndex maxwarn = 1000;
   while ( count < maxCount ) {
     fin.seekg(2*ksam);
     SampleIndex ksamNext = ksam + nsambuf;
@@ -108,7 +129,7 @@ int AdcBinarySampleReader::read() const {
     SampleIndex nsamRead = ksamNext - ksam;
     if ( nsamRead == 0 ) break;
     fin.read((char*)buff, 2*nsamRead);
-    cout << "Read block at sample " << setw(8) << ksam << ": " << setw(6) << (buff[0]&chanMask())
+    cout << myname << "Read block at sample " << setw(8) << ksam << ": " << setw(6) << (buff[0]&chanMask())
          << " (size = " << nsamRead << ")" << endl;
     SampleIndex isamMax = isam + nsamRead;
     for ( SampleIndex isam=0; isam<isamMax; (++isam, ++ksam) ) {
@@ -116,26 +137,39 @@ int AdcBinarySampleReader::read() const {
       AdcCode chancode = buff[isam];
       code = chancode&chanMask();
       Index chan = chancode>>chanShift();
-      if ( ksam == 0 ) m_channel = chan;
+      if ( m_channel == badChannel() ) m_channel = chan;
+      if ( chan != channel() ) {
+        ++nbadChan;
+        if ( nbadChan < maxwarn ) {
+          cout << myname << "WARNING: Data[" << isam << "] channel is not consistent: "
+               << chan << " != " << channel() << endl;
+        }
+      } else {
+        ++ngoodChan;
+      }
       if ( m_nDump > ndumped ) {
-        cout << setw(10) << count << ": channel= " << setw(2) << chan << ", code="
+        cout << myname << setw(10) << count << ": channel= " << setw(2) << chan << ", code="
              << setw(4) << code << endl;
          ++ndumped;
       } else if ( ksam == 0 ) {
-        cout << "Channel number is " << channel() << endl;
+        cout << myname << "Channel number is " << channel() << endl;
       }
       if ( doTree ) m_ptree->Fill();
       if ( doData ) m_data[ksam] = code;
       ++count;
     }
   }
+  if ( nbadChan ) {
+    cout << myname << "WARNING: # ticks with wrong channel is " << nbadChan << endl;
+    cout << myname << "WARNING: # ticks with right channel is " << ngoodChan << endl;
+  }
   if ( doTree ) {
     if ( count != nsample() ) {
-      cout << "WARNING: Error counting samples: " << count << " != " << nsample() << endl;
+      cout << myname << "WARNING: Error counting samples: " << count << " != " << nsample() << endl;
     }
   }
   if ( ksam != count ) {
-    cout << "ERROR: Sample index and count are inconsistent: " << ksam << " != " << count << endl;
+    cout << myname << "ERROR: Sample index and count are inconsistent: " << ksam << " != " << count << endl;
   }
   if ( doTree ) {
     m_ptree->Write();

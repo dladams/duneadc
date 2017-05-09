@@ -28,7 +28,16 @@ public:  // static members
 public:  // non-static members
 
   // Ctor from input file name.
-  AdcBinarySampleReader(Name fname, SampleIndex afence);
+  AdcBinarySampleReader(Name fname);
+
+  // Ctor from input file name plus metadata.
+  //      fname - file name (full path)
+  //     dsname - Dataset name (e.g. 201703b)
+  //       chip - chip index (within the dataset)
+  //  chipLabel - global chip label
+  //       icha - channel number
+  //      fsamp - sampling frequency [Hz]
+  AdcBinarySampleReader(Name fname, Name dsname, Index chip, Name chipLabel, Index icha, double fsamp);
 
   // Dtor.
   ~AdcBinarySampleReader();
@@ -45,25 +54,36 @@ public:  // non-static members
   // Shift to extract channel number.
   Index chanShift() const { return m_chanShift; }
 
-  // Fence for determining under and overflow regions.
-  // There must be at least this many non-underflow/overflow
-  // samples on either side of the region.
-  SampleIndex fence() const { return m_fence; }
-
   // File/stream name.
   Name fileName() { return m_fname; }
 
   // Input stream.
   std::istream* inputStream() { return m_pin; }
 
+  // Return the dataset name.
+  Name dataset() const override { return m_dsname; }
+
+  // Return the chip index.
+  Index chip() const override { return m_chip; }
+
+  // Return the chip label.
+  Name chipLabel() const override { return m_chipLabel; }
+
+  // Return the channel number.
+  // From metadata or high bits of the packed data.
+  Index channel() const override { return m_channel; }
+
   // Return the number of ADC bins.
   SampleValue nadc() const override { return 4096; }
+
+  // Return the number of ADC bins.
+  Index nchannel() const override { return 16; }
 
   // Return the number of samples.
   SampleIndex nsample() const override;
 
-  // Return the channel number retrieved from the high bits of the codes.
-  Index channel() const override { return m_channel; }
+  // Return the sampling frequency.
+  double samplingFrequency() const override { return m_fsamp; }
 
   // Read the data and fill data vector or tree if either of those flags is set.
   //   m_doTree - Fill the tree
@@ -92,6 +112,11 @@ public:  // Flags
 
 private:
 
+  Name m_dsname;
+  Index m_chip = badChip();
+  Name m_chipLabel;
+  mutable Index m_channel = badChannel();
+  double m_fsamp = 0.0;
   AdcCode m_underflowCode;
   AdcCode m_overflowCode;
   AdcCode m_chanMask;
@@ -99,10 +124,8 @@ private:
   bool m_ownStream;
   std::istream* m_pin;
   Name m_fname;
-  SampleIndex m_fence;
   mutable bool m_haveReadFile;
   mutable SampleIndex m_nsample;
-  mutable Index m_channel;
   mutable TTree* m_ptree;
   mutable SampleVector m_data;
 

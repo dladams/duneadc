@@ -13,8 +13,9 @@
   gROOT->ProcessLine(".L AdcSampleReader.cxx+");
   gROOT->ProcessLine(".L AdcBorderFinder.cxx+");
   gROOT->ProcessLine(".L AdcBorderExtremaFinder.cxx+");
-  gROOT->ProcessLine(".L AdcBinarySampleReader.cxx+");
   gROOT->ProcessLine(".L AdcTestSampleReader.cxx+");
+  gROOT->ProcessLine(".L AdcBinarySampleReader.cxx+");
+  gROOT->ProcessLine(".L AdcSampleFinder.cxx+");
   gROOT->ProcessLine(".L AdcBinRecord.cxx+");
   gROOT->ProcessLine(".L AdcVoltageResponse.cxx+");
   gROOT->ProcessLine(".L AdcVoltagePerformance.cxx+");

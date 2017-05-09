@@ -167,6 +167,7 @@ int AdcTestSampleReader::read() {
       subdir += sclksuf;
       istringstream sschp(schp);
       sschp >> m_chip;
+      m_chipLabel = schp;
     } else bad = 1;
     if ( ! bad ) dirname = m_topdir + "/201612/p1_adc_old_format/P1_" + schp + "/" + subdir;
     m_vinmin = -50.0;
@@ -234,10 +235,12 @@ int AdcTestSampleReader::read() {
       }
     } else if ( ssam.substr(0, 8) == "20170306" ) {        // 20170306_CC
       m_dataset = ssam.substr(0, 8);
+      m_chipLabel = ssam.substr(8,3);
       schp = ssam.substr(9,2);
       dirname = m_topdir + "/20170307/P1_ADC_Long_Term_0306/P1_S7_02_1";
     } else if ( ssam.substr(0, 8) == "20170307" ) {        // 20170307_CC,
       m_dataset = ssam.substr(0, 8);
+      m_chipLabel = ssam.substr(8,3);
       schp = ssam.substr(9,2);
       dirname = m_topdir + "/20170307/P1_ADC_Long_Term_0306/P1_S7_02_2";
     } else if ( ssam.substr(0, 7) == "201703a" ) {
@@ -246,6 +249,7 @@ int AdcTestSampleReader::read() {
       m_dvdt = 400.0;
       if ( ssam.size() == 11 ) {
         m_dataset = ssam.substr(0, 7);
+        m_chipLabel = ssam.substr(8,3);
         schp = ssam.substr(9,2);
         dirname = m_topdir + "/201703/P1_ADC_ScreeningData_03222017/P1_S7_D" + schp;
       } else {
@@ -257,6 +261,7 @@ int AdcTestSampleReader::read() {
     if ( bad == 0 ) {
       istringstream sschp(schp);
       sschp >> m_chip;
+      if ( m_chipLabel.size() == 0 ) m_chipLabel = schp;
       isRawCsv = true;
       m_nomVinPerAdc = 0.34;
     }

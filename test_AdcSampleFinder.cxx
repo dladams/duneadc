@@ -128,15 +128,15 @@ int test_201703b(Index icha) {
       pcan->Update();
     }
   }
-  ec.check( int(prdr->vin( 4000000)) ==  410, "vin( 4000000)" );
-  ec.check( int(prdr->vin(10000000)) == -190, "vin(10000000)" );
-  ec.check( int(prdr->vin(20000000)) ==  792, "vin(20000000)" );
+  ec.checkequal( int(prdr->vin( 4000000)),  310, "vin( 4000000)" );
+  ec.checkequal( int(prdr->vin(10000000)), -290, "vin(10000000)" );
+  ec.checkequal( int(prdr->vin(20000000)),  692, "vin(20000000)" );
   cout << line() << endl;
   cout << myname << "Check table." << endl;
   ec.check( prdr->nvin() == 20000, "nvin");
   ec.check( prdr->dvin() == 0.1, "dvin");
-  ec.check( prdr->vinmin() == -200, "vinmin");
-  ec.check( prdr->vinmax() == 1800, "vinmax");
+  ec.check( prdr->vinmin() == -300, "vinmin");
+  ec.check( prdr->vinmax() == 1700, "vinmax");
   if ( ec.count() == 0 ) {
     ec.checkequal( prdr->countTable()[2000][9875], 579u, "countTable()[2000][9875]");
   }

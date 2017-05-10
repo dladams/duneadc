@@ -144,11 +144,11 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
   if ( next == 0 ) {
     cout << myname << "ERROR: No extrema found." << endl;
   } else {
-    SampleFunction* pfun = new Sawtooth(-200, 1800, binExts);
+    SampleFunction* pfun = new Sawtooth(-300, 1700, binExts);
     prdrFull->setSampleFunction(pfun);
   }
   // Build ADC-voltage table.
-  prdr->buildTableFromWaveform(20000, 0.1, -200.0);
+  prdr->buildTableFromWaveform(20000, 0.1, -300.0);
   return prdr;
 }
 

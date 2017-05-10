@@ -12,6 +12,7 @@
 #include "AdcSampleReader.h"
 #include "AdcBinRecord.h"
 
+class SampleFunction;
 class TTree;
 class TCanvas;
 
@@ -41,6 +42,9 @@ public:  // non-static members
 
   // Dtor.
   ~AdcBinarySampleReader();
+
+  // Set the sample fuction that specifies vin.
+  void setSampleFunction(const SampleFunction* samfun) { m_samfun = samfun; }
 
   // Underflow code.
   AdcCode underflowCode() const { return m_underflowCode; }
@@ -96,6 +100,10 @@ public:  // non-static members
   // Return the waveform.
   AdcCode code(SampleIndex isam) const override;
 
+  // The input voltage (mV) for sample isam.
+  double vin(SampleIndex isam) const override;
+
+
   // Return the tree. Non-const builds tree if needed.
   TTree* tree();
   TTree* tree() const { return m_ptree; }
@@ -128,6 +136,7 @@ private:
   mutable SampleIndex m_nsample;
   mutable TTree* m_ptree;
   mutable SampleVector m_data;
+  const SampleFunction* m_samfun = nullptr;
 
 };
 

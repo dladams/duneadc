@@ -2,6 +2,8 @@
   gSystem->SetBuildDir(".aclic");
   gROOT->ProcessLine(".L palette.cxx+");
   gROOT->ProcessLine(".L EffNBit.cxx+");
+  gROOT->ProcessLine(".L SampleFunction.cxx+");
+  gROOT->ProcessLine(".L Sawtooth.cxx+");
   gROOT->ProcessLine(".L TH1Props.cxx+");
   gROOT->ProcessLine(".L histNSigma.cxx+");
   gROOT->ProcessLine(".L drawNSigma.cxx+");

@@ -30,13 +30,12 @@ AdcTestSampleReader::AdcTestSampleReader(Name ssam)
   m_nadc(4096),
   m_maxSample(0),
   m_nsample(0),
-  m_nvin(0),
-  m_dvin(0.1),
-  m_vinmin(0.0),
   m_samplingFrequency(2.e6),
   m_dvdt(0.0),
   m_dvds(0.0),
-  m_nomVinPerAdc(0.0) { }
+  m_nomVinPerAdc(0.0) {
+  m_dvin = 0.1;
+}
 
 //**********************************************************************
 
@@ -297,6 +296,11 @@ int AdcTestSampleReader::read() {
   for ( Index ivin=0; ivin<nvin(); ++ivin ) {
     vvin[ivin] = vinmin() + 0.1*ivin;
   }
+  // Set voltage calibration. Must be done before filling table from waveform.
+  m_dvds = m_dvdt;
+  if ( samplingFrequency() > 0.0 ) {
+    m_dvds /= samplingFrequency();
+  }
   // Fetch the count for each ADC-Vin bin
   Index maxvin = 0;
   Index nline = 0;
@@ -317,8 +321,6 @@ int AdcTestSampleReader::read() {
     cout << myname << "ERROR: Invalid Vin bin size: " << dvin() << endl;
     return 8;
   }
-  m_table.clear();
-  m_table.resize(nadc());
   if ( isRawCsv ) {
     cout << myname << "Reading raw data." << endl;
     if ( samplingFrequency() <= 0.0 ) {
@@ -350,39 +352,13 @@ int AdcTestSampleReader::read() {
       m_data.push_back(iadc);
     }
     cout << myname << "Waveform tick count: " << m_data.size() << endl;
+    nline = m_data.size();
+    m_nsample = m_data.size();
     // Construct table from waveform.
-    for ( CountVector& vec : m_table ) vec.resize(nvin());
-    for ( Code iadc : m_data ) {
-      double t = isam*dt;
-      double vin = dvdt()*t;
-      Index ivin = vin/dvin();
-      if ( ivin > nvin() ) {
-        cout << myname << "ERROR: Vin is too large: " << vin << endl;
-        return 11;
-      }
-      if ( iadc >= m_table.size() ) {
-        cout << myname << "ERROR: Table is too small for index " << iadc << endl;
-        return 12;
-      }
-      if ( ivin >= m_table[iadc].size() ) {
-        cout << myname << "ERROR: Table row " << iadc << " is too small for index " << ivin << endl;
-        cout << myname << "ERROR:   Row size is " << m_table[iadc].size() << endl;
-        cout << myname << "ERROR:   isam = " << isam << endl;
-        cout << myname << "ERROR:   Vin = " << vin << endl;
-        return 13;
-      }
-      ++m_table[iadc][ivin];
-      //if ( iadc == 3500 ) cout << myname << "  ... " << iadc << ", " << ivin << ": " << m_table[iadc][ivin] << endl;
-      ++isam;
-      if ( maxsam > 0 && isam >= maxsam ) {
-        cout << myname << "Reached maximum sample count of " << maxsam << endl;
-        break;
-      }
-    }
-    maxvin = nvin();
-    nline = isam;
-    m_nsample = isam;
+    buildTableFromWaveform(20000, 0.1, -200.0);
   } else {
+    m_table.clear();
+    m_table.resize(nadc());
     cout << myname << "Reading table data." << endl;
     for ( Index iadc=0; iadc<nadc(); ++iadc ) {
       m_table[iadc].resize(nvin(), 0);
@@ -406,10 +382,6 @@ int AdcTestSampleReader::read() {
       ++nline;
     }
   }
-  m_dvds = m_dvdt;
-  if ( samplingFrequency() > 0.0 ) {
-    m_dvds /= samplingFrequency();
-  }
   cout << myname << "# ADC: " << nadc() << endl;
   cout << myname << "# Vin: " << nvin() << endl;
   cout << myname << "# lines: " << nline << endl;
@@ -418,18 +390,6 @@ int AdcTestSampleReader::read() {
   cout << myname << "Total count/nadc: " << nsample()/nadc() << endl;
   cout << myname << "Ramp rate: " << dvdt() << " mV/sec" << endl;
   return 0;
-}
-
-//**********************************************************************
-
-double AdcTestSampleReader::vinLow(Index ivin) const {
-  return vinmin() + dvin()*ivin;
-}
-
-//**********************************************************************
-
-double AdcTestSampleReader::vinCenter(Index ivin) const {
-  return vinmin() + dvin()*(ivin+0.5);
 }
 
 //**********************************************************************

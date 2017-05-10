@@ -83,29 +83,10 @@ public:  // Waveform info.
   Code code(SampleIndex isam) const override { return data()[isam]; }
 
   // Return the voltage for a sample.
-  double vin(Index isam) const override { return m_dvds*isam; }
+  double vin(SampleIndex isam) const override { return m_dvds*isam; }
 
   // Sampling frequency (Hz).
   double samplingFrequency() const override { return m_samplingFrequency; }
-
-public:  // Table info
-
-  // There are nvin() input voltage bins. Bin ivin starts at
-  //   vinmin() + dvin()*ivin  mV
-  Index nvin() const override { return m_nvin; }
-  double dvin() const override { return m_dvin; }
-  double vinmin() const override { return m_vinmin; }
-  double vinmax() const override { return m_vinmin + nvin()*dvin(); }
-
-  // Count table.
-  // The # samples for ADC code iadc and input voltage bin ivin is count[iadc][ivin];
-  const CountTable& countTable() const override { return m_table; }
-
-  // Return the low edge of an input voltage bin.
-  double vinLow(Index ivin) const override;
-
-  // Return the center of an input voltage bin.
-  double vinCenter(Index ivin) const override;
 
 public:  // Methods specific to this class
 
@@ -135,15 +116,11 @@ private:
   Code m_nadc;
   Index m_maxSample;
   SampleIndex m_nsample;
-  Index m_nvin;
-  double m_dvin;
-  double m_vinmin;
   double m_samplingFrequency;
   double m_dvdt;
   double m_dvds;
   double m_nomVinPerAdc;
 
-  CountTable m_table;
   CodeVector m_data;
 
 };

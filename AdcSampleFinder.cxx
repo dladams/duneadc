@@ -5,6 +5,7 @@
 #include "AdcBinarySampleReader.h"
 #include "AdcBorderExtremaFinder.h"
 #include "AdcBinExtremaFinder.h"
+#include "Sawtooth.h"
 #include "FileDirectory.h"
 #include "TSystem.h"
 #include <iostream>
@@ -101,7 +102,8 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
   Index ichp = badChip();
   sschp >> ichp;
   istringstream sscha(scha);
-  AdcSampleReaderPtr prdr(new AdcBinarySampleReader(fname, dsname, ichp, schpLabel, icha, fsamp));
+  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, dsname, ichp, schpLabel, icha, fsamp);
+  AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
   AdcExtrema borderExts;
   {
@@ -141,7 +143,12 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
   }
   if ( next == 0 ) {
     cout << myname << "ERROR: No extrema found." << endl;
+  } else {
+    SampleFunction* pfun = new Sawtooth(-200, 1800, binExts);
+    prdrFull->setSampleFunction(pfun);
   }
+  // Build ADC-voltage table.
+  prdr->buildTableFromWaveform(20000, 0.1, -200.0);
   return prdr;
 }
 
@@ -149,7 +156,7 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
 
 Name AdcSampleFinder::schan(Index icha) const {
   static NameVector schans = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                              "a", "b", "c", "d", "e", "f"};
+                              "A", "B", "C", "D", "E", "F"};
   if ( icha > schans.size() ) return "";
   return schans[icha];
 }

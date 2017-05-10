@@ -12,6 +12,7 @@
 #include <vector>
 #include "AdcTypes.h"
 class TH1;
+class TF1;
 
 class AdcSampleReader {
 
@@ -71,33 +72,55 @@ public:  // For waveforms
   virtual Code code(SampleIndex isam) const =0;
 
   // The input voltage (mV) for sample isam.
-  virtual double vin(Index isam) const { return 0.0; }
+  virtual double vin(SampleIndex isam) const { return 0.0; }
+  double vinForTF1(double* x, double*) const;
+  TF1* vinTF1(Name name = "sampleVin") const;
 
   // Return the sampling frequency.
   virtual double samplingFrequency() const { return 0.0; }
 
   // Return a histogram of the waveform from sample idat to idat+ndat.
   // Every nshow'th point is shown.
-  virtual TH1* histdata(unsigned int idat =0, unsigned int ndat =0, unsigned int nshow =1);
+  // If histtime, then ploat is vs time instead of tick.
+  virtual TH1* histdata(unsigned int idat =0, unsigned int ndat =0,
+                        unsigned int nshow =1, bool histtime = false);
+
+  // Return a histogram of the input voltage from sample idat to idat+ndat.
+  // Every nshow'th point is shown.
+  // If histtime, then ploat is vs time instead of tick.
+  virtual TH1* histvin(unsigned int idat =0, unsigned int ndat =0,
+                       unsigned int nshow =1, bool histtime = false);
 
 public:  // Table description.
 
   // There are nvin() input voltage bins. Bin ivin starts at
   //   vinmin() + dvin()*ivin  mV
-  virtual Index nvin() const { return 0; }
-  virtual double dvin() const { return 0; }
-  virtual double vinmin() const { return 0; }
-  virtual double vinmax() const { return vinmin() + nvin()*dvin(); }
+  Index nvin() const { return m_nvin; }
+  double dvin() const { return m_dvin; }
+  double vinmin() const { return m_vinmin; }
+  double vinmax() const { return vinmin() + nvin()*dvin(); }
 
   // Count table.
   // The # samples for ADC code iadc and input voltage bin ivin is count[iadc][ivin];
-  virtual const CountTable& countTable() const { static CountTable t; return t; }
+  const CountTable& countTable() const { return m_table; }
 
   // Return the low edge of an input voltage bin.
-  virtual double vinLow(Index ivin) const;
+  double vinLow(Index ivin) const;
 
   // Return the center of an input voltage bin.
-  virtual double vinCenter(Index ivin) const;
+  double vinCenter(Index ivin) const;
+
+  // Build table from waveform.
+  // Table will have nvin voltage bins width dvin starting at vinmin.
+  int buildTableFromWaveform(Index nvin, double dvin, double vinmin);
+
+protected:  // data: subclasses should fill this
+
+  // Data describing the table.
+  Index m_nvin = 0;
+  double m_dvin = 0.0;
+  double m_vinmin = 0.0;
+  CountTable m_table;
 
 };
 

@@ -1,6 +1,7 @@
 // AdcBinarySampleReader.cxx
 
 #include "AdcBinarySampleReader.h"
+#include "SampleFunction.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -192,6 +193,13 @@ AdcCode AdcBinarySampleReader::code(SampleIndex isam) const {
   }
   if ( isam >= m_data.size() ) return 0.0;
   return m_data[isam];
+}
+
+//**********************************************************************
+
+double AdcBinarySampleReader::vin(SampleIndex isam) const {
+  if ( m_samfun == nullptr ) return 0.0;
+  return m_samfun->value(isam);
 }
 
 //**********************************************************************

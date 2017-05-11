@@ -83,7 +83,7 @@ public:  // Waveform info.
   Code code(SampleIndex isam) const override { return data()[isam]; }
 
   // Return the voltage for a sample.
-  double vin(SampleIndex isam) const override { return m_dvds*isam; }
+  double vin(SampleIndex isam) const override { return m_dvds*isam + m_vinmin; }
 
   // Sampling frequency (Hz).
   double samplingFrequency() const override { return m_samplingFrequency; }

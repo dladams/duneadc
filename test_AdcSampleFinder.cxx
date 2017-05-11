@@ -35,9 +35,12 @@ int test_201703a(Index icha) {
   ec.check( prdr->maxSample() == 0, "Max # samples" );
   ec.check( prdr->nsample() == 9000000, "# samples" );
   ec.check( prdr->code(6000000) == 3131, "code(6000000)" );
-  ec.check( prdr->vin(0) == 0, "vin(0)" );
-  ec.check( prdr->vin(6000000) == 1200, "vin(6000000)" );
-  ec.check( prdr->vin(9000000) == 1800, "vin(9000000)" );
+  vector<int> expvin0M(16, -200);
+  vector<int> expvin6M(16, 1000);
+  vector<int> expvin9M(16, 1600);
+  ec.checkequal( int(prdr->vin(      0)), expvin0M[icha], "vin(0)" );
+  ec.checkequal( int(prdr->vin(6000000)), expvin6M[icha], "vin(6000000)" );
+  ec.checkequal( int(prdr->vin(9000000)), expvin9M[icha], "vin(9000000)" );
   ec.check( prdr->samplingFrequency() == 2.0e6, "sampling frequency" );
   if ( ec.count() == 0 ) {
     cout << line() << endl;
@@ -63,8 +66,7 @@ int test_201703a(Index icha) {
   ec.check( prdr->dvin() == 0.1, "dvin");
   ec.check( prdr->vinmin() == -200, "vinmin");
   ec.check( prdr->vinmax() == 1800, "vinmax");
-  //ec.checkequal( prdr->countTable()[2000][8426], 182u, "countTable()[2000][8426]");
-  ec.checkequal( prdr->countTable()[2000][10426], 181u, "countTable()[2000][10426]");
+  ec.checkequal( prdr->countTable()[2000][8426], 182u, "countTable()[2000][8426]");
   for ( unsigned int iv=0; iv<prdr->nvin(); ++iv ) {
     unsigned int nent = prdr->countTable()[2000][iv];
     unsigned int nfound = 0;

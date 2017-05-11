@@ -6,10 +6,12 @@
 #include "TF1.h"
 #include "TCanvas.h"
 #include <iostream>
+#include <sstream>
 
 using std::string;
 using std::cout;
 using std::endl;
+using std::ostringstream;
 
 namespace {
 
@@ -34,7 +36,11 @@ int test_201703a(Index icha) {
   ec.check( prdr->nadc() == 4096, "# ADC bins" );
   ec.check( prdr->maxSample() == 0, "Max # samples" );
   ec.check( prdr->nsample() == 9000000, "# samples" );
-  ec.check( prdr->code(6000000) == 3131, "code(6000000)" );
+  vector<SampleValue> expCode6M = {    0,    0,    0,    0,
+                                    3131, 3124,    0,    0,
+                                       0,    0,    0,    0,
+                                       0,    0,    0,    0};
+  ec.checkequal( prdr->code(6000000), expCode6M[icha], "code(6000000)" );
   vector<int> expvin0M(16, -200);
   vector<int> expvin6M(16, 1000);
   vector<int> expvin9M(16, 1600);
@@ -50,11 +56,19 @@ int test_201703a(Index icha) {
     TH1* phv = prdr->histvin(0, prdr->nsample(), 1000, usetime);
     ec.check( phd != nullptr, "histogram");
     if ( phd != nullptr ) {
-      phd->SetTitle(dsname.c_str());
+      ostringstream sstitl;
+      sstitl << dsname << " channel " << icha;
+      string stitl = sstitl.str();
+      phd->SetTitle(stitl.c_str());
+      phd->SetMinimum(-500);
+      phd->SetMaximum(4500);
+      phd->SetLineWidth(2);
       TCanvas* pcan = new TCanvas;
+      pcan->SetGridy();
       phd->DrawCopy();
       if ( phv != nullptr ) {
         phv->SetLineColor(2);
+        phv->SetLineWidth(2);
         phv->DrawCopy("same");
       }
       pcan->Update();
@@ -117,14 +131,22 @@ int test_201703b(Index icha) {
     cout << myname << "Draw data." << endl;
     bool usetime = true;
     TH1* phd = prdr->histdata(0, prdr->nsample(), 1000, usetime);
-    TH1* phv = prdr->histvin(0, prdr->nsample(), 1000, usetime);
     ec.check( phd != nullptr, "histogram");
+    TH1* phv = prdr->histvin(0, prdr->nsample(), 1000, usetime);
     if ( phd != nullptr ) {
-      phd->SetTitle(dsname.c_str());
+      ostringstream sstitl;
+      sstitl << dsname << " channel " << icha;
+      string stitl = sstitl.str();
+      phd->SetTitle(stitl.c_str());
+      phd->SetMinimum(-500);
+      phd->SetMaximum(4500);
+      phd->SetLineWidth(2);
       TCanvas* pcan = new TCanvas;
+      pcan->SetGridy();
       phd->DrawCopy();
       if ( phv != nullptr ) {
         phv->SetLineColor(2);
+        phv->SetLineWidth(2);
         phv->DrawCopy("same");
       }
       pcan->Update();

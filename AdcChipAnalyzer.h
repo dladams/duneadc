@@ -23,7 +23,7 @@ class AdcChipAnalyzer {
 
 public:
 
-  AdcChipAnalyzer(AdcSampleReader& reader,
+  AdcChipAnalyzer(std::string dsname,
                   unsigned int icha1 =0,
                   unsigned int ncha =0,
                   std::string datasetCalib ="",

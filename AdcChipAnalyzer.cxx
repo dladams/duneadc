@@ -1,6 +1,7 @@
 // AdcChipAnalyzer.cxx
 
 #include "AdcChipAnalyzer.h"
+#include "AdcSampleFinder.h"
 #include "AdcCalibrationTree.h"
 #include "AdcPerformanceTree.h"
 #include <iostream>
@@ -29,16 +30,20 @@ typedef unsigned int Index;
 //**********************************************************************
 //
 AdcChipAnalyzer::
-AdcChipAnalyzer(AdcSampleReader& reader, Index icha1, Index ncha, string datasetCalib, bool savecalib,
+AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, bool savecalib,
                 float vmin, float vmax, Index nv, double vrmsmax, bool dropTails, bool saveperf)
 : asas(icha1+ncha, nullptr) {
   string myname = "AdcChipAnalyzer::ctor: ";
+  AdcSampleFinder asf;
+  // Open the sample for the first channel.
+  Index icha0 = icha1;
+  AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha0);
   gStyle->SetOptStat(110111);
   vector<string> stypes = {"resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
   //vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
   //vector<string> stypes = {"fdn", "fdr", "fds", "fdsb"};
-  Index maxchan = reader.nchannel();
-  string ssam = reader.sample();
+  Index maxchan = prdr->nchannel();
+  string ssam = prdr->sample();
   if ( ssam.substr(0,6) == "201610" ) maxchan = 15;
   if ( ncha == 0 ) ncha = maxchan - icha1;
   // Assign the channel numbers to include.
@@ -98,15 +103,16 @@ AdcChipAnalyzer(AdcSampleReader& reader, Index icha1, Index ncha, string dataset
     Index icha = chans[kcha];
     Index ipad = npad ? pads[kcha] : 0;
     if ( npad ) cans[0]->cd(ipad);
-    int estat = reader.setChannel(icha);
-    if ( estat != 0 ) {
-      cout << myname << "Unable to set channel " << icha << ". Error code " << estat << "." << endl;
+    if ( icha != icha0 ) prdr = asf.find(dsname, icha);
+    if ( prdr == nullptr ) {
+      cout << myname << "Unable to set channel " << icha << endl;
       return;
     };
-    if ( reader.channel() != icha ) {
-      cout << myname << "Set channel differes from input: " << reader.channel() << " != " << icha << "." << endl;
+    if ( prdr->channel() != icha ) {
+      cout << myname << "Set channel differs from input: " << prdr->channel() << " != " << icha << "." << endl;
+      return;
     };
-    asas[icha] = new AdcSampleAnalyzer(reader, datasetCalib);
+    asas[icha] = new AdcSampleAnalyzer(*prdr, datasetCalib);
     AdcSampleAnalyzer*& pasa = asas[icha];
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc == nullptr ) {

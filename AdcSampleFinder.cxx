@@ -102,7 +102,7 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
   Index ichp = badChip();
   sschp >> ichp;
   istringstream sscha(scha);
-  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, dsname, ichp, schpLabel, icha, fsamp);
+  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp);
   AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
   AdcExtrema borderExts;

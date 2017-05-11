@@ -40,11 +40,13 @@ AdcBinarySampleReader::AdcBinarySampleReader(Name fname)
 //**********************************************************************
 
 AdcBinarySampleReader::
-AdcBinarySampleReader(Name fname, Name dsname, Index a_chip, Name a_chipLabel,
+AdcBinarySampleReader(Name fname, Name a_sample, Index a_chip, Name a_chipLabel,
                       Index icha, double fsamp)
 : AdcBinarySampleReader(fname) {
   const string myname = "AdcBinarySampleReader::ctor: ";
-  m_dsname = dsname;
+  m_sample = a_sample;
+  string::size_type ipos = m_sample.find("_");
+  m_dsname = m_sample.substr(0, ipos);
   m_chip = a_chip;
   m_chipLabel= a_chipLabel;
   m_channel = icha;
@@ -122,7 +124,9 @@ int AdcBinarySampleReader::read() const {
   unsigned int ndumped = 0;
   SampleIndex nbadChan = 0;
   SampleIndex ngoodChan = 0;
+  SampleIndex nskipChan = 0;
   SampleIndex maxwarn = 1000;
+  bool skipping = true;
   while ( count < maxCount ) {
     fin.seekg(2*ksam);
     SampleIndex ksamNext = ksam + nsambuf;
@@ -133,19 +137,27 @@ int AdcBinarySampleReader::read() const {
     cout << myname << "Read block at sample " << setw(8) << ksam << ": " << setw(6) << (buff[0]&chanMask())
          << " (size = " << nsamRead << ")" << endl;
     SampleIndex isamMax = isam + nsamRead;
-    for ( SampleIndex isam=0; isam<isamMax; (++isam, ++ksam) ) {
+    for ( SampleIndex isam=0; isam<isamMax; ++isam ) {
       if ( count >= maxCount ) break;
       AdcCode chancode = buff[isam];
       code = chancode&chanMask();
       Index chan = chancode>>chanShift();
       if ( m_channel == badChannel() ) m_channel = chan;
       if ( chan != channel() ) {
+        // Skip bad channels at start of stream.
+        if ( skipping ) {
+          ++nskipChan;
+          --m_nsample;
+          if ( isamMax ) --isamMax;
+          continue;
+        }
         ++nbadChan;
         if ( nbadChan < maxwarn ) {
           cout << myname << "WARNING: Data[" << isam << "] channel is not consistent: "
                << chan << " != " << channel() << endl;
         }
       } else {
+        skipping = false;
         ++ngoodChan;
       }
       if ( m_nDump > ndumped ) {
@@ -157,9 +169,11 @@ int AdcBinarySampleReader::read() const {
       }
       if ( doTree ) m_ptree->Fill();
       if ( doData ) m_data[ksam] = code;
+      ++ksam;
       ++count;
     }
   }
+  cout << myname << "# skipped channels: " << nskipChan << endl;
   if ( nbadChan ) {
     cout << myname << "WARNING: # ticks with wrong channel is " << nbadChan << endl;
     cout << myname << "WARNING: # ticks with right channel is " << ngoodChan << endl;
@@ -169,8 +183,10 @@ int AdcBinarySampleReader::read() const {
       cout << myname << "WARNING: Error counting samples: " << count << " != " << nsample() << endl;
     }
   }
-  if ( ksam != count ) {
-    cout << myname << "ERROR: Sample index and count are inconsistent: " << ksam << " != " << count << endl;
+  SampleIndex ksamExp = count + nskipChan;
+  if ( ksam != ksamExp ) {
+    cout << myname << "ERROR: Sample index and count are inconsistent: " << ksam << " != "
+         << count << " + " << nskipChan << endl;
   }
   if ( doTree ) {
     m_ptree->Write();

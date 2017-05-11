@@ -33,15 +33,18 @@ public:  // non-static members
 
   // Ctor from input file name plus metadata.
   //      fname - file name (full path)
-  //     dsname - Dataset name (e.g. 201703b)
+  //   a_sample - Sample name (e.g. 201703b_D02_6a)
   //       chip - chip index (within the dataset)
   //  chipLabel - global chip label
   //       icha - channel number
   //      fsamp - sampling frequency [Hz]
-  AdcBinarySampleReader(Name fname, Name dsname, Index chip, Name chipLabel, Index icha, double fsamp);
+  AdcBinarySampleReader(Name fname, Name a_sample, Index chip, Name chipLabel, Index icha, double fsamp);
 
   // Dtor.
   ~AdcBinarySampleReader();
+
+  // Sample name.
+  Name sample() const override { return m_sample; }
 
   // Set the sample fuction that specifies vin.
   void setSampleFunction(const SampleFunction* samfun) { m_samfun = samfun; }
@@ -120,6 +123,7 @@ public:  // Flags
 
 private:
 
+  Name m_sample;
   Name m_dsname;
   Index m_chip = badChip();
   Name m_chipLabel;

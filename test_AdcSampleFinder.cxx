@@ -93,11 +93,11 @@ int test_201703b(Index icha) {
   cout << myname << "Find sample." << endl;
   AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha);   // Channel 4 has 45 inconsistent ticks
   vector<SampleIndex> expNsample = {        0,        0,        0,        0,
-                                            0, 42017808, 42014584, 42018105,
+                                     42017557, 42017808, 42014584, 42018105,
                                      42017602, 42018105, 42018561, 42016093,
                                             0,        0,        0,        0};
   vector<SampleValue> expCode20M = {    0,    0,    0,    0,
-                                        0, 2016, 2013, 2004,
+                                     1992, 2016, 2013, 2004,
                                      1988, 1958, 1951, 2008,
                                         0,    0,    0,    0};
   ec.check( prdr->dataset() == "201703b", "Dataset name" );
@@ -128,17 +128,41 @@ int test_201703b(Index icha) {
       pcan->Update();
     }
   }
-  ec.checkequal( int(prdr->vin( 4000000)),  310, "vin( 4000000)" );
-  ec.checkequal( int(prdr->vin(10000000)), -290, "vin(10000000)" );
-  ec.checkequal( int(prdr->vin(20000000)),  692, "vin(20000000)" );
+  vector<int> expvin04M = {    0,    0,    0,    0,
+                             310,  310,    0,    0,
+                               0,    0,    0,    0,
+                               0,    0,    0,    0};
+  vector<int> expvin10M = {    0,    0,    0,    0,
+                            -290, -290,    0,    0,
+                               0,    0,    0,    0,
+                               0,    0,    0,    0};
+  vector<int> expvin20M = {    0,    0,    0,    0,
+                             692,  692,    0,    0,
+                               0,    0,    0,    0,
+                               0,    0,    0,    0};
+  ec.checkequal( int(prdr->vin( 4000000)), expvin04M[icha], "vin( 4000000)" );
+  ec.checkequal( int(prdr->vin(10000000)), expvin10M[icha], "vin(10000000)" );
+  ec.checkequal( int(prdr->vin(20000000)), expvin20M[icha], "vin(20000000)" );
   cout << line() << endl;
   cout << myname << "Check table." << endl;
   ec.check( prdr->nvin() == 20000, "nvin");
   ec.check( prdr->dvin() == 0.1, "dvin");
   ec.check( prdr->vinmin() == -300, "vinmin");
   ec.check( prdr->vinmax() == 1700, "vinmax");
+  vector<Index> expivin = {    0,    0,    0,    0,
+                            9952, 9875,    0,    0,
+                               0,    0,    0,    0,
+                               0,    0,    0,    0};
+  vector<Index> expntab = {    0,    0,    0,    0,
+                             860,  579,    0,    0,
+                               0,    0,    0,    0,
+                               0,    0,    0,    0};
   if ( ec.count() == 0 ) {
-    ec.checkequal( prdr->countTable()[2000][9875], 579u, "countTable()[2000][9875]");
+    Index ivin = expivin[icha];
+    ostringstream sslab;
+    sslab << "countTable()[2000][" << ivin << "]";
+    string slab = sslab.str();
+    ec.checkequal( prdr->countTable()[2000][ivin], expntab[icha], slab);
   }
   for ( unsigned int iv=0; iv<prdr->nvin(); ++iv ) {
     unsigned int nent = prdr->countTable()[2000][iv];

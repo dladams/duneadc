@@ -38,10 +38,12 @@ public:  // non-static members
   //  chipLabel - global chip label
   //       icha - channel number
   //      fsamp - sampling frequency [Hz]
-  //       time - time sampel was taken in unix sec
+  //       time - time sample was taken in unix sec
+  //     maxsam - max # samples to read
   AdcBinarySampleReader(Name fname, Name a_sample,
                         Index chip, Name chipLabel,
-                        Index icha, double fsamp, AdcTime a_time);
+                        Index icha, double fsamp, AdcTime a_time,
+                        SampleIndex a_maxSample =0);
 
   // Dtor.
   ~AdcBinarySampleReader();

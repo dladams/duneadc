@@ -41,7 +41,8 @@ AdcBinarySampleReader::AdcBinarySampleReader(Name fname)
 
 AdcBinarySampleReader::
 AdcBinarySampleReader(Name fname, Name a_sample, Index a_chip, Name a_chipLabel,
-                      Index icha, double fsamp, AdcTime a_time)
+                      Index icha, double fsamp, AdcTime a_time,
+                      SampleIndex a_maxSample)
 : AdcBinarySampleReader(fname) {
   const string myname = "AdcBinarySampleReader::ctor: ";
   m_sample = a_sample;
@@ -52,6 +53,7 @@ AdcBinarySampleReader(Name fname, Name a_sample, Index a_chip, Name a_chipLabel,
   m_channel = icha;
   m_fsamp = fsamp;
   m_time = a_time;
+  m_maxSample = a_maxSample;
   cout << myname << "    Dataset: " << dataset() << endl;
   cout << myname << "       Chip: " << chip() << endl;
   cout << myname << " Chip label: " << chipLabel() << endl;
@@ -93,6 +95,7 @@ int AdcBinarySampleReader::read() const {
   }
   cout << myname << "  # samples: " << setw(10) << nsample() << endl;
   SampleIndex maxCount = m_nsample;
+  if ( m_maxSample > 0 && m_nsample > m_maxSample ) maxCount = m_maxSample;
   if ( !doTree && !doData ) maxCount = m_nDump;
   cout << myname << "  # to read: " << setw(10) << maxCount << endl;
   if ( maxCount == 0 ) return 0;
@@ -132,7 +135,7 @@ int AdcBinarySampleReader::read() const {
     SampleIndex ksam = ksamNext;
     fin.seekg(2*ksam);
     ksamNext = ksam + nsambuf;
-    if ( ksamNext > nsample() ) ksamNext = nsample();
+    if ( ksamNext > maxCount ) ksamNext = maxCount;
     SampleIndex nsamRead = ksamNext - ksam;
     if ( nsamRead == 0 ) break;
     fin.read((char*)buff, 2*nsamRead);
@@ -189,6 +192,7 @@ int AdcBinarySampleReader::read() const {
     cout << myname << "ERROR: Sample index and count are inconsistent: " << ksamNext << " != "
          << count << " + " << 2*nskipCode << endl;
   }
+  m_nsample = count;
   if ( doTree ) {
     m_ptree->Write();
     // Closing and opening the file prevents a crash in draw().

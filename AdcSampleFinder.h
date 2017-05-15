@@ -28,10 +28,10 @@ public:
   // Return the reader for a sample.
   // Returns null if the sample is not found or does not have the requested channel.
   // Channel is not checked if it is set to badChannel().
-  AdcSampleReaderPtr find(Name asample, Index icha = badChannel(), Index maxsam =0) const;
+  AdcSampleReaderPtr find(Name asample, Index icha = badChannel(), SampleIndex maxsam =0) const;
 
   // Return a binary reader.
-  AdcSampleReaderPtr findBinaryReader(Name asample, Index icha = badChannel(), Index maxsam =0) const;
+  AdcSampleReaderPtr findBinaryReader(Name asample, Index icha = badChannel(), SampleIndex maxsam =0) const;
 
   // Convert channel snumber to string.
   Name schan(Index icha) const;

@@ -38,7 +38,7 @@ AdcSampleFinder::AdcSampleFinder(Name topdir) {
 
 //**********************************************************************
 
-AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, Index maxsam) const {
+AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxsam) const {
   const string myname = "AdcSampleFinder::find: ";
   // CSV samples from Hucheng et al.
   if ( ssam.substr(0,4) == "2016" ||
@@ -50,6 +50,9 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, Index maxsam) co
   }
   // Binary samples from Hucheng et al.
   if ( ssam.substr(0,7) == "201703b" ) {
+    SampleIndex maxsam201703b = 39600000;  // Must cut off the data to avoid problem at end.
+    if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
+cout << myname << "maxsam = " << maxsam << endl;
     return findBinaryReader(ssam, icha, maxsam);
   }
   cout << myname << "ERROR: Unable to find reader for sample " << ssam << endl;
@@ -59,7 +62,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, Index maxsam) co
 //**********************************************************************
 
 AdcSampleReaderPtr AdcSampleFinder::
-findBinaryReader(Name ssam, Index icha, Index maxsam) const {
+findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   const string myname = "AdcSampleFinder::findBinaryReader: ";
   // Long term tests: 201703b_CCC_DDD where CCC=chip=D02 and DDD = day
   string dsname;         // Dataset name.
@@ -115,7 +118,8 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
   int minute = std::atoi(fname.substr(ipos+9, 2).c_str());
   TDatime datime(2017, month, day, hour, minute, 0);
   AdcTime itime = datime.Convert();
-  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime);
+  // Read the data.
+  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam);
   AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
   AdcExtrema borderExts;

@@ -130,10 +130,11 @@ int test_201703b(Index icha) {
   cout << line() << endl;
   cout << myname << "Find sample." << endl;
   AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha);   // Channel 4 has 45 inconsistent ticks
-  vector<SampleIndex> expNsample = {        0,        0,        0,        0,
-                                     42017557, 42017808, 42014584, 42018105,
-                                     42017602, 42018105, 42018561, 42016093,
-                                            0,        0,        0,        0};
+  vector<SampleIndex> expNsample(16, 39600000);
+  //vector<SampleIndex> expNsample = {        0,        0,        0,        0,
+  //                                   42017557, 42017808, 42014584, 42018105,
+  //                                   42017602, 42018105, 42018561, 42016093,
+  //                                          0,        0,        0,        0};
   vector<SampleValue> expCode20M = {    0,    0,    0,    0,
                                      1993, 2016, 2013, 2004,
                                      1988, 1958, 1951, 2008,

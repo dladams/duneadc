@@ -8,10 +8,12 @@
 #include "Sawtooth.h"
 #include "FileDirectory.h"
 #include "TSystem.h"
+#include "TDatime.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <stdlib.h>
 
 using std::string;
 using std::cout;
@@ -102,7 +104,18 @@ findBinaryReader(Name ssam, Index icha, Index maxsam) const {
   Index ichp = badChip();
   sschp >> ichp;
   istringstream sscha(scha);
-  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp);
+  // Find the time.
+  string::size_type ipos;
+  ipos = fname.find("_chn");
+  ipos = fname.find("_", ipos+1);
+  ++ipos;
+  int month  = std::atoi(fname.substr(ipos+0, 2).c_str());
+  int day    = std::atoi(fname.substr(ipos+3, 2).c_str());
+  int hour   = std::atoi(fname.substr(ipos+6, 2).c_str());
+  int minute = std::atoi(fname.substr(ipos+9, 2).c_str());
+  TDatime datime(2017, month, day, hour, minute, 0);
+  AdcTime itime = datime.Convert();
+  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime);
   AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
   AdcExtrema borderExts;

@@ -38,7 +38,10 @@ public:  // non-static members
   //  chipLabel - global chip label
   //       icha - channel number
   //      fsamp - sampling frequency [Hz]
-  AdcBinarySampleReader(Name fname, Name a_sample, Index chip, Name chipLabel, Index icha, double fsamp);
+  //       time - time sampel was taken in unix sec
+  AdcBinarySampleReader(Name fname, Name a_sample,
+                        Index chip, Name chipLabel,
+                        Index icha, double fsamp, AdcTime a_time);
 
   // Dtor.
   ~AdcBinarySampleReader();
@@ -92,6 +95,9 @@ public:  // non-static members
   // Return the sampling frequency.
   double samplingFrequency() const override { return m_fsamp; }
 
+  // Return the DAQ time in unix sec.
+  AdcTime time() const override { return m_time; }
+
   // Read the data and fill data vector or tree if either of those flags is set.
   //   m_doTree - Fill the tree
   //   m_doData - Fill the data vactor
@@ -129,6 +135,7 @@ private:
   Name m_chipLabel;
   mutable Index m_channel = badChannel();
   double m_fsamp = 0.0;
+  AdcTime m_time;
   AdcCode m_underflowCode;
   AdcCode m_overflowCode;
   AdcCode m_chanMask;

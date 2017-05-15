@@ -59,6 +59,9 @@ public:  // General
   // Number of ADC codes (4096 for the typical 12-bits)
   virtual Code nadc() const { return 0; }
 
+  // Time data was taken in unix sec.
+  virtual AdcTime time() const { return 0; }
+
 public:  // For waveforms
 
   // Maximum # samples to read. Zero for all.

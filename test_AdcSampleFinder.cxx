@@ -4,6 +4,7 @@
 #include "ErrorCount.h"
 #include "TH1.h"
 #include "TF1.h"
+#include "TDatime.h"
 #include "TCanvas.h"
 #include <iostream>
 #include <sstream>
@@ -61,6 +62,8 @@ int test_201703a(Index icha) {
   ec.checkequal( int(prdr->vin(6000000)), expvin6M[icha], "vin(6000000)" );
   ec.checkequal( int(prdr->vin(9000000)), expvin9M[icha], "vin(9000000)" );
   ec.check( prdr->samplingFrequency() == 2.0e6, "sampling frequency" );
+  ec.checkequal( prdr->time(), 0u, "time");
+  TDatime(prdr->time()).Print();
   if ( ec.count() == 0 ) {
     cout << line() << endl;
     cout << myname << "Draw data." << endl;
@@ -132,7 +135,7 @@ int test_201703b(Index icha) {
                                      42017602, 42018105, 42018561, 42016093,
                                             0,        0,        0,        0};
   vector<SampleValue> expCode20M = {    0,    0,    0,    0,
-                                     1992, 2016, 2013, 2004,
+                                     1993, 2016, 2013, 2004,
                                      1988, 1958, 1951, 2008,
                                         0,    0,    0,    0};
   ec.check( prdr->dataset() == "201703b", "Dataset name" );
@@ -145,6 +148,12 @@ int test_201703b(Index icha) {
   ec.checkequal( prdr->nsample(), expNsample[icha], "# samples" );
   ec.checkequal( prdr->code(20000000), expCode20M[icha], "code(20M)" );
   ec.check( prdr->samplingFrequency() == 2.0e6, "sampling frequency" );
+  vector<AdcTime> expTime = {          0,          0,          0,          0,
+                              1489275780, 1489275780, 1489275840,          0,
+                                       0,          0,          0,          0,
+                                       0,          0,          0,          0};
+  ec.checkequal( prdr->time(), expTime[icha], "time");
+  TDatime(prdr->time()).Print();
   if ( ec.count() == 0 ) {
     cout << line() << endl;
     cout << myname << "Draw data." << endl;
@@ -178,15 +187,15 @@ int test_201703b(Index icha) {
     }
   }
   vector<int> expvin04M = {    0,    0,    0,    0,
-                             310,  310,    0,    0,
+                             310,  310,  310,    0,
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   vector<int> expvin10M = {    0,    0,    0,    0,
-                            -290, -290,    0,    0,
+                            -290, -290, -290,    0,
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   vector<int> expvin20M = {    0,    0,    0,    0,
-                             692,  692,    0,    0,
+                             692,  692,  692,    0,
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   ec.checkequal( int(prdr->vin( 4000000)), expvin04M[icha], "vin( 4000000)" );
@@ -203,7 +212,7 @@ int test_201703b(Index icha) {
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   vector<Index> expntab = {    0,    0,    0,    0,
-                             860,  579,    0,    0,
+                             863,  579,    0,    0,
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   if ( ec.count() == 0 ) {

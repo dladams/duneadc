@@ -14,6 +14,7 @@ using AdcCode = unsigned short;
 using SampleValue = AdcCode;
 using Index = unsigned int;
 using SampleIndex = unsigned long;
+using AdcTime = unsigned long;
 using SampleVector = std::vector<SampleValue>;
 using SampleVector = std::vector<SampleValue>;
 using SampleIndexVector = std::vector<SampleIndex>;

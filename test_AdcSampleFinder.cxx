@@ -19,6 +19,19 @@ string line() {
   return "-----------------------------------------";
 }
 
+void addLegend(TH1* phAdc, TH1* phVin) {
+  TLegend* pleg = new TLegend(0.18, 0.77, 0.33, 0.87);
+  pleg->SetBorderSize(0);
+  pleg->SetFillStyle(0);
+  pleg->AddEntry(phAdc, "ADC", "l");
+  pleg->AddEntry(phVin, "V_{in}", "l");
+  pleg->Draw();
+  double x1 = phAdc->GetXaxis()->GetXmin();
+  double x2 = phAdc->GetXaxis()->GetXmax();
+  TLine* pline = new TLine(x1, 0.0, x2, 0.0);
+  pline->Draw();
+}
+
 int test_201703a(Index icha) {
   const string myname = "test_201703a: ";
   cout << line() << endl;
@@ -63,7 +76,12 @@ int test_201703a(Index icha) {
       phd->SetMinimum(-500);
       phd->SetMaximum(4500);
       phd->SetLineWidth(2);
+      phd->GetYaxis()->SetTitleOffset(1.3);
+      string ylab = "ADC code, Input voltage [mV]";
+      if ( phv != nullptr ) phd->GetYaxis()->SetTitle(ylab.c_str());
       TCanvas* pcan = new TCanvas;
+      pcan->SetRightMargin(0.05);
+      pcan->SetLeftMargin(0.13);
       pcan->SetGridy();
       phd->DrawCopy();
       if ( phv != nullptr ) {
@@ -71,6 +89,7 @@ int test_201703a(Index icha) {
         phv->SetLineWidth(2);
         phv->DrawCopy("same");
       }
+      addLegend(phd, phv);
       pcan->Update();
     }
   }
@@ -141,7 +160,12 @@ int test_201703b(Index icha) {
       phd->SetMinimum(-500);
       phd->SetMaximum(4500);
       phd->SetLineWidth(2);
+      phd->GetYaxis()->SetTitleOffset(1.3);
+      string ylab = "ADC code, Input voltage [mV]";
+      if ( phv != nullptr ) phd->GetYaxis()->SetTitle(ylab.c_str());
       TCanvas* pcan = new TCanvas;
+      pcan->SetRightMargin(0.05);
+      pcan->SetLeftMargin(0.13);
       pcan->SetGridy();
       phd->DrawCopy();
       if ( phv != nullptr ) {
@@ -149,6 +173,7 @@ int test_201703b(Index icha) {
         phv->SetLineWidth(2);
         phv->DrawCopy("same");
       }
+      addLegend(phd, phv);
       pcan->Update();
     }
   }

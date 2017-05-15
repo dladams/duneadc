@@ -1,3 +1,11 @@
+// filldb03a.C
+//
+// David Adams
+// May 2017
+//
+// Performance tre filler for dataset 201703a, the survey of
+// 77 chips D01 - D79.
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -10,13 +18,15 @@ using std::endl;
 using std::ostringstream;
 using std::vector;
 
-void filldb03(string datagroup ="201703a", int chip1=0, int chip2=80, int chan1=0, int nchan =16) {
+void filldb03a(Index chip1=1, Index nchip =77, int chan1=0, int nchan =16) {
   vector<string> schips;
-  for ( int chip=chip1; chip<chip2; ++chip ) {
+  Index chip = chip1;
+  Index count = 0;
+  for ( Index chip=chip1; schips.size() < nchip; ++chip ) {
     if ( chip < 1 ) continue;
     if ( chip == 2 ) continue;
     if ( chip == 6 ) continue;
-    if ( chip > 79 ) continue;
+    if ( chip > 79 ) break;
     ostringstream sschip;
     sschip << "D";
     if ( chip < 10 ) sschip << "0";
@@ -39,12 +49,13 @@ void filldb03(string datagroup ="201703a", int chip1=0, int chip2=80, int chan1=
       cout << "Execution halted by stop file." << endl;
       break;
     }
-    string dataset = datagroup + "_" + schip;
+    string dataset = "201703a";
+    string dschip = dataset + "_" + schip;
     cout << endl;
-    cout << "*************  " << dataset << "  *****************" << endl;
+    cout << "*************  " << dschip << "  *****************" << endl;
     TDatime dt1;
     dt1.Print();
-    AdcChipAnalyzer chipper(dataset, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
+    AdcChipAnalyzer chipper(dschip, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
     TDatime dt2;
     dt2.Print();
     cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;

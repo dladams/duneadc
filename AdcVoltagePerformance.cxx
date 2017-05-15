@@ -8,15 +8,17 @@ using Float = AdcVoltagePerformance::Float;
 //**********************************************************************
 
 AdcVoltagePerformance::AdcVoltagePerformance()
-: chip(0), chan(999), vuncmax(0.0), nv(0), vmin(0.0), vmax(0.0) { }
+: chip(0), chan(999), time(0), vuncmax(0.0), nv(0), vmin(0.0), vmax(0.0) { }
 
 //**********************************************************************
 
 AdcVoltagePerformance::
-AdcVoltagePerformance(Index achip, Index achan, Float avuncmax,
-                      Index anv, Float avmin, Float avmax)
-: chip(achip), chan(achan), vuncmax(avuncmax),
-  nv(anv), vmin(avmin), vmax(avmax),
+AdcVoltagePerformance(Index a_chip, Index a_chan, AdcTime a_time,
+                      Float a_vuncmax,
+                      Index a_nv, Float a_vmin, Float a_vmax)
+: chip(a_chip), chan(a_chan), time(a_time),
+  vuncmax(a_vuncmax),
+  nv(a_nv), vmin(a_vmin), vmax(a_vmax),
   vinCounts(nv, 0),
   vinEffs(nv, 0.0),
   vinResMeans(nv, 0.0),

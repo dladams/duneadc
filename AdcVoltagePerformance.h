@@ -5,8 +5,15 @@
 //
 // Class to hold performance data for an ADC channel.
 //
-// Performance is recorded in nv voltage bins running from vmin to vmax
-// and includes the following each with one entry for each voltage bin:
+// Data include
+//   chip -  Chip index
+//   chan -  Channel number
+//   time - Time (unix sec) data was taken
+//   vuncmax - Threshold for declaring channels bad (mV).
+//   nv - # voltage bins
+//   vmin - Min voltage
+//   vmax - Max voltge
+// with the following data for each bin:
 //   vinCounts - # samples
 //   vinEffs - Efficiency == fraction of samples that are good
 //   vinRmsMeans - <Vres> = Mean(Vres) for good samples
@@ -23,13 +30,13 @@
 #define AdcVoltagePerformance_H
 
 #include <vector>
+#include "AdcTypes.h"
 #include "AdcChannelId.h"
 
 class AdcVoltagePerformance {
 
 public:
 
-  using Index = unsigned short;
   using Count = unsigned int;
   using Float = float;
   using CountVector = std::vector<Count>;
@@ -38,8 +45,9 @@ public:
   // Ctors.
   AdcVoltagePerformance();
   AdcVoltagePerformance(AdcChannelId aid);
-  AdcVoltagePerformance(Index achip, Index achan, Float avuncmax,
-                        Index anv, Float avmin, Float avmax);
+  AdcVoltagePerformance(Index a_chip, Index a_chan, AdcTime a_time,
+                        Float a_vuncmax,
+                        Index a_nv, Float a_vmin, Float a_vmax);
 
   // This object is valid if it holds a valid ID.
   bool isValid() const { return id().isValid(); }
@@ -62,18 +70,19 @@ public:
 
 public:
 
-  Index chip;
-  Index chan;
-  Float vuncmax;
-  Index nv;
-  Float vmin;
-  Float vmax;
-  CountVector vinCounts;
-  FloatVector vinEffs;
-  FloatVector vinResMeans;
-  FloatVector vinResRmss;
-  FloatVector vinResRmslos;
-  FloatVector vinResRmshis;
+  Index chip;                  // Chip index
+  Index chan;                  // Channel number
+  AdcTime time;                // Time (unix sec) data was taken
+  Float vuncmax;               // Threshold for declaring channels bad (mV).
+  Index nv;                    // # voltage bins
+  Float vmin;                  // Min volatage
+  Float vmax;                  // Max voltage
+  CountVector vinCounts;       // Chip index
+  FloatVector vinEffs;                  // Chip index
+  FloatVector vinResMeans;                  // Chip index
+  FloatVector vinResRmss;                  // Chip index
+  FloatVector vinResRmslos;                  // Chip index
+  FloatVector vinResRmshis;                  // Chip index
 
 };
 

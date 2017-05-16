@@ -7,7 +7,6 @@
 
 using std::cout;
 using std::endl;
-using ShortIndex = unsigned short;
 using Name = std::string;
 using Float = AdcChannelCalibration::Float;
 using CalibMap = std::map<AdcChannelId, const AdcChannelCalibration*>;
@@ -63,43 +62,44 @@ AdcChannelCalibration::AdcChannelCalibration()
 
 //**********************************************************************
 
-AdcChannelCalibration::AdcChannelCalibration(AdcChannelId aid)
-: chip(aid.chip), chan(aid.chan), gain(0.0), offset(0.0) { }
+AdcChannelCalibration::AdcChannelCalibration(AdcChannelId aid, AdcTime atime)
+: chip(aid.chip), chan(aid.chan), time(atime), gain(0.0), offset(0.0) { }
 
 //**********************************************************************
 
 AdcChannelCalibration::
-AdcChannelCalibration(AdcChannelId aid, Float again, Float aoffset,
+AdcChannelCalibration(AdcChannelId aid, AdcTime atime,
+                      Float again, Float aoffset,
                       const FloatVector& acalMeans,
                       const FloatVector& acalRmss,
-                      const IndexVector& acalCounts)
-: chip(aid.chip), chan(aid.chan), gain(again), offset(aoffset),
+                      const ShortIndexVector& acalCounts)
+: chip(aid.chip), chan(aid.chan), time(atime), gain(again), offset(aoffset),
   calMeans(acalMeans), calRmss(acalRmss), calCounts(acalCounts) { }
 
 //**********************************************************************
 
-Float AdcChannelCalibration::calMean(Index code) const {
+Float AdcChannelCalibration::calMean(AdcCode code) const {
   if ( code >= calMeans.size() ) return -999.0;
   return calMeans[code];
 }
 
 //**********************************************************************
 
-Float AdcChannelCalibration::calRms(Index code) const {
+Float AdcChannelCalibration::calRms(AdcCode code) const {
   if ( code >= calRmss.size() ) return -1.0;
   return calRmss[code];
 }
 
 //**********************************************************************
 
-Float AdcChannelCalibration::calTail(Index code) const {
+Float AdcChannelCalibration::calTail(AdcCode code) const {
   if ( code >= calTails.size() ) return -999.0;
   return calTails[code];
 }
 
 //**********************************************************************
 
-AdcChannelCalibration::Index AdcChannelCalibration::calCount(Index code) const {
+ShortIndex AdcChannelCalibration::calCount(AdcCode code) const {
   if ( code >= calCounts.size() ) return 0;
   return calCounts[code];
 }

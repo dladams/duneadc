@@ -19,27 +19,27 @@
 
 #include <vector>
 #include "AdcChannelId.h"
+#include "AdcTypes.h"
 
 class AdcChannelCalibration {
 
 public:
 
-  using Index = unsigned short;
   using Float = float;
-  using IndexVector = std::vector<Index>;
   using FloatVector = std::vector<Float>;
 
   // Load an existing calibration from a Root TTree.
   static const AdcChannelCalibration* find(std::string dataset, AdcChannelId aid);
-  static const AdcChannelCalibration* find(std::string dataset, Index chip, Index chan);
+  static const AdcChannelCalibration* find(std::string dataset, ShortIndex chip, ShortIndex chan);
 
   // Ctors.
   AdcChannelCalibration();
-  AdcChannelCalibration(AdcChannelId aid);
-  AdcChannelCalibration(AdcChannelId aid, Float again, Float aoffset,
+  AdcChannelCalibration(AdcChannelId aid, AdcTime atime);
+  AdcChannelCalibration(AdcChannelId aid, AdcTime atime,
+                        Float again, Float aoffset,
                         const FloatVector& acalMeans,
                         const FloatVector& acalRmss,
-                        const IndexVector& acalCounts);
+                        const ShortIndexVector& acalCounts);
 
   // This object is valid if it holds a valid ID.
   bool isValid() const { return id().isValid(); }
@@ -48,21 +48,22 @@ public:
   AdcChannelId id() const { return AdcChannelId(chip, chan); }
 
   // Full calibration for each ADC code.
-  Float calMean(Index code) const;
-  Float calRms(Index code) const;
-  Float calTail(Index code) const;
-  Index calCount(Index code) const;
+  Float calMean(AdcCode code) const;
+  Float calRms(AdcCode code) const;
+  Float calTail(AdcCode code) const;
+  ShortIndex calCount(AdcCode code) const;
 
 public:
 
-  Index chip;
-  Index chan;
+  ShortIndex chip;
+  ShortIndex chan;
+  AdcTime time;
   Float gain;
   Float offset;
   FloatVector calMeans;
   FloatVector calRmss;
   FloatVector calTails;
-  IndexVector calCounts;
+  ShortIndexVector calCounts;
 
 };
 

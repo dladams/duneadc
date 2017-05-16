@@ -123,7 +123,6 @@ int AdcBinarySampleReader::read() const {
   AdcCode buff[nsambuf];
   cout << myname << "Buffer size: " << setw(10) << nsambuf << endl;
   SampleIndex ksamNext = 0; // next buffer position in the stream
-  SampleIndex isam = 0;     // sample position in the buffer.
   SampleIndex count = 0;    // Counter to check each sample is read.
   unsigned int ndumped = 0;
   SampleIndex nbadChan = 0;
@@ -139,10 +138,12 @@ int AdcBinarySampleReader::read() const {
     SampleIndex nsamRead = ksamNext - ksam;
     if ( nsamRead == 0 ) break;
     fin.read((char*)buff, 2*nsamRead);
-    cout << myname << "Read block at sample " << setw(8) << ksam << ": " << setw(6) << (buff[0]&chanMask())
-         << " (size = " << nsamRead << ")" << endl;
-    SampleIndex isamMax = isam + nsamRead;
-    for ( SampleIndex isam=0; isam<isamMax; ++isam ) {
+    cout << myname << "Read block at sample " << setw(8) << ksam
+         << ": " << setw(6) << (buff[0]&chanMask())
+         << " (size = " << nsamRead << ")"
+         << ", count = " << count
+         << endl;
+    for ( SampleIndex isam=0; isam<nsamRead; ++isam ) {
       if ( count >= maxCount ) break;
       AdcCode chancode = buff[isam];
       code = chancode&chanMask();
@@ -152,13 +153,11 @@ int AdcBinarySampleReader::read() const {
         // Skip bad channels at start of stream.
         if ( skipping ) {
           ++nskipCode;
-          --m_nsample;
-          if ( isamMax ) --isamMax;
           continue;
         }
         ++nbadChan;
         if ( nbadChan < maxwarn ) {
-          cout << myname << "WARNING: Data[" << isam << "] channel is not consistent: "
+          cout << myname << "WARNING: Data[" << count << "] channel is not consistent: "
                << chan << " != " << channel() << endl;
         }
       } else {
@@ -187,10 +186,10 @@ int AdcBinarySampleReader::read() const {
       cout << myname << "WARNING: Error counting samples: " << count << " != " << nsample() << endl;
     }
   }
-  SampleIndex ksamNextExp = count + 2*nskipCode;
+  SampleIndex ksamNextExp = count + nskipCode;
   if ( ksamNext != ksamNextExp ) {
     cout << myname << "ERROR: Sample index and count are inconsistent: " << ksamNext << " != "
-         << count << " + " << 2*nskipCode << endl;
+         << count << " + " << nskipCode << endl;
   }
   m_nsample = count;
   if ( doTree ) {

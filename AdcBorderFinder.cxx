@@ -75,7 +75,7 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
       if ( sampleIsFence ) {
         ++nsamFence;
         if ( nsamFence >= fenceWidth() ) {
-          cout << myname << "Ending " << stateName(state) << " at " << isam << endl;
+          cout << myname << "Ending " << stateName(state) << " at ADC[" << isam << "] = " << code << endl;
           borders.push_back(range);
           range.print();
           borders.back().print();

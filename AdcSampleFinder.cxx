@@ -124,7 +124,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   // Find extrema.
   AdcExtrema borderExts;
   {
-    AdcBorderExtremaFinder ef(4000000, 50, 4095, 500, 3500);
+    AdcBorderExtremaFinder ef(5000000, 50, 4095, 500, 3500);
     ef.find(*prdr, borderExts);
   }
   AdcExtrema binExts;

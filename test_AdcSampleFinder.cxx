@@ -129,13 +129,14 @@ int test_201703b(Index icha) {
   cout << myname << "ADC data location: " << asf.topdir() << endl;
   cout << line() << endl;
   cout << myname << "Find sample." << endl;
-  AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha);   // Channel 4 has 45 inconsistent ticks
-  vector<SampleIndex> expNsample(16, 39600000);
+  AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha);
+  vector<SampleIndex> expNsample(16, 2000000*19.8);  // Samples are truncated at 19.8 sec
+  expNsample[4] -= 45;  // Channel 4 has 45 inconsistent ticks
   //vector<SampleIndex> expNsample = {        0,        0,        0,        0,
   //                                   42017557, 42017808, 42014584, 42018105,
   //                                   42017602, 42018105, 42018561, 42016093,
   //                                          0,        0,        0,        0};
-  vector<SampleValue> expCode20M = {    0,    0,    0,    0,
+  vector<SampleValue> expCode20M = {    0,    0,    0, 2064,
                                      1993, 2016, 2013, 2004,
                                      1988, 1958, 1951, 2008,
                                         0,    0,    0,    0};
@@ -149,8 +150,8 @@ int test_201703b(Index icha) {
   ec.checkequal( prdr->nsample(), expNsample[icha], "# samples" );
   ec.checkequal( prdr->code(20000000), expCode20M[icha], "code(20M)" );
   ec.check( prdr->samplingFrequency() == 2.0e6, "sampling frequency" );
-  vector<AdcTime> expTime = {          0,          0,          0,          0,
-                              1489275780, 1489275780, 1489275840,          0,
+  vector<AdcTime> expTime = {          0,          0,          0, 1489275780,
+                              1489275780, 1489275780, 1489275840, 1489275840,
                                        0,          0,          0,          0,
                                        0,          0,          0,          0};
   ec.checkequal( prdr->time(), expTime[icha], "time");
@@ -187,18 +188,9 @@ int test_201703b(Index icha) {
       pcan->Update();
     }
   }
-  vector<int> expvin04M = {    0,    0,    0,    0,
-                             310,  310,  310,    0,
-                               0,    0,    0,    0,
-                               0,    0,    0,    0};
-  vector<int> expvin10M = {    0,    0,    0,    0,
-                            -290, -290, -290,    0,
-                               0,    0,    0,    0,
-                               0,    0,    0,    0};
-  vector<int> expvin20M = {    0,    0,    0,    0,
-                             692,  692,  692,    0,
-                               0,    0,    0,    0,
-                               0,    0,    0,    0};
+  vector<int> expvin04M(16,  310);
+  vector<int> expvin10M(16, -290);
+  vector<int> expvin20M(16,  692);
   ec.checkequal( int(prdr->vin( 4000000)), expvin04M[icha], "vin( 4000000)" );
   ec.checkequal( int(prdr->vin(10000000)), expvin10M[icha], "vin(10000000)" );
   ec.checkequal( int(prdr->vin(20000000)), expvin20M[icha], "vin(20000000)" );
@@ -213,7 +205,7 @@ int test_201703b(Index icha) {
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   vector<Index> expntab = {    0,    0,    0,    0,
-                             863,  579,    0,    0,
+                             866,  580,    0,    0,
                                0,    0,    0,    0,
                                0,    0,    0,    0};
   if ( ec.count() == 0 ) {

@@ -6,6 +6,8 @@
 #include "TF1.h"
 #include "TDatime.h"
 #include "TCanvas.h"
+#include "TLegend.h"
+#include "TLine.h"
 #include <iostream>
 #include <sstream>
 

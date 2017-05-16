@@ -125,7 +125,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   AdcExtrema borderExts;
   {
     AdcBorderExtremaFinder ef(5000000, 50, 4095, 500, 3500);
-    ef.find(*prdr, borderExts);
+    int rstat = ef.find(*prdr, borderExts);
+    if ( rstat ) cout << myname << "Border extrema search returned error " << rstat << endl;
   }
   AdcExtrema binExts;
   {

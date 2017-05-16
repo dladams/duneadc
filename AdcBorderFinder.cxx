@@ -50,7 +50,7 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
   for ( SampleIndex isam=0; isam<reader.nsample(); ++isam ) {
     SampleValue code = reader.code(isam);
     bool sampleIsUnderThresh = code <= minThresh();
-    bool sampleIsOverThresh = code >=maxThresh();
+    bool sampleIsOverThresh = code >= maxThresh();
     bool sampleIsFence = !sampleIsUnderThresh && !sampleIsOverThresh;
     bool streamIsUnder = state == UNDER;
     bool streamIsOver = state == OVER;
@@ -61,7 +61,7 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
         if ( nsamFence >= fenceWidth() ) {
           SampleRange tmprange(isam+1-fenceWidth(), isam+1);
           cout << myname << "Found starting fence: ";
-          tmprange.print();
+          //tmprange.print();
           cout << endl;
           foundStartingFence = true;
         }
@@ -74,41 +74,57 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
     } else if ( streamIsUnder || streamIsOver ) {
       if ( sampleIsFence ) {
         ++nsamFence;
-        if ( nsamFence >= fenceWidth() ) {
-          cout << myname << "Ending " << stateName(state) << " at ADC[" << isam << "] = " << code << endl;
+        if ( nsamFence >= fenceWidth()
+             || (streamIsUnder && code > minLimit())
+             || (streamIsOver && code < maxLimit()) ) {
+          cout << myname << "Ending " << stateName(state)
+               << " at ADC[" << isam << "] = " << code << endl;
           borders.push_back(range);
-          range.print();
-          borders.back().print();
+          //range.print();
+          //borders.back().print();
           range.reset();
           if ( state == UNDER ) state = RISING;
           if ( state ==  OVER ) state = FALLING;
         }
       } else {
+        //if ( nsamFence ) cout << myname << "Reset fence at ADC[" << isam << "] = " << code << endl;
         if ( streamIsUnder && code > minLimit() ) return 7;
         if ( streamIsOver && code < maxLimit() ) return 8;
         nsamFence = 0;
         range.setEnd(isam + 1);
       }
     // Stream is in a fence. Look for the next border flagged by one sample
-    // outside of fence threholds.
+    // outside of fence thresholds.
     } else {
       if ( sampleIsUnderThresh ) {
-        if ( nsamFence < fenceWidth() ) return 9;
-        cout << myname << "Starting min border at " << isam << endl;
-        range.set(isam, isam+1, UNDER);
-        range.print();
-        state = UNDER;
-        nsamFence = 0;
+        cout << myname << "Starting min border at ADC[" << isam << "] = " << code << endl;
+        if ( nsamFence < fenceWidth() ) {
+          cout << myname << "Too few samples in fence: " << nsamFence << " < " << fenceWidth() << endl;
+          sampleIsFence = true;
+          //return 9;
+        } else {
+          range.set(isam, isam+1, UNDER);
+          //range.print();
+          state = UNDER;
+          nsamFence = 0;
+        }
       } else if ( sampleIsOverThresh ) {
-        if ( nsamFence < fenceWidth() ) return 10;
-        cout << myname << "Starting max border at " << isam << endl;
-        range.set(isam, isam+1, OVER);
-        range.print();
-        state = OVER;
-        nsamFence = 0;
+        cout << myname << "Starting max border at ADC[" << isam << "] = " << code << endl;
+        if ( nsamFence < fenceWidth() ) {
+          cout << myname << "Too few samples in fence: " << nsamFence << " < " << fenceWidth() << endl;
+          sampleIsFence = true;
+          //return 10;
+        } else {
+          range.set(isam, isam+1, OVER);
+          //range.print();
+          state = OVER;
+          nsamFence = 0;
+        }
       }
+      if ( sampleIsFence ) ++nsamFence;
     }
   }
+  cout << myname << "Processed all samples." << endl;
   return 0;
 }
 

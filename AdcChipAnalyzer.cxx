@@ -39,7 +39,7 @@ AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, boo
   Index icha0 = icha1;
   AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha0);
   gStyle->SetOptStat(110111);
-  vector<string> stypes = {"resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
+  vector<string> stypes = {"rawv", "resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
   //vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
   //vector<string> stypes = {"fdn", "fdr", "fds", "fdsb"};
   Index maxchan = prdr->nchannel();
@@ -137,7 +137,25 @@ AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, boo
       TVirtualPad* ppad = pcan->cd(ipad);
       ppad->SetGridy();
       TH1* ph = nullptr;
+      TH1* ph2 = nullptr;
       string sarg = "colz";
+      if ( stype == "rawv" ) {
+        ppad->SetGridx();
+        ppad->SetGridy();
+        int rebin = 1000;
+        ph = prdr->histdata(0, 0, -rebin, true);
+        ph->SetLineWidth(2);
+        ph->SetMinimum(-500);
+        ph->SetMaximum(4500);
+        ph2 = prdr->histvin(0, 0, rebin, true);
+        ph2->SetLineWidth(2);
+        ph2->SetLineColor(2);
+        string ylab = "ADC code, Input voltage [mV]";
+        if ( ph2 != nullptr ) ph->GetYaxis()->SetTitle(ylab.c_str());
+        sarg = "e0 x0";
+        ppad->SetLeftMargin(0.13);
+        ph->GetYaxis()->SetTitleOffset(1.3);
+      }
       if ( stype == "resp" ) ph = asa.phc;
       if ( stype == "diff" ) ph = asa.phd;
       if ( stype == "difn" ) ph = asa.phn;
@@ -209,6 +227,7 @@ AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, boo
         pleg->Draw();
       } else {
         ph->DrawCopy(sarg.c_str());
+        if ( ph2 != nullptr ) ph2->DrawCopy("same");
       }
       if ( hsums.find(stype) != hsums.end() ) {
         TH1*& phs = hsums[stype];

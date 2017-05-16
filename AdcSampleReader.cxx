@@ -1,8 +1,11 @@
 // AdcSampleReader.cxx
 
 #include "AdcSampleReader.h"
+#include <sstream>
 #include "TH1.h"
 #include "TF1.h"
+
+using std::ostringstream;
 
 //**********************************************************************
 
@@ -19,10 +22,12 @@ double AdcSampleReader::vinForTF1(double* x, double*) const {
 //**********************************************************************
 
 TH1* AdcSampleReader::
-histdata(unsigned int idat0, unsigned int ndatin,
-         unsigned int show, bool usetime) {
+histdata(SampleIndex idat0, SampleIndex ndatin,
+         int sshow, bool usetime) {
   if ( idat0 >= nsample() ) return 0;
-  if ( show < 1 ) return 0;
+  if ( sshow == 1 ) return 0;
+  unsigned int show = std::abs(sshow);
+  bool binned = sshow < 0;
   double samper = 1.0;
   string xlab = "Tick";
   unsigned int ndat = ndatin;
@@ -32,7 +37,13 @@ histdata(unsigned int idat0, unsigned int ndatin,
     samper = 1.0/samplingFrequency();
   }
   string hname = "hwf";
-  string htitl = "Waveform; " + xlab + "; ADC code";
+  ostringstream sstitl;
+  sstitl << sample();
+  if ( channel() != badChannel() ) sstitl << " channel " << channel();
+  if ( binned ) sstitl << " binned";
+  sstitl << " waveform";
+  sstitl << "; " + xlab + "; ADC code";
+  string htitl = sstitl.str();
   unsigned int npt = ndat/show;
   double t1 = samper*idat0;
   double t2 = samper*(t1 + ndat);
@@ -40,8 +51,22 @@ histdata(unsigned int idat0, unsigned int ndatin,
   ph->SetStats(0);
   for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
     unsigned int idat = show*ipt;
-    Code adc = code(idat);
-    ph->SetBinContent(ipt+1, adc);
+    if ( binned ) {
+      double adcMin = code(idat);
+      double adcMax = adcMin;
+      for ( SampleIndex jdat=idat+1; jdat<idat+show; ++jdat ) {
+        double adcj = code(jdat);
+        if ( adcj < adcMin ) adcMin = adcj;
+        if ( adcj > adcMax ) adcMax = adcj;
+      }
+      double adcMean = 0.5*(adcMin + adcMax);
+      double adcErr = 0.5*(adcMax - adcMin);
+      ph->SetBinContent(ipt+1, adcMean);
+      ph->SetBinError(ipt+1, adcErr);
+    } else {
+      Code adc = code(idat);
+      ph->SetBinContent(ipt+1, adc);
+    }
   }
   return ph;
 }
@@ -49,10 +74,10 @@ histdata(unsigned int idat0, unsigned int ndatin,
 //**********************************************************************
 
 TH1* AdcSampleReader::
-histvin(unsigned int idat0, unsigned int ndatin,
+histvin(SampleIndex idat0, SampleIndex ndatin,
         unsigned int show, bool usetime) {
-  if ( idat0 >= nsample() ) return 0;
-  if ( show < 1 ) return 0;
+  if ( idat0 >= nsample() ) return nullptr;
+  if ( show < 1 ) return nullptr;
   double samper = 1.0;
   string xlab = "Tick";
   unsigned int ndat = ndatin;
@@ -62,7 +87,12 @@ histvin(unsigned int idat0, unsigned int ndatin,
     samper = 1.0/samplingFrequency();
   }
   string hname = "hwf";
-  string htitl = "Waveform; " + xlab + "; ADC code";
+  ostringstream sstitl;
+  sstitl << sample();
+  if ( channel() != badChannel() ) sstitl << " channel " << channel();
+  sstitl << " V_{in}";
+  sstitl << "; " + xlab + "; Voltage [mV]";
+  string htitl = sstitl.str();
   unsigned int npt = ndat/show;
   double t1 = samper*idat0;
   double t2 = samper*(t1 + ndat);
@@ -70,8 +100,7 @@ histvin(unsigned int idat0, unsigned int ndatin,
   ph->SetStats(0);
   for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
     unsigned int idat = show*ipt;
-    double yvin = vin(idat);
-    ph->SetBinContent(ipt+1, yvin);
+    ph->SetBinContent(ipt+1, vin(idat));
   }
   return ph;
 }

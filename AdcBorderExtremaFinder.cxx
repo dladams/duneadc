@@ -17,7 +17,8 @@ find(const AdcSampleReader& reader, AdcExtrema& ext) const {
   const string myname = "AdcBorderExtremaFinder::find: ";
   ext.clear();
   AdcBorderFinder::SampleRangeVector borders;
-  borderFinder().find(reader, borders);
+  int rstat = borderFinder().find(reader, borders);
+  if ( rstat ) return rstat;
   for ( const AdcBorderFinder::SampleRange& border : borders ) {
     SampleIndex tick = (border.begin() + border.end())/2;
     if ( border.state() == AdcBorderFinder::UNDER ) {

@@ -15,9 +15,10 @@ ADC test data comes in many formats: CSV, binary and Root trees. Most provide th
 (ADC count for each tick) but early test data at BNL is an ADC-Vin table: number of samples
 in bins of  ADC count/bin and input voltage).
 
-The interface `AdcSampleReader` provides clients (you) with access to the data in any of these
-formats. The data may be viewed as a raw waveform (where available) or as a table summary. ADC
-sample files may be opened using `AdcSampleFinder`, e.g.
+The interface [AdcSampleReader](AdcSampleReader.h) provides clients (you) with access to the
+data in any of these formats.
+The data may be viewed as a raw waveform (where available) or as a table summary. ADC
+sample files may be opened using [AdcSampleFinder](AdcSampleFinder.h), e.g.
 
 ```
 root> AdcSampleFinder asf;
@@ -78,7 +79,7 @@ studies this limit has been set to 5 mV.
 The linear and ultimate calibration data are stored in the class `AdcChannelCalibration` and
 include the above variables:
 
-| Type | Name |
+| [Type](AdcTypes.h) | Name |
 |------|------|
 | ShortIndex       | chip |
 | ShortIndex       | chan |

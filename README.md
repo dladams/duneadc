@@ -76,8 +76,8 @@ its voltage distribution `calRmss[code]` and the tail fraction `calTails[code]`.
 fraction of input voltage samples that are more than some distance from the mean. In recent
 studies this limit has been set to 5 mV.
 
-The linear and ultimate calibration data are stored in the class `AdcChannelCalibration` and
-include the above variables:
+The linear and ultimate calibration data are stored in the class
+[AdcChannelCalibration](AdcChannelCalibration.h} and include the above variables:
 
 | [Type](AdcTypes.h) | Name |
 |------|------|

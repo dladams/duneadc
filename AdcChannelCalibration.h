@@ -25,9 +25,6 @@ class AdcChannelCalibration {
 
 public:
 
-  using Float = float;
-  using FloatVector = std::vector<Float>;
-
   // Load an existing calibration from a Root TTree.
   static const AdcChannelCalibration* find(std::string dataset, AdcChannelId aid);
   static const AdcChannelCalibration* find(std::string dataset, ShortIndex chip, ShortIndex chan);

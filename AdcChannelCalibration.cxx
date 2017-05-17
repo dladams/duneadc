@@ -8,7 +8,6 @@
 using std::cout;
 using std::endl;
 using Name = std::string;
-using Float = AdcChannelCalibration::Float;
 using CalibMap = std::map<AdcChannelId, const AdcChannelCalibration*>;
 using CalibMapMap = std::map<Name, CalibMap>;
 

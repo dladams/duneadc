@@ -58,7 +58,7 @@ AdcChannelCalibration::find(std::string dataset, ShortIndex chip, ShortIndex cha
 //**********************************************************************
 
 AdcChannelCalibration::AdcChannelCalibration()
-: gain(0.0), offset(0.0) { }
+: time(0), gain(0.0), offset(0.0) { }
 
 //**********************************************************************
 

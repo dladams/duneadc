@@ -80,6 +80,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
   Index nsample = reader.nsample();
   calib.chip = reader.chip();
   calib.chan = channel();
+  calib.time = reader.time();
   ostringstream sschan;
   sschan << channel();
   string schan = sschan.str();

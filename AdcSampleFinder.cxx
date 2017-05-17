@@ -42,6 +42,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
   const string myname = "AdcSampleFinder::find: ";
   // CSV samples from Hucheng et al.
   if ( ssam.substr(0,4) == "2016" ||
+       ssam.substr(0,6) == "201701" ||
        ssam.substr(0,6) == "201702" ||
        ssam.substr(0,8) == "20170306" ||
        ssam.substr(0,8) == "20170307" ||

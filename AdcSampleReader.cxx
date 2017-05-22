@@ -23,7 +23,7 @@ double AdcSampleReader::vinForTF1(double* x, double*) const {
 
 TH1* AdcSampleReader::
 histdata(SampleIndex idat0, SampleIndex ndatin,
-         int sshow, bool usetime) {
+         int sshow, bool usetime) const {
   if ( idat0 >= nsample() ) return 0;
   if ( sshow == 1 ) return 0;
   unsigned int show = std::abs(sshow);
@@ -75,7 +75,7 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
 
 TH1* AdcSampleReader::
 histvin(SampleIndex idat0, SampleIndex ndatin,
-        unsigned int show, bool usetime) {
+        unsigned int show, bool usetime) const {
   if ( idat0 >= nsample() ) return nullptr;
   if ( show < 1 ) return nullptr;
   double samper = 1.0;

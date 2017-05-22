@@ -14,6 +14,7 @@
 #include "AdcVoltagePerformance.h"
 #include "FileDirectory.h"
 #include <string>
+#include <memory>
 #include "TH2.h"
 #include "TF1.h"
 #include "TGraphAsymmErrors.h"
@@ -38,9 +39,12 @@ public:
 
   using TLineVector = std::vector<TLine*>;
 
+  using AdcSampleReaderPtr = std::unique_ptr<AdcSampleReader>;
+
+  using TH1Vector = std::vector<TH1*>;
+
 public:
 
-  const AdcSampleReader& reader;
   std::string datasetCalib;
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
@@ -107,10 +111,23 @@ public:
   //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
   AdcSampleAnalyzer(const AdcSampleReader& areader, Name adatasetCalib ="", double nomGain =0.0);
 
-  // Return the id.
-  Name dataset() const { return reader.dataset(); }
-  Index chip() const { return reader.chip(); }
-  Index channel() const { return reader.channel(); }
+  // Same as previous except this object now manages the reader.
+  // The reader will be deleted when this analyzer is deleted.
+  // Caller must move the input pointer: AdcSampleyAnalyzer myobj(std::move(prdr), ...)
+  AdcSampleAnalyzer(AdcSampleReaderPtr preader, Name adatasetCalib ="", double nomGain =0.0);
+
+  // Dtor. Needed to delete locally managed histograms.
+  ~AdcSampleAnalyzer();
+
+  // Remove locally managed histograms.
+  void clean();
+
+  // Getters.
+  const AdcSampleReader* reader() const { return m_preader; }
+  Name dataset() const { return m_dataset; }
+  Index chip() const { return m_chip; }
+  Index channel() const { return m_channel; }
+  AdcTime time() const { return m_time; }
 
   // Return the distribution of Vin for an ADC count.
   // This projects phc onto the X axis.
@@ -154,6 +171,18 @@ public:
 
   // Overlay efficiency, resolution and tail all vs. Vin.
   void drawperf(bool dolabtail =false) const;
+
+  // Locally managed histograms.
+  mutable TH1Vector m_localHists;
+  
+private:
+
+  const AdcSampleReader* m_preader;
+  AdcSampleReaderPtr m_preaderManaged;
+  Name m_dataset;
+  Index m_chip;
+  Index m_channel;
+  AdcTime m_time;
 
 };
 

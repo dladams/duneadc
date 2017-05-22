@@ -87,13 +87,13 @@ public:  // For waveforms
   // If histtime, then plot is vs time instead of tick.
   // If nshow < 0, then data is binned and error bars reflect range.
   virtual TH1* histdata(SampleIndex idat =0, SampleIndex ndat =0,
-                        int nshow =1, bool histtime = false);
+                        int nshow =1, bool histtime = false) const;
 
   // Return a histogram of the input voltage from sample idat to idat+ndat.
   // Every nshow'th point is shown.
   // If histtime, then ploat is vs time instead of tick.
   virtual TH1* histvin(SampleIndex idat =0, SampleIndex ndat =0,
-                       unsigned int nshow =1, bool histtime = false);
+                       unsigned int nshow =1, bool histtime = false) const;
 
 public:  // Table description.
 

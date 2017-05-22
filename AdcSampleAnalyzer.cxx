@@ -12,6 +12,7 @@
 #include "TLine.h"
 #include "TDirectory.h"
 #include "TSystem.h"
+#include "TROOT.h"
 
 using std::string;
 using std::cout;
@@ -37,12 +38,16 @@ bool sticky(Index iadc) {
 
 //**********************************************************************
 
-AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adatasetCalib, double cfac)
-: reader(areader),
-  datasetCalib(adatasetCalib),
-  pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0) {
+AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double cfac)
+: datasetCalib(adatasetCalib),
+  pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0),
+  m_preader(&rdr),
+  m_dataset(rdr.dataset()),
+  m_chip(rdr.chip()),
+  m_channel(rdr.channel()),
+  m_time(rdr.time()) {
   const string myname = "AdcSampleAnalyzer::ctor: ";
-  if ( reader.countTable().size() == 0 ) {
+  if ( rdr.countTable().size() == 0 ) {
     cout << myname << "Unable to read data." << endl;
     return;
   }
@@ -55,7 +60,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
   double gmax = 4.0;
   double lmin = 0.2;
   double lmax = 0.6;
-  Index nadc = reader.nadc();
+  Index nadc = rdr.nadc();
   iadcfitmin = nadc==4096 ? 128 : 1;
   iadcfitmax = nadc - 1;
   vinfitmin = 0.0;
@@ -64,23 +69,23 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
   nomVinPerAdc = cfac;
   nomped = 0.0;
   Index adcmax = nadc;
-  Index nvin = reader.nvin();
+  Index nvin = rdr.nvin();
   Index npadc = 4100*nadc/4096;
   Index padcmax = npadc;
-  int pvinmin = reader.vinmin();
-  int pvinmax = reader.vinmax();
+  int pvinmin = rdr.vinmin();
+  int pvinmax = rdr.vinmax();
   Index npvin = pvinmax - pvinmin;
   adcUnderflow = 64;  // This and below are considered underflow
-  Name ssam = reader.sample();
+  Name ssam = rdr.sample();
   if ( ssam.find("ltc") != string::npos ) {
     fitusestuck = true;
     nomVinPerAdc = 0.1151;
     adcUnderflow = 0;
   }
-  Index nsample = reader.nsample();
-  calib.chip = reader.chip();
+  Index nsample = rdr.nsample();
+  calib.chip = rdr.chip();
   calib.chan = channel();
-  calib.time = reader.time();
+  calib.time = rdr.time();
   ostringstream sschan;
   sschan << channel();
   string schan = sschan.str();
@@ -142,6 +147,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
     ph->SetLineWidth(2);
     ph->SetBit(TH1::kIsNotW);    // Turn off weights.
   }
+  phc->GetYaxis()->SetTitleOffset(1.4);  // Make room for large labels on y-axis.
   vector<TH1*> dhists = {phdn, phdr, phds, phdsb, phdw};
   for ( TH1* ph : dhists ) {
     //ph->SetStats(0);
@@ -200,8 +206,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
   Index nskip = 0;
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
-      double vin = reader.vinCenter(ivin);
-      Index count = reader.countTable()[iadc][ivin];
+      double vin = rdr.vinCenter(ivin);
+      Index count = rdr.countTable()[iadc][ivin];
       phc->Fill(iadc, vin, count);
       //if ( iadc == 500 && ivin < 700) cout << myname << "XXX: " << iadc << ", " << vin << ": " << count << endl;
       if ( iadc > iadcfitmin && iadc < iadcfitmax && vin > vinfitmin && vin < vinfitmax ) {
@@ -221,7 +227,12 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
   if ( nfill == 0 ) return;
   // Fit the response histogram.
   cout << myname << "Fitting..." << endl;
+  bool isBatch = gROOT->IsBatch();
+  if ( ! isBatch ) gROOT->SetBatch(true);
+  TCanvas* pcantmp = new TCanvas;
+  if ( ! isBatch ) gROOT->SetBatch(false);
   phf->Fit("pol1", "Q");
+  delete pcantmp;
   cout << myname << "  fitusestuck: " << fitusestuck << endl;
   cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
   cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
@@ -242,7 +253,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
   bool useNomGain = datasetCalib.size() == 0;
   if ( ! useNomGain ) {
     cout << myname << "Taking nominal calibration from dataset " << datasetCalib << endl;
-    pcalNominal = AdcChannelCalibration::find(datasetCalib, reader.chip(), reader.channel());
+    pcalNominal = AdcChannelCalibration::find(datasetCalib, chip(), channel());
     if ( pcalNominal == nullptr ) {
       cout << myname << "Nominal calibration not found!" << endl;
       useNomGain = true;
@@ -274,9 +285,9 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
     double evinCalib  = vinCalib(iadc);
     double ermsCalib  = rmsCalib(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
-      double vin = reader.vinCenter(ivin);
+      double vin = rdr.vinCenter(ivin);
       double evinLinear = fitped + iadc*fitVinPerAdc;
-      Index count = reader.countTable()[iadc][ivin];
+      Index count = rdr.countTable()[iadc][ivin];
       phd->Fill( iadc, vin - evinLinear, count);
       phdw->Fill(iadc, vin - evinLinear, count);
       phn->Fill( iadc, vin - evinCalib,  count);
@@ -355,6 +366,28 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& areader, string adat
 
 //**********************************************************************
 
+AdcSampleAnalyzer::AdcSampleAnalyzer(AdcSampleReaderPtr preader, string adatasetCalib, double cfac)
+: AdcSampleAnalyzer(*preader, adatasetCalib, cfac) {
+  m_preaderManaged.swap(preader);
+}
+
+//**********************************************************************
+
+AdcSampleAnalyzer::~AdcSampleAnalyzer() {
+  clean();
+}
+
+//**********************************************************************
+
+void AdcSampleAnalyzer::clean() {
+  for ( TH1* ph : m_localHists ) delete ph;
+  m_localHists.clear();
+  m_preaderManaged.reset(nullptr);
+  m_preader = nullptr;
+}
+
+//**********************************************************************
+
 TH1* AdcSampleAnalyzer::hcalib(Index iadc) const {
   if ( phc == nullptr ) return nullptr;
   ostringstream sshnam;
@@ -362,6 +395,8 @@ TH1* AdcSampleAnalyzer::hcalib(Index iadc) const {
   string shnam = sshnam.str();
   Index bin = iadc + 1;
   TH1* ph = phc->ProjectionY(shnam.c_str(), bin, bin);
+  ph->SetDirectory(nullptr);
+  m_localHists.push_back(ph);
   int nbin = ph->GetNbinsX();
   ostringstream sshtitl;
   sshtitl << phc->GetTitle() << " bin " << iadc;
@@ -379,6 +414,8 @@ TH1* AdcSampleAnalyzer::hdiff(Index iadc) const {
   string hnam = sshnam.str();
   Index bin = iadc + 1;
   TH1* ph = phd->ProjectionY(hnam.c_str(), bin, bin);
+  ph->SetDirectory(nullptr);
+  m_localHists.push_back(ph);
   ostringstream sshtitl;
   sshtitl << phd->GetTitle() << " bin " << iadc;
   string shtitl = sshtitl.str();
@@ -396,6 +433,8 @@ TH1* AdcSampleAnalyzer::hdiffn(Index iadc) const {
   string hnam = sshnam.str();
   Index bin = iadc + 1;
   TH1* ph = phn->ProjectionY(hnam.c_str(), bin, bin);
+  ph->SetDirectory(nullptr);
+  m_localHists.push_back(ph);
   ostringstream sshtitl;
   sshtitl << phn->GetTitle() << " bin " << iadc;
   string shtitl = sshtitl.str();
@@ -417,6 +456,8 @@ TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
     string hnam = sshnam.str();
     Index bin = iadc + 1;
     ph = phdw->ProjectionY(hnam.c_str(), bin, bin);
+    ph->SetDirectory(nullptr);
+    m_localHists.push_back(ph);
     ostringstream sshtitl;
     sshtitl << phdw->GetTitle() << " bin " << iadc;
     string shtitl = sshtitl.str();
@@ -534,15 +575,20 @@ AdcSampleAnalyzer::evaluateVoltageResponses(double vmin, double vmax, Index nv) 
 const FloatVector&
 AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, bool dropTails) {
   const string myname = "AdcSampleAnalyzer::evaluateVoltageEfficiencies: ";
-  evaluateReadData = readData;
   static FloatVector empty;
+  if ( reader() == nullptr ) {
+    cout << myname << "ERROR: Reader has been removed." << endl;
+    return empty;
+  }
+  const AdcSampleReader& rdr = *reader();
+  evaluateReadData = readData;
   unsigned int nvr = voltageResponses.size();
   if ( phc ==  nullptr ) return empty;
   if ( nvr < 1 ) return empty;
   // Create voltage performance object.
   double v1 = voltageResponses[0].vmin;
   double v2 = voltageResponses[nvr-1].vmax;
-  vperfs.emplace_back(chip(), channel(), reader.time(), rmsmax, nvr, v1, v2);
+  vperfs.emplace_back(chip(), channel(), time(), rmsmax, nvr, v1, v2);
   AdcVoltagePerformance& vperf = vperfs.back();
   // Create efficiency histogram.
   ostringstream sshnam;
@@ -603,7 +649,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   FloatVector gey10(nvr, 0.0);
   FloatVector gey90(nvr, 0.0);
   Index ictvin = 0;                 // Voltage index for the reader count table
-  Index nctvin = reader.nvin();     // Maximum voltage index for the reader count table
+  Index nctvin = rdr.nvin();     // Maximum voltage index for the reader count table
   // Loop over performance voltage bins.
   bool remhist = true;
   if ( ! remhist ) cout << myname << "WARNING: Histograms are not being removed." << endl;
@@ -634,14 +680,14 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
       if ( remhist ) phdvin2->SetDirectory(0);
       double tailFracSum = 0.0;
       // Skip reader voltage bins below the current range.
-      while ( reader.vinCenter(ictvin) < vin1 && ictvin < nctvin ) ++ictvin;
+      while ( rdr.vinCenter(ictvin) < vin1 && ictvin < nctvin ) ++ictvin;
       // Loop over reader voltage bins in the current range.
-      while ( reader.vinCenter(ictvin) < vin2 && ictvin < nctvin ) {
-        double vinTrue = reader.vinCenter(ictvin);
+      while ( rdr.vinCenter(ictvin) < vin2 && ictvin < nctvin ) {
+        double vinTrue = rdr.vinCenter(ictvin);
         if ( vinTrue >= vin2 ) break;    // We have reached the next voltage bin.
         // Loop over reader ADC bins.
-        for ( Index iadc=0; iadc<reader.countTable().size(); ++iadc ) {
-          Index count = reader.countTable()[iadc][ictvin];
+        for ( Index iadc=0; iadc<rdr.countTable().size(); ++iadc ) {
+          Index count = rdr.countTable()[iadc][ictvin];
           if ( count == 0 ) continue;
           countSum += count;
           double vinMeasured = calMean(iadc);

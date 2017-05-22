@@ -8,7 +8,6 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <map>
 #include "AdcSampleAnalyzer.h"
 #include "TCanvas.h"
 #include "TROOT.h"
@@ -17,6 +16,7 @@
 #include "TStyle.h"
 #include "TLegend.h"
 #include "TSystem.h"
+#include "TCanvas.h"
 
 using std::string;
 using std::cout;
@@ -24,51 +24,112 @@ using std::endl;
 using std::ostringstream;
 using std::setw;
 using std::vector;
-using std::map;
 typedef unsigned int Index;
 
 //**********************************************************************
 //
 AdcChipAnalyzer::
-AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, bool savecalib,
-                float vmin, float vmax, Index nv, double vrmsmax, bool dropTails, bool saveperf)
-: asas(icha1+ncha, nullptr) {
+AdcChipAnalyzer(string a_sampleName, Index a_icha1, Index a_ncha, string a_datasetCalib, bool a_saveCalib,
+                float a_vmin, float a_vmax, Index a_nv, double a_vRmsMax, bool a_dropTails, bool a_savePerf,
+                int cleanFlag)
+: m_sampleName(a_sampleName),
+  m_icha1(0),
+  m_ncha(0),
+  m_datasetCalib(a_datasetCalib),
+  m_saveCalib(a_saveCalib),
+  m_vmin(a_vmin),
+  m_vmax(a_vmax),
+  m_nv(a_nv),
+  m_vRmsMax(a_vRmsMax),
+  m_dropTails(a_dropTails),
+  m_savePerf(a_savePerf) {
   string myname = "AdcChipAnalyzer::ctor: ";
-  AdcSampleFinder asf;
-  // Open the sample for the first channel.
-  Index icha0 = icha1;
-  AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(dsname, icha0);
-  gStyle->SetOptStat(110111);
-  vector<string> stypes = {"rawv", "resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
-  //vector<string> stypes = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
-  //vector<string> stypes = {"fdn", "fdr", "fds", "fdsb"};
-  Index maxchan = prdr->nchannel();
-  string ssam = prdr->sample();
-  if ( ssam.substr(0,6) == "201610" ) maxchan = 15;
-  if ( ncha == 0 ) ncha = maxchan - icha1;
-  // Assign the channel numbers to include.
-  vector<Index> chans;
-  vector<Index> pads;
-  if ( ssam == "201612_ltc2314" && ncha > 0 ) {
-    ncha = 4;
-    chans.push_back(0);
-    chans.push_back(1);
-    chans.push_back(8);
-    chans.push_back(11);
-    pads.push_back(1);
-    pads.push_back(2);
-    pads.push_back(3);
-    pads.push_back(4);
-  } else {
-    for ( Index icha=icha1; icha<icha1+ncha; ++icha ) chans.push_back(icha);
-    for ( Index icha=icha1; icha<icha1+ncha; ++icha ) pads.push_back(icha+1);
+  // Create linear-fit gain summary histogram.
+  string hgtitl = sampleName() + " Linear fit gain; Gain [mV/ADC]; # channels";
+  m_phGain = new TH1F("hg", hgtitl.c_str(), 60, 0, 0.6);
+  m_phGain->SetDirectory(0);   // Don't delete this
+  m_hists.push_back(m_phGain);
+  // Create linear-fit offset summary histogram.
+  string hptitl = sampleName() + " Linear fit offset; Offset [mV]; # channels";
+  m_phOffset = new TH1F("hp", hptitl.c_str(), 40, -100, 100);
+  m_phOffset->SetDirectory(0);   // Don't delete this
+  m_hists.push_back(m_phOffset);
+  // Set channels and read data.
+  setChannels(a_icha1, a_ncha, cleanFlag);
+  // Draw plots.
+  cout << myname << "Chip analyzer constructed from sample " << sampleName() << "." << endl;
+  cout << myname << "Use this->draw(plotName) to draw plots (plotName = \"help\" to list)." << endl;
+}
+
+//**********************************************************************
+
+AdcChipAnalyzer::~AdcChipAnalyzer() {
+  for ( AdcSampleAnalyzer*& pasa : m_asas ) {
+    delete pasa;
+    pasa = nullptr;
   }
-  // Evaluate the layout of plots on a page (1, 4 or 16).
-  Index npadx = 0;
-  if ( ncha > 4 ) {
-    npadx = 4;
-  } else if ( ncha > 1 ) {
-    npadx = 2;
+  for ( TH1* ph : m_hists ) delete ph;
+  m_hists.clear();
+  for ( TH1* ph : m_rawHists ) delete ph;
+  m_rawHists.clear();
+  for ( TH1* ph : m_vinHists ) delete ph;
+  m_vinHists.clear();
+}
+
+//**********************************************************************
+
+int AdcChipAnalyzer::setChannels(Index a_icha1, Index a_ncha, int cleanFlag) {
+  string myname = "AdcChipAnalyzer::setChannels: ";
+  m_icha1 = a_icha1;
+  m_ncha = a_ncha;
+  m_chans.clear();
+  // Assign channel and pad numbers.
+  if ( sampleName() == "201612_ltc2314" && nChannel() > 0 ) {
+    if ( nChannel() == 1 ) m_chans.push_back(firstChannel());
+    else {
+      m_ncha = 4;
+      m_chans.push_back(0);
+      m_chans.push_back(1);
+      m_chans.push_back(8);
+      m_chans.push_back(11);
+    }
+  } else {
+    Index maxnchan = 16 - firstChannel();
+    if ( m_ncha > maxnchan ) m_ncha = maxnchan;
+    for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
+      Index icha = firstChannel() + kcha;
+      m_chans.push_back(icha);
+    }
+  }
+  m_clean = cleanFlag;
+  if ( cleanFlag == 2 && nChannel() == 1 ) m_clean = false;
+  // Fetch the analyzer for each channel.
+  for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
+    Index icha = channel(kcha);
+    AdcSampleAnalyzer& asa = sampleAnalyzer(icha);
+    if ( asa.phc == nullptr ) {
+      cout << myname << "ERROR: Unable to analyze channel " << icha << endl;
+      return 1;
+    };
+  }
+  return 0;
+}
+
+//**********************************************************************
+
+TCanvas* AdcChipAnalyzer::newCanvas(string splot, string canName) const {
+  gStyle->SetOptStat(110111);
+  Index npadx = 1;
+  bool onePad = nChannel() == 1 ||
+                splot.substr(0,3) == "sum" ||
+                splot == "gain" ||
+                splot == "offset";
+  if ( ! onePad ) {
+    if ( nChannel() > 4 ) {
+      npadx = 4;
+    } else if ( nChannel() > 1 ) {
+      npadx = 2;
+    }
   }
   Index npady = npadx;
   Index npad = npadx*npadx;
@@ -78,206 +139,301 @@ AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, boo
     wwx *= npadx;
     wwy *= npady;
   }
-  vector<TCanvas*> cans;
-  for ( string stype : stypes ) {
-    TCanvas* pcan = new TCanvas(stype.c_str(), stype.c_str(), wwx, wwy);
-    if ( npadx ) pcan->Divide(npadx, npadx);
-    cans.push_back(pcan);
+  TCanvas* pcan = new TCanvas(canName.c_str(), canName.c_str(), wwx, wwy);
+  if ( npadx ) pcan->Divide(npadx, npadx);
+  return pcan;
+}
+
+//**********************************************************************
+
+int AdcChipAnalyzer::drawall() {
+  string myname = "AdcChipAnalyzer::draw: ";
+  gStyle->SetOptStat(110111);
+  vector<string> splots = {"rawv", "resp", "diff", "difn", "zres", "fmea", "fsdv", "fsdx", "fsdt", "veffall"};
+  //vector<string> splots = {"resp", "diff", "difn", "zres", "frms", "fsdv", "fsdz", "fsdg", "fmea", "fdn", "fdr", "fds", "fdsb", "veff"};
+  //vector<string> splots = {"fdn", "fdr", "fds", "fdsb"};
+  Index rstat = 0;
+  for ( unsigned int ityp=0; ityp<splots.size(); ++ityp ) {
+    rstat += draw(splots[ityp], true);
   }
-  // Create linear-fit gain summary histogram.
-  string hgtitl = ssam + " fit Vin/ADC; Gain [mV/ADC]; # channels";
-  TH1* phg = new TH1F("hg", hgtitl.c_str(), 60, 0, 0.6);
-  phg->SetDirectory(0);   // Don't delete this
-  // Create linear-fit offset summary histogram.
-  string hptitl = ssam + " fit offset; Offset [mV]; # channels";
-  TH1* php = new TH1F("hp", hptitl.c_str(), 40, -100, 100);
-  php->SetDirectory(0);   // Don't delete this
-  // Record local histograms.
-  vector<TH1*> fhists = {phg, php};
-  vector<string> flabs = {"fitgain", "fitped"};
-  map<string, TH1*> hsums;  // Channels will be summed for these types.
-  hsums["fdn"] = nullptr;
-  hsums["fdr"] = nullptr;
-  hsums["fds"] = nullptr;
-  for ( Index kcha=0; kcha<ncha; ++kcha ) {
-    Index icha = chans[kcha];
-    Index ipad = npad ? pads[kcha] : 0;
-    if ( npad ) cans[0]->cd(ipad);
-    if ( icha != icha0 ) prdr = asf.find(dsname, icha);
-    if ( prdr == nullptr ) {
-      cout << myname << "Unable to set channel " << icha << endl;
-      return;
-    };
-    if ( prdr->channel() != icha ) {
-      cout << myname << "Set channel differs from input: " << prdr->channel() << " != " << icha << "." << endl;
-      return;
-    };
-    asas[icha] = new AdcSampleAnalyzer(*prdr, datasetCalib);
-    AdcSampleAnalyzer*& pasa = asas[icha];
-    AdcSampleAnalyzer& asa = *pasa;
+  return rstat;
+}
+
+//**********************************************************************
+
+int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
+  string myname = "AdcChipAnalyzer::draw: ";
+  if ( splotin == "help" ) {
+    cout << myname << "Supported plots:" << endl;
+    cout << myname << "   rawv - Raw waveform plus Vin." << endl;
+    cout << myname << "   resp - Inverse response (V{in} vs. ADC bin)." << endl;
+    cout << myname << "   zres - Inverse response for ADC bin < 300." << endl;
+    cout << myname << "   diff - Linear-fit residual." << endl;
+    cout << myname << "  diffn - Calibration residual." << endl;
+    cout << myname << "   frms - Linear resolution (residual RMS from linear fit) vs. ADC bin." << endl;
+    cout << myname << "   fsdv - Ultimate resolution (residual RMS from ultimate calibration) vs. ADC bin." << endl;
+    cout << myname << "   fsdz - Ultimate resolution vs. ADC bin with expanded scale (5 mV)." << endl;
+    cout << myname << "   fsdg - Ultimate resolution vs. ADC bin for good bins only." << endl;
+    cout << myname << "   fsdb - Ultimate resolution vs. ADC bin for bad bins only." << endl;
+    cout << myname << "   fsdx - Expanded (pull > 5.0) ultimate resolution vs. ADC bin." << endl;
+    cout << myname << "   fsdt - Tail fraction vs. ADC bin." << endl;
+    cout << myname << "   fmea - Mean linear fit residual (ultimate calibration constants) vs. ADC bin." << endl;
+    cout << myname << "    fdr - Linear-fit resolution distribution." << endl;
+    cout << myname << "    fds - Ultimate resolution distribution." << endl;
+    cout << myname << "   fdsb - Ultimate resolution distribution for bad channels." << endl;
+    cout << myname << "   veff - Efficiency (good fraction) vs. input voltage." << endl;
+    cout << myname << "   perf - Efficiency, resolution and tail fraction vs. input voltage." << endl;
+    cout << myname << " sumfdr - Linear-fit resolution distribution summed over channels." << endl;
+    cout << myname << " sumfds - Ultimate resolution distribution summed over channels." << endl;
+    cout << myname << "   gain - Gain distribution for all channels." << endl;
+    cout << myname << " offset - Offset distribution for all channels." << endl;
+    return 0;
+  }
+  // Fill the map of histograms that are summed over channels..
+  if ( m_hsums.size() == 0 ) {
+    m_hsums["fdr"] = nullptr;
+    m_hsums["fds"] = nullptr;
+  }
+  // Build strings with channel range.
+  ostringstream sschan;
+  sschan << firstChannel();
+  if ( nChannel() > 1 ) sschan << "-" << firstChannel() + nChannel() - 1;
+  string schan = sschan.str();
+  string schanlab = string(nChannel() == 1 ? "channel" : "channels") + " " + schan;
+  // Suffix for object names.
+  ostringstream ssnamsuf;
+  ssnamsuf << splotin << "_" << firstChannel();
+  if ( nChannel() > 1 ) ssnamsuf << "_" << firstChannel() + nChannel() - 1;
+  string namsuf = ssnamsuf.str();
+  // Create canvas for the plots.
+  string canName = "can_" + namsuf;
+  TCanvas* pcan = newCanvas(splotin, canName.c_str());
+  m_cans.push_back(pcan);
+  // Loop over channels and add plots.
+  TVirtualPad* ppad = pcan;
+  // Check if this is summed over channels.
+  bool doChannelSum = false;
+  string splot = splotin;
+  if ( splot.substr(0,3) == "sum" ) {
+    doChannelSum = true;
+    splot = splotin.substr(3);
+  }
+  for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
+    Index icha = channel(kcha);
+    if ( nChannel() ) ppad = pcan->cd(kcha + 1 );
+    AdcSampleAnalyzer& asa = sampleAnalyzer(icha);
     if ( asa.phc == nullptr ) {
-      cout << myname << "ADC analysis failed." << endl;
-      return;
+      cout << myname << "ERROR: Unable to analyze channel " << icha << endl;
+      return 1;
+    };
+    if ( asa.channel() != icha ) {
+      cout << myname << "ERROR: Reader channel differs from input: " << asa.channel() << " != " << icha << "." << endl;
+      return 2;
+    };
+    TH1* ph = nullptr;
+    TH1* ph2 = nullptr;
+    string sarg = "hist";
+    string sarg2 = "hist same";
+    double rightMargin = 0.02;
+    double leftMargin = 0.10;
+    bool logy = false;
+    bool gridx = false;
+    bool gridy = false;
+    bool doDraw = true;
+    bool doLine = false;  // Draw a line for the x-axis.
+    TLine* pline = nullptr;
+    // Find the histogram(s) for the plot name.
+    if ( splot == "rawv" ) {
+      gridx = true;
+      gridy = true;
+      ph = m_rawHists[icha];
+      ph2 = m_vinHists[icha];
+      sarg = "e0 x0";
+      ph->GetYaxis()->SetTitleOffset(1.3);
+      doLine = true;
     }
-    // Create array of voltage responses.
-    asa.evaluateVoltageResponses(vmin, vmax, nv);
-    // Create efficiency histogram.
-    asa.evaluateVoltageEfficiencies(vrmsmax, true, dropTails);
-    // Create histogram plots.
-    if ( asa.phc == nullptr ) {
-      cout << myname << "No response plot for " << ssam << " channel " << icha << endl;
-      return;
-      continue;
+    else if ( splot == "resp" ) { ph = asa.phc; sarg = "colz"; rightMargin = 0.12; doLine = true; }
+    else if ( splot == "zres" ) {
+      ph = dynamic_cast<TH2*>(asa.phc->Clone("zres"));
+      ph->GetXaxis()->SetRangeUser(0.0, 300.0);
+      ph->GetYaxis()->SetRangeUser(-50.0, 150.0);
+      sarg = "colz"; rightMargin = 0.12; doLine = true;
+      pline = new TLine(0.0, 0.0, 300.0, 0.0);
     }
-    for ( unsigned int ityp=0; ityp<stypes.size(); ++ityp ) {
-      bool addvrms = false;
-      bool drawvrms = false;  // Let ASA draw the performance.
-      string stype = stypes[ityp];
-      TCanvas* pcan = cans[ityp];
-      TVirtualPad* ppad = pcan->cd(ipad);
-      ppad->SetGridy();
-      TH1* ph = nullptr;
-      TH1* ph2 = nullptr;
-      string sarg = "colz";
-      if ( stype == "rawv" ) {
-        ppad->SetGridx();
-        ppad->SetGridy();
-        int rebin = 1000;
-        ph = prdr->histdata(0, 0, -rebin, true);
-        ph->SetLineWidth(2);
-        ph->SetMinimum(-500);
-        ph->SetMaximum(4500);
-        ph2 = prdr->histvin(0, 0, rebin, true);
-        ph2->SetLineWidth(2);
-        ph2->SetLineColor(2);
-        string ylab = "ADC code, Input voltage [mV]";
-        if ( ph2 != nullptr ) ph->GetYaxis()->SetTitle(ylab.c_str());
-        sarg = "e0 x0";
-        ppad->SetLeftMargin(0.13);
-        ph->GetYaxis()->SetTitleOffset(1.3);
+    else if ( splot == "diff" ) { ph = asa.phd; sarg = "colz"; rightMargin = 0.12; gridy = true; doLine = true; }
+    else if ( splot == "difn" ) { ph = asa.phn; sarg = "colz"; rightMargin = 0.12; gridy = true; doLine = true; }
+    else if ( splot == "frms" ) { ph = asa.phr; gridy = true; }
+    else if ( splot == "fsdv" ) { ph = asa.phs; gridy = true; }
+    else if ( splot == "fsdz" ) { ph = dynamic_cast<TH1*>(asa.phs->Clone("fsdz")); ph->SetMaximum(5.0); gridy = true; }
+    else if ( splot == "fsdg" ) { ph = asa.phsg; gridy = true; }
+    else if ( splot == "fsdb" ) { ph = asa.phsb; gridy = true; }
+    else if ( splot == "fsdx" ) { ph = asa.phsx; gridy = true; }
+    else if ( splot == "fsdt" ) { ph = asa.phst; logy = true; gridy = true; }
+    else if ( splot == "fmea" ) { ph = asa.phm; gridy = true; }
+    else if ( splot == "fdr"  ) { ph = asa.phdr; }
+    else if ( splot == "fds"  ) { ph = asa.phds; }
+    else if ( splot == "fdsb" ) { ph = asa.phdsb; }
+    else if ( splot == "veff" ) { ph = asa.phveff; ppad->SetGridx(); gridx = true; gridy = true; }
+    else if ( splot == "perf" ) {
+      ppad->SetGridx();
+      asa.drawperf();
+      doDraw = false;
+    }
+    else if ( splot == "gain" ) {
+      ph = m_phGain;
+      if ( kcha == 0 ) {
+        ph->Reset();
+        string htitl = sampleName() + " Linear fit gain for " + schanlab;
+        ph->SetTitle(htitl.c_str());
       }
-      if ( stype == "resp" ) ph = asa.phc;
-      if ( stype == "diff" ) ph = asa.phd;
-      if ( stype == "difn" ) ph = asa.phn;
-      if ( stype == "frms" ) ph = asa.phr;
-      if ( stype == "fsdv" ) ph = asa.phs;
-      if ( stype == "fsdx" ) ph = asa.phsx;
-      if ( stype == "fsdt" ) {
-        ph = asa.phst;
-        ppad->SetLogy();
+      ph->Fill(asa.calib.gain);
+      doDraw = kcha+1 == nChannel();
+    }
+    else if ( splot == "offset" ) {
+      ph = m_phOffset;
+      if ( kcha == 0 ) {
+        ph->Reset();
+        string htitl = sampleName() + " Linear fit offset for " + schanlab;
+        ph->SetTitle(htitl.c_str());
       }
-      if ( stype == "fsdg" ) ph = asa.phsg;
-      if ( stype == "fsdz" ) {
-        ph = dynamic_cast<TH1*>(asa.phs->Clone("fsdv"));
-        ph->SetMaximum(5.0);
-      }
-      if ( stype == "fmea" ) ph = asa.phm;
-      if ( stype == "fdn"  ) ph = asa.phdn;
-      if ( stype == "fdr"  ) ph = asa.phdr;
-      if ( stype == "fds"  ) ph = asa.phds;
-      if ( stype == "fdsb" ) ph = asa.phdsb;
-      if ( stype == "zres" ) {
-        ph = dynamic_cast<TH2*>(asa.phc->Clone("zres"));
-        ph->GetXaxis()->SetRangeUser(0.0, 300.0);
-        ph->GetYaxis()->SetRangeUser(-50.0, 150.0);
-      }
-      if ( stype == "veff" ) {
-        ph = asa.phveff;
-        ppad->SetGridx();
-        sarg = "h";
-        addvrms = true;
-      }
-      if ( stype == "veffall" ) {
-        ph = asa.phveff;
-        ppad->SetGridx();
-        sarg = "h";
-        drawvrms = true;
-      }
-      if ( ph == nullptr ) continue;
-      if ( dynamic_cast<TH2*>(ph) == nullptr ) ppad->SetRightMargin(0.05);
-      if ( stype == "diff" ||
-           stype == "difn" ||
-           stype == "fmea" ) {
-        double xmin = ph->GetXaxis()->GetXmin();
-        double xmax = ph->GetXaxis()->GetXmax();
-        ph->DrawCopy(sarg.c_str());
-        TLine* pline = new TLine(xmin, 0.0, xmax, 0.0);
-        pline->Draw();
-        string sarg2 = sarg + " same";
-        ph->DrawCopy(sarg2.c_str());
-      } else if ( drawvrms ) {
-        asa.drawperf(true);
-      } else if ( addvrms ) {
-        string hnam = ph->GetName();
-        hnam += "_vrms";
-        TH1* phax = dynamic_cast<TH1*>(ph->Clone(hnam.c_str()));
-        string ylab = phax->GetYaxis()->GetTitle();
-        ylab += ", V_{in} resolution [mV]";
-        phax->GetYaxis()->SetTitle(ylab.c_str());
-        //phax->SetLineColor(kBlue+1);
-        //phax->SetLineWidth(2);
-        phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
-        phax->DrawCopy("h");
-        asa.pgvrms->Draw("Z");
-        TLegend* pleg = new TLegend(0.5, 0.15, 0.65, 0.25);
-        pleg->SetBorderSize(0);
-        pleg->SetFillStyle(0);
-        pleg->AddEntry(phax, "Efficiency", "l");
-        pleg->AddEntry(asa.pgvrms, "Resolution", "le");
-        pleg->Draw();
-      } else {
-        ph->DrawCopy(sarg.c_str());
-        if ( ph2 != nullptr ) ph2->DrawCopy("same");
-      }
-      if ( hsums.find(stype) != hsums.end() ) {
-        TH1*& phs = hsums[stype];
-        if ( phs == nullptr ) {
-          string hname = ph->GetName();
+      ph->Fill(asa.calib.offset);
+      doDraw = kcha+1 == nChannel();
+    }
+    else {
+      cout << myname << "Invalid plot name: " << splot << endl;
+      doDraw = false;
+    }
+    // If this is a sum, sum instead of drawing.
+    if ( doChannelSum ) {
+      if ( m_hsums.find(splot) != m_hsums.end() ) {
+        TH1*& phs = m_hsums[splot];
+        if ( icha == firstChannel() ) {
+          delete phs;
+          string hname = "hist_" + splot + "_" + namsuf;
           string htitl = ph->GetTitle();
           string::size_type ipos = htitl.find(" channel");
-          htitl = htitl.substr(0, ipos);
+          htitl = htitl.substr(0, ipos+8) + "s " + schan;
           hname += "_sum";
           phs = dynamic_cast<TH1*>(ph->Clone(hname.c_str()));
           phs->SetDirectory(nullptr);
           phs->SetTitle(htitl.c_str());
-          fhists.push_back(phs);
-          string slab = stype + "_sum";
-          flabs.push_back(slab);
+          m_hists.push_back(phs);
         } else {
           phs->Add(ph);
         }
-      }
-    }
-    phg->Fill(asa.fitVinPerAdc);
-    php->Fill(asa.fitped);
-    if ( savecalib ) {
-      if ( asa.calib.isValid() && asa.dataset().size() ) {
-        cout << myname << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
-        string calibName = "calib_" + asa.dataset();
-        string fname = calibName + ".root";
-        AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
-        int istat = calibdb.insert(asa.calib);
-        cout << myname << "Insertion returned " << istat << endl;
+        doDraw = kcha+1 == nChannel();
+        ph = nullptr;
+        if ( doDraw ) ph = phs;
       } else {
-        cout << myname << "Not adding channel " << asa.calib.chan << " to calib DB." << endl;
+        cout << myname << "Invalid sum plot name: " << splotin << endl;
+        doDraw = false;
       }
     }
-    if ( saveperf ) {
-      if ( asa.vperfs.size() && asa.dataset().size() ) {
-        cout << myname << "Adding channel " << asa.channel() << " to performance DB." << endl;
-        string perfName = "perf_" + asa.dataset();
-        string fname = perfName + ".root";
-        AdcPerformanceTree perfdb(fname, "adcperf", "UPDATE");
-        for ( const AdcVoltagePerformance& vperf : asa.vperfs ) {
-          unsigned int oldsize = perfdb.size();
-          int istat = perfdb.insert(vperf);
-          unsigned int newsize = perfdb.size();
-          cout << myname << "Insertion returned " << istat << ".";
-          cout << " Old-->new size = " << oldsize << "-->" << newsize << "." << endl;
+    // Gain.
+    if ( doLine && pline == nullptr && ph != nullptr ) {
+      double xmin = ph->GetXaxis()->GetXmin();
+      double xmax = ph->GetXaxis()->GetXmax();
+      pline = new TLine(xmin, 0.0, xmax, 0.0);
+    }
+    if ( doDraw ) {
+      ppad->SetRightMargin(rightMargin);
+      ppad->SetLeftMargin(leftMargin);
+      if ( logy ) ppad->SetLogy();
+      if ( gridx ) ppad->SetGridx();
+      if ( gridy ) ppad->SetGridy();
+      if ( ph == nullptr ) {
+        cout << myname << "Histogram for " << splot << " channel " << icha << " not found." << endl;
+      } else {
+        ph->DrawCopy(sarg.c_str());
+        if ( pline != nullptr ) {
+          pline->Draw();
+          string sargup = sarg + " same";
+          ph->DrawCopy(sargup.c_str());
         }
-      } else {
-        cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
       }
+      if ( ph2 != nullptr ) ph2->DrawCopy(sarg2.c_str());
+    }
+  }
+  if ( savePlot ) {
+    string fchan;
+    if ( nChannel() != 16 ) fchan = "_chan" + schan;
+    string fnamesuff = "_" + sampleName() + fchan + ".png";
+    string fname = splotin + fnamesuff; 
+    pcan->Print(fname.c_str());
+  }
+  return 0;
+}
+
+//**********************************************************************
+
+AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
+  const string myname = "AdcChipAnalyzer::sampleAnalyzer: ";
+  if ( m_asas.size() < icha+1 ) m_asas.resize(icha+1, nullptr);
+  if ( m_rawHists.size() < icha+1 ) m_rawHists.resize(icha+1, nullptr);
+  if ( m_vinHists.size() < icha+1 ) m_vinHists.resize(icha+1, nullptr);
+  AdcSampleAnalyzer*& pasa = m_asas[icha];
+  if ( pasa == nullptr ) {
+    cout << myname << "Reading data for channel " << icha << endl;
+    AdcSampleFinder asf;
+    AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(sampleName(), icha);
+    pasa = new AdcSampleAnalyzer(std::move(prdr), datasetCalib());
+    AdcSampleAnalyzer& asa = *pasa;
+    if ( asa.phc != nullptr ) {
+      // Create array of voltage responses.
+      asa.evaluateVoltageResponses(vmin(), vmax(), nv());
+      // Create efficiency histogram.
+      asa.evaluateVoltageEfficiencies(vRmsMax(), true, dropTails());
+      // Add calibration to tree.
+      if ( saveCalib() ) {
+        if ( asa.calib.isValid() && asa.dataset().size() ) {
+          cout << myname << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
+          string calibName = "calib_" + asa.dataset();
+          string fname = calibName + ".root";
+          AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
+          int istat = calibdb.insert(asa.calib);
+          cout << myname << "Insertion returned " << istat << endl;
+        } else {
+          cout << myname << "Not adding channel " << asa.calib.chan << " to calib DB." << endl;
+        }
+      }
+      // Add performance to tree.
+      if ( savePerf() ) {
+        if ( asa.vperfs.size() && asa.dataset().size() ) {
+          cout << myname << "Adding channel " << asa.channel() << " to performance DB." << endl;
+          string perfName = "perf_" + asa.dataset();
+          string fname = perfName + ".root";
+          AdcPerformanceTree perfdb(fname, "adcperf", "UPDATE");
+          for ( const AdcVoltagePerformance& vperf : asa.vperfs ) {
+            unsigned int oldsize = perfdb.size();
+            int istat = perfdb.insert(vperf);
+            unsigned int newsize = perfdb.size();
+            cout << myname << "Insertion returned " << istat << ".";
+            cout << " Old-->new size = " << oldsize << "-->" << newsize << "." << endl;
+          }
+        } else {
+          cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
+        }
+      }
+    }
+    // Fetch the waveform histograms.
+    const AdcSampleReader& rdr = *asa.reader();
+    int rebin = 1000;
+    TH1* ph = rdr.histdata(0, 0, -rebin, true);
+    ph->SetLineWidth(2);
+    ph->SetMinimum(-500);
+    ph->SetMaximum(4500);
+    TH1* ph2 = rdr.histvin(0, 0, rebin, true);
+    ph2->SetLineWidth(2);
+    ph2->SetLineColor(2);
+    string ylab = "ADC code, Input voltage [mV]";
+    if ( ph2 != nullptr ) ph->GetYaxis()->SetTitle(ylab.c_str());
+    m_rawHists[icha] = ph;
+    m_vinHists[icha] = ph2;
+    // If flag is set, clean the analyzer.
+    // This deletes some less-critcal histograms and deletes the reader.
+    if ( clean() ) {
+      pasa->clean();
+      //gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
     }
     if ( true ) {
       ProcInfo_t info;
@@ -285,56 +441,18 @@ AdcChipAnalyzer(string dsname, Index icha1, Index ncha, string datasetCalib, boo
       cout << myname << "Virtual memory after channel " << setw(2) << asa.channel() << " is "
            << info.fMemVirtual/1000000.0 << " GB" << endl;
     }
-    if ( true ) {
-      gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
-    }
-    if ( true ) {
-      delete pasa;
-      pasa = nullptr;
-    }
-    cout << myname << endl;
   }
-  string schan;
-  if ( npad < 16 ) {
-    ostringstream sschan;
-    sschan << "_chan";
-    if ( icha1 < 10 ) sschan << "0";
-    sschan << icha1;
-    if ( ncha > 1 ) {
-      sschan << "_n" << ncha;
-    }
-    schan = sschan.str();
+  if ( pasa->phc == nullptr ) {
+    cout << myname << "ERROR: ADC analysis failed for channel " << icha << "." << endl;
   }
-  string fnamesuff = "_" + ssam + schan + ".png";
-  for ( Index ityp=0; ityp<stypes.size(); ++ityp ) {
-    string stype = stypes[ityp];
-    TCanvas* pcan = cans[ityp];
-    string fname = stype + fnamesuff; 
-    pcan->Print(fname.c_str());
-  }
-  for ( Index ihst=0; ihst<fhists.size(); ++ihst ) {
-    TCanvas* pcan = new TCanvas;
-    TH1* ph = fhists[ihst];
-    ph->SetLineWidth(2);
-    ph->DrawCopy();
-    string fname = flabs[ihst] + fnamesuff; 
-    pcan->Print(fname.c_str());
-    delete ph;
-  }
-  if ( true ) {
-    ProcInfo_t info;
-    gSystem->GetProcInfo(&info);
-    cout << myname << "Virtual memory at exit is " << info.fMemVirtual/1000000.0 << " GB" << endl;
-  }
+  return *pasa;
 }
 
 //**********************************************************************
 
-AdcChipAnalyzer::~AdcChipAnalyzer() {
-  for ( AdcSampleAnalyzer*& pasa : asas ) {
-    delete pasa;
-    pasa = nullptr;
-  }
+Index AdcChipAnalyzer::channel(Index kcha) const {
+  if ( kcha >= nChannel() ) return nChannel();
+  return m_chans[kcha];
 }
 
 //**********************************************************************

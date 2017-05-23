@@ -54,15 +54,16 @@ public:
 
   // Set the channels to include in plots.
   // Reads data for channels as needed.
+  // Arguments have the same meaning as in the ctor.
   int setChannels(Index icha1, Index ncha =1, int cleanFlag = 2);
 
   // Return the the analyzer for channel icha). Created if absent.
   AdcSampleAnalyzer& sampleAnalyzer(Index icha);
 
-  // Draw all plots.
+  // Draw a selected set of plots.
   int drawall();
 
-  // Draw a plot.
+  // Draw a plot. Use splot = "help" to list available plots wiht descriptions.
   int draw(Name splot, bool savePlot =false);
 
   // Getters.
@@ -91,9 +92,6 @@ public:
   // This will have 1, 4 or 16 drawing pads depending on the drawing type (stype)
   // and # channels.
   TCanvas* newCanvas(Name splot, Name canName) const;
-
-  // Pointer to the analyzer for each channel.
-  // Null or absent if channel was not analyzed.
 
 private:
 

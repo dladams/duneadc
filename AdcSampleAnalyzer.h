@@ -78,9 +78,11 @@ public:
   double vinfitmax = 0.0;    // Max Vin for linear reponse fit
   bool fitusestuck = false;  // If true, classic stuck codes (LSB6=0,63) are excluded from linear response fit.
   // Nominal calibration.
+  bool haveNominalCalibration = false;
+  bool nominalCalibrationIsLinear = false;
   const AdcChannelCalibration* pcalNominal = nullptr;
-  double nomVinPerAdc;
-  double nomped;
+  double nominalGain = 0.0;
+  double nominalOffset = 0.0;
   // Linear fit.
   double fitVinPerAdc;
   double fitped;
@@ -101,14 +103,15 @@ public:
   bool evaluateReadData =false;   // Flag indicating if data was read for performance evaluation.
 
   // Read in and process the data using nominal calibration from adatasetCalib.
-  // If the latter is blank, the gain is taken from nomGain.
-  // If that is zero, the gain is obtained from the reader.
-  // In either of the latter two cases, the offset is obtained from the data at ADC=500.
-  //  asample - sample name
-  //  achan - channel #
-  //  adatasetCalib - Name of the calibration dataset (e.g. "201701b").
-  //  maxsam - maximum # samples to read from a waveform (0 for all)
-  //  nomGain - if nonzero, this value is used for the nominal gain [(ADC count/mV]
+  // If the latter is "linear", the nominal calibration is linear with gain specified
+  // by nomGain and the offset is obtained from the data at ADC=500.
+  // If the string is "none" or blank, there is no nominal calibration and the
+  // calibration difference histograms are not created. This saves memory.
+  //   areader - Sample reader
+  //   adatasetCalib - Name of the calibration dataset (e.g. "201701b").
+  //   maxsam - maximum # samples to read from a waveform (0 for all)
+  //  nomGain: >0 - Nominal gain for a linear calibration [(ADC count/mV]
+  //            0   Take gain from reader
   AdcSampleAnalyzer(const AdcSampleReader& areader, Name adatasetCalib ="", double nomGain =0.0);
 
   // Same as previous except this object now manages the reader.
@@ -155,8 +158,8 @@ public:
   double calExpandedRms(Index iadc) const;
 
   // Nominal calibration.
-  double vinCalib(Index iadc) const;
-  double rmsCalib(Index iadc) const;
+  double nominalCalibrationVin(Index iadc) const;
+  double nominalCalibrationRms(Index iadc) const;
 
   // Evaluate voltage responses.
   AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);

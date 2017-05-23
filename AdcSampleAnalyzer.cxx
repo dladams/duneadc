@@ -38,7 +38,7 @@ bool sticky(Index iadc) {
 
 //**********************************************************************
 
-AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double cfac)
+AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nominalGain)
 : datasetCalib(adatasetCalib),
   pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0),
   m_preader(&rdr),
@@ -66,8 +66,6 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   vinfitmin = 0.0;
   vinfitmax = 1600.0;
   fitusestuck = false;
-  nomVinPerAdc = cfac;
-  nomped = 0.0;
   Index adcmax = nadc;
   Index nvin = rdr.nvin();
   Index npadc = 4100*nadc/4096;
@@ -79,13 +77,36 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   Name ssam = rdr.sample();
   if ( ssam.find("ltc") != string::npos ) {
     fitusestuck = true;
-    nomVinPerAdc = 0.1151;
+    if ( a_nominalGain == 0.0 ) nominalGain = 0.1151;
     adcUnderflow = 0;
   }
+  cout << myname << "Processing sample " << rdr.sample() << endl;
   Index nsample = rdr.nsample();
   calib.chip = rdr.chip();
   calib.chan = channel();
   calib.time = rdr.time();
+  haveNominalCalibration = datasetCalib.size() && (datasetCalib != "none");
+  if ( haveNominalCalibration ) {
+    nominalCalibrationIsLinear = datasetCalib == "linear";
+    if ( nominalCalibrationIsLinear ) {
+      nominalGain = a_nominalGain;
+      if ( nominalGain <= 0.0 ) {
+        cout << myname << "ERROR: Invalid nominal gain: " << a_nominalGain << endl;
+        return;
+      }
+      cout << myname << "Nominal calibration is linear with gain " << nominalGain << "  mV/ADC." << endl;
+    } else {
+      cout << myname << "Taking nominal calibration from dataset " << datasetCalib << endl;
+      pcalNominal = AdcChannelCalibration::find(datasetCalib, chip(), channel());
+      if ( pcalNominal == nullptr ) {
+        cout << myname << "ERROR: Nominal calibration not found for dataset " << datasetCalib << endl;
+        return;
+      }
+    }
+  } else {
+    cout << myname << "Nominal calibration is not provided." << endl;
+  }
+  // Create names and titles for histograms.
   ostringstream sschan;
   sschan << channel();
   string schan = sschan.str();
@@ -121,25 +142,35 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   Index nvinperf = 80;
   double vinperfmin = 0.0;
   double vinperfmax = 1600.0;
+  // Create histograms.
   phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
   phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
   phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
-  phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
-  phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
-  phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
   phm = new TH1F(hnamm.c_str(), stitle.c_str(), npadc, 0, padcmax);
   phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
   phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
   pht = new TH1F(hnamt.c_str(), stitlt.c_str(), npadc, 0, padcmax);
   phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
   phst = new TH1F(hnamst.c_str(), stitlst.c_str(), npadc, 0, padcmax);
-  phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
   phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
   phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
   phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
-  vector<TH1*> hists = {phf, phc, phd, phn, phnw, phvn};
-  for ( TH1* ph : hists ) {
+  vector<TH1*> hists2d = {phf, phc, phd};
+  vector<TH1*> dhists = {phdr, phds, phdsb, phdw};
+  // Add calibration histograms.
+  if ( haveNominalCalibration ) {
+    phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+    phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+    phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
+    phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
+    phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
+    hists2d.push_back(phn);
+    hists2d.push_back(phnw);
+    hists2d.push_back(phvn);
+    dhists.push_back(phdn);
+  }
+  for ( TH1* ph : hists2d ) {
     ph->SetStats(0);
     ph->SetContour(20);
     if ( zmax > 0 ) ph->SetMaximum(zmax); 
@@ -148,14 +179,12 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
     ph->SetBit(TH1::kIsNotW);    // Turn off weights.
   }
   phc->GetYaxis()->SetTitleOffset(1.4);  // Make room for large labels on y-axis.
-  vector<TH1*> dhists = {phdn, phdr, phds, phdsb, phdw};
   for ( TH1* ph : dhists ) {
     //ph->SetStats(0);
     ph->GetYaxis()->SetTitle("# ADC bins");
     ph->SetLineWidth(2);
     ph->SetBit(TH1::kIsNotW);    // Turn off weights.
   }
-  phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
   phdr->GetXaxis()->SetTitle("RMS [mV]");
   phds->GetXaxis()->SetTitle("Sigma [mV]");
   phdsb->GetXaxis()->SetTitle("Sigma [mV]");
@@ -169,9 +198,6 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   phm->SetStats(0);
   phd->SetStats(0);
   phdw->SetStats(0);
-  phn->SetStats(0);
-  phnw->SetStats(0);
-  phvn->SetStats(0);
   phr->SetStats(0);
   phs->SetStats(0);
   pht->SetStats(0);
@@ -199,7 +225,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   if ( zmax == 0 ) {
     zmax = 4*nsample/nvin;
     cout << myname << "zmax = " << zmax << endl;
-    for ( TH1* ph : hists ) ph->SetMaximum(zmax); 
+    for ( TH1* ph : hists2d ) ph->SetMaximum(zmax); 
   }
   // Create the fit and response histograms.
   Index nfill = 0;
@@ -241,7 +267,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   fitVinPerAdc = pfit->GetParameter(1);
   calib.gain = fitVinPerAdc;
   calib.offset = fitped;
-  cout << myname << "Fit gain: " << fitVinPerAdc << " mV/ADC, pedestal: " << fitped << " mV" << endl;
+  cout << myname << "Fit gain: " << fitVinPerAdc << " mV/ADC, offset: " << fitped << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
   ssdif << "V_{in} - (" << fitVinPerAdc << " ADC + " << fitped << ") [mV]";
@@ -250,30 +276,25 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   // Find the nominal calibration.
   // If datasetCalib is set, use its calibration for this channel.
   // Otherwise, use the gain from the reader and the pedestal from data at ADC = 500.
-  bool useNomGain = datasetCalib.size() == 0;
-  if ( ! useNomGain ) {
-    cout << myname << "Taking nominal calibration from dataset " << datasetCalib << endl;
-    pcalNominal = AdcChannelCalibration::find(datasetCalib, chip(), channel());
-    if ( pcalNominal == nullptr ) {
-      cout << myname << "Nominal calibration not found!" << endl;
-      useNomGain = true;
-    } else {
-      ostringstream ssdifn;
-      ssdifn.precision(3);
-      ssdifn << "V_{in} - V_{in}(" << datasetCalib << ") [mV]";
-      phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
-      phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
-      phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
-    }
-  }
-  if ( useNomGain ) {
-    Index adc_nom = 500;
-    cout << myname << "Nominal gain taken from reader, offset from data at ADC = " << adc_nom << endl;
-    nomped = fitped + (fitVinPerAdc - nomVinPerAdc)*adc_nom;
-    cout << myname << "Nominal gain: " << nomVinPerAdc << " mV/ADC, pedestal: " << nomped << " mV" << endl;
+  if ( pcalNominal != nullptr ) {
     ostringstream ssdifn;
     ssdifn.precision(3);
-    ssdifn << "V_{in} - (" << nomVinPerAdc << " ADC + " << nomped << ") [mV]";
+    ssdifn << "V_{in} - V_{in}(" << datasetCalib << ") [mV]";
+    phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+  }
+  // Find the offset for a linear calbration.
+  // This uses the linear calibration of this data.
+  if ( nominalCalibrationIsLinear ) {
+    Index adc_nom = 500;
+    cout << myname << "Nominal gain taken from reader, offset from data at ADC = " << adc_nom << endl;
+    nominalOffset = fitped + (fitVinPerAdc - nominalGain)*adc_nom;
+    cout << myname << "Nominal gain: " << nominalGain << " mV/ADC, offset: "
+         << nominalOffset << " mV" << endl;
+    ostringstream ssdifn;
+    ssdifn.precision(3);
+    ssdifn << "V_{in} - (" << nominalGain << " ADC + " << nominalOffset << ") [mV]";
     phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
     phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
     phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
@@ -282,17 +303,19 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   vector<Index> nsamtot;
   vector<Index> nsamkeep;
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
-    double evinCalib  = vinCalib(iadc);
-    double ermsCalib  = rmsCalib(iadc);
+    double evinCalib = haveNominalCalibration ? nominalCalibrationVin(iadc) : 0.0;
+    double ermsCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationRms(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = rdr.vinCenter(ivin);
       double evinLinear = fitped + iadc*fitVinPerAdc;
       Index count = rdr.countTable()[iadc][ivin];
       phd->Fill( iadc, vin - evinLinear, count);
       phdw->Fill(iadc, vin - evinLinear, count);
-      phn->Fill( iadc, vin - evinCalib,  count);
-      phnw->Fill(iadc, vin - evinCalib,  count);
-      if ( ermsCalib < 1.0 ) phvn->Fill(vin, vin - evinCalib,  count);
+      if ( haveNominalCalibration ) {
+        phn->Fill( iadc, vin - evinCalib,  count);
+        phnw->Fill(iadc, vin - evinCalib,  count);
+        if ( ermsCalib < 1.0 ) phvn->Fill(vin, vin - evinCalib,  count);
+      }
     }
   }
   // Fill diff stat histograms.
@@ -348,12 +371,14 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
         phds->Fill(xs);
       }
     }
-    ph = hdiffn(iadc);
-    xm = ph->GetMean();
-    xs = ph->GetRMS();
-    xr = sqrt(xm*xm+xs*xs);
-    if ( iadc > 64 && !isStuck ) {
-      phdn->Fill(xr);
+    if ( haveNominalCalibration ) {
+      ph = hdiffn(iadc);
+      xm = ph->GetMean();
+      xs = ph->GetRMS();
+      xr = sqrt(xm*xm+xs*xs);
+      if ( iadc > 64 && !isStuck ) {
+        phdn->Fill(xr);
+      }
     }
   }
   if ( true ) {
@@ -380,10 +405,14 @@ AdcSampleAnalyzer::~AdcSampleAnalyzer() {
 //**********************************************************************
 
 void AdcSampleAnalyzer::clean() {
+  // Delete the histograms managed locally.
   for ( TH1* ph : m_localHists ) delete ph;
   m_localHists.clear();
-  m_preaderManaged.reset(nullptr);
-  m_preader = nullptr;
+  // Delete the analyzer if it is managed here.
+  if ( m_preaderManaged ) {
+    m_preaderManaged.reset(nullptr);
+    m_preader = nullptr;
+  }
 }
 
 //**********************************************************************
@@ -508,19 +537,26 @@ double AdcSampleAnalyzer::calTail(Index iadc) const {
 
 //**********************************************************************
 
-double AdcSampleAnalyzer::vinCalib(Index iadc) const {
+double AdcSampleAnalyzer::nominalCalibrationVin(Index iadc) const {
+  const string myname = "AdcSampleAnalyzer::vinCalib: ";
+  if ( nominalCalibrationIsLinear ) {
+    return nominalOffset + iadc*nominalGain;
+  }
   if ( pcalNominal != nullptr ) {
     return pcalNominal->calMean(iadc);
   }
-  return nomped + iadc*nomVinPerAdc;
+  cout << myname << "ERROR: Sample analyzer does not have a nominal calibration." << endl;
+  return 0.0;
 }
 
 //**********************************************************************
 
-double AdcSampleAnalyzer::rmsCalib(Index iadc) const {
+double AdcSampleAnalyzer::nominalCalibrationRms(Index iadc) const {
+  const string myname = "AdcSampleAnalyzer::nominalCalibrationRms: ";
   if ( pcalNominal != nullptr ) {
     return pcalNominal->calRms(iadc);
   }
+  cout << myname << "ERROR: Sample analyzer does not have a nominal calibration RMS." << endl;
   return 0.0;
 }
 

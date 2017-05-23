@@ -48,11 +48,13 @@ AdcChipAnalyzer(string a_sampleName, Index a_icha1, Index a_ncha, string a_datas
   string hgtitl = sampleName() + " Linear fit gain; Gain [mV/ADC]; # channels";
   m_phGain = new TH1F("hg", hgtitl.c_str(), 60, 0, 0.6);
   m_phGain->SetDirectory(0);   // Don't delete this
+  m_phGain->SetLineWidth(2);
   m_hists.push_back(m_phGain);
   // Create linear-fit offset summary histogram.
   string hptitl = sampleName() + " Linear fit offset; Offset [mV]; # channels";
   m_phOffset = new TH1F("hp", hptitl.c_str(), 40, -100, 100);
   m_phOffset->SetDirectory(0);   // Don't delete this
+  m_phOffset->SetLineWidth(2);
   m_hists.push_back(m_phOffset);
   // Set channels and read data.
   setChannels(a_icha1, a_ncha, cleanFlag);

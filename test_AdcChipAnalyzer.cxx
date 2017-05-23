@@ -7,7 +7,7 @@
 
 #include "AdcChipAnalyzer.h"
 
-int test_AdcChipAnalyzer(Index ncha) {
+int test_AdcChipAnalyzer(Index ncha =1) {
   AdcChipAnalyzer chipper("201703b_D02_6b", 0, ncha, "", false, -200, 1600, 90, 1.0, false, false);
   bool save = false;
   chipper.draw("rawv", save);

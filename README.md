@@ -112,7 +112,9 @@ in a root tree and later retrieving it from that tree. The tree variable names a
 
 ## Perfomance evaluation
 
-Coming soon ...
+The class [AdcChipAnalyzer] may be used to carry out calibration and performance analysis,
+fill the corresponding trees and generate plots with behavior controlled by parameters passed
+to the ctor. See the header for more information.
 
 ## Validation
 
@@ -129,6 +131,13 @@ E.g. to test channel 4 for 201703b_D02_6b:
 ```
 root> test_AdcSampleFinder(-1, 4)
 ```
+
+There is also a test for the chip analyzer:
+```
+root> .L test_AdcChipAnalyzer.cxx+
+root> test_AdcChipAnalyzer(4);
+```
+The argument is the number of channels to analyze.
 
 ## Reading this file
 

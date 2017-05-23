@@ -10,7 +10,6 @@ int test_AdcSampleAnalyzer(string dscalib ="linear", double nomGain =0.342) {
   const string line = "----------------------------------------------------------------";
   cout  << myname << line << endl;
   AdcSampleFinder asf;
-  cout  << myname << line << endl;
   cout << myname << "Finding sample." << endl;
   auto prdr = asf.find("201703b_D02_6b", 4);
   cout  << myname << line << endl;

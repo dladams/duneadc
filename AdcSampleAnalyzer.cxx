@@ -40,7 +40,7 @@ bool sticky(Index iadc) {
 
 AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nominalGain)
 : datasetCalib(adatasetCalib),
-  pfit(nullptr), fitVinPerAdc(0.0), fitped(0.0),
+  pfit(nullptr), fitGain(0.0), fitOffset(0.0),
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
   m_chip(rdr.chip()),
@@ -263,14 +263,14 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
   cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
   pfit = phf->GetFunction("pol1");
-  fitped = pfit->GetParameter(0);
-  fitVinPerAdc = pfit->GetParameter(1);
-  calib.gain = fitVinPerAdc;
-  calib.offset = fitped;
-  cout << myname << "Fit gain: " << fitVinPerAdc << " mV/ADC, offset: " << fitped << " mV" << endl;
+  fitOffset = pfit->GetParameter(0);
+  fitGain = pfit->GetParameter(1);
+  calib.gain = fitGain;
+  calib.offset = fitOffset;
+  cout << myname << "Fit gain: " << fitGain << " mV/ADC, offset: " << fitOffset << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
-  ssdif << "V_{in} - (" << fitVinPerAdc << " ADC + " << fitped << ") [mV]";
+  ssdif << "V_{in} - (" << fitGain << " ADC + " << fitOffset << ") [mV]";
   phd->GetYaxis()->SetTitle(ssdif.str().c_str());
   phdw->GetYaxis()->SetTitle(ssdif.str().c_str());
   // Find the nominal calibration.
@@ -289,7 +289,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   if ( nominalCalibrationIsLinear ) {
     Index adc_nom = 500;
     cout << myname << "Nominal gain taken from reader, offset from data at ADC = " << adc_nom << endl;
-    nominalOffset = fitped + (fitVinPerAdc - nominalGain)*adc_nom;
+    nominalOffset = fitOffset + (fitGain - nominalGain)*adc_nom;
     cout << myname << "Nominal gain: " << nominalGain << " mV/ADC, offset: "
          << nominalOffset << " mV" << endl;
     ostringstream ssdifn;
@@ -307,7 +307,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
     double ermsCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationRms(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = rdr.vinCenter(ivin);
-      double evinLinear = fitped + iadc*fitVinPerAdc;
+      double evinLinear = fitOffset + iadc*fitGain;
       Index count = rdr.countTable()[iadc][ivin];
       phd->Fill( iadc, vin - evinLinear, count);
       phdw->Fill(iadc, vin - evinLinear, count);
@@ -345,7 +345,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
       if ( tailFracUsesPull ) tailfrac = hp.tailFrac(pullthresh);
       else tailfrac = hp.fracOutsideMean(tailWindow);
     }
-    double xmLinear = fitVinPerAdc*iadc + fitped;
+    double xmLinear = fitGain*iadc + fitOffset;
     calib.calCounts[iadc] = count;
     calib.calMeans[iadc] = xm + xmLinear;
     calib.calRmss[iadc] = xs;
@@ -506,7 +506,7 @@ TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
 double AdcSampleAnalyzer::calMean(Index iadc) const {
   if ( phm == nullptr ) return 0.0;
   if ( int(iadc) >= phm->GetNbinsX() ) return 0.0;
-  double mean0 = fitVinPerAdc*iadc + fitped;
+  double mean0 = fitGain*iadc + fitOffset;
   double dmean = phm->GetBinContent(iadc+1);
   return mean0 + dmean;
 }

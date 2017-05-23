@@ -45,7 +45,6 @@ public:
 
 public:
 
-  std::string datasetCalib;
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
   unsigned int minCountForStats = 2;
@@ -54,9 +53,9 @@ public:
   TH2* phc = nullptr;   // Vin vs ADC
   TH2* phd = nullptr;   // ADC diff from linear fit
   TH2* phdw = nullptr;  // ADC diff from linear fit with broader range and coarser binning
-  TH2* phn = nullptr;   // ADC diff from calibration
-  TH2* phnw = nullptr;  // ADC diff from calibration with broader range and coarser binning
-  TH2* phvn = nullptr;  // ADC diff from calibration vs Vin
+  TH2* phn = nullptr;   // ADC diff from nominal calibration
+  TH2* phnw = nullptr;  // ADC diff from nominal calibration with broader range and coarser binning
+  TH2* phvn = nullptr;  // ADC diff from nominal calibration vs Vin
   // Following are the stat histograms. One entry for each ADC code bin.
   // Bins with fewer than minCountForStats entries are recorded as underflows.
   TH1* phm = nullptr;   // Mean ADC diff vs ADC bin
@@ -78,14 +77,15 @@ public:
   double vinfitmax = 0.0;    // Max Vin for linear reponse fit
   bool fitusestuck = false;  // If true, classic stuck codes (LSB6=0,63) are excluded from linear response fit.
   // Nominal calibration.
+  std::string datasetCalib;
   bool haveNominalCalibration = false;
   bool nominalCalibrationIsLinear = false;
   const AdcChannelCalibration* pcalNominal = nullptr;
   double nominalGain = 0.0;
   double nominalOffset = 0.0;
   // Linear fit.
-  double fitVinPerAdc;
-  double fitped;
+  double fitGain;
+  double fitOffset;
   // Output calibration and response.
   AdcChannelCalibration calib;
   AdcVoltageResponseVector voltageResponses;

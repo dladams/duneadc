@@ -270,7 +270,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     else if ( splot == "fsdg" ) { ph = asa.phsg; gridy = true; }
     else if ( splot == "fsdb" ) { ph = asa.phsb; gridy = true; }
     else if ( splot == "fsdx" ) { ph = asa.phsx; gridy = true; }
-    else if ( splot == "fsdt" ) { ph = asa.phst; logy = true; gridy = true; }
+    else if ( splot == "fsdt" ) { ph = asa.pht; logy = true; gridy = true; }
     else if ( splot == "fmea" ) { ph = asa.phm; gridy = true; }
     else if ( splot == "fdr"  ) { ph = asa.phdr; }
     else if ( splot == "fds"  ) { ph = asa.phds; }
@@ -288,7 +288,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
         string htitl = sampleName() + " Linear fit gain for " + schanlab;
         ph->SetTitle(htitl.c_str());
       }
-      ph->Fill(asa.calib.gain);
+      ph->Fill(asa.calib().gain);
       doDraw = kcha+1 == nChannel();
     }
     else if ( splot == "offset" ) {
@@ -298,7 +298,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
         string htitl = sampleName() + " Linear fit offset for " + schanlab;
         ph->SetTitle(htitl.c_str());
       }
-      ph->Fill(asa.calib.offset);
+      ph->Fill(asa.calib().offset);
       doDraw = kcha+1 == nChannel();
     }
     else {
@@ -387,15 +387,15 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
       asa.evaluateVoltageEfficiencies(vRmsMax(), true, dropTails());
       // Add calibration to tree.
       if ( saveCalib() ) {
-        if ( asa.calib.isValid() && asa.dataset().size() ) {
-          cout << myname << "Adding channel " << asa.calib.chan << " to calib DB." << endl;
+        if ( asa.calib().isValid() && asa.dataset().size() ) {
+          cout << myname << "Adding channel " << asa.calib().chan << " to calib DB." << endl;
           string calibName = "calib_" + asa.dataset();
           string fname = calibName + ".root";
           AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
-          int istat = calibdb.insert(asa.calib);
+          int istat = calibdb.insert(asa.calib());
           cout << myname << "Insertion returned " << istat << endl;
         } else {
-          cout << myname << "Not adding channel " << asa.calib.chan << " to calib DB." << endl;
+          cout << myname << "Not adding channel " << asa.calib().chan << " to calib DB." << endl;
         }
       }
       // Add performance to tree.

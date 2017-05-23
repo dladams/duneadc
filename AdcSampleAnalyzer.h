@@ -63,13 +63,12 @@ public:
   TH1* phs = nullptr;   // Mean ADC standard deviation vs ADC bin
   TH1* pht = nullptr;   // Tail fraction vs ADC bin
   TH1* phsx = nullptr;  // ADC expanded standard deviation (so pull <5)
-  TH1* phst = nullptr;  // Tail fraction for ADC standard deviation
-  TH1* phsg = nullptr;  // Mean ADC standard deviation for non-stuck codes
-  TH1* phsb = nullptr;  // Mean ADC standard deviation for stuck codes
+  TH1* phsg = nullptr;  // Mean ADC standard deviation for classic non-stuck codes
+  TH1* phsb = nullptr;  // Mean ADC standard deviation for classic stuck codes
   TH1* phdn = nullptr;  // Mean ADC nominal RMS distribution
   TH1* phdr = nullptr;  // Mean ADC fitted RMS distribution
-  TH1* phds = nullptr;  // Mean ADC fitted sigma distribution for ADC > 64, non stuck
-  TH1* phdsb = nullptr; // Mean ADC fitted sigma distribution for ADC > 64, stuck
+  TH1* phds = nullptr;  // Mean ADC fitted sigma distribution for ADC > 64, classic non stuck
+  TH1* phdsb = nullptr; // Mean ADC fitted sigma distribution for ADC > 64, classic stuck
   TF1* pfit = nullptr;
   Index iadcfitmin = 0;      // Min adc code for linear reponse fit
   Index iadcfitmax = 0;      // Max adc code for linear reponse fit
@@ -86,8 +85,6 @@ public:
   // Linear fit.
   double fitGain;
   double fitOffset;
-  // Output calibration and response.
-  AdcChannelCalibration calib;
   AdcVoltageResponseVector voltageResponses;
   //std::vector<double> voltageEfficiencies;
   AdcVoltagePerformanceVector vperfs;
@@ -119,18 +116,24 @@ public:
   // Caller must move the input pointer: AdcSampleyAnalyzer myobj(std::move(prdr), ...)
   AdcSampleAnalyzer(AdcSampleReaderPtr preader, Name adatasetCalib ="", double nomGain =0.0);
 
+  // Construct analyzer from a channel calibration
+  AdcSampleAnalyzer(Name a_dataset, Name a_sampleName, const AdcChannelCalibration& a_calib);
+
   // Dtor. Needed to delete locally managed histograms.
   ~AdcSampleAnalyzer();
 
-  // Remove locally managed histograms.
+  // Remove locally managed histograms and delete the reader if it is managed here.
   void clean();
 
   // Getters.
   const AdcSampleReader* reader() const { return m_preader; }
   Name dataset() const { return m_dataset; }
+  Name sampleName() const { return m_sampleName; }
+  const AdcChannelCalibration& calib() { return m_refCalib; }
   Index chip() const { return m_chip; }
   Index channel() const { return m_channel; }
   AdcTime time() const { return m_time; }
+  Index nadc() const { return m_nadc; }
 
   // Return the distribution of Vin for an ADC count.
   // This projects phc onto the X axis.
@@ -180,12 +183,20 @@ public:
   
 private:
 
-  const AdcSampleReader* m_preader;
+  const AdcSampleReader* m_preader = nullptr;
   AdcSampleReaderPtr m_preaderManaged;
+  AdcChannelCalibration m_localCalib;
+  AdcChannelCalibration& localCalib() { return m_localCalib; }
+  const AdcChannelCalibration& m_refCalib;
   Name m_dataset;
-  Index m_chip;
-  Index m_channel;
-  AdcTime m_time;
+  Name m_sampleName;
+  Index m_chip = badChip();
+  Index m_channel = badChannel();
+  AdcTime m_time = badTime();
+  Index m_nadc = 0;
+  SampleIndex nsample = 0;    // # ticks in sample
+
+  int createHistograms(Index nvin, double vinmin, double vinmax);
 
 };
 

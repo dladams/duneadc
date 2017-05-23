@@ -41,55 +41,42 @@ bool sticky(Index iadc) {
 AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nominalGain)
 : datasetCalib(adatasetCalib),
   pfit(nullptr), fitGain(0.0), fitOffset(0.0),
+  nominalGain(a_nominalGain),
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
+  m_sampleName(rdr.sample()),
+  m_refCalib(m_localCalib),
   m_chip(rdr.chip()),
   m_channel(rdr.channel()),
-  m_time(rdr.time()) {
+  m_time(rdr.time()),
+  m_nadc(rdr.nadc()) {
   const string myname = "AdcSampleAnalyzer::ctor: ";
   if ( rdr.countTable().size() == 0 ) {
-    cout << myname << "Unable to read data." << endl;
+    cout << myname << "ERROR: Reader table is empty." << endl;
     return;
   }
-  double zmax = 0;
-  double dmax = 20;
-  Index nd = 40;
-  double wdmax = 10*dmax;
-  double smax = 0.1*dmax;
-  double gmin = 1.0;
-  double gmax = 4.0;
-  double lmin = 0.2;
-  double lmax = 0.6;
-  Index nadc = rdr.nadc();
-  iadcfitmin = nadc==4096 ? 128 : 1;
-  iadcfitmax = nadc - 1;
+  iadcfitmin = nadc()==4096 ? 128 : 1;
+  iadcfitmax = nadc() - 1;
   vinfitmin = 0.0;
   vinfitmax = 1600.0;
   fitusestuck = false;
-  Index adcmax = nadc;
+  Index adcmax = nadc();
   Index nvin = rdr.nvin();
-  Index npadc = 4100*nadc/4096;
-  Index padcmax = npadc;
-  int pvinmin = rdr.vinmin();
-  int pvinmax = rdr.vinmax();
-  Index npvin = pvinmax - pvinmin;
   adcUnderflow = 64;  // This and below are considered underflow
-  Name ssam = rdr.sample();
-  if ( ssam.find("ltc") != string::npos ) {
+  if ( sampleName().find("ltc") != string::npos ) {
     fitusestuck = true;
-    if ( a_nominalGain == 0.0 ) nominalGain = 0.1151;
+    if ( nominalGain == 0.0 ) nominalGain = 0.1151;
     adcUnderflow = 0;
   }
   cout << myname << "Processing sample " << rdr.sample() << endl;
-  Index nsample = rdr.nsample();
-  calib.chip = rdr.chip();
-  calib.chan = channel();
-  calib.time = rdr.time();
+  nsample = rdr.nsample();
+  localCalib().chip = rdr.chip();
+  localCalib().chan = channel();
+  localCalib().time = rdr.time();
   haveNominalCalibration = datasetCalib.size() && (datasetCalib != "none");
   if ( haveNominalCalibration ) {
     nominalCalibrationIsLinear = datasetCalib == "linear";
     if ( nominalCalibrationIsLinear ) {
-      nominalGain = a_nominalGain;
       if ( nominalGain <= 0.0 ) {
         cout << myname << "ERROR: Invalid nominal gain: " << a_nominalGain << endl;
         return;
@@ -106,131 +93,17 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   } else {
     cout << myname << "Nominal calibration is not provided." << endl;
   }
-  // Create names and titles for histograms.
-  ostringstream sschan;
-  sschan << channel();
-  string schan = sschan.str();
-  string stitle = ssam + " channel " + schan;
-  string hnambase = "h" + ssam + "_" + schan + "_";
-  string hnamf = hnambase + "fit";
-  string hnamc = hnambase + "cor";
-  string hnamd = hnambase + "dif";
-  string hnamdw = hnambase + "difw";
-  string hnamn = hnambase + "dfn";
-  string hnamnw = hnambase + "dfnw";
-  string hnamvn = hnambase + "vdfn";
-  string hnamg = hnambase + "gai";
-  string hnaml = hnambase + "lga";
-  string hnamm = hnambase + "fmm";
-  string hnams = hnambase + "fms";
-  string hnamt = hnambase + "fmt";
-  string hnamsx = hnambase + "fmsx";
-  string hnamst = hnambase + "fmst";
-  string hnamsg = hnambase + "fmsg";
-  string hnamsb = hnambase + "fmsb";
-  string hnamr = hnambase + "fmr";
-  string hnamdn = hnambase + "fmdn";
-  string hnamdr = hnambase + "fmdr";
-  string hnamds = hnambase + "fmds";
-  string hnamdsb = hnambase + "fmdsb";
-  string stitlr = stitle + " fit RMS";
-  string stitls = stitle + " fit sigma";
-  string stitlt = stitle + " tail fraction";
-  string stitlsx = stitle + " expanded fit sigma";
-  string stitlst = stitle + " fit sigma tail";
-  string stitldsb = stitle + " stuck";
-  Index nvinperf = 80;
-  double vinperfmin = 0.0;
-  double vinperfmax = 1600.0;
-  // Create histograms.
-  phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
-  phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
-  phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
-  phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
-  phm = new TH1F(hnamm.c_str(), stitle.c_str(), npadc, 0, padcmax);
-  phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
-  phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
-  pht = new TH1F(hnamt.c_str(), stitlt.c_str(), npadc, 0, padcmax);
-  phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
-  phst = new TH1F(hnamst.c_str(), stitlst.c_str(), npadc, 0, padcmax);
-  phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
-  phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
-  phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
-  vector<TH1*> hists2d = {phf, phc, phd};
-  vector<TH1*> dhists = {phdr, phds, phdsb, phdw};
-  // Add calibration histograms.
-  if ( haveNominalCalibration ) {
-    phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
-    phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
-    phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
-    phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
-    phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
-    hists2d.push_back(phn);
-    hists2d.push_back(phnw);
-    hists2d.push_back(phvn);
-    dhists.push_back(phdn);
-  }
-  for ( TH1* ph : hists2d ) {
-    ph->SetStats(0);
-    ph->SetContour(20);
-    if ( zmax > 0 ) ph->SetMaximum(zmax); 
-    ph->GetXaxis()->SetTitle("ADC count");
-    ph->SetLineWidth(2);
-    ph->SetBit(TH1::kIsNotW);    // Turn off weights.
-  }
-  phc->GetYaxis()->SetTitleOffset(1.4);  // Make room for large labels on y-axis.
-  for ( TH1* ph : dhists ) {
-    //ph->SetStats(0);
-    ph->GetYaxis()->SetTitle("# ADC bins");
-    ph->SetLineWidth(2);
-    ph->SetBit(TH1::kIsNotW);    // Turn off weights.
-  }
-  phdr->GetXaxis()->SetTitle("RMS [mV]");
-  phds->GetXaxis()->SetTitle("Sigma [mV]");
-  phdsb->GetXaxis()->SetTitle("Sigma [mV]");
-  phc->GetYaxis()->SetTitle("Input level [mV]");
-  phm->GetYaxis()->SetTitle("V_{in} diff mean [mV]");
-  phr->GetYaxis()->SetTitle("V_{in} diff RMS [mV]");
-  phs->GetYaxis()->SetTitle("V_{in} diff standard deviation [mV]");
-  pht->GetYaxis()->SetTitle("Tail fraction");
-  phsx->GetYaxis()->SetTitle("V_{in} diff expanded standard deviation [mV]");
-  phst->GetYaxis()->SetTitle("Tail fraction");
-  phm->SetStats(0);
-  phd->SetStats(0);
-  phdw->SetStats(0);
-  phr->SetStats(0);
-  phs->SetStats(0);
-  pht->SetStats(0);
-  phsx->SetStats(0);
-  phst->SetStats(0);
-  phm->SetMaximum(dmax);
-  phm->SetMinimum(-dmax);
-  phr->SetMaximum(dmax);
-  phr->SetMinimum(0.0);
-  phs->SetMaximum(0.1*dmax);
-  pht->SetMinimum(1.e-6);
-  pht->SetMaximum(1.0);
-  phsx->SetMaximum(0.1*dmax);
-  phst->SetMaximum(1.0);
-  phs->SetMinimum(0.0);
-  phsx->SetMinimum(0.0);
-  phst->SetMinimum(1.e-6);
-  phsg = dynamic_cast<TH1*>(phs->Clone(hnamsg.c_str()));
-  phsb = dynamic_cast<TH1*>(phs->Clone(hnamsb.c_str()));
-  double countPerVinBin = double(nsample)/nadc;
+  // DCreate the histograms.
+  createHistograms(nvin, rdr.vinmin(), rdr.vinmax());
+  double countPerVinBin = double(nsample)/nadc();
   minCountForStats = 2 + countPerVinBin/1000;
-  cout << myname << "# ADC: " << nadc << endl;
+  cout << myname << "# ADC: " << nadc() << endl;
   cout << myname << "# Vin: " << nvin << endl;
   cout << myname << "Min count for stats: " << minCountForStats << endl;
-  if ( zmax == 0 ) {
-    zmax = 4*nsample/nvin;
-    cout << myname << "zmax = " << zmax << endl;
-    for ( TH1* ph : hists2d ) ph->SetMaximum(zmax); 
-  }
   // Create the fit and response histograms.
   Index nfill = 0;
   Index nskip = 0;
-  for ( Index iadc=0; iadc<nadc; ++iadc ) {
+  for ( Index iadc=0; iadc<nadc(); ++iadc ) {
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = rdr.vinCenter(ivin);
       Index count = rdr.countTable()[iadc][ivin];
@@ -265,8 +138,8 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   pfit = phf->GetFunction("pol1");
   fitOffset = pfit->GetParameter(0);
   fitGain = pfit->GetParameter(1);
-  calib.gain = fitGain;
-  calib.offset = fitOffset;
+  localCalib().gain = fitGain;
+  localCalib().offset = fitOffset;
   cout << myname << "Fit gain: " << fitGain << " mV/ADC, offset: " << fitOffset << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
@@ -302,7 +175,7 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
   // Fill the remaining histograms.
   vector<Index> nsamtot;
   vector<Index> nsamkeep;
-  for ( Index iadc=0; iadc<nadc; ++iadc ) {
+  for ( Index iadc=0; iadc<nadc(); ++iadc ) {
     double evinCalib = haveNominalCalibration ? nominalCalibrationVin(iadc) : 0.0;
     double ermsCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationRms(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
@@ -319,17 +192,17 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
     }
   }
   // Fill diff stat histograms.
-  calib.calMeans.resize(nadc);
-  calib.calRmss.resize(nadc);
-  calib.calCounts.resize(nadc);
-  calib.calTails.resize(nadc);
+  localCalib().calMeans.resize(nadc());
+  localCalib().calRmss.resize(nadc());
+  localCalib().calCounts.resize(nadc());
+  localCalib().calTails.resize(nadc());
   cout << myname << "Tail fraction uses pull: " << tailFracUsesPull << endl;
   if ( tailFracUsesPull ) {
     cout << myname << "Tail is pull > " <<  pullthresh << endl;
   } else {
     cout << myname << "Tail is deviation > " << tailWindow << " mV" << endl;
   }
-  for ( Index iadc=0; iadc<nadc; ++iadc ) {
+  for ( Index iadc=0; iadc<nadc(); ++iadc ) {
     TH1* ph = hdiffcalib(iadc);
     if ( ph == nullptr ) continue;
     double xm = -99999.;
@@ -346,10 +219,10 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
       else tailfrac = hp.fracOutsideMean(tailWindow);
     }
     double xmLinear = fitGain*iadc + fitOffset;
-    calib.calCounts[iadc] = count;
-    calib.calMeans[iadc] = xm + xmLinear;
-    calib.calRmss[iadc] = xs;
-    calib.calTails[iadc] = tailfrac;
+    localCalib().calCounts[iadc] = count;
+    localCalib().calMeans[iadc] = xm + xmLinear;
+    localCalib().calRmss[iadc] = xs;
+    localCalib().calTails[iadc] = tailfrac;
     bool isStuck = sticky(iadc);
     double xsg = isStuck ? 0 : xs;
     double xsb = !isStuck ? 0 : xs;
@@ -358,7 +231,6 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
     phs->SetBinContent(iadc+1, xs);
     pht->SetBinContent(iadc+1, tailfrac);
     phsx->SetBinContent(iadc+1, xsx);
-    phst->SetBinContent(iadc+1, tailfrac);
     phsg->SetBinContent(iadc+1, xsg);
     phsb->SetBinContent(iadc+1, xsb);
     phr->SetBinContent(iadc+1, xr);
@@ -394,6 +266,48 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(const AdcSampleReader& rdr, string adataset
 AdcSampleAnalyzer::AdcSampleAnalyzer(AdcSampleReaderPtr preader, string adatasetCalib, double cfac)
 : AdcSampleAnalyzer(*preader, adatasetCalib, cfac) {
   m_preaderManaged.swap(preader);
+}
+
+//**********************************************************************
+
+AdcSampleAnalyzer::
+AdcSampleAnalyzer(Name a_dataset, Name a_sampleName,
+                  const AdcChannelCalibration& a_calib)
+: m_dataset(a_dataset), m_sampleName(a_sampleName), m_refCalib(a_calib),
+  m_chip(calib().chip),
+  m_channel(calib().chan),
+  m_time(calib().time),
+  m_nadc(calib().calMeans.size()) {
+  fitGain = calib().gain;
+  fitOffset = calib().offset;
+  adcUnderflow = 64;
+  createHistograms(2000, 0, 2000);
+  for ( Index iadc=0; iadc<nadc(); ++iadc ) {
+    double fitMean = fitGain*iadc + fitOffset;
+    double calMean = calib().calMeans[iadc];
+    double xm = calMean - fitMean;
+    double xs = calib().calRmss[iadc];
+    bool isStuck = sticky(iadc);
+    double xsg = isStuck ? 0 : xs;
+    double xsb = !isStuck ? 0 : xs;
+    double xr = sqrt(xm*xm+xs*xs);
+    phm->SetBinContent(iadc+1, xm);
+    phs->SetBinContent(iadc+1, xs);
+    phsg->SetBinContent(iadc+1, xsg);
+    phsb->SetBinContent(iadc+1, xsb);
+    phr->SetBinContent(iadc+1, xr);
+    pht->SetBinContent(iadc+1, calib().calTails[iadc]);
+    phr->SetBinContent(iadc+1, xr);
+    if ( iadc > adcUnderflow && iadc < adcOverflow ) {
+      bool bad = !fitusestuck && isStuck;
+      phdr->Fill(xr);
+      if ( bad ) {
+        phdsb->Fill(xs);
+      } else {
+        phds->Fill(xs);
+      }
+    }
+  }
 }
 
 //**********************************************************************
@@ -530,9 +444,9 @@ double AdcSampleAnalyzer::calExpandedRms(Index iadc) const {
 //**********************************************************************
 
 double AdcSampleAnalyzer::calTail(Index iadc) const {
-  if ( phst == nullptr ) return 0.0;
-  if ( int(iadc) >= phst->GetNbinsX() ) return 0.0;
-  return phst->GetBinContent(iadc+1);
+  if ( pht == nullptr ) return 0.0;
+  if ( int(iadc) >= pht->GetNbinsX() ) return 0.0;
+  return pht->GetBinContent(iadc+1);
 }
 
 //**********************************************************************
@@ -947,6 +861,141 @@ void AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   pleg->Draw();
   TLine* pline = new TLine(x1, 0.0, x2, 0.0);
   pline->Draw();
+}
+
+//**********************************************************************
+
+int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax) {
+  const string myname = "AdcSampleAnalyzer::createHistograms: ";
+  double zmax = 0;
+  double dmax = 20;
+  Index nd = 40;
+  double wdmax = 10*dmax;
+  double smax = 0.1*dmax;
+  double gmin = 1.0;
+  double gmax = 4.0;
+  double lmin = 0.2;
+  double lmax = 0.6;
+  Index npadc = 4100*nadc()/4096;
+  Index padcmax = npadc;
+  int pvinmin = vinmin;
+  int pvinmax = vinmax;
+  Index npvin = pvinmax - pvinmin;
+  cout << myname << "ADC binning: " << npadc << " (" << 0 << ", " << padcmax << ")" << endl;
+  cout << myname << "Vin binning: " << npvin << " (" << pvinmin << ", " << pvinmax << ")" << endl;
+  cout << myname << "  d binning: " << nd << " (" << 0 << ", " << dmax << ")" << endl;
+  ostringstream sschan;
+  sschan << channel();
+  string schan = sschan.str();
+  string stitle = sampleName() + " channel " + schan;
+  string hnambase = "h" + sampleName() + "_" + schan + "_";
+  string hnamf = hnambase + "fit";
+  string hnamc = hnambase + "cor";
+  string hnamd = hnambase + "dif";
+  string hnamdw = hnambase + "difw";
+  string hnamn = hnambase + "dfn";
+  string hnamnw = hnambase + "dfnw";
+  string hnamvn = hnambase + "vdfn";
+  string hnamg = hnambase + "gai";
+  string hnaml = hnambase + "lga";
+  string hnamm = hnambase + "fmm";
+  string hnams = hnambase + "fms";
+  string hnamt = hnambase + "fmt";
+  string hnamsx = hnambase + "fmsx";
+  string hnamst = hnambase + "fmst";
+  string hnamsg = hnambase + "fmsg";
+  string hnamsb = hnambase + "fmsb";
+  string hnamr = hnambase + "fmr";
+  string hnamdn = hnambase + "fmdn";
+  string hnamdr = hnambase + "fmdr";
+  string hnamds = hnambase + "fmds";
+  string hnamdsb = hnambase + "fmdsb";
+  string stitlm = stitle + " fit mean";
+  string stitlr = stitle + " fit RMS";
+  string stitls = stitle + " fit sigma";
+  string stitlt = stitle + " tail fraction";
+  string stitlsx = stitle + " expanded fit sigma";
+  string stitlst = stitle + " fit sigma tail";
+  string stitldsb = stitle + " stuck";
+  Index nvinperf = 80;
+  double vinperfmin = 0.0;
+  double vinperfmax = 1600.0;
+  // Create histograms.
+  phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+  phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+  phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+  phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+  phm = new TH1F(hnamm.c_str(), stitlm.c_str(), npadc, 0, padcmax);
+  phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
+  phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
+  pht = new TH1F(hnamt.c_str(), stitlt.c_str(), npadc, 0, padcmax);
+  phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
+  phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
+  phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
+  phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
+  vector<TH1*> hists2d = {phf, phc, phd};
+  vector<TH1*> dhists = {phdr, phds, phdsb, phdw};
+  // Add calibration histograms.
+  if ( haveNominalCalibration ) {
+    phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+    phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+    phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
+    phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
+    phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
+    hists2d.push_back(phn);
+    hists2d.push_back(phnw);
+    hists2d.push_back(phvn);
+    dhists.push_back(phdn);
+  }
+  for ( TH1* ph : hists2d ) {
+    ph->SetStats(0);
+    ph->SetContour(20);
+    if ( zmax > 0 ) ph->SetMaximum(zmax); 
+    ph->GetXaxis()->SetTitle("ADC count");
+    ph->SetLineWidth(2);
+    ph->SetBit(TH1::kIsNotW);    // Turn off weights.
+  }
+  phc->GetYaxis()->SetTitleOffset(1.4);  // Make room for large labels on y-axis.
+  for ( TH1* ph : dhists ) {
+    //ph->SetStats(0);
+    ph->GetYaxis()->SetTitle("# ADC bins");
+    ph->SetLineWidth(2);
+    ph->SetBit(TH1::kIsNotW);    // Turn off weights.
+  }
+  phdr->GetXaxis()->SetTitle("RMS [mV]");
+  phds->GetXaxis()->SetTitle("Sigma [mV]");
+  phdsb->GetXaxis()->SetTitle("Sigma [mV]");
+  phc->GetYaxis()->SetTitle("Input level [mV]");
+  phm->GetYaxis()->SetTitle("V_{in} diff mean [mV]");
+  phr->GetYaxis()->SetTitle("V_{in} diff RMS [mV]");
+  phs->GetYaxis()->SetTitle("V_{in} diff standard deviation [mV]");
+  pht->GetYaxis()->SetTitle("Tail fraction");
+  phsx->GetYaxis()->SetTitle("V_{in} diff expanded standard deviation [mV]");
+  phm->SetStats(0);
+  phd->SetStats(0);
+  phdw->SetStats(0);
+  phr->SetStats(0);
+  phs->SetStats(0);
+  pht->SetStats(0);
+  phsx->SetStats(0);
+  phm->SetMaximum(dmax);
+  phm->SetMinimum(-dmax);
+  phr->SetMaximum(dmax);
+  phr->SetMinimum(0.0);
+  phs->SetMaximum(0.1*dmax);
+  pht->SetMinimum(1.e-6);
+  pht->SetMaximum(1.0);
+  phsx->SetMaximum(0.1*dmax);
+  phs->SetMinimum(0.0);
+  phsx->SetMinimum(0.0);
+  phsg = dynamic_cast<TH1*>(phs->Clone(hnamsg.c_str()));
+  phsb = dynamic_cast<TH1*>(phs->Clone(hnamsb.c_str()));
+  if ( zmax == 0 ) {
+    zmax = 4*nsample/nvin;
+    cout << myname << "zmax = " << zmax << endl;
+    for ( TH1* ph : hists2d ) ph->SetMaximum(zmax); 
+  }
+  return 0;
 }
 
 //**********************************************************************

@@ -26,5 +26,6 @@ using FloatVector = std::vector<float>;
 
 inline Index badChannel() { return Index(-1); }
 inline Index badChip() { return Index(-1); }
+inline Index badTime() { return AdcTime(-1); }
 
 #endif

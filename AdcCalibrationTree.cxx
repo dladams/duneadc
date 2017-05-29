@@ -17,7 +17,7 @@ AdcCalibrationTree::
 AdcCalibrationTree(Name fname, Name tname, Name opt)
 : m_status(1), m_fname(fname), m_tname(tname),
   m_pfile(nullptr), m_ptree(nullptr),
-  m_pcal(new AdcChannelCalibration) {
+  m_pcal(new AdcChannelCalibration), m_modified(false) {
   const string myname = "AdcCalibrationTree::ctor: ";
   TDirectory* thisdir = gDirectory;
   m_pfile = TFile::Open(fname.c_str(), opt.c_str());
@@ -55,10 +55,10 @@ int AdcCalibrationTree::close() {
     bool cdback = thisdir != m_pfile;
     m_pfile->cd();
     if ( m_ptree != nullptr ) {
-      m_ptree->Write();
+      if ( m_modified ) m_ptree->Write();
       m_ptree = nullptr;
     }
-    m_pfile->Purge();
+    if ( m_modified ) m_pfile->Purge();
     m_pfile->Close();
     if ( cdback ) thisdir->cd();
     delete m_pfile;
@@ -88,6 +88,7 @@ int AdcCalibrationTree::insert(const AdcChannelCalibration& cal) {
 int AdcCalibrationTree::insert() {
   if ( status() ) return status();
   m_ptree->Fill();
+  m_modified = true;
   return 0;
 }
 
@@ -102,8 +103,19 @@ const AdcChannelCalibration* AdcCalibrationTree::find(Index ient) const {
 
 //**********************************************************************
 
-const AdcChannelCalibration* AdcCalibrationTree::find(AdcChannelId) const {
+const AdcChannelCalibration* AdcCalibrationTree::find(AdcChannelId aid, Index& ient) const {
+  return find(aid.chip, aid.chan, ient);
+}
+
+//**********************************************************************
+
+const AdcChannelCalibration* AdcCalibrationTree::find(Index chip, Index chan, Index& ient) const {
   if ( status() ) return nullptr;
+  Index nent = m_ptree->GetEntries();
+  for ( ; ient<nent; ++ient ) {
+    const AdcChannelCalibration* pcal = find(ient);
+    if ( pcal->chip == chip && pcal->chan == chan ) return pcal;
+  }
   return nullptr;
 }
 

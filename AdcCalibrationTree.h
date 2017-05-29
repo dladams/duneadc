@@ -45,8 +45,10 @@ public:
   // Find a calibration by entry number.
   const AdcChannelCalibration* find(Index ient) const;
 
-  // Find a calibration by ID.
-  const AdcChannelCalibration* find(AdcChannelId id) const;
+  // Find a calibration by ID. Search starts at ient and continues to the
+  // end of the tree. The index ient is entry number of the returned calibration.
+  const AdcChannelCalibration* find(AdcChannelId id, Index& ient) const;
+  const AdcChannelCalibration* find(Index chip, Index chan, Index& ient) const;
 
   // Accessors.
   int status() const { return m_status; }
@@ -69,6 +71,7 @@ private:
 
   // Data buffer
   AdcChannelCalibration* m_pcal;
+  bool m_modified;
 
 };
 

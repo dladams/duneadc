@@ -21,6 +21,7 @@ using Float = float;
 using SampleVector = std::vector<SampleValue>;
 using SampleVector = std::vector<SampleValue>;
 using ShortIndexVector = std::vector<ShortIndex>;
+using IndexVector = std::vector<Index>;
 using SampleIndexVector = std::vector<SampleIndex>;
 using FloatVector = std::vector<float>;
 

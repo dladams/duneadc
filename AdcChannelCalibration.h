@@ -10,7 +10,7 @@
 // where code is the ADC code (0-4095) and V and offset are in mV.
 //
 // Full calibrations is calMean(code) with RMS calRms(code). It is based
-// on calCount(code) meausurements with that code. Fraction in the tail
+// on calCount(code) measurements with that code. Fraction in the tail
 // of the distribution (e.g. pull > 5) is calTail(code).
 
 

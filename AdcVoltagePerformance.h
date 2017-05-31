@@ -63,10 +63,13 @@ public:
   Count count(Index iv) const;
   Float eff(Index iv) const;       // Efficiency fraction good
   Float deff(Index iv) const;      // Uncertainty on efficiency
+  Float devRms(Index iv) const;    // Deviation (measured - true) RMS
+/*
   Float resMean(Index iv) const;   // Mean good Vres
   Float resRms(Index iv) const;    // RMS good Vres
   Float resRmslo(Index iv) const;  // RMS good Vres < mean
   Float resRmshi(Index iv) const;  // RMS good Vres > mean
+*/
 
 public:
 
@@ -77,12 +80,15 @@ public:
   Index nv;                    // # voltage bins
   Float vmin;                  // Min volatage
   Float vmax;                  // Max voltage
-  CountVector vinCounts;       // Chip index
-  FloatVector vinEffs;                  // Chip index
-  FloatVector vinResMeans;                  // Chip index
-  FloatVector vinResRmss;                  // Chip index
-  FloatVector vinResRmslos;                  // Chip index
-  FloatVector vinResRmshis;                  // Chip index
+  CountVector vinCounts;
+  FloatVector vinEffs;
+  FloatVector vinDevRmss;
+/*
+  FloatVector vinResMeans;
+  FloatVector vinResRmss;
+  FloatVector vinResRmslos;
+  FloatVector vinResRmshis;
+*/
 
 };
 

@@ -21,10 +21,13 @@ AdcVoltagePerformance(Index a_chip, Index a_chan, AdcTime a_time,
   nv(a_nv), vmin(a_vmin), vmax(a_vmax),
   vinCounts(nv, 0),
   vinEffs(nv, 0.0),
+  vinDevRmss(nv, 0.0) { }
+/*
   vinResMeans(nv, 0.0),
   vinResRmss(nv, 0.0),
   vinResRmslos(nv, 0.0),
-  vinResRmshis(nv, 0.0) { }
+  vinResRmshis(nv, 0.0)
+*/
 
 //**********************************************************************
 
@@ -56,31 +59,37 @@ Float AdcVoltagePerformance::eff(Index iv) const {
 
 //**********************************************************************
 
+Float AdcVoltagePerformance::devRms(Index iv) const {
+  if ( iv >= nv ) return 0.0;
+  return vinDevRmss[iv];
+}
+
+/*
+
 Float AdcVoltagePerformance::resMean(Index iv) const {
   if ( iv >= nv ) return 0.0;
   return vinResMeans[iv];
 }
 
-//**********************************************************************
 
 Float AdcVoltagePerformance::resRms(Index iv) const {
   if ( iv >= nv ) return 0.0;
   return vinResRmss[iv];
 }
 
-//**********************************************************************
 
 Float AdcVoltagePerformance::resRmslo(Index iv) const {
   if ( iv >= nv ) return 0.0;
   return vinResRmslos[iv];
 }
 
-//**********************************************************************
 
 Float AdcVoltagePerformance::resRmshi(Index iv) const {
   if ( iv >= nv ) return 0.0;
   return vinResRmshis[iv];
 }
+
+*/
 
 //**********************************************************************
 

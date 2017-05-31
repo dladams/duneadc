@@ -89,10 +89,10 @@ public:
   //std::vector<double> voltageEfficiencies;
   AdcVoltagePerformanceVector vperfs;
   TH1* phveff = nullptr;   // Efficiency vs Vin.
-  TH1* phvrms = nullptr;   // Mean good RMS vs Vin.
+  TH1* phvrms = nullptr;   // Mean RMS(Vin_cal - Vin_true) for good bins.
   TH1* phvtail = nullptr;   // Tail fraction vs Vin.
-  TGraphAsymmErrors* pgvrms = nullptr;
   TLineVector g80bars;
+  TLineVector g100bars;
   // Threshold for pull fractions.
   double pullthresh = 5.0;
   // Threshold [mV] for tail window.
@@ -116,8 +116,12 @@ public:
   // Caller must move the input pointer: AdcSampleyAnalyzer myobj(std::move(prdr), ...)
   AdcSampleAnalyzer(AdcSampleReaderPtr preader, Name adatasetCalib ="", double nomGain =0.0);
 
-  // Construct analyzer from a channel calibration
-  AdcSampleAnalyzer(Name a_dataset, Name a_sampleName, const AdcChannelCalibration& a_calib);
+  // Construct analyzer from a channel calibration.
+  // The dataset and sample names are needed for labels.
+  // If dataset is blank, it is the sample name is truncated at the first underscore.
+  AdcSampleAnalyzer(const AdcChannelCalibration& a_calib,
+                    Name a_sampleName ="TestSample",
+                    Name a_dataset ="");
 
   // Dtor. Needed to delete locally managed histograms.
   ~AdcSampleAnalyzer();
@@ -163,6 +167,7 @@ public:
   // Nominal calibration.
   double nominalCalibrationVin(Index iadc) const;
   double nominalCalibrationRms(Index iadc) const;
+  double nominalCalibrationTail(Index iadc) const;
 
   // Evaluate voltage responses.
   AdcVoltageResponseVector& evaluateVoltageResponses(double vmin, double vmax, Index nv);
@@ -176,7 +181,8 @@ public:
   const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax, bool readData, bool dropTails =false);
 
   // Overlay efficiency, resolution and tail all vs. Vin.
-  void drawperf(bool dolabtail =false) const;
+  // Returns 0 for success.
+  int drawperf(bool dolabtail =false) const;
 
   // Locally managed histograms.
   mutable TH1Vector m_localHists;

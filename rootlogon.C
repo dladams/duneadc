@@ -39,4 +39,5 @@
   gROOT->ProcessLine(".L datasetAnalyze.C");
   palette(0);
   int chan = 0;
+  gStyle->SetTitleW(1.0);  // So title can extend full width of pad.
 }

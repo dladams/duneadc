@@ -5,6 +5,18 @@ Root macros for processing ADC test data
 David Adams  
 May 2017
 
+## Introduction
+
+This repository (duneadc) holds Root macros for use in analyzing LAr TPC ADC test data.
+For assistance, please contadt the author.
+
+## News
+
+June 1, 2017   
+The version committed today changes the name of the class that holds calibration tree data
+from AdcChannelCalibration to AdcTreeChannelCalibrationData. This means that calibration
+trees created with earlier versions are no longer readable with AdcCalibrationTree.
+
 ## Usage 
 
 Set up Root and then run it in this directory.

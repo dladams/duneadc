@@ -288,7 +288,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
         string htitl = sampleName() + " Linear fit gain for " + schanlab;
         ph->SetTitle(htitl.c_str());
       }
-      ph->Fill(asa.calib().gain);
+      ph->Fill(asa.calib().linearGain());
       doDraw = kcha+1 == nChannel();
     }
     else if ( splot == "offset" ) {
@@ -298,7 +298,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
         string htitl = sampleName() + " Linear fit offset for " + schanlab;
         ph->SetTitle(htitl.c_str());
       }
-      ph->Fill(asa.calib().offset);
+      ph->Fill(asa.calib().linearOffset());
       doDraw = kcha+1 == nChannel();
     }
     else {
@@ -388,14 +388,14 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
       // Add calibration to tree.
       if ( saveCalib() ) {
         if ( asa.calib().isValid() && asa.dataset().size() ) {
-          cout << myname << "Adding channel " << asa.calib().chan << " to calib DB." << endl;
+          cout << myname << "Adding channel " << asa.calib().channel() << " to calib DB." << endl;
           string calibName = "calib_" + asa.dataset();
           string fname = calibName + ".root";
           AdcCalibrationTree calibdb(fname, "adccalib", "UPDATE");
-          int istat = calibdb.insert(asa.calib());
+          int istat = calibdb.insert(asa.localCalib());
           cout << myname << "Insertion returned " << istat << endl;
         } else {
-          cout << myname << "Not adding channel " << asa.calib().chan << " to calib DB." << endl;
+          cout << myname << "Not adding channel " << asa.channel() << " to calib DB." << endl;
         }
       }
       // Add performance to tree.

@@ -114,7 +114,7 @@ const AdcTreeChannelCalibration* AdcCalibrationTree::find(Index chip, Index chan
   Index nent = m_ptree->GetEntries();
   for ( ; ient<nent; ++ient ) {
     const AdcTreeChannelCalibration* pcal = find(ient);
-    if ( pcal->chip == chip && pcal->chan == chan ) return pcal;
+    if ( pcal->chip() == chip && pcal->channel() == chan ) return pcal;
   }
   return nullptr;
 }

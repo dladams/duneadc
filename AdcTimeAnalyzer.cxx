@@ -103,18 +103,18 @@ AdcTimeAnalyzer::AdcTimeAnalyzer(Name a_dsname, Index a_chip, Index a_chan, int 
   Index nbadbin = 0;
   binCountTotals.resize(nadc+1, 0);
   for ( ; ient < nent; ++ient ) {
-    const AdcChannelCalibration* pcal = pact->find(chip, chan, ient);
+    const AdcTreeChannelCalibration* pcal = pact->find(chip, chan, ient);
     if ( pcal == nullptr ) continue;
     calibEntries.push_back(ient);
     sampleCountTotals.push_back(0);
-    TDatime dt(pcal->time);
+    TDatime dt(pcal->time());
     if ( dbg > 1 ) dt.Print();
     for ( Index iadc=1; iadc<iadc2; ++iadc ) {
-      double rms = pcal->calRmss[iadc];
+      double rms = pcal->calRms(iadc);
       if ( rms > badThresh ) phbad->Fill(iadc);
       else if ( rms < 0.0 ) phlostat->Fill(iadc);
       else phgood->Fill(iadc);
-      SampleIndex count = pcal->calCounts[iadc];
+      SampleIndex count = pcal->calCount(iadc);
       sampleCountTotals[ndst] += count;
       binCountTotals[iadc] += count;
     }
@@ -228,18 +228,18 @@ TH1* AdcTimeAnalyzer::histMean(Index iadc, int opt, bool draw, int dbg) const {
   double valmax = 10.0;
   for ( Index idst=0; idst<ndst; ++idst) {
     Index ient = calibEntries[idst];
-    const AdcChannelCalibration* pcal = pact->find(ient);
+    const AdcTreeChannelCalibration* pcal = pact->find(ient);
     if ( pcal == nullptr ) continue;
-    double val = pcal->calMeans[iadc];
+    double val = pcal->calMean(iadc);
     if ( dbg ) cout << myname << "Mean: " << val << endl;
     if ( val < -10.0 ) continue;
     if  ( subtractLinear ) {
-      double valLinear = pcal->gain*iadc + pcal->offset;
+      double valLinear = pcal->linearGain()*iadc + pcal->linearOffset();
       val -= valLinear;
       if ( dbg ) cout << myname << "Residual: " << val << endl;
     }
     if  ( subtractPedestal ) {
-      double valPedestal = pcal->calMeans[iadcPedestal];
+      double valPedestal = pcal->calMean(iadcPedestal);
       val -= valPedestal;
       if ( dbg ) cout << myname << "After ped: " << val << endl;
     }
@@ -299,9 +299,9 @@ TH1* AdcTimeAnalyzer::histRms(Index iadc, bool draw, int dbg) const {
     ph->SetLineWidth(2);
     for ( Index idst=0; idst<ndst; ++idst) {
       Index ient = calibEntries[idst];
-      const AdcChannelCalibration* pcal = pact->find(ient);
+      const AdcTreeChannelCalibration* pcal = pact->find(ient);
       if ( pcal == nullptr ) continue;
-      double rms = pcal->calRmss[iadc];
+      double rms = pcal->calRms(iadc);
       if ( dbg ) cout << myname << "RMS: " << rms << endl;
       if ( rms > 0.0 ) {
         ph->Fill(rms);
@@ -331,9 +331,9 @@ TH1* AdcTimeAnalyzer::histRmsTime(Index iadc, bool draw) const {
   ph->SetMaximum(rmsmax);
   for ( Index idst=0; idst<ndst; ++idst) {
     Index ient = calibEntries[idst];
-    const AdcChannelCalibration* pcal = pact->find(ient);
+    const AdcTreeChannelCalibration* pcal = pact->find(ient);
     if ( pcal == nullptr ) continue;
-    double rms = pcal->calRmss[iadc];
+    double rms = pcal->calRms(iadc);
     if ( rms >= rmsmax ) rms = 0.999*rmsmax;
     if ( rms < 0 ) rms = 0.0;
     ph->SetBinContent(idst+1, rms);
@@ -364,9 +364,9 @@ TH1* AdcTimeAnalyzer::histCount(Index iadc, bool draw, int dbg) const {
     ph->SetLineWidth(2);
     for ( Index idst=0; idst<ndst; ++idst) {
       Index ient = calibEntries[idst];
-      const AdcChannelCalibration* pcal = pact->find(ient);
+      const AdcTreeChannelCalibration* pcal = pact->find(ient);
       if ( pcal == nullptr ) continue;
-      SampleIndex count = pcal->calCounts[iadc];
+      SampleIndex count = pcal->calCount(iadc);
       if ( dbg ) cout << myname << "Count: " << count << endl;
       ph->Fill(count);
     }
@@ -394,9 +394,9 @@ TH1* AdcTimeAnalyzer::histCountTime(Index iadc, bool draw) const {
   //ph->SetMaximum(1.03*rmsmax);
   for ( Index idst=0; idst<ndst; ++idst) {
     Index ient = calibEntries[idst];
-    const AdcChannelCalibration* pcal = pact->find(ient);
+    const AdcTreeChannelCalibration* pcal = pact->find(ient);
     if ( pcal == nullptr ) continue;
-    double count = pcal->calCounts[iadc];
+    double count = pcal->calCount(iadc);
     ph->SetBinContent(idst+1, count);
   }
   if ( draw ) ph->Draw("hist");

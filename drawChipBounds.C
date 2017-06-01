@@ -68,11 +68,11 @@ void drawChipBounds(TH1* phin, bool off, bool dolabs, bool drawhist, vector<unsi
           ptree->GetBranch("perf")->SetAddress(pavpold);
         }
       } else {
-        AdcChannelCalibration* pacc = new AdcChannelCalibration;
+        AdcTreeChannelCalibration* pacc = new AdcTreeChannelCalibration;
         char* paccold = ptree->GetBranch("cal")->GetAddress();
         ptree->GetBranch("cal")->SetAddress(&pacc);
         ptree->GetEntry(16*ichp);
-        chip = pacc->chip;
+        chip = pacc->chip();
         ptree->GetBranch("cal")->SetAddress(paccold);
       }
     }

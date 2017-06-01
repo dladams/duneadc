@@ -217,8 +217,8 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
       return;
     }
   }
-  calib.chip = chip;
-  calib.chan = chan;
+  calib.data().chip = chip;
+  calib.data().chan = chan;
   if ( cfac > 0.0 ) nomVinPerAdc = cfac;
   cout << myname << "File: " << fname << endl;
   string stitle = ssam + " channel " + schan;
@@ -390,8 +390,8 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
   pfit = phf->GetFunction("pol1");
   fitped = pfit->GetParameter(0);
   fitVinPerAdc = pfit->GetParameter(1);
-  calib.gain = fitVinPerAdc;
-  calib.offset = fitped;
+  calib.data().gain = fitVinPerAdc;
+  calib.data().offset = fitped;
   cout << "Fit gain: " << fitVinPerAdc << " mV/ADC, pedestal: " << fitped << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
@@ -419,9 +419,9 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
     }
   }
   // Fill diff stat histograms.
-  calib.calMeans.resize(nadc);
-  calib.calRmss.resize(nadc);
-  calib.calCounts.resize(nadc);
+  calib.data().calMeans.resize(nadc);
+  calib.data().calRmss.resize(nadc);
+  calib.data().calCounts.resize(nadc);
   for ( Index iadc=0; iadc<nadc; ++iadc ) {
     TH1* ph = hdiffcalib(iadc);
     if ( ph == nullptr ) continue;
@@ -433,9 +433,9 @@ AdcHist::AdcHist(string ssam, int chan, double cfac)
       xs = ph->GetRMS();
     }
     double xm0 = fitVinPerAdc*iadc + fitped;
-    calib.calCounts[iadc] = count;
-    calib.calMeans[iadc] = xm + xm0;
-    calib.calRmss[iadc] = xs;
+    calib.data().calCounts[iadc] = count;
+    calib.data().calMeans[iadc] = xm + xm0;
+    calib.data().calRmss[iadc] = xs;
     bool isStuck = stuck(iadc);
     double xsg = isStuck ? 0 : xs;
     double xsb = !isStuck ? 0 : xs;

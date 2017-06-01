@@ -10,7 +10,7 @@
   gROOT->ProcessLine(".L ErrorCount.cxx+");
   gROOT->ProcessLine(".L FileDirectory.cxx+");
   gROOT->ProcessLine(".L AdcChannelId.cxx+");
-  gROOT->ProcessLine(".L AdcChannelCalibration.cxx+");
+  gROOT->ProcessLine(".L AdcTreeChannelCalibration.cxx+");
   gROOT->ProcessLine(".L AdcCalibrationTree.cxx+");
   gROOT->ProcessLine(".L AdcSampleReader.cxx+");
   gROOT->ProcessLine(".L AdcBorderFinder.cxx+");

@@ -1,6 +1,7 @@
 // AdcSampleAnalyzer.cxx
 
 #include "AdcSampleAnalyzer.h"
+#include "AdcTreeChannelCalibration.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -46,7 +47,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
   m_sampleName(rdr.sample()),
-  m_refCalib(m_localCalib),
+  m_refCalib(m_localTreeCalib),
   m_chip(rdr.chip()),
   m_channel(rdr.channel()),
   m_time(rdr.time()),
@@ -71,9 +72,9 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
   }
   cout << myname << "Processing sample " << rdr.sample() << endl;
   nsample = rdr.nsample();
-  localCalib().chip = rdr.chip();
-  localCalib().chan = channel();
-  localCalib().time = rdr.time();
+  localCalib().data().chip = rdr.chip();
+  localCalib().data().chan = channel();
+  localCalib().data().time = rdr.time();
   haveNominalCalibration = datasetCalib.size() && (datasetCalib != "none");
   if ( haveNominalCalibration ) {
     nominalCalibrationIsLinear = datasetCalib == "linear";
@@ -85,7 +86,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
       cout << myname << "Nominal calibration is linear with gain " << nominalGain << "  mV/ADC." << endl;
     } else {
       cout << myname << "Taking nominal calibration from dataset " << datasetCalib << endl;
-      pcalNominal = AdcChannelCalibration::find(datasetCalib, chip(), channel());
+      pcalNominal = AdcTreeChannelCalibration::find(datasetCalib, chip(), channel());
       if ( pcalNominal == nullptr ) {
         cout << myname << "ERROR: Nominal calibration not found for dataset " << datasetCalib << endl;
         return;
@@ -138,8 +139,8 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
   pfit = phf->GetFunction("pol1");
   fitOffset = pfit->GetParameter(0);
   fitGain = pfit->GetParameter(1);
-  localCalib().gain = fitGain;
-  localCalib().offset = fitOffset;
+  localCalib().data().gain = fitGain;
+  localCalib().data().offset = fitOffset;
   cout << myname << "Fit gain: " << fitGain << " mV/ADC, offset: " << fitOffset << " mV" << endl;
   ostringstream ssdif;
   ssdif.precision(3);
@@ -192,10 +193,10 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
     }
   }
   // Fill diff stat histograms.
-  localCalib().calMeans.resize(nadc());
-  localCalib().calRmss.resize(nadc());
-  localCalib().calCounts.resize(nadc());
-  localCalib().calTails.resize(nadc());
+  localCalib().data().calMeans.resize(nadc());
+  localCalib().data().calRmss.resize(nadc());
+  localCalib().data().calCounts.resize(nadc());
+  localCalib().data().calTails.resize(nadc());
   cout << myname << "Tail fraction uses pull: " << tailFracUsesPull << endl;
   if ( tailFracUsesPull ) {
     cout << myname << "Tail is pull > " <<  pullthresh << endl;
@@ -219,10 +220,10 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
       else tailfrac = hp.fracOutsideMean(tailWindow);
     }
     double xmLinear = fitGain*iadc + fitOffset;
-    localCalib().calCounts[iadc] = count;
-    localCalib().calMeans[iadc] = xm + xmLinear;
-    localCalib().calRmss[iadc] = xs;
-    localCalib().calTails[iadc] = tailfrac;
+    localCalib().data().calCounts[iadc] = count;
+    localCalib().data().calMeans[iadc] = xm + xmLinear;
+    localCalib().data().calRmss[iadc] = xs;
+    localCalib().data().calTails[iadc] = tailfrac;
     bool isStuck = sticky(iadc);
     double xsg = isStuck ? 0 : xs;
     double xsb = !isStuck ? 0 : xs;
@@ -273,22 +274,22 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(AdcSampleReaderPtr preader, string adataset
 AdcSampleAnalyzer::
 AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name a_dataset)
 : m_dataset(a_dataset), m_sampleName(a_sampleName), m_refCalib(a_calib),
-  m_chip(calib().chip),
-  m_channel(calib().chan),
-  m_time(calib().time),
-  m_nadc(calib().calMeans.size()) {
+  m_chip(calib().chip()),
+  m_channel(calib().channel()),
+  m_time(calib().time()),
+  m_nadc(calib().size()) {
   if ( m_dataset.size() == 0 ) {
     m_dataset = m_sampleName.substr(0, m_sampleName.find("_"));
   }
-  fitGain = calib().gain;
-  fitOffset = calib().offset;
+  fitGain = calib().linearGain();
+  fitOffset = calib().linearOffset();
   adcUnderflow = 64;
   createHistograms(2000, 0, 2000);
   for ( Index iadc=0; iadc<nadc(); ++iadc ) {
     double fitMean = fitGain*iadc + fitOffset;
-    double calMean = calib().calMeans[iadc];
+    double calMean = calib().calMean(iadc);
     double xm = calMean - fitMean;
-    double xs = calib().calRmss[iadc];
+    double xs = calib().calRms(iadc);
     bool isStuck = sticky(iadc);
     double xsg = isStuck ? 0 : xs;
     double xsb = !isStuck ? 0 : xs;
@@ -298,7 +299,7 @@ AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name 
     phsg->SetBinContent(iadc+1, xsg);
     phsb->SetBinContent(iadc+1, xsb);
     phr->SetBinContent(iadc+1, xr);
-    pht->SetBinContent(iadc+1, calib().calTails[iadc]);
+    pht->SetBinContent(iadc+1, calib().calTail(iadc));
     phr->SetBinContent(iadc+1, xr);
     if ( iadc > adcUnderflow && iadc < adcOverflow ) {
       bool bad = !fitusestuck && isStuck;

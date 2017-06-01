@@ -15,7 +15,7 @@ using AdcCode = unsigned short;
 using SampleValue = AdcCode;
 using Index = unsigned int;
 using SampleIndex = unsigned long;
-using AdcTime = unsigned int;   // 4 bytes covers 1970-2106
+using AdcTime = Index;   // 4 bytes covers 1970-2106
 using Float = float;
 
 using SampleVector = std::vector<SampleValue>;
@@ -28,5 +28,7 @@ using FloatVector = std::vector<float>;
 inline Index badChannel() { return Index(-1); }
 inline Index badChip() { return Index(-1); }
 inline Index badTime() { return AdcTime(-1); }
+inline Index badIndex() { return Index(-1); }
+inline ShortIndex badShortIndex() { return ShortIndex(-1); }
 
 #endif

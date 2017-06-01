@@ -13,6 +13,24 @@ using CalibMapMap = std::map<Name, CalibMap>;
 
 //**********************************************************************
 
+AdcTreeChannelCalibrationData::
+AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
+                              Float again, Float aoffset,
+                              const FloatVector& acalMeans,
+                              const FloatVector& acalRmss,
+                              const ShortIndexVector& acalCounts)
+: chip(achip), chan(achan), time(atime), gain(again), offset(aoffset),
+  calMeans(acalMeans), calRmss(acalRmss), calCounts(acalCounts) { }
+
+//**********************************************************************
+
+AdcTreeChannelCalibrationData::
+AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
+                              Float again, Float aoffset)
+: chip(achip), chan(achan), time(atime), gain(again), offset(aoffset) { }
+
+//**********************************************************************
+
 const AdcTreeChannelCalibration*
 AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
   static CalibMapMap calibmaps;
@@ -33,15 +51,16 @@ AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
     cout << myname << "Unable to find tree adccalib in file " << fname << endl;
     return nullptr;
   }
-  const AdcTreeChannelCalibration* pcal = new AdcTreeChannelCalibration;
-  ptree->SetBranchAddress("cal", &pcal);
+  const AdcTreeChannelCalibrationData* pdat = new AdcTreeChannelCalibrationData;
+  ptree->SetBranchAddress("cal", &pdat);
   for ( unsigned int ient=0; ient<ptree->GetEntries(); ++ient ) {
     ptree->GetEntry(ient);
-    if ( pcal->chip == aid.chip && pcal->chan == aid.chan ) {
-      pcalout = new AdcTreeChannelCalibration(*pcal);
+    if ( pdat->chip == aid.chip && pdat->chan == aid.chan ) {
+      pcalout = new AdcTreeChannelCalibration(*pdat);
       break;
     }
   }
+  delete pdat;
   pfile->Close();
   delete pfile;
   return pcalout;
@@ -56,13 +75,12 @@ AdcTreeChannelCalibration::find(std::string dataset, ShortIndex chip, ShortIndex
 
 //**********************************************************************
 
-AdcTreeChannelCalibration::AdcTreeChannelCalibration()
-: time(0), gain(0.0), offset(0.0) { }
+AdcTreeChannelCalibration::AdcTreeChannelCalibration() { }
 
 //**********************************************************************
 
 AdcTreeChannelCalibration::AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime)
-: chip(aid.chip), chan(aid.chan), time(atime), gain(0.0), offset(0.0) { }
+: m_data(aid.chip, aid.chan, atime) { }
 
 //**********************************************************************
 
@@ -72,35 +90,75 @@ AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime,
                           const FloatVector& acalMeans,
                           const FloatVector& acalRmss,
                           const ShortIndexVector& acalCounts)
-: chip(aid.chip), chan(aid.chan), time(atime), gain(again), offset(aoffset),
-  calMeans(acalMeans), calRmss(acalRmss), calCounts(acalCounts) { }
+: m_data(aid.chip, aid.chan, atime, again, aoffset, acalMeans, acalRmss, acalCounts) { }
 
 //**********************************************************************
 
-Float AdcTreeChannelCalibration::calMean(AdcCode code) const {
-  if ( code >= calMeans.size() ) return -999.0;
-  return calMeans[code];
+AdcTreeChannelCalibration::AdcTreeChannelCalibration(const AdcTreeChannelCalibrationData& data)
+: m_data(data) { }
+
+//**********************************************************************
+
+Index AdcTreeChannelCalibration::chip() const {
+  return m_data.chip;
 }
 
 //**********************************************************************
 
-Float AdcTreeChannelCalibration::calRms(AdcCode code) const {
-  if ( code >= calRmss.size() ) return -1.0;
-  return calRmss[code];
+Index AdcTreeChannelCalibration::channel() const {
+  return m_data.chan;
 }
 
 //**********************************************************************
 
-Float AdcTreeChannelCalibration::calTail(AdcCode code) const {
-  if ( code >= calTails.size() ) return -999.0;
-  return calTails[code];
+Index AdcTreeChannelCalibration::time() const {
+  return m_data.time;
+}
+
+//**********************************************************************
+
+Index AdcTreeChannelCalibration::size() const {
+  return m_data.calMeans.size();
+}
+
+//**********************************************************************
+
+double AdcTreeChannelCalibration::calMean(AdcCode code) const {
+  if ( code >= m_data.calMeans.size() ) return -999.0;
+  return m_data.calMeans[code];
+}
+
+//**********************************************************************
+
+double AdcTreeChannelCalibration::calRms(AdcCode code) const {
+  if ( code >= m_data.calRmss.size() ) return -1.0;
+  return m_data.calRmss[code];
+}
+
+//**********************************************************************
+
+double AdcTreeChannelCalibration::calTail(AdcCode code) const {
+  if ( code >= m_data.calTails.size() ) return -999.0;
+  return m_data.calTails[code];
 }
 
 //**********************************************************************
 
 ShortIndex AdcTreeChannelCalibration::calCount(AdcCode code) const {
-  if ( code >= calCounts.size() ) return 0;
-  return calCounts[code];
+  if ( code >= m_data.calCounts.size() ) return 0;
+  return m_data.calCounts[code];
+}
+
+//**********************************************************************
+
+double AdcTreeChannelCalibration::linearOffset() const {
+  return m_data.offset;
+}
+
+//**********************************************************************
+
+double AdcTreeChannelCalibration::linearGain() const {
+  return m_data.gain;
 }
 
 //**********************************************************************

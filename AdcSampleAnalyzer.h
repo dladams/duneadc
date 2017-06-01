@@ -9,7 +9,7 @@
 #define adchist_H
 
 #include "AdcSampleReader.h"
-#include "AdcChannelCalibration.h"
+#include "AdcTreeChannelCalibration.h"
 #include "AdcVoltageResponse.h"
 #include "AdcVoltagePerformance.h"
 #include "FileDirectory.h"
@@ -133,6 +133,7 @@ public:
   const AdcSampleReader* reader() const { return m_preader; }
   Name dataset() const { return m_dataset; }
   Name sampleName() const { return m_sampleName; }
+  AdcTreeChannelCalibration& localCalib() { return m_localTreeCalib; }
   const AdcChannelCalibration& calib() { return m_refCalib; }
   Index chip() const { return m_chip; }
   Index channel() const { return m_channel; }
@@ -191,8 +192,7 @@ private:
 
   const AdcSampleReader* m_preader = nullptr;
   AdcSampleReaderPtr m_preaderManaged;
-  AdcChannelCalibration m_localCalib;
-  AdcChannelCalibration& localCalib() { return m_localCalib; }
+  AdcTreeChannelCalibration m_localTreeCalib;     // The calibration created by this analyzer.
   const AdcChannelCalibration& m_refCalib;
   Name m_dataset;
   Name m_sampleName;

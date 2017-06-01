@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include "AdcChannelCalibration.h"
+#include "AdcTreeChannelCalibration.h"
 #include "TH2F.h"
 #include "TCanvas.h"
 #include "TPaletteAxis.h"
@@ -18,8 +18,7 @@ using std::setw;
 using Index = AdcDatasetAnalyzer::Index;
 using IndexVector = AdcDatasetAnalyzer::IndexVector;
 using NameVector = AdcDatasetAnalyzer::NameVector;
-//using AdcChannelCalibrationPtr = std::unique_ptr<const AdcChannelCalibration>;
-using AdcChannelCalibrationPtr = const AdcChannelCalibration*;
+using AdcTreeChannelCalibrationPtr = const AdcTreeChannelCalibration*;
 
 //**********************************************************************
 
@@ -62,10 +61,10 @@ int AdcDatasetAnalyzer::fill(Index chan) {
   const Name myname = "AdcDatasetAnalyzer::fill: ";
   if ( chan > hcnt.size() ) return 2;
   if ( hcnt[chan] != nullptr ) return 0;
-  vector<AdcChannelCalibrationPtr> cals(dsts.size());
+  vector<AdcTreeChannelCalibrationPtr> cals(dsts.size());
   for ( Index idst=0; idst<dsts.size(); ++idst ) {
     Name dst = dsts[idst];
-    AdcChannelCalibrationPtr pcal(AdcChannelCalibration::find(dst, chip, chan));
+    AdcTreeChannelCalibrationPtr pcal(AdcTreeChannelCalibration::find(dst, chip, chan));
     if ( pcal == nullptr ) {
       cout << myname << "Unable to find calibration for " << dst << " chip " << chip << " channel " << chan << endl;
       return 3;
@@ -113,7 +112,7 @@ int AdcDatasetAnalyzer::fill(Index chan) {
     unsigned int nbad = 0;
     for ( unsigned int idst=0; idst<ndst; ++idst ) {
       unsigned int bin = phr->GetBin(ibin+1, idst+1);
-      const AdcChannelCalibrationPtr& pcal = cals[idst];
+      const AdcTreeChannelCalibrationPtr& pcal = cals[idst];
       unsigned short cnt = pcal->calCount(ibin);
       float res = pcal->calRms(ibin);
       if ( cnt > 0 ) phc->SetBinContent(bin, log10(cnt));
@@ -184,7 +183,7 @@ int AdcDatasetAnalyzer::fill(Index chan) {
       unsigned int ibin = jumpbins[ijmp];
       if ( dbg ) cout << myname << "Bin " << ibin << endl;
       for ( unsigned int idst=0; idst<ndst; ++idst ) {
-        const AdcChannelCalibrationPtr& pcal = cals[idst];
+        const AdcTreeChannelCalibrationPtr& pcal = cals[idst];
         unsigned int bin = phj->GetBin(ijmp+1, idst+1);
         float res = pcal->calRms(ibin);
         unsigned short cnt = pcal->calCount(ibin);

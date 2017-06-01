@@ -10,7 +10,7 @@
 #ifndef AdcHist_H
 #define AdcHist_H
 
-#include "AdcChannelCalibration.h"
+#include "AdcTreeChannelCalibration.h"
 #include "FileDirectory.h"
 #include <string>
 #include "TH2.h"
@@ -45,7 +45,7 @@ public:
   TF1* pfit = nullptr;
   double fitVinPerAdc;
   double fitped;
-  AdcChannelCalibration calib;
+  AdcTreeChannelCalibration calib;
 
   // Build histograms and calibrations for one ADC channel.
   AdcHist(std::string ssam, int chan, double cfac =0.0);

@@ -31,9 +31,12 @@ AdcCalibrationTree(Name fname, Name tname, Name opt)
   if ( m_ptree == nullptr ) {
     cout << myname << "Creating tree " << m_tname << endl;
     m_ptree = new TTree(m_tname.c_str(), "ADC calibration tree");
-    m_ptree->Branch("cal", m_pcal);
+    AdcTreeChannelCalibrationData& pdat = m_pcal->data();
+    m_ptree->Branch("cal", &pdat);
   } else {
-    m_ptree->SetBranchAddress("cal", &m_pcal);
+    AdcTreeChannelCalibrationData& rdat = m_pcal->data();
+    AdcTreeChannelCalibrationData* pdat = &rdat;
+    m_ptree->SetBranchAddress("cal", &pdat);
     m_ptree->GetEntry(0);
   }
   thisdir->cd();

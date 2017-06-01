@@ -33,3 +33,10 @@ AdcPedestalChannelCalibration(const AdcChannelCalibration& calraw,
 
 //**********************************************************************
 
+double AdcPedestalChannelCalibration::calMean(AdcCode iadc) const {
+  if ( iadc >= size() ) return 0.0;
+  return rawCalibration().calMean(iadc) - pedestal();
+}
+
+//**********************************************************************
+

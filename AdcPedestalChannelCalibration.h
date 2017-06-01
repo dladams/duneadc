@@ -41,7 +41,7 @@ public:
   Index channel()              const override { return rawCalibration().channel(); }
   Index time()                 const override { return rawCalibration().time(); }
   Index size()                 const override { return rawCalibration().size(); }
-  double calMean(AdcCode code) const override { return rawCalibration().calMean(code) - pedestal(); }
+  double calMean(AdcCode code) const override;
   double calRms(AdcCode code)  const override { return rawCalibration().calRms(code); }
   double calTail(AdcCode code) const override { return rawCalibration().calTail(code); }
   double linearOffset()        const override { return rawCalibration().linearOffset() - pedestal(); }

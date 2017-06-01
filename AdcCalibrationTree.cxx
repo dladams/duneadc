@@ -17,7 +17,7 @@ AdcCalibrationTree::
 AdcCalibrationTree(Name fname, Name tname, Name opt)
 : m_status(1), m_fname(fname), m_tname(tname),
   m_pfile(nullptr), m_ptree(nullptr),
-  m_pcal(new AdcChannelCalibration), m_modified(false) {
+  m_pcal(new AdcTreeChannelCalibration), m_modified(false) {
   const string myname = "AdcCalibrationTree::ctor: ";
   TDirectory* thisdir = gDirectory;
   m_pfile = TFile::Open(fname.c_str(), opt.c_str());
@@ -77,7 +77,7 @@ Index AdcCalibrationTree::size() const {
 
 //**********************************************************************
 
-int AdcCalibrationTree::insert(const AdcChannelCalibration& cal) {
+int AdcCalibrationTree::insert(const AdcTreeChannelCalibration& cal) {
   if ( status() ) return status();
   (*m_pcal) = cal;
   return insert();
@@ -94,7 +94,7 @@ int AdcCalibrationTree::insert() {
 
 //**********************************************************************
 
-const AdcChannelCalibration* AdcCalibrationTree::find(Index ient) const {
+const AdcTreeChannelCalibration* AdcCalibrationTree::find(Index ient) const {
   if ( status() ) return nullptr;
   if ( ient >= m_ptree->GetEntries() ) return nullptr;
   m_ptree->GetEntry(ient);
@@ -103,17 +103,17 @@ const AdcChannelCalibration* AdcCalibrationTree::find(Index ient) const {
 
 //**********************************************************************
 
-const AdcChannelCalibration* AdcCalibrationTree::find(AdcChannelId aid, Index& ient) const {
+const AdcTreeChannelCalibration* AdcCalibrationTree::find(AdcChannelId aid, Index& ient) const {
   return find(aid.chip, aid.chan, ient);
 }
 
 //**********************************************************************
 
-const AdcChannelCalibration* AdcCalibrationTree::find(Index chip, Index chan, Index& ient) const {
+const AdcTreeChannelCalibration* AdcCalibrationTree::find(Index chip, Index chan, Index& ient) const {
   if ( status() ) return nullptr;
   Index nent = m_ptree->GetEntries();
   for ( ; ient<nent; ++ient ) {
-    const AdcChannelCalibration* pcal = find(ient);
+    const AdcTreeChannelCalibration* pcal = find(ient);
     if ( pcal->chip == chip && pcal->chan == chan ) return pcal;
   }
   return nullptr;

@@ -1,6 +1,6 @@
-// AdcChannelCalibration.cxx
+// AdcTreeChannelCalibration.cxx
 
-#include "AdcChannelCalibration.h"
+#include "AdcTreeChannelCalibration.h"
 #include "TFile.h"
 #include "TTree.h"
 #include <iostream>
@@ -8,19 +8,19 @@
 using std::cout;
 using std::endl;
 using Name = std::string;
-using CalibMap = std::map<AdcChannelId, const AdcChannelCalibration*>;
+using CalibMap = std::map<AdcChannelId, const AdcTreeChannelCalibration*>;
 using CalibMapMap = std::map<Name, CalibMap>;
 
 //**********************************************************************
 
-const AdcChannelCalibration*
-AdcChannelCalibration::find(std::string dataset, AdcChannelId aid) {
+const AdcTreeChannelCalibration*
+AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
   static CalibMapMap calibmaps;
-  const Name myname = "AdcChannelCalibration::find: ";
+  const Name myname = "AdcTreeChannelCalibration::find: ";
   CalibMap& calibmap = calibmaps[dataset];
   CalibMap::iterator icm = calibmap.find(aid);
   if ( icm != calibmap.end() ) return icm->second;
-  const AdcChannelCalibration*& pcalout = calibmap[aid];
+  const AdcTreeChannelCalibration*& pcalout = calibmap[aid];
   pcalout = nullptr;
   Name fname = "calib_" + dataset + ".root";
   TFile* pfile = TFile::Open(fname.c_str());
@@ -33,12 +33,12 @@ AdcChannelCalibration::find(std::string dataset, AdcChannelId aid) {
     cout << myname << "Unable to find tree adccalib in file " << fname << endl;
     return nullptr;
   }
-  const AdcChannelCalibration* pcal = new AdcChannelCalibration;
+  const AdcTreeChannelCalibration* pcal = new AdcTreeChannelCalibration;
   ptree->SetBranchAddress("cal", &pcal);
   for ( unsigned int ient=0; ient<ptree->GetEntries(); ++ient ) {
     ptree->GetEntry(ient);
     if ( pcal->chip == aid.chip && pcal->chan == aid.chan ) {
-      pcalout = new AdcChannelCalibration(*pcal);
+      pcalout = new AdcTreeChannelCalibration(*pcal);
       break;
     }
   }
@@ -49,56 +49,56 @@ AdcChannelCalibration::find(std::string dataset, AdcChannelId aid) {
 
 //**********************************************************************
 
-const AdcChannelCalibration*
-AdcChannelCalibration::find(std::string dataset, ShortIndex chip, ShortIndex chan) {
+const AdcTreeChannelCalibration*
+AdcTreeChannelCalibration::find(std::string dataset, ShortIndex chip, ShortIndex chan) {
   return find(dataset, AdcChannelId(chip, chan));
 }
 
 //**********************************************************************
 
-AdcChannelCalibration::AdcChannelCalibration()
+AdcTreeChannelCalibration::AdcTreeChannelCalibration()
 : time(0), gain(0.0), offset(0.0) { }
 
 //**********************************************************************
 
-AdcChannelCalibration::AdcChannelCalibration(AdcChannelId aid, AdcTime atime)
+AdcTreeChannelCalibration::AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime)
 : chip(aid.chip), chan(aid.chan), time(atime), gain(0.0), offset(0.0) { }
 
 //**********************************************************************
 
-AdcChannelCalibration::
-AdcChannelCalibration(AdcChannelId aid, AdcTime atime,
-                      Float again, Float aoffset,
-                      const FloatVector& acalMeans,
-                      const FloatVector& acalRmss,
-                      const ShortIndexVector& acalCounts)
+AdcTreeChannelCalibration::
+AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime,
+                          Float again, Float aoffset,
+                          const FloatVector& acalMeans,
+                          const FloatVector& acalRmss,
+                          const ShortIndexVector& acalCounts)
 : chip(aid.chip), chan(aid.chan), time(atime), gain(again), offset(aoffset),
   calMeans(acalMeans), calRmss(acalRmss), calCounts(acalCounts) { }
 
 //**********************************************************************
 
-Float AdcChannelCalibration::calMean(AdcCode code) const {
+Float AdcTreeChannelCalibration::calMean(AdcCode code) const {
   if ( code >= calMeans.size() ) return -999.0;
   return calMeans[code];
 }
 
 //**********************************************************************
 
-Float AdcChannelCalibration::calRms(AdcCode code) const {
+Float AdcTreeChannelCalibration::calRms(AdcCode code) const {
   if ( code >= calRmss.size() ) return -1.0;
   return calRmss[code];
 }
 
 //**********************************************************************
 
-Float AdcChannelCalibration::calTail(AdcCode code) const {
+Float AdcTreeChannelCalibration::calTail(AdcCode code) const {
   if ( code >= calTails.size() ) return -999.0;
   return calTails[code];
 }
 
 //**********************************************************************
 
-ShortIndex AdcChannelCalibration::calCount(AdcCode code) const {
+ShortIndex AdcTreeChannelCalibration::calCount(AdcCode code) const {
   if ( code >= calCounts.size() ) return 0;
   return calCounts[code];
 }

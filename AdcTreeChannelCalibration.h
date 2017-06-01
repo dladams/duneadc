@@ -1,4 +1,4 @@
-// AdcChannelCalibration.h
+// AdcTreeChannelCalibration.h
 
 // David Adams
 // January 2017
@@ -14,25 +14,25 @@
 // of the distribution (e.g. pull > 5) is calTail(code).
 
 
-#ifndef AdcChannelCalibration_H
-#define AdcChannelCalibration_H
+#ifndef AdcTreeChannelCalibration_H
+#define AdcTreeChannelCalibration_H
 
 #include <vector>
 #include "AdcChannelId.h"
 #include "AdcTypes.h"
 
-class AdcChannelCalibration {
+class AdcTreeChannelCalibration {
 
 public:
 
   // Load an existing calibration from a Root TTree.
-  static const AdcChannelCalibration* find(std::string dataset, AdcChannelId aid);
-  static const AdcChannelCalibration* find(std::string dataset, ShortIndex chip, ShortIndex chan);
+  static const AdcTreeChannelCalibration* find(std::string dataset, AdcChannelId aid);
+  static const AdcTreeChannelCalibration* find(std::string dataset, ShortIndex chip, ShortIndex chan);
 
   // Ctors.
-  AdcChannelCalibration();
-  AdcChannelCalibration(AdcChannelId aid, AdcTime atime);
-  AdcChannelCalibration(AdcChannelId aid, AdcTime atime,
+  AdcTreeChannelCalibration();
+  AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime);
+  AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime,
                         Float again, Float aoffset,
                         const FloatVector& acalMeans,
                         const FloatVector& acalRmss,

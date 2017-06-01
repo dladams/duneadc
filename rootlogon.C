@@ -30,6 +30,8 @@
   gROOT->ProcessLine(".L AdcDatasetAnalyzer.cxx+");
   gROOT->ProcessLine(".L AdcChipMetric.cxx+");
   gROOT->ProcessLine(".L AdcTimeAnalyzer.cxx+");
+  gROOT->ProcessLine(".L AdcLinearChannelCalibration.cxx+");
+  gROOT->ProcessLine(".L AdcPedestalChannelCalibration.cxx+");
   //dev1 gROOT->ProcessLine(".L AdcPerfHists.cxx+");
   //gROOT->ProcessLine(".L processChip.cxx+");
   gROOT->ProcessLine(".L AdcHist.cxx+");   // obsolete

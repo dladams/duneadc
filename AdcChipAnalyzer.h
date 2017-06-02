@@ -21,6 +21,9 @@ public:
   using Name = std::string;
   using TH1Vector = std::vector<TH1*>;
 
+  // List the supported plots.
+  static void help(Name prefix ="");
+
   // Ctor from the parameters used to create and update the sample analyzers.
   //   sampleName: chip sample name, e.g. 201701_14
   //   icha1, ncha: The channel range is ncha channels starting at icha1.

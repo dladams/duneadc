@@ -27,7 +27,36 @@ using std::vector;
 typedef unsigned int Index;
 
 //**********************************************************************
-//
+
+void AdcChipAnalyzer::help(Name prefix) {
+  cout << prefix << "Display plots with aca.draw(plotName, doPrint)" << endl;
+  cout << prefix << "Supported plot names:" << endl;
+  cout << prefix << "   rawv - Raw waveform plus Vin." << endl;
+  cout << prefix << "   resp - Inverse response (V{in} vs. ADC bin)." << endl;
+  cout << prefix << "   zres - Inverse response for ADC bin < 300." << endl;
+  cout << prefix << "   diff - Linear-fit residual." << endl;
+  cout << prefix << "  diffn - Calibration residual." << endl;
+  cout << prefix << "   frms - Linear resolution (residual RMS from linear fit) vs. ADC bin." << endl;
+  cout << prefix << "   fsdv - Ultimate resolution (residual RMS from ultimate calibration) vs. ADC bin." << endl;
+  cout << prefix << "   fsdz - Ultimate resolution vs. ADC bin with expanded scale (5 mV)." << endl;
+  cout << prefix << "   fsdg - Ultimate resolution vs. ADC bin for good bins only." << endl;
+  cout << prefix << "   fsdb - Ultimate resolution vs. ADC bin for bad bins only." << endl;
+  cout << prefix << "   fsdx - Expanded (pull > 5.0) ultimate resolution vs. ADC bin." << endl;
+  cout << prefix << "   fsdt - Tail fraction vs. ADC bin." << endl;
+  cout << prefix << "   fmea - Mean linear fit residual (ultimate calibration constants) vs. ADC bin." << endl;
+  cout << prefix << "    fdr - Linear-fit resolution distribution." << endl;
+  cout << prefix << "    fds - Ultimate resolution distribution." << endl;
+  cout << prefix << "   fdsb - Ultimate resolution distribution for bad channels." << endl;
+  cout << prefix << "   veff - Efficiency (good fraction) vs. input voltage." << endl;
+  cout << prefix << "   perf - Efficiency, resolution and tail fraction vs. input voltage." << endl;
+  cout << prefix << " sumfdr - Linear-fit resolution distribution summed over channels." << endl;
+  cout << prefix << " sumfds - Ultimate resolution distribution summed over channels." << endl;
+  cout << prefix << "   gain - Gain distribution for all channels." << endl;
+  cout << prefix << " offset - Offset distribution for all channels." << endl;
+}
+
+//**********************************************************************
+
 AdcChipAnalyzer::
 AdcChipAnalyzer(string a_sampleName, Index a_icha1, Index a_ncha, string a_datasetCalib, bool a_saveCalib,
                 float a_vmin, float a_vmax, Index a_nv, double a_vRmsMax, bool a_dropTails, bool a_savePerf,
@@ -166,29 +195,7 @@ int AdcChipAnalyzer::drawall() {
 int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
   string myname = "AdcChipAnalyzer::draw: ";
   if ( splotin == "help" ) {
-    cout << myname << "Supported plots:" << endl;
-    cout << myname << "   rawv - Raw waveform plus Vin." << endl;
-    cout << myname << "   resp - Inverse response (V{in} vs. ADC bin)." << endl;
-    cout << myname << "   zres - Inverse response for ADC bin < 300." << endl;
-    cout << myname << "   diff - Linear-fit residual." << endl;
-    cout << myname << "  diffn - Calibration residual." << endl;
-    cout << myname << "   frms - Linear resolution (residual RMS from linear fit) vs. ADC bin." << endl;
-    cout << myname << "   fsdv - Ultimate resolution (residual RMS from ultimate calibration) vs. ADC bin." << endl;
-    cout << myname << "   fsdz - Ultimate resolution vs. ADC bin with expanded scale (5 mV)." << endl;
-    cout << myname << "   fsdg - Ultimate resolution vs. ADC bin for good bins only." << endl;
-    cout << myname << "   fsdb - Ultimate resolution vs. ADC bin for bad bins only." << endl;
-    cout << myname << "   fsdx - Expanded (pull > 5.0) ultimate resolution vs. ADC bin." << endl;
-    cout << myname << "   fsdt - Tail fraction vs. ADC bin." << endl;
-    cout << myname << "   fmea - Mean linear fit residual (ultimate calibration constants) vs. ADC bin." << endl;
-    cout << myname << "    fdr - Linear-fit resolution distribution." << endl;
-    cout << myname << "    fds - Ultimate resolution distribution." << endl;
-    cout << myname << "   fdsb - Ultimate resolution distribution for bad channels." << endl;
-    cout << myname << "   veff - Efficiency (good fraction) vs. input voltage." << endl;
-    cout << myname << "   perf - Efficiency, resolution and tail fraction vs. input voltage." << endl;
-    cout << myname << " sumfdr - Linear-fit resolution distribution summed over channels." << endl;
-    cout << myname << " sumfds - Ultimate resolution distribution summed over channels." << endl;
-    cout << myname << "   gain - Gain distribution for all channels." << endl;
-    cout << myname << " offset - Offset distribution for all channels." << endl;
+    help(myname);
     return 0;
   }
   // Fill the map of histograms that are summed over channels..
@@ -435,7 +442,7 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     // This deletes some less-critcal histograms and deletes the reader.
     if ( clean() ) {
       pasa->clean();
-      //gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
+      gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
     }
     if ( true ) {
       ProcInfo_t info;

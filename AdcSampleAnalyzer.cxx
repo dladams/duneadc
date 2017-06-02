@@ -325,6 +325,14 @@ void AdcSampleAnalyzer::clean() {
   // Delete the histograms managed locally.
   for ( TH1* ph : m_localHists ) delete ph;
   m_localHists.clear();
+  // Clear the bars. Saves a little space but spoils on-screen performance plots.
+  bool rembars = gROOT->IsBatch();
+  if ( rembars ) {
+    for ( TLine* pline : g80bars ) delete pline;
+    g80bars.clear();
+    for ( TLine* pline : g100bars ) delete pline;
+    g100bars.clear();
+  }
   // Delete the analyzer if it is managed here.
   if ( m_preaderManaged ) {
     m_preaderManaged.reset(nullptr);
@@ -562,9 +570,10 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   double v2 = voltageResponses[nvr-1].vmax;
   vperfs.emplace_back(chip(), channel(), time(), rmsmax, nvr, v1, v2);
   AdcVoltagePerformance& vperf = vperfs.back();
+  string hnambase = "h" + sampleName() + "_" + schan + "_";
   // Create efficiency histogram.
   ostringstream sshnam;
-  sshnam << "hveff" << rmsmax;
+  sshnam << hnambase << "hveff" << rmsmax;
   string shnam = sshnam.str();
   ostringstream sstitl;
   sstitl << titlePrefix;
@@ -583,7 +592,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   // Create mean RMS histogram.
   if ( readData ) {
     sshnam.str("");
-    sshnam << "hvrms" << rmsmax;
+    sshnam << hnambase << "hvrms" << rmsmax;
     shnam = sshnam.str();
     sstitl.str("");
     sstitl << titlePrefix;
@@ -599,7 +608,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   }
   // Create tail histogram.
   sshnam.str("");
-  sshnam << "hvtail" << rmsmax;
+  sshnam << hnambase  << "hvtail" << rmsmax;
   shnam = sshnam.str();
   sstitl.str("");
   sstitl << titlePrefix;

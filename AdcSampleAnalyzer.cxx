@@ -72,11 +72,15 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
     if ( nominalGain == 0.0 ) nominalGain = 0.1151;
     adcUnderflow = 0;
   }
-  cout << myname << "Processing sample " << rdr.sample() << endl;
+  cout << myname << "Processing sample " << rdr.sample();
+  cout << ": chip " << chip() << ", channel " << channel()
+       << ", time " << time()
+       << " (" << TDatime(time()).AsString() << ")"
+       << endl;
   nsample = rdr.nsample();
-  localCalib().data().chip = rdr.chip();
+  localCalib().data().chip = chip();
   localCalib().data().chan = channel();
-  localCalib().data().time = rdr.time();
+  localCalib().data().time = time();
   haveNominalCalibration = datasetCalib.size() && (datasetCalib != "none");
   if ( haveNominalCalibration ) {
     nominalCalibrationIsLinear = datasetCalib == "linear";
@@ -878,7 +882,7 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   phax->GetYaxis()->SetTitle(ylab.c_str());
   phax->SetMaximum(ymax);
   phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
-  //TCanvas* pcan = new TCanvas;
+  if ( gPad == nullptr ) new TCanvas;
   gPad->SetGridx();
   gPad->SetGridy();
   phax->DrawCopy("h");

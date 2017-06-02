@@ -31,7 +31,9 @@ public:
   ~AdcCalibrationTree();
 
   // Add a calibration.
-  int insert(const AdcTreeChannelCalibration& cal);
+  // Fails and returns 1 if dup is false and there is already a calibration
+  // with the same chip, channel and time.
+  int insert(const AdcTreeChannelCalibration& cal, bool dup=false);
 
   // Add the current buffered calibration.
   int insert();
@@ -49,12 +51,17 @@ public:
   // end of the tree. The index ient is entry number of the returned calibration.
   const AdcTreeChannelCalibration* find(AdcChannelId id, Index& ient) const;
   const AdcTreeChannelCalibration* find(Index chip, Index chan, Index& ient) const;
+  const AdcTreeChannelCalibration* find(Index chip, Index chan, AdcTime time, Index& ient) const;
 
   // Accessors.
   int status() const { return m_status; }
   TFile* file() const { return m_pfile; }
   TTree* tree() const { return m_ptree; }
-  AdcTreeChannelCalibration& buffer() { return *m_pcal; }
+  AdcTreeChannelCalibration& buffer() { return m_cal; }
+
+  // Display the tree contents.
+  // Maximum of maxent entries are displayed.
+  void print(Index maxent =200) const;
 
 private:
 
@@ -70,7 +77,8 @@ private:
   TTree* m_ptree;
 
   // Data buffer
-  AdcTreeChannelCalibration* m_pcal;
+  AdcTreeChannelCalibration m_cal;
+  AdcTreeChannelCalibrationData* m_pdat;
   bool m_modified;
 
 };

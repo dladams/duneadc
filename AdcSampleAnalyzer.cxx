@@ -319,8 +319,17 @@ AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name 
 
 AdcSampleAnalyzer::~AdcSampleAnalyzer() {
   clean();
+  // Delete the long-term histograms.
   for ( TH1* ph : m_saveHists ) delete ph;
   m_saveHists.clear();
+  // Clear the bars. Saves a little space but spoils on-screen performance plots.
+  bool rembars = gROOT->IsBatch();
+  if ( rembars ) {
+    for ( TLine* pline : g80bars ) delete pline;
+    g80bars.clear();
+    for ( TLine* pline : g100bars ) delete pline;
+    g100bars.clear();
+  }
 }
 
 //**********************************************************************
@@ -345,14 +354,6 @@ void AdcSampleAnalyzer::clean() {
   // Delete the histograms managed locally.
   for ( TH1* ph : m_cleanHists ) delete ph;
   m_cleanHists.clear();
-  // Clear the bars. Saves a little space but spoils on-screen performance plots.
-  bool rembars = gROOT->IsBatch();
-  if ( rembars ) {
-    for ( TLine* pline : g80bars ) delete pline;
-    g80bars.clear();
-    for ( TLine* pline : g100bars ) delete pline;
-    g100bars.clear();
-  }
   // Delete the analyzer if it is managed here.
   if ( m_preaderManaged ) {
     m_preaderManaged.reset(nullptr);

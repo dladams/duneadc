@@ -185,9 +185,6 @@ public:
   // Returns 0 for success.
   int drawperf(bool dolabtail =false) const;
 
-  // Locally managed histograms.
-  mutable TH1Vector m_localHists;
-  
 private:
 
   const AdcSampleReader* m_preader = nullptr;
@@ -201,6 +198,19 @@ private:
   AdcTime m_time = badTime();
   Index m_nadc = 0;
   SampleIndex nsample = 0;    // # ticks in sample
+
+  // Locally managed histograms that are deleted when this object is cleaned.
+  mutable TH1Vector m_cleanHists;
+  
+  // Locally managed histograms that are deleted when this object is deleted.
+  mutable TH1Vector m_saveHists;
+  
+  // Manage a histogram.
+  // If cleaned is true, the histogram is deleted when cleaning is done.
+  // Otherwise is is kept until this object is deleted.
+  void manageHist(TH1* ph, bool cleaned =false) const;
+  void saveHist(TH1* ph) const  { manageHist(ph, false); }
+  void cleanHist(TH1* ph) const { manageHist(ph, true); }
 
   int createHistograms(Index nvin, double vinmin, double vinmax);
 

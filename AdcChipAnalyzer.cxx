@@ -439,10 +439,10 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     m_rawHists[icha] = ph;
     m_vinHists[icha] = ph2;
     // If flag is set, clean the analyzer.
-    // This deletes some less-critcal histograms and deletes the reader.
+    // This deletes some less-critical histograms and deletes the reader.
     if ( clean() ) {
       pasa->clean();
-      gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
+      //gDirectory->DeleteAll();   // Delete all the histograms to make room for the next channel.
     }
     if ( true ) {
       ProcInfo_t info;

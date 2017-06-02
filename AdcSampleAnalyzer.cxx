@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "TH2F.h"
 #include "TH1Props.h"
 #include "TCanvas.h"
@@ -19,6 +20,7 @@ using std::string;
 using std::cout;
 using std::endl;
 using std::ostringstream;
+using std::find;
 
 using Name = AdcSampleReader::Name;
 using Index = AdcSampleReader::Index;
@@ -317,14 +319,32 @@ AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name 
 
 AdcSampleAnalyzer::~AdcSampleAnalyzer() {
   clean();
+  for ( TH1* ph : m_saveHists ) delete ph;
+  m_saveHists.clear();
+}
+
+//**********************************************************************
+
+void AdcSampleAnalyzer::manageHist(TH1* ph, bool cleaned) const {
+  const Name myname = "AdcSampleAnalyzer::manageHist: ";
+  bool doCheck = true;
+  if ( doCheck ) {
+    if ( find(m_saveHists.begin(), m_saveHists.end(), ph) != m_saveHists.end() ||
+         find(m_cleanHists.begin(), m_cleanHists.end(), ph) != m_cleanHists.end() ) {
+      cout << "WARNING: Ignoring second attempt to manage a histogram." << endl;
+      return;
+    }
+  }
+  if ( cleaned ) m_cleanHists.push_back(ph);
+  else m_saveHists.push_back(ph);
 }
 
 //**********************************************************************
 
 void AdcSampleAnalyzer::clean() {
   // Delete the histograms managed locally.
-  for ( TH1* ph : m_localHists ) delete ph;
-  m_localHists.clear();
+  for ( TH1* ph : m_cleanHists ) delete ph;
+  m_cleanHists.clear();
   // Clear the bars. Saves a little space but spoils on-screen performance plots.
   bool rembars = gROOT->IsBatch();
   if ( rembars ) {
@@ -350,7 +370,7 @@ TH1* AdcSampleAnalyzer::hcalib(Index iadc) const {
   Index bin = iadc + 1;
   TH1* ph = phc->ProjectionY(shnam.c_str(), bin, bin);
   ph->SetDirectory(nullptr);
-  m_localHists.push_back(ph);
+  cleanHist(ph);
   int nbin = ph->GetNbinsX();
   ostringstream sshtitl;
   sshtitl << phc->GetTitle() << " bin " << iadc;
@@ -369,7 +389,7 @@ TH1* AdcSampleAnalyzer::hdiff(Index iadc) const {
   Index bin = iadc + 1;
   TH1* ph = phd->ProjectionY(hnam.c_str(), bin, bin);
   ph->SetDirectory(nullptr);
-  m_localHists.push_back(ph);
+  cleanHist(ph);
   ostringstream sshtitl;
   sshtitl << phd->GetTitle() << " bin " << iadc;
   string shtitl = sshtitl.str();
@@ -388,7 +408,7 @@ TH1* AdcSampleAnalyzer::hdiffn(Index iadc) const {
   Index bin = iadc + 1;
   TH1* ph = phn->ProjectionY(hnam.c_str(), bin, bin);
   ph->SetDirectory(nullptr);
-  m_localHists.push_back(ph);
+  cleanHist(ph);
   ostringstream sshtitl;
   sshtitl << phn->GetTitle() << " bin " << iadc;
   string shtitl = sshtitl.str();
@@ -411,7 +431,7 @@ TH1* AdcSampleAnalyzer::hdiffcalib(Index iadc) const {
     Index bin = iadc + 1;
     ph = phdw->ProjectionY(hnam.c_str(), bin, bin);
     ph->SetDirectory(nullptr);
-    m_localHists.push_back(ph);
+    cleanHist(ph);
     ostringstream sshtitl;
     sshtitl << phdw->GetTitle() << " bin " << iadc;
     string shtitl = sshtitl.str();
@@ -585,6 +605,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   string stitl = sstitl.str();
   for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
   phveff = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
+  manageHist(phveff);
+  phveff->SetDirectory(nullptr);
   phveff->SetStats(0);
   phveff->SetMinimum(0.0);
   phveff->SetMaximum(1.03);
@@ -601,6 +623,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
     sstitl << ";RMS(V_{in}) [mV]";
     stitl = sstitl.str();
     phvrms = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
+    manageHist(phvrms);
     phvrms->SetStats(0);
     phvrms->SetMinimum(0.0);
     phvrms->SetMaximum(rmsmax);
@@ -618,6 +641,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   stitl = sstitl.str();
   for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
   phvtail = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
+  manageHist(phvtail);
   phvtail->SetStats(0);
   phvtail->SetMinimum(1.e-6);
   phvtail->SetMaximum(1.0);
@@ -652,7 +676,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
     shnam = sshnam.str();
     TH1* phverr = new TH1F(shnam.c_str(), "", 1000, 0, rmsmax);
     if ( remhist ) {
-      phverr->SetDirectory(0);
+      phverr->SetDirectory(nullptr);
     }
     // Evaluate efficiency, resolution and tail fraction using the input data.
     double effSum = 0.0;
@@ -948,25 +972,41 @@ int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax
   double vinperfmax = 1600.0;
   // Create histograms.
   phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+  manageHist(phf);
   phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+  manageHist(phc);
   phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+  manageHist(phd);
   phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+  manageHist(phdw);
   phm = new TH1F(hnamm.c_str(), stitlm.c_str(), npadc, 0, padcmax);
+  manageHist(phm);
   phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
+  manageHist(phr);
   phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
+  manageHist(phs);
   pht = new TH1F(hnamt.c_str(), stitlt.c_str(), npadc, 0, padcmax);
+  manageHist(pht);
   phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
+  manageHist(phsx);
   phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
+  manageHist(phdr);
   phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
+  manageHist(phds);
   phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
+  manageHist(phdsb);
   vector<TH1*> hists2d = {phf, phc, phd};
   vector<TH1*> dhists = {phdr, phds, phdsb, phdw};
   // Add calibration histograms.
   if ( haveNominalCalibration ) {
     phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
+    manageHist(phn);
     phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
+    manageHist(phnw);
     phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
+    manageHist(phvn);
     phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
+    manageHist(phdn);
     phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
     hists2d.push_back(phn);
     hists2d.push_back(phnw);

@@ -245,7 +245,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
 
 AdcSampleAnalyzer::
 AdcSampleAnalyzer(AdcSampleReaderPtr preader, const AdcChannelCalibration* pcal, bool fixped)
-: AdcSampleAnalyzer(*preader, pcal) {
+: AdcSampleAnalyzer(*preader, pcal, fixped) {
   m_preaderManaged.swap(preader);
 }
 

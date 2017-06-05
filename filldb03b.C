@@ -59,7 +59,7 @@ void filldb03b(Index itim1=0, Index ntim=18, Index chan1=0, Index nchan =16) {
     bool save = true;
     chipper.draw("rawv", save);
     chipper.draw("diff", save);
-    chipper.draw("diffn", save);
+    chipper.draw("difn", save);
     chipper.draw("perf", save);
     TDatime dt2;
     dt2.Print();

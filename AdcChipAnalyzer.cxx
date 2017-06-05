@@ -35,7 +35,7 @@ void AdcChipAnalyzer::help(Name prefix) {
   cout << prefix << "   resp - Inverse response (V{in} vs. ADC bin)." << endl;
   cout << prefix << "   zres - Inverse response for ADC bin < 300." << endl;
   cout << prefix << "   diff - Linear-fit residual." << endl;
-  cout << prefix << "  diffn - Calibration residual." << endl;
+  cout << prefix << "   difn - Calibration residual." << endl;
   cout << prefix << "   frms - Linear resolution (residual RMS from linear fit) vs. ADC bin." << endl;
   cout << prefix << "   fsdv - Ultimate resolution (residual RMS from ultimate calibration) vs. ADC bin." << endl;
   cout << prefix << "   fsdz - Ultimate resolution vs. ADC bin with expanded scale (5 mV)." << endl;

@@ -41,6 +41,10 @@ AdcCalibrationTree(Name fname, Name tname, Name opt)
   }
   thisdir->cd();
   m_status = 0;
+  m_baseCalibName = fname;
+  if ( fname.substr(0, 6) == "calib_" ) m_baseCalibName = m_baseCalibName.substr(6);
+  string::size_type ipos = m_baseCalibName.find(".root");
+  if ( ipos != string::npos ) m_baseCalibName = m_baseCalibName.substr(0, ipos);
 }
 
 //**********************************************************************
@@ -52,7 +56,9 @@ AdcCalibrationTree::~AdcCalibrationTree() {
 //**********************************************************************
 
 int AdcCalibrationTree::close() {
+  string myname = "AdcCalibrationTree::close: ";
   if ( m_pfile != nullptr ) {
+    cout << myname << "Closing " << m_pfile->GetName() << endl;
     TDirectory* thisdir = gDirectory;
     bool cdback = thisdir != m_pfile;
     m_pfile->cd();
@@ -105,6 +111,13 @@ const AdcTreeChannelCalibration* AdcCalibrationTree::find(Index ient) const {
   if ( status() ) return nullptr;
   if ( ient >= m_ptree->GetEntries() ) return nullptr;
   m_ptree->GetEntry(ient);
+  ostringstream sscnam;
+  sscnam << m_baseCalibName
+         << "_chip" << m_cal.chip()
+         << "_chan" << m_cal.channel()
+         << "_time" << m_cal.time();
+  string scnam = sscnam.str();
+  m_cal.setName(scnam);
   return &m_cal;
 }
 
@@ -124,7 +137,7 @@ find(Index chip, Index chan, Index& ient) const {
     const AdcTreeChannelCalibration* pcal = find(ient);
     if ( pcal->chip() == chip && pcal->channel() == chan ) return pcal;
   }
-  return nullptr;
+  return find(ient);
 }
 
 //**********************************************************************
@@ -139,7 +152,7 @@ find(Index chip, Index chan, AdcTime time, Index& ient) const {
          pcal->channel() == chan &&
          pcal->time() == time ) return pcal;
   }
-  return nullptr;
+  return find(ient);
 }
 
 //**********************************************************************

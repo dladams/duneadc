@@ -61,6 +61,9 @@ public:
                             const ShortIndexVector& acalCounts);
   AdcTreeChannelCalibration(const AdcTreeChannelCalibrationData& dat);
 
+  // Set the calibration name.
+  void setName(std::string cname);
+
   // Return the ADC channel ID.
   AdcChannelId id() const { return AdcChannelId(chip(), channel()); }
 
@@ -68,6 +71,7 @@ public:
   bool isValid() const override { return id().isValid(); }
 
   // Full calibration for each ADC code.
+  std::string name() const override;
   Index chip() const override;
   Index channel() const override;
   Index time() const override;
@@ -84,6 +88,7 @@ public:
 
 public:
 
+  std::string m_name = "TreeCalibration";
   AdcTreeChannelCalibrationData m_data;
 
 };

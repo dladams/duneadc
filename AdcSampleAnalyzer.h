@@ -76,10 +76,8 @@ public:
   double vinfitmax = 0.0;    // Max Vin for linear reponse fit
   bool fitusestuck = false;  // If true, classic stuck codes (LSB6=0,63) are excluded from linear response fit.
   // Nominal calibration.
-  std::string datasetCalib;
-  bool haveNominalCalibration = false;
-  bool nominalCalibrationIsLinear = false;
   const AdcChannelCalibration* pcalNominal = nullptr;
+  bool manageCalNominal =false;
   double nominalGain = 0.0;
   double nominalOffset = 0.0;
   // Linear fit.
@@ -99,26 +97,26 @@ public:
   double tailWindow = 5.0;
   bool evaluateReadData =false;   // Flag indicating if data was read for performance evaluation.
 
-  // Read in and process the data using nominal calibration from adatasetCalib.
-  // If the latter is "linear", the nominal calibration is linear with gain specified
-  // by nomGain and the offset is obtained from the data at ADC=500.
-  // If the string is "none" or blank, there is no nominal calibration and the
-  // calibration difference histograms are not created. This saves memory.
+  // Read in and process the data using calibration from pcal.
+  // If there is no calibration (pcal is null), then the calibration difference
+  // histograms are not created. This saves memory.
   //   areader - Sample reader
-  //   adatasetCalib - Name of the calibration dataset (e.g. "201701b").
-  //   maxsam - maximum # samples to read from a waveform (0 for all)
-  //  nomGain: >0 - Nominal gain for a linear calibration [(ADC count/mV]
-  //            0   Take gain from reader
-  AdcSampleAnalyzer(const AdcSampleReader& areader, Name adatasetCalib ="", double nomGain =0.0);
+  //   pcal - Pointer to a reference calibration (for histograms phn, etc.)
+  //   fixped - If true the ref calib is adjusted to have the same response near bin 300
+  AdcSampleAnalyzer(const AdcSampleReader& areader,
+                    const AdcChannelCalibration* pcal =nullptr,
+                    bool fixped =false);
 
   // Same as previous except this object now manages the reader.
   // The reader will be deleted when this analyzer is deleted.
   // Caller must move the input pointer: AdcSampleyAnalyzer myobj(std::move(prdr), ...)
-  AdcSampleAnalyzer(AdcSampleReaderPtr preader, Name adatasetCalib ="", double nomGain =0.0);
+  AdcSampleAnalyzer(AdcSampleReaderPtr preader,
+                    const AdcChannelCalibration* pcal =nullptr,
+                    bool fixped =false);
 
   // Construct analyzer from a channel calibration.
   // The dataset and sample names are needed for labels.
-  // If dataset is blank, it is the sample name is truncated at the first underscore.
+  // If dataset is blank, it is the sample name truncated at the first underscore.
   AdcSampleAnalyzer(const AdcChannelCalibration& a_calib,
                     Name a_sampleName ="TestSample",
                     Name a_dataset ="");
@@ -213,6 +211,12 @@ private:
   void cleanHist(TH1* ph) const { manageHist(ph, true); }
 
   int createHistograms(Index nvin, double vinmin, double vinmax);
+  TH1* createManagedHistogram(Name name, Name title,
+                              Index nx, double xmin, double xmax,
+                              Index ny =0, double ymin =0.0, double ymax =-1.0);
+  TH2* createManaged2dHistogram(Name name, Name title,
+                                Index nx, double xmin, double xmax,
+                                Index ny, double ymin, double ymax);
 
 };
 

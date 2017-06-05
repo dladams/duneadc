@@ -99,6 +99,18 @@ AdcTreeChannelCalibration::AdcTreeChannelCalibration(const AdcTreeChannelCalibra
 
 //**********************************************************************
 
+void AdcTreeChannelCalibration::setName(Name cname) {
+  m_name = cname;
+}
+
+//**********************************************************************
+
+string AdcTreeChannelCalibration::name() const {
+  return m_name;
+}
+
+//**********************************************************************
+
 Index AdcTreeChannelCalibration::chip() const {
   return m_data.chip;
 }

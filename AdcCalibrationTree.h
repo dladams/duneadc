@@ -75,9 +75,10 @@ private:
   Name m_tname;
   TFile* m_pfile;
   TTree* m_ptree;
+  Name m_baseCalibName;
 
   // Data buffer
-  AdcTreeChannelCalibration m_cal;
+  mutable AdcTreeChannelCalibration m_cal;
   AdcTreeChannelCalibrationData* m_pdat;
   bool m_modified;
 

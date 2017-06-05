@@ -32,7 +32,7 @@ void filldb03b(Index itim1=0, Index ntim=18, Index chan1=0, Index nchan =16) {
     cout << myname << "ERROR: Invalid channel range." << endl;
     return;
   }
-  string datasetCalib;
+  string datasetCalib = "201703b_0602";
   bool fillCalTree = true;
   unsigned int nv = 90;
   double vmin = -200.0;

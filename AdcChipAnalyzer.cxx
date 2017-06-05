@@ -385,7 +385,10 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     cout << myname << "Reading data for channel " << icha << endl;
     AdcSampleFinder asf;
     AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(sampleName(), icha);
-    pasa = new AdcSampleAnalyzer(std::move(prdr), datasetCalib());
+    AdcCalibrationTree act(datasetCalib());
+    Index ient = 0;
+    const AdcChannelCalibration* pcal = act.find(prdr->chip(), icha, ient);
+    pasa = new AdcSampleAnalyzer(std::move(prdr), pcal);
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc != nullptr ) {
       // Create array of voltage responses.

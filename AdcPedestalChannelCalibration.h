@@ -22,6 +22,10 @@ class AdcPedestalChannelCalibration : public AdcChannelCalibration {
 
 public:
 
+  // Evaluate the pedestal for a calibration.
+  static double evaluatePedestal(const AdcChannelCalibration& cal,
+                          Index iadc1, Index a_iadc2, double rmsmax);
+
   // Ctor from specified pedestal.
   AdcPedestalChannelCalibration(const AdcChannelCalibration& calraw, double ped);
 
@@ -31,12 +35,20 @@ public:
                                 double vped =0.0,
                                 double rmsmax =1.0);
 
+  // Ctor from another calibration.
+  // The pedestal here is set to match the one there.
+  AdcPedestalChannelCalibration(const AdcChannelCalibration& calraw,
+                                Index iadc1, Index iadc2,
+                                const AdcChannelCalibration& cal0,
+                                double rmsmax =1.0);
+
   // Getters.
   const AdcChannelCalibration& rawCalibration() const { return m_calraw; }
   double pedestal() const { return m_ped; }
 
   // This object is valid if it holds a valid ID.
   bool isValid()               const override { return rawCalibration().isValid(); }
+  std::string name()           const override { return rawCalibration().name() + "_ped"; }
   Index chip()                 const override { return rawCalibration().chip(); }
   Index channel()              const override { return rawCalibration().channel(); }
   Index time()                 const override { return rawCalibration().time(); }

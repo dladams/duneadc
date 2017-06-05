@@ -4,6 +4,27 @@
 
 //**********************************************************************
 
+double AdcPedestalChannelCalibration::
+evaluatePedestal(const AdcChannelCalibration& cal,
+                 Index iadc1, Index a_iadc2, double rmsmax) {
+  Index nbin = 0;
+  double vsum = 0.0;
+  Index iadc2 = a_iadc2 > iadc1 ? a_iadc2 : iadc1 + 1;
+  for ( Index iadc=iadc1; iadc<iadc2; ++iadc ) {
+    if ( iadc >= cal.size() ) break;
+    if ( cal.calRms(iadc) < rmsmax ) {
+      vsum += cal.calMean(iadc);
+      ++nbin;
+    }
+  }
+  return nbin > 0 ? vsum/nbin : 0.0;
+}
+
+//**********************************************************************
+
+AdcPedestalChannelCalibration::
+//**********************************************************************
+
 AdcPedestalChannelCalibration::
 AdcPedestalChannelCalibration(const AdcChannelCalibration& calraw, double ped)
 : m_calraw(calraw), m_ped(ped) { }
@@ -16,19 +37,21 @@ AdcPedestalChannelCalibration(const AdcChannelCalibration& calraw,
                               double vped,
                               double rmsmax)
 : m_calraw(calraw), m_ped(0.0) {
-  Index nbin = 0;
-  double vsum = 0.0;
-  Index iadc2 = a_iadc2 > iadc1 ? a_iadc2 : iadc1 + 1;
-  for ( Index iadc=iadc1; iadc<iadc2; ++iadc ) {
-    if ( iadc >= size() ) break;
-    if ( calRms(iadc) < rmsmax ) {
-      vsum += calMean(iadc);
-      ++nbin;
-    }
-  }
-  if ( nbin > 0 ) {
-    m_ped = vsum/nbin;
-  }
+  double pedin = evaluatePedestal(calraw, iadc1, a_iadc2, rmsmax);
+  m_ped = pedin - vped;
+}
+
+//**********************************************************************
+
+AdcPedestalChannelCalibration::
+AdcPedestalChannelCalibration(const AdcChannelCalibration& calraw,
+                              Index iadc1, Index a_iadc2,
+                              const AdcChannelCalibration& cal0,
+                              double rmsmax)
+: m_calraw(calraw), m_ped(0.0) {
+  double ped0 = evaluatePedestal(cal0, iadc1, a_iadc2, rmsmax);
+  double ped = evaluatePedestal(calraw, iadc1, a_iadc2, rmsmax);
+  m_ped = ped - ped0;
 }
 
 //**********************************************************************

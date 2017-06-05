@@ -2,6 +2,7 @@
 
 #include "AdcSampleAnalyzer.h"
 #include "AdcTreeChannelCalibration.h"
+#include "AdcPedestalChannelCalibration.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -42,10 +43,9 @@ bool sticky(Index iadc) {
 //**********************************************************************
 
 AdcSampleAnalyzer::
-AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nominalGain)
-: datasetCalib(adatasetCalib),
+AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal, bool fixped)
+: pcalNominal(pcal),
   pfit(nullptr), fitGain(0.0), fitOffset(0.0),
-  nominalGain(a_nominalGain),
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
   m_sampleName(rdr.sample()),
@@ -81,26 +81,6 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
   localCalib().data().chip = chip();
   localCalib().data().chan = channel();
   localCalib().data().time = time();
-  haveNominalCalibration = datasetCalib.size() && (datasetCalib != "none");
-  if ( haveNominalCalibration ) {
-    nominalCalibrationIsLinear = datasetCalib == "linear";
-    if ( nominalCalibrationIsLinear ) {
-      if ( nominalGain <= 0.0 ) {
-        cout << myname << "ERROR: Invalid nominal gain: " << a_nominalGain << endl;
-        return;
-      }
-      cout << myname << "Nominal calibration is linear with gain " << nominalGain << "  mV/ADC." << endl;
-    } else {
-      cout << myname << "Taking nominal calibration from dataset " << datasetCalib << endl;
-      pcalNominal = AdcTreeChannelCalibration::find(datasetCalib, chip(), channel());
-      if ( pcalNominal == nullptr ) {
-        cout << myname << "ERROR: Nominal calibration not found for dataset " << datasetCalib << endl;
-        return;
-      }
-    }
-  } else {
-    cout << myname << "Nominal calibration is not provided." << endl;
-  }
   // Create the histograms.
   createHistograms(nvin, rdr.vinmin(), rdr.vinmax());
   double countPerVinBin = double(nsample)/nadc();
@@ -153,49 +133,14 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
   ssdif << "V_{in} - (" << fitGain << " ADC + " << fitOffset << ") [mV]";
   phd->GetYaxis()->SetTitle(ssdif.str().c_str());
   phdw->GetYaxis()->SetTitle(ssdif.str().c_str());
-  // Find the nominal calibration.
-  // If datasetCalib is set, use its calibration for this channel.
-  // Otherwise, use the gain from the reader and the pedestal from data at ADC = 500.
-  if ( pcalNominal != nullptr ) {
-    ostringstream ssdifn;
-    ssdifn.precision(3);
-    ssdifn << "V_{in} - V_{in}(" << datasetCalib << ") [mV]";
-    phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
-    phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
-    phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
-  }
-  // Find the offset for a linear calbration.
-  // This uses the linear calibration of this data.
-  if ( nominalCalibrationIsLinear ) {
-    Index adc_nom = 500;
-    cout << myname << "Nominal gain taken from reader, offset from data at ADC = " << adc_nom << endl;
-    nominalOffset = fitOffset + (fitGain - nominalGain)*adc_nom;
-    cout << myname << "Nominal gain: " << nominalGain << " mV/ADC, offset: "
-         << nominalOffset << " mV" << endl;
-    ostringstream ssdifn;
-    ssdifn.precision(3);
-    ssdifn << "V_{in} - (" << nominalGain << " ADC + " << nominalOffset << ") [mV]";
-    phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
-    phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
-    phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
-  }
-  // Fill the remaining histograms.
-  vector<Index> nsamtot;
-  vector<Index> nsamkeep;
+  // Fill the linear response difference histograms.
   for ( Index iadc=0; iadc<nadc(); ++iadc ) {
-    double evinCalib = haveNominalCalibration ? nominalCalibrationVin(iadc) : 0.0;
-    double ermsCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationRms(iadc);
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = rdr.vinCenter(ivin);
       double evinLinear = fitOffset + iadc*fitGain;
       Index count = rdr.countTable()[iadc][ivin];
       phd->Fill( iadc, vin - evinLinear, count);
       phdw->Fill(iadc, vin - evinLinear, count);
-      if ( haveNominalCalibration ) {
-        phn->Fill( iadc, vin - evinCalib,  count);
-        phnw->Fill(iadc, vin - evinCalib,  count);
-        if ( ermsCalib < 1.0 ) phvn->Fill(vin, vin - evinCalib,  count);
-      }
     }
   }
   // Fill diff stat histograms.
@@ -250,16 +195,44 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
         phds->Fill(xs);
       }
     }
-    if ( haveNominalCalibration ) {
-      ph = hdiffn(iadc);
-      xm = ph->GetMean();
-      xs = ph->GetRMS();
-      xr = sqrt(xm*xm+xs*xs);
-      if ( iadc > 64 && !isStuck ) {
-        phdn->Fill(xr);
-      }
+    if ( iadc > 64 && !isStuck ) {
+      phdn->Fill(xr);
     }
   }
+  // Fill the calibration difference histograms.
+  // Find the nominal calibration.
+  if ( pcalNominal != nullptr ) {
+    ostringstream ssdifn;
+    ssdifn.precision(3);
+    ssdifn << "V_{in} - V_{in}(" << pcalNominal->name() << ") [mV]";
+    phn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    phnw->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    phvn->GetYaxis()->SetTitle(ssdifn.str().c_str());
+    cout << myname << "Calibration is for chip " << pcalNominal->chip()
+         << ", channel " << pcalNominal->channel()
+         << ", time " << pcalNominal->time()
+         << " (" << TDatime(pcalNominal->time()).AsString() << ")"
+         << endl;
+    if ( fixped ) {
+      cout << myname << "Applying pedestal correction to calibration." << endl;
+      pcalNominal =
+        new AdcPedestalChannelCalibration(*pcalNominal, 290, 311, localCalib(), 1.0);
+    }
+    for ( Index iadc=0; iadc<nadc(); ++iadc ) {
+      double evinCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationVin(iadc);
+      double ermsCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationRms(iadc);
+      for ( Index ivin=0; ivin<nvin; ++ivin ) {
+        double vin = rdr.vinCenter(ivin);
+        Index count = rdr.countTable()[iadc][ivin];
+        phn->Fill( iadc, vin - evinCalib,  count);
+        phnw->Fill(iadc, vin - evinCalib,  count);
+        if ( ermsCalib < 1.0 ) phvn->Fill(vin, vin - evinCalib,  count);
+      }
+    }
+  } else {
+    cout << myname << "Nominal calibration is not provided." << endl;
+  }
+  // Report memory at end of processing.
   if ( true ) {
     ProcInfo_t info;
     gSystem->GetProcInfo(&info);
@@ -270,8 +243,9 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, string adatasetCalib, double a_nom
 
 //**********************************************************************
 
-AdcSampleAnalyzer::AdcSampleAnalyzer(AdcSampleReaderPtr preader, string adatasetCalib, double cfac)
-: AdcSampleAnalyzer(*preader, adatasetCalib, cfac) {
+AdcSampleAnalyzer::
+AdcSampleAnalyzer(AdcSampleReaderPtr preader, const AdcChannelCalibration* pcal, bool fixped)
+: AdcSampleAnalyzer(*preader, pcal) {
   m_preaderManaged.swap(preader);
 }
 
@@ -279,14 +253,19 @@ AdcSampleAnalyzer::AdcSampleAnalyzer(AdcSampleReaderPtr preader, string adataset
 
 AdcSampleAnalyzer::
 AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name a_dataset)
-: m_dataset(a_dataset), m_sampleName(a_sampleName), m_refCalib(a_calib),
+: pcalNominal(nullptr),
+  m_dataset(a_dataset), m_sampleName(a_sampleName), m_refCalib(a_calib),
   m_chip(calib().chip()),
   m_channel(calib().channel()),
   m_time(calib().time()),
   m_nadc(calib().size()) {
+  const string myname = "AdcSampleAnalyzer::ctor: ";
   if ( m_dataset.size() == 0 ) {
     m_dataset = m_sampleName.substr(0, m_sampleName.find("_"));
   }
+  cout << myname << "Processing calibration " << calib().name()
+       << " assigned sample name " << sampleName()
+       << " and dataset name " << dataset() << endl;
   fitGain = calib().linearGain();
   fitOffset = calib().linearOffset();
   adcUnderflow = 64;
@@ -333,6 +312,10 @@ AdcSampleAnalyzer::~AdcSampleAnalyzer() {
     g80bars.clear();
     for ( TLine* pline : g100bars ) delete pline;
     g100bars.clear();
+  }
+  if ( manageCalNominal ) {
+    delete pcalNominal;
+    pcalNominal = nullptr;
   }
 }
 
@@ -489,9 +472,6 @@ double AdcSampleAnalyzer::calTail(Index iadc) const {
 
 double AdcSampleAnalyzer::nominalCalibrationVin(Index iadc) const {
   const string myname = "AdcSampleAnalyzer::vinCalib: ";
-  if ( nominalCalibrationIsLinear ) {
-    return nominalOffset + iadc*nominalGain;
-  }
   if ( pcalNominal != nullptr ) {
     return pcalNominal->calMean(iadc);
   }
@@ -503,7 +483,6 @@ double AdcSampleAnalyzer::nominalCalibrationVin(Index iadc) const {
 
 double AdcSampleAnalyzer::nominalCalibrationRms(Index iadc) const {
   const string myname = "AdcSampleAnalyzer::nominalCalibrationRms: ";
-  if ( nominalCalibrationIsLinear ) return nominalGain/sqrt(12.0);
   if ( pcalNominal != nullptr ) {
     return pcalNominal->calRms(iadc);
   }
@@ -515,7 +494,6 @@ double AdcSampleAnalyzer::nominalCalibrationRms(Index iadc) const {
 
 double AdcSampleAnalyzer::nominalCalibrationTail(Index iadc) const {
   const string myname = "AdcSampleAnalyzer::nominalCalibrationTail: ";
-  if ( nominalCalibrationIsLinear ) return 0.0;
   if ( pcalNominal != nullptr ) {
     return pcalNominal->calTail(iadc);
   }
@@ -604,13 +582,12 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   sstitl << titlePrefix;
   sstitl << " efficiency for RMS < " << rmsmax << " mV";
   if ( dropTails ) sstitl << ", notail";
-  if ( haveNominalCalibration ) sstitl << ", calib " + datasetCalib;
+  if ( pcalNominal != nullptr ) sstitl << ", calib " << pcalNominal->name();
   sstitl << ";V_{in} [mV]";
   sstitl << ";Efficiency";
   string stitl = sstitl.str();
   for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
-  phveff = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
-  manageHist(phveff);
+  phveff = createManagedHistogram(shnam, stitl, nvr, v1, v2);
   phveff->SetDirectory(nullptr);
   phveff->SetStats(0);
   phveff->SetMinimum(0.0);
@@ -627,8 +604,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
     sstitl << ";V_{in} [mV]";
     sstitl << ";RMS(V_{in}) [mV]";
     stitl = sstitl.str();
-    phvrms = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
-    manageHist(phvrms);
+    phvrms = createManagedHistogram(shnam, stitl, nvr, v1, v2);
     phvrms->SetStats(0);
     phvrms->SetMinimum(0.0);
     phvrms->SetMaximum(rmsmax);
@@ -645,8 +621,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   sstitl << ";Tail fraction";
   stitl = sstitl.str();
   for ( char& ch : shnam ) if ( ch == '.' ) ch = 'p';
-  phvtail = new TH1F(shnam.c_str(), stitl.c_str(), nvr, v1, v2);
-  manageHist(phvtail);
+  phvtail = createManagedHistogram(shnam, stitl, nvr, v1, v2);
   phvtail->SetStats(0);
   phvtail->SetMinimum(1.e-6);
   phvtail->SetMaximum(1.0);
@@ -713,7 +688,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
           double vinMeasured = calMean(iadc);
           double rmsMeasured = calRms(iadc);
           double tailFrac = calTail(iadc);
-          if ( haveNominalCalibration ) {
+          if ( pcalNominal != nullptr ) {
             vinMeasured = nominalCalibrationVin(iadc);
             rmsMeasured = nominalCalibrationRms(iadc);
             tailFrac = nominalCalibrationTail(iadc);
@@ -976,42 +951,26 @@ int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax
   double vinperfmin = 0.0;
   double vinperfmax = 1600.0;
   // Create histograms.
-  phf = new TH2F(hnamf.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
-  manageHist(phf);
-  phc = new TH2F(hnamc.c_str(), stitle.c_str(), npadc, 0, padcmax, npvin, pvinmin, pvinmax);
-  manageHist(phc);
-  phd = new TH2F(hnamd.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
-  manageHist(phd);
-  phdw = new TH2F(hnamdw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
-  manageHist(phdw);
-  phm = new TH1F(hnamm.c_str(), stitlm.c_str(), npadc, 0, padcmax);
-  manageHist(phm);
-  phr = new TH1F(hnamr.c_str(), stitlr.c_str(), npadc, 0, padcmax);
-  manageHist(phr);
-  phs = new TH1F(hnams.c_str(), stitls.c_str(), npadc, 0, padcmax);
-  manageHist(phs);
-  pht = new TH1F(hnamt.c_str(), stitlt.c_str(), npadc, 0, padcmax);
-  manageHist(pht);
-  phsx = new TH1F(hnamsx.c_str(), stitlsx.c_str(), npadc, 0, padcmax);
-  manageHist(phsx);
-  phdr = new TH1F(hnamdr.c_str(), stitle.c_str(), nd, 0, dmax);
-  manageHist(phdr);
-  phds = new TH1F(hnamds.c_str(), stitle.c_str(), nd, 0, smax);
-  manageHist(phds);
-  phdsb = new TH1F(hnamdsb.c_str(), stitldsb.c_str(), nd, 0, smax);
-  manageHist(phdsb);
+  phf = createManaged2dHistogram(hnamf, stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+  phc = createManaged2dHistogram(hnamc, stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+  phd = createManaged2dHistogram(hnamd, stitle, npadc, 0, padcmax, 400, -dmax, dmax);
+  phdw = createManaged2dHistogram(hnamdw, stitle, npadc, 0, padcmax, 400, -wdmax, wdmax);
+  phm = createManagedHistogram(hnamm, stitlm, npadc, 0, padcmax);
+  phr = createManagedHistogram(hnamr, stitlr, npadc, 0, padcmax);
+  phs = createManagedHistogram(hnams, stitls, npadc, 0, padcmax);
+  pht = createManagedHistogram(hnamt, stitlt, npadc, 0, padcmax);
+  phsx = createManagedHistogram(hnamsx, stitlsx, npadc, 0, padcmax);
+  phdr = createManagedHistogram(hnamdr, stitle, nd, 0, dmax);
+  phds = createManagedHistogram(hnamds, stitle, nd, 0, smax);
+  phdsb = createManagedHistogram(hnamdsb, stitldsb, nd, 0, smax);
   vector<TH1*> hists2d = {phf, phc, phd};
   vector<TH1*> dhists = {phdr, phds, phdsb, phdw};
   // Add calibration histograms.
-  if ( haveNominalCalibration ) {
-    phn = new TH2F(hnamn.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -dmax, dmax);
-    manageHist(phn);
-    phnw = new TH2F(hnamnw.c_str(), stitle.c_str(), npadc, 0, padcmax, 400, -wdmax, wdmax);
-    manageHist(phnw);
-    phvn = new TH2F(hnamvn.c_str(), stitle.c_str(), nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
-    manageHist(phvn);
-    phdn = new TH1F(hnamdn.c_str(), stitle.c_str(), nd, 0, wdmax);
-    manageHist(phdn);
+  if ( pcalNominal != nullptr ) {
+    phn = createManaged2dHistogram(hnamn, stitle, npadc, 0, padcmax, 400, -dmax, dmax);
+    phnw = createManaged2dHistogram(hnamnw, stitle, npadc, 0, padcmax, 400, -wdmax, wdmax);
+    phvn = createManaged2dHistogram(hnamvn, stitle, nvinperf, vinperfmin, vinperfmax, 400, -dmax, dmax);
+    phdn = createManagedHistogram(hnamdn, stitle, nd, 0, wdmax);
     phdn->GetXaxis()->SetTitle("Nominal resolution [mV]");
     hists2d.push_back(phn);
     hists2d.push_back(phnw);
@@ -1060,13 +1019,50 @@ int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax
   phs->SetMinimum(0.0);
   phsx->SetMinimum(0.0);
   phsg = dynamic_cast<TH1*>(phs->Clone(hnamsg.c_str()));
+  manageHist(phsg);
   phsb = dynamic_cast<TH1*>(phs->Clone(hnamsb.c_str()));
+  manageHist(phsb);
   if ( zmax == 0 ) {
     zmax = 4*nsample/nvin;
     cout << myname << "zmax = " << zmax << endl;
     for ( TH1* ph : hists2d ) ph->SetMaximum(zmax); 
   }
   return 0;
+}
+
+//**********************************************************************
+
+TH1* AdcSampleAnalyzer::
+createManagedHistogram(Name name, Name title,
+                      Index nx, double xmin, double xmax,
+                      Index ny, double ymin, double ymax) {
+  TH1* ph = nullptr;
+  Name shnam = name;
+  TH1* phold = dynamic_cast<TH1*>(gDirectory->Get(shnam.c_str()));
+  Index iver = 0;
+  while ( phold != nullptr ) {
+    ostringstream sshnam;
+    sshnam << name << "_v" << ++iver;
+    shnam = sshnam.str();
+    phold = dynamic_cast<TH1*>(gDirectory->Get(shnam.c_str()));
+  }
+  if ( ny > 0 ) {
+    ph = new TH2F(shnam.c_str(), title.c_str(), nx, xmin, xmax, ny, ymin, ymax);
+  } else {
+    ph = new TH1F(shnam.c_str(), title.c_str(), nx, xmin, xmax);
+  }
+  manageHist(ph);
+  return ph;
+}
+//**********************************************************************
+
+TH2* AdcSampleAnalyzer::
+createManaged2dHistogram(Name name, Name title,
+                         Index nx, double xmin, double xmax,
+                         Index ny, double ymin, double ymax) {
+  TH1* ph = createManagedHistogram(name, title, nx, xmin, xmax, ny, ymin, ymax);
+  TH2* ph2 = dynamic_cast<TH2*>(ph);
+  return ph2;
 }
 
 //**********************************************************************

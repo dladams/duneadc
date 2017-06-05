@@ -96,6 +96,8 @@ public:
   // and # channels.
   TCanvas* newCanvas(Name splot, Name canName) const;
 
+  bool fixped = true;
+
 private:
 
   Name   m_sampleName;

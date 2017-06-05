@@ -388,7 +388,7 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     AdcCalibrationTree act(datasetCalib());
     Index ient = 0;
     const AdcChannelCalibration* pcal = act.find(prdr->chip(), icha, ient);
-    pasa = new AdcSampleAnalyzer(std::move(prdr), pcal);
+    pasa = new AdcSampleAnalyzer(std::move(prdr), pcal, fixped);
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc != nullptr ) {
       // Create array of voltage responses.

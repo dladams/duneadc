@@ -107,7 +107,8 @@ int AdcCalibrationTree::insert() {
 
 //**********************************************************************
 
-const AdcTreeChannelCalibration* AdcCalibrationTree::find(Index ient) const {
+const AdcTreeChannelCalibration* AdcCalibrationTree::
+find(Index ient) const {
   if ( status() ) return nullptr;
   if ( ient >= m_ptree->GetEntries() ) return nullptr;
   m_ptree->GetEntry(ient);
@@ -123,7 +124,8 @@ const AdcTreeChannelCalibration* AdcCalibrationTree::find(Index ient) const {
 
 //**********************************************************************
 
-const AdcTreeChannelCalibration* AdcCalibrationTree::find(AdcChannelId aid, Index& ient) const {
+const AdcTreeChannelCalibration* AdcCalibrationTree::
+find(AdcChannelId aid, Index& ient) const {
   return find(aid.chip, aid.chan, ient);
 }
 
@@ -153,6 +155,42 @@ find(Index chip, Index chan, AdcTime time, Index& ient) const {
          pcal->time() == time ) return pcal;
   }
   return find(ient);
+}
+
+//**********************************************************************
+
+AdcTreeChannelCalibration AdcCalibrationTree::
+get(Index ient) const {
+  const AdcTreeChannelCalibration* pcal = find(ient);
+  if ( pcal == nullptr ) return std::move(AdcTreeChannelCalibration());
+  return std::move(AdcTreeChannelCalibration(*pcal)) ;
+}
+
+//**********************************************************************
+
+AdcTreeChannelCalibration AdcCalibrationTree::
+get(AdcChannelId aid, Index& ient) const {
+  const AdcTreeChannelCalibration* pcal = find(aid, ient);
+  if ( pcal == nullptr ) return std::move(AdcTreeChannelCalibration());
+  return std::move(AdcTreeChannelCalibration(*pcal)) ;
+}
+
+//**********************************************************************
+
+AdcTreeChannelCalibration AdcCalibrationTree::
+get(Index chip, Index chan, Index& ient) const {
+  const AdcTreeChannelCalibration* pcal = find(chip, chan, ient);
+  if ( pcal == nullptr ) return std::move(AdcTreeChannelCalibration());
+  return std::move(AdcTreeChannelCalibration(*pcal)) ;
+}
+
+//**********************************************************************
+
+AdcTreeChannelCalibration AdcCalibrationTree::
+get(Index chip, Index chan, AdcTime time, Index& ient) const {
+  const AdcTreeChannelCalibration* pcal = find(chip, chan, time, ient);
+  if ( pcal == nullptr ) return std::move(AdcTreeChannelCalibration());
+  return std::move(AdcTreeChannelCalibration(*pcal)) ;
 }
 
 //**********************************************************************

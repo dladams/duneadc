@@ -65,7 +65,7 @@ public:
   TH1* phsx = nullptr;  // ADC expanded standard deviation (so pull <5)
   TH1* phsg = nullptr;  // Mean ADC standard deviation for classic non-stuck codes
   TH1* phsb = nullptr;  // Mean ADC standard deviation for classic stuck codes
-  TH1* phdn = nullptr;  // Mean ADC nominal RMS distribution
+  TH1* phns = nullptr;  // Mean ADC nominal calibration RMS distribution
   TH1* phdr = nullptr;  // Mean ADC fitted RMS distribution
   TH1* phds = nullptr;  // Mean ADC fitted sigma distribution for ADC > 64, classic non stuck
   TH1* phdsb = nullptr; // Mean ADC fitted sigma distribution for ADC > 64, classic stuck

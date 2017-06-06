@@ -49,9 +49,17 @@ public:
 
   // Find a calibration by ID. Search starts at ient and continues to the
   // end of the tree. The index ient is entry number of the returned calibration.
+  // WARNING: The pointer may point to a different calibration after the next call to find(...)
+  //          and the pointer becomes invalid (crash) when this object is deleted.
   const AdcTreeChannelCalibration* find(AdcChannelId id, Index& ient) const;
   const AdcTreeChannelCalibration* find(Index chip, Index chan, Index& ient) const;
   const AdcTreeChannelCalibration* find(Index chip, Index chan, AdcTime time, Index& ient) const;
+
+  // Same as find(...) but return an always-valid copy managed by the caller.
+  AdcTreeChannelCalibration get(Index ient) const;
+  AdcTreeChannelCalibration get(AdcChannelId id, Index& ient) const;
+  AdcTreeChannelCalibration get(Index chip, Index chan, Index& ient) const;
+  AdcTreeChannelCalibration get(Index chip, Index chan, AdcTime time, Index& ient) const;
 
   // Accessors.
   int status() const { return m_status; }

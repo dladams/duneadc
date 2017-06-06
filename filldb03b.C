@@ -55,12 +55,18 @@ void filldb03b(Index itim1=0, Index ntim=18, Index chan1=0, Index nchan =16) {
     cout << "*************  " << dschip << "  *****************" << endl;
     TDatime dt1;
     dt1.Print();
-    AdcChipAnalyzer chipper(dschip, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
-    bool save = true;
-    chipper.draw("rawv", save);
-    chipper.draw("diff", save);
-    chipper.draw("difn", save);
-    chipper.draw("perf", save);
+      AdcChipAnalyzer chipper(dschip, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
+      bool save = true;
+      chipper.draw("rawv", save);
+      chipper.draw("diff", save);
+      chipper.draw("difn", save);
+      chipper.draw("perf", save);
+    //try {
+    //} catch(...) {
+    //  cout << myname << "Exception raised..." << endl;
+    //  gSystem->StackTrace();
+    //  return 1;
+    //}
     TDatime dt2;
     dt2.Print();
     cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;

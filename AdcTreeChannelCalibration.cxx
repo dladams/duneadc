@@ -12,6 +12,8 @@ using CalibMap = std::map<AdcChannelId, const AdcTreeChannelCalibration*>;
 using CalibMapMap = std::map<Name, CalibMap>;
 
 //**********************************************************************
+// Subclass methods.
+//**********************************************************************
 
 AdcTreeChannelCalibrationData::
 AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
@@ -29,6 +31,8 @@ AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
                               Float again, Float aoffset)
 : chip(achip), chan(achan), time(atime), gain(again), offset(aoffset) { }
 
+//**********************************************************************
+// Static class methods.
 //**********************************************************************
 
 const AdcTreeChannelCalibration*
@@ -74,6 +78,8 @@ AdcTreeChannelCalibration::find(std::string dataset, ShortIndex chip, ShortIndex
 }
 
 //**********************************************************************
+// Class ctors, copy and dtor.
+//**********************************************************************
 
 AdcTreeChannelCalibration::AdcTreeChannelCalibration() { }
 
@@ -94,9 +100,31 @@ AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime,
 
 //**********************************************************************
 
-AdcTreeChannelCalibration::AdcTreeChannelCalibration(const AdcTreeChannelCalibrationData& data)
+AdcTreeChannelCalibration::
+AdcTreeChannelCalibration(const AdcTreeChannelCalibrationData& data)
 : m_data(data) { }
 
+//**********************************************************************
+
+AdcTreeChannelCalibration::
+AdcTreeChannelCalibration(const AdcTreeChannelCalibration& cal)
+: AdcTreeChannelCalibration(cal.data()) {
+  m_name = cal.name();
+}
+
+//**********************************************************************
+
+AdcTreeChannelCalibration& AdcTreeChannelCalibration::
+operator=(const AdcTreeChannelCalibration& cal) {
+  if ( &cal != this ) {
+    m_data = cal.data();
+    m_name = cal.name();
+  }
+  return *this;
+}
+
+//**********************************************************************
+// Other class methods.
 //**********************************************************************
 
 void AdcTreeChannelCalibration::setName(Name cname) {

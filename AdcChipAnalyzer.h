@@ -11,6 +11,7 @@
 #include "AdcSampleReader.h"
 
 class AdcSampleAnalyzer;
+class AdcChannelCalibration;
 class TH1;
 class TCanvas;
 
@@ -112,7 +113,9 @@ private:
   bool   m_dropTails;
   bool   m_savePerf;
   bool   m_clean;
+  std::vector<bool> m_haveAsa;
   std::vector<AdcSampleAnalyzer*> m_asas;
+  std::vector<AdcChannelCalibration*> m_pcals;
   std::vector<Index> m_chans;
   TH1Vector m_hists;
   TH1Vector m_rawHists;

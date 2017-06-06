@@ -47,6 +47,7 @@ void AdcChipAnalyzer::help(Name prefix) {
   cout << prefix << "    fdr - Linear-fit resolution distribution." << endl;
   cout << prefix << "    fds - Ultimate resolution distribution." << endl;
   cout << prefix << "   fdsb - Ultimate resolution distribution for bad channels." << endl;
+  cout << prefix << "   fnds - RMS distribution for the input calibration." << endl;
   cout << prefix << "   veff - Efficiency (good fraction) vs. input voltage." << endl;
   cout << prefix << "   perf - Efficiency, resolution and tail fraction vs. input voltage." << endl;
   cout << prefix << " sumfdr - Linear-fit resolution distribution summed over channels." << endl;
@@ -111,6 +112,8 @@ AdcChipAnalyzer::~AdcChipAnalyzer() {
   m_rawHists.clear();
   for ( TH1* ph : m_vinHists ) delete ph;
   m_vinHists.clear();
+  for ( const AdcChannelCalibration* pcal : m_pcals ) delete pcal;
+  m_pcals.clear();
 }
 
 //**********************************************************************
@@ -292,6 +295,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     else if ( splot == "fmea" ) { ph = asa.phm; gridy = true; }
     else if ( splot == "fdr"  ) { ph = asa.phdr; }
     else if ( splot == "fds"  ) { ph = asa.phds; }
+    else if ( splot == "fnds" ) { ph = asa.phns; }
     else if ( splot == "fdsb" ) { ph = asa.phdsb; }
     else if ( splot == "veff" ) { ph = asa.phveff; ppad->SetGridx(); gridx = true; gridy = true; }
     else if ( splot == "perf" ) {
@@ -388,25 +392,29 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
 
 AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
   const string myname = "AdcChipAnalyzer::sampleAnalyzer: ";
+  if ( m_haveAsa.size() < icha+1 ) m_haveAsa.resize(icha+1, false);
   if ( m_asas.size() < icha+1 ) m_asas.resize(icha+1, nullptr);
   if ( m_rawHists.size() < icha+1 ) m_rawHists.resize(icha+1, nullptr);
   if ( m_vinHists.size() < icha+1 ) m_vinHists.resize(icha+1, nullptr);
   AdcSampleAnalyzer*& pasa = m_asas[icha];
-  if ( pasa == nullptr ) {
+  if ( ! m_haveAsa[icha] ) {
+    m_haveAsa[icha] = true;
     cout << myname << "Reading data for channel " << icha << endl;
     AdcSampleFinder asf;
     AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(sampleName(), icha);
-    const AdcChannelCalibration* pcal = nullptr;
+    AdcChannelCalibration* pcal = nullptr;
     if ( datasetCalib().size() ) {
       AdcCalibrationTree act(datasetCalib());
       Index ient = 0;
-      const AdcChannelCalibration* pcal = act.find(prdr->chip(), icha, ient);
-      if ( pcal == nullptr ) {
+      const AdcTreeChannelCalibration* pcaltmp = act.find(prdr->chip(), icha, ient);
+      if ( pcaltmp == nullptr ) {
         cout << myname << "WARNING: Unable to find calibration " << datasetCalib()
              << " for channel " << icha << ". Skipping channel." << endl;
         return nullptr;
       }
+      pcal = new AdcTreeChannelCalibration(*pcaltmp);
     }
+    m_pcals.push_back(pcal);    // Record this for deletion in dtor.
     pasa = new AdcSampleAnalyzer(std::move(prdr), pcal, fixped);
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc != nullptr ) {
@@ -473,7 +481,7 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
            << info.fMemVirtual/1000000.0 << " GB" << endl;
     }
   }
-  if ( pasa->phc == nullptr ) {
+  if ( pasa == nullptr || pasa->phc == nullptr ) {
     cout << myname << "ERROR: ADC analysis failed for channel " << icha << "." << endl;
   }
   return pasa;

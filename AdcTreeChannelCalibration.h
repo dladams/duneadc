@@ -60,6 +60,11 @@ public:
                             const FloatVector& acalRmss,
                             const ShortIndexVector& acalCounts);
   AdcTreeChannelCalibration(const AdcTreeChannelCalibrationData& dat);
+  AdcTreeChannelCalibration(const AdcTreeChannelCalibration& cal);
+  AdcTreeChannelCalibration(AdcTreeChannelCalibration&& cal) = default;
+
+  // Copy.
+  AdcTreeChannelCalibration& operator=(const AdcTreeChannelCalibration& cal);
 
   // Set the calibration name.
   void setName(std::string cname);
@@ -85,6 +90,7 @@ public:
 
   // Full calibration data (tree entry).
   AdcTreeChannelCalibrationData& data() { return m_data; }
+  const AdcTreeChannelCalibrationData& data() const { return m_data; }
 
 public:
 

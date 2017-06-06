@@ -58,8 +58,14 @@ void AdcChipAnalyzer::help(Name prefix) {
 //**********************************************************************
 
 AdcChipAnalyzer::
-AdcChipAnalyzer(string a_sampleName, Index a_icha1, Index a_ncha, string a_datasetCalib, bool a_saveCalib,
-                float a_vmin, float a_vmax, Index a_nv, double a_vRmsMax, bool a_dropTails, bool a_savePerf,
+AdcChipAnalyzer(string a_sampleName,
+                Index a_icha1, Index a_ncha,
+                string a_datasetCalib,
+                bool a_saveCalib,
+                float a_vmin, float a_vmax, Index a_nv,
+                double a_vRmsMax,
+                bool a_dropTails,
+                bool a_savePerf,
                 int cleanFlag)
 : m_sampleName(a_sampleName),
   m_icha1(0),
@@ -137,8 +143,8 @@ int AdcChipAnalyzer::setChannels(Index a_icha1, Index a_ncha, int cleanFlag) {
   // Fetch the analyzer for each channel.
   for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
     Index icha = channel(kcha);
-    AdcSampleAnalyzer& asa = sampleAnalyzer(icha);
-    if ( asa.phc == nullptr ) {
+    AdcSampleAnalyzer* pasa = sampleAnalyzer(icha);
+    if ( pasa == nullptr || pasa->phc == nullptr ) {
       cout << myname << "ERROR: Unable to analyze channel " << icha << endl;
       return 1;
     };
@@ -230,7 +236,12 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
   for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
     Index icha = channel(kcha);
     if ( nChannel() ) ppad = pcan->cd(kcha + 1 );
-    AdcSampleAnalyzer& asa = sampleAnalyzer(icha);
+    AdcSampleAnalyzer* pasa = sampleAnalyzer(icha);
+    if ( pasa == nullptr ) {
+      cout << myname << "WARNING: Skipping channel " << icha << endl;
+      continue;
+    }
+    AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc == nullptr ) {
       cout << myname << "ERROR: Unable to analyze channel " << icha << endl;
       return 1;
@@ -375,7 +386,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
 
 //**********************************************************************
 
-AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
+AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
   const string myname = "AdcChipAnalyzer::sampleAnalyzer: ";
   if ( m_asas.size() < icha+1 ) m_asas.resize(icha+1, nullptr);
   if ( m_rawHists.size() < icha+1 ) m_rawHists.resize(icha+1, nullptr);
@@ -385,9 +396,17 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     cout << myname << "Reading data for channel " << icha << endl;
     AdcSampleFinder asf;
     AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(sampleName(), icha);
-    AdcCalibrationTree act(datasetCalib());
-    Index ient = 0;
-    const AdcChannelCalibration* pcal = act.find(prdr->chip(), icha, ient);
+    const AdcChannelCalibration* pcal = nullptr;
+    if ( datasetCalib().size() ) {
+      AdcCalibrationTree act(datasetCalib());
+      Index ient = 0;
+      const AdcChannelCalibration* pcal = act.find(prdr->chip(), icha, ient);
+      if ( pcal == nullptr ) {
+        cout << myname << "WARNING: Unable to find calibration " << datasetCalib()
+             << " for channel " << icha << ". Skipping channel." << endl;
+        return nullptr;
+      }
+    }
     pasa = new AdcSampleAnalyzer(std::move(prdr), pcal, fixped);
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc != nullptr ) {
@@ -457,7 +476,7 @@ AdcSampleAnalyzer& AdcChipAnalyzer::sampleAnalyzer(Index icha) {
   if ( pasa->phc == nullptr ) {
     cout << myname << "ERROR: ADC analysis failed for channel " << icha << "." << endl;
   }
-  return *pasa;
+  return pasa;
 }
 
 //**********************************************************************

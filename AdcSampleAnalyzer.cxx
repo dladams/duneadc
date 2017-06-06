@@ -73,10 +73,17 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
     adcUnderflow = 0;
   }
   cout << myname << "Processing sample " << rdr.sample();
-  cout << ": chip " << chip() << ", channel " << channel()
-       << ", time " << time()
+  cout << " chip " << chip() << " channel " << channel() << endl;
+  cout << myname << "Sample time: " << time()
        << " (" << TDatime(time()).AsString() << ")"
        << endl;
+  if ( pcalNominal == nullptr ) {
+   cout << myname << "No input calibration." << endl;
+  } else {
+    cout << myname << "Input calibration is " << pcalNominal->name() << endl;
+    cout << myname << "Calibration pedestal correction is "
+         << (fixped ? "enabled" : "disabled") << "." << endl;
+  }
   nsample = rdr.nsample();
   localCalib().data().chip = chip();
   localCalib().data().chan = channel();
@@ -154,6 +161,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   } else {
     cout << myname << "Tail is deviation > " << tailWindow << " mV" << endl;
   }
+cout << 0 << endl;
   for ( Index iadc=0; iadc<nadc(); ++iadc ) {
     TH1* ph = hdiffcalib(iadc);
     if ( ph == nullptr ) continue;
@@ -170,6 +178,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
       if ( tailFracUsesPull ) tailfrac = hp.tailFrac(pullthresh);
       else tailfrac = hp.fracOutsideMean(tailWindow);
     }
+cout << 200 << endl;
     double xmLinear = fitGain*iadc + fitOffset;
     localCalib().data().calCounts[iadc] = count;
     localCalib().data().calMeans[iadc] = xm + xmLinear;
@@ -186,19 +195,30 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
     phsg->SetBinContent(iadc+1, xsg);
     phsb->SetBinContent(iadc+1, xsb);
     phr->SetBinContent(iadc+1, xr);
+cout << 500 << endl;
     if ( iadc > adcUnderflow && iadc < adcOverflow ) {
       bool bad = !fitusestuck && isStuck;
       phdr->Fill(xr);
       if ( bad ) {
+cout << 501 << endl;
         phdsb->Fill(xs);
+cout << 502 << endl;
       } else {
+cout << 503 << endl;
         phds->Fill(xs);
+cout << 504 << endl;
       }
     }
+cout << 505 << endl;
     if ( iadc > 64 && !isStuck ) {
+cout << 507 << endl;
+cout << phdn << endl;
       phdn->Fill(xr);
+cout << 508 << endl;
     }
+cout << 509 << endl;
   }
+cout << 700 << endl;
   // Fill the calibration difference histograms.
   // Find the nominal calibration.
   if ( pcalNominal != nullptr ) {
@@ -232,6 +252,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   } else {
     cout << myname << "Nominal calibration is not provided." << endl;
   }
+cout << 900 << endl;
   // Report memory at end of processing.
   if ( true ) {
     ProcInfo_t info;

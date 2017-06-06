@@ -61,7 +61,7 @@ public:
   int setChannels(Index icha1, Index ncha =1, int cleanFlag = 2);
 
   // Return the the analyzer for channel icha). Created if absent.
-  AdcSampleAnalyzer& sampleAnalyzer(Index icha);
+  AdcSampleAnalyzer* sampleAnalyzer(Index icha);
 
   // Draw a selected set of plots.
   int drawall();

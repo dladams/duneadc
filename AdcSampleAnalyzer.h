@@ -88,12 +88,18 @@ public:
   double fitGain;
   double fitOffset;
 
-  // Nominal calibration.
-  // The caller may provide this and may indicate that its offset should be adjusted
-  // to agree with the data near bin 300.
-  // If it is not provided, the calibration derived from the data is used.
+  // Input and nominal calibration.
+  // The nominal calibration is used to evaluate calibration difference histograms and
+  // performance as a function of input voltage.
+  // The nominal calibration is eitehr the same as the input or may be a pedestal
+  // correction to the input.
+  // In the latter case, the correction is done at Vin = pedCorVin using bins within
+  // +/-pedCorHalfWindow of the corresponding ADC bin.
+  // The input calibration is owned by the caller and should not be deleted before all
+  // evaluation of calib diffs and performance have been completed.
+  // The pedestal-corrected calibration is deleted when this object is deleted.
+  const AdcChannelCalibration* pcalInput = nullptr;
   const AdcChannelCalibration* pcalNominal = nullptr;
-  bool manageCalNominal =false;
 
   // Perfomance results. All in the same input voltage bins.
   AdcVoltageResponseVector voltageResponses;   // # of samples in each ADC bin

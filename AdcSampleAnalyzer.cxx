@@ -44,7 +44,7 @@ bool sticky(Index iadc) {
 
 AdcSampleAnalyzer::
 AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal, bool fixped)
-: pcalNominal(pcal),
+: pcalInput(pcal), pcalNominal(pcal),
   pfit(nullptr), fitGain(0.0), fitOffset(0.0),
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
@@ -217,13 +217,14 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
          << " (" << TDatime(pcalNominal->time()).AsString() << ")"
          << endl;
     if ( fixped ) {
-      cout << myname << "Applying pedestal correction to calibration." << endl;
       double vped = pedCorVin;
       double gain = pcalNominal->linearGain();
       double offset = pcalNominal->linearOffset();
       Index iadcCenter = int((vped - offset)/gain + 0.5);
       Index iadc1 = iadcCenter - pedCorHalfWindow;
       Index iadc2 = iadcCenter + pedCorHalfWindow + 1;
+      cout << myname << "Applying pedestal correction to calibration "
+           << "(pedestal Vin " << vped << " mV ==> " << " <= iadc < " << iadc2 << ")" << endl;
       pcalNominal =
         new AdcPedestalChannelCalibration(*pcalNominal, iadc1, iadc2, localCalib(), 1.0);
     }
@@ -262,7 +263,7 @@ AdcSampleAnalyzer(AdcSampleReaderPtr preader, const AdcChannelCalibration* pcal,
 
 AdcSampleAnalyzer::
 AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name a_dataset)
-: pcalNominal(nullptr),
+: pcalInput(nullptr), pcalNominal(nullptr),
   m_dataset(a_dataset), m_sampleName(a_sampleName), m_refCalib(a_calib),
   m_chip(calib().chip()),
   m_channel(calib().channel()),
@@ -322,7 +323,7 @@ AdcSampleAnalyzer::~AdcSampleAnalyzer() {
     for ( TLine* pline : g100bars ) delete pline;
     g100bars.clear();
   }
-  if ( manageCalNominal ) {
+  if ( pcalNominal != pcalInput ) {
     delete pcalNominal;
     pcalNominal = nullptr;
   }
@@ -894,7 +895,7 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     phax->SetTitle(htitl.c_str());
   }
   string ylab = phax->GetYaxis()->GetTitle();
-  ylab += ", V_{in} resolution [mV]";
+  ylab += ", uncertainty [mV], deviation [mV]";
   phax->GetYaxis()->SetTitle(ylab.c_str());
   phax->SetMaximum(ymax);
   phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend

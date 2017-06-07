@@ -69,7 +69,6 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   adcUnderflow = 64;  // This and below are considered underflow
   if ( sampleName().find("ltc") != string::npos ) {
     fitusestuck = true;
-    if ( nominalGain == 0.0 ) nominalGain = 0.1151;
     adcUnderflow = 0;
   }
   cout << myname << "Processing sample " << rdr.sample();
@@ -219,8 +218,14 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
          << endl;
     if ( fixped ) {
       cout << myname << "Applying pedestal correction to calibration." << endl;
+      double vped = pedCorVin;
+      double gain = pcalNominal->linearGain();
+      double offset = pcalNominal->linearOffset();
+      Index iadcCenter = int((vped - offset)/gain + 0.5);
+      Index iadc1 = iadcCenter - pedCorHalfWindow;
+      Index iadc2 = iadcCenter + pedCorHalfWindow + 1;
       pcalNominal =
-        new AdcPedestalChannelCalibration(*pcalNominal, 290, 311, localCalib(), 1.0);
+        new AdcPedestalChannelCalibration(*pcalNominal, iadc1, iadc2, localCalib(), 1.0);
     }
     for ( Index iadc=0; iadc<nadc(); ++iadc ) {
       double evinCalib = pcalNominal == nullptr ? 0.0 : nominalCalibrationVin(iadc);
@@ -600,11 +605,39 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   // Create mean RMS histogram.
   if ( readData ) {
     sshnam.str("");
+    sshnam << hnambase << "hvdev" << rmsmax;
+    shnam = sshnam.str();
+    sstitl.str("");
+    sstitl << titlePrefix;
+    sstitl << " mean deviation for RMS < " << rmsmax << " mV";
+    sstitl << ";V_{in} [mV]";
+    sstitl << ";RMS(V_{in}) [mV]";
+    stitl = sstitl.str();
+    phvdev = createManagedHistogram(shnam, stitl, nvr, v1, v2);
+    phvdev->SetStats(0);
+    phvdev->SetMinimum(-rmsmax);
+    phvdev->SetMaximum(rmsmax);
+    phvdev->SetLineWidth(2);
+    sshnam.str("");
+    sshnam << hnambase << "hvdev" << rmsmax;
+    shnam = sshnam.str();
+    sstitl.str("");
+    sstitl << titlePrefix;
+    sstitl << " |mean deviation| for RMS < " << rmsmax << " mV";
+    sstitl << ";V_{in} [mV]";
+    sstitl << ";RMS(V_{in}) [mV]";
+    stitl = sstitl.str();
+    phvadv = createManagedHistogram(shnam, stitl, nvr, v1, v2);
+    phvadv->SetStats(0);
+    phvadv->SetMinimum(0.0);
+    phvadv->SetMaximum(rmsmax);
+    phvadv->SetLineWidth(2);
+    sshnam.str("");
     sshnam << hnambase << "hvrms" << rmsmax;
     shnam = sshnam.str();
     sstitl.str("");
     sstitl << titlePrefix;
-    sstitl << " mean RMS for RMS < " << rmsmax << " mV";
+    sstitl << " deviation RMS for RMS < " << rmsmax << " mV";
     sstitl << ";V_{in} [mV]";
     sstitl << ";RMS(V_{in}) [mV]";
     stitl = sstitl.str();
@@ -652,7 +685,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
     Index iadc1 = avr.bin0;
     Index iadc2 = iadc1 + avr.fractions.size();
     double countSum = 0.0;
-    double rmsDev = 0.0;    // RMS(Vmeas - Vtrue)
+    double devMean = 0.0;   // mean(Vmeas - Vtrue)
+    double devRms = 0.0;    // RMS(Vmeas - Vtrue)
     double tailFrac = 0.0;
     // Histogram used to get RMS and RMS extent
     sshnam.str("");
@@ -717,12 +751,14 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
         ++ictvin;
       }
       if ( effSum > 0.0 ) {
-        double devMean = devSum/effSum;
+        devMean = devSum/effSum;
         double dev2Mean = dev2Sum/effSum;
-        rmsDev = sqrt(dev2Mean);        // RMS deviation
+        devRms = sqrt(dev2Mean);        // RMS deviation
         tailFrac = tailFracSum/effSum;
       }
-      phvrms->SetBinContent(ivr+1, rmsDev);
+      phvdev->SetBinContent(ivr+1, devMean);
+      phvadv->SetBinContent(ivr+1, fabs(devMean));
+      phvrms->SetBinContent(ivr+1, devRms);
     // Evaluate efficiency, resolution and tail fraction using the calibration.
     } else {
       // Loop over ADC bins in this voltage bin.
@@ -765,7 +801,8 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
     }
     vperf.vinCounts[ivr] = countSum;
     vperf.vinEffs[ivr] = eff;
-    vperf.vinDevRmss[ivr] = rmsDev;
+    vperf.vinDevMeans[ivr] = devMean;
+    vperf.vinDevRmss[ivr] = devRms;
     double deff = vperf.deff(ivr);
     phveff->SetBinContent(ivr+1, eff);
     phveff->SetBinError(ivr+1, deff);
@@ -876,24 +913,60 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   // Add tail, eff again and rms.
   phts->DrawCopy("same");
   phax->DrawCopy("hist same");
-  for ( TLine* pline : g100bars ) pline->Draw();
-  for ( TLine* pline : g80bars ) pline->Draw();
+  int lcol = 28;
+  for ( TLine* pline : g100bars ) {
+    pline->SetLineColor(lcol);
+    pline->Draw();
+  }
+  for ( TLine* pline : g80bars ) {
+    pline->SetLineColor(lcol);
+    pline->Draw();
+  }
   if ( phvrms != nullptr ) {
     phvrms->SetMarkerStyle(34);
     phvrms->DrawCopy("p same");
   }
-  TLegend* pleg = new TLegend(0.3, 0.73, 0.55, 0.87);
+  if ( phvadv != nullptr ) {
+    phvadv->SetMarkerStyle(8);
+    phvadv->DrawCopy("p same");
+  }
+  TLegend* pleg = new TLegend(0.3, 0.68, 0.55, 0.87);
   pleg->SetBorderSize(0);
   pleg->SetFillStyle(0);
   pleg->AddEntry(phax, "Efficiency", "l");
   pleg->AddEntry(g80bars[0], "Uncertainty (80%)", "l");
-  if ( phvrms != nullptr ) {
-    pleg->AddEntry(phvrms, "RMS deviation", "p");
-  }
+  if ( phvrms != nullptr ) pleg->AddEntry(phvrms, "Deviation RMS", "p");
+  if ( phvadv != nullptr ) pleg->AddEntry(phvadv, "Deviation |mean|", "p");
   pleg->AddEntry(phts, "Tail fraction", "f");
   pleg->Draw();
   TLine* pline = new TLine(x1, 0.0, x2, 0.0);
   pline->Draw();
+  bool decorate = true;
+  if ( decorate ) {
+    TLine* pl001 = new TLine(300, 0, 1330, 1.03);
+    pl001->SetLineStyle(2);
+    pl001->Draw();
+    TLatex* plab001 = new TLatex(0.78, 0.91, "0.1%");
+    plab001->SetNDC();
+    plab001->SetTextFont(42);
+    plab001->SetTextSize(0.03);
+    plab001->Draw();
+    TLatex* plab450 = new TLatex(0.91, 0.865, "450 e");
+    plab450->SetNDC();
+    plab450->SetTextFont(42);
+    plab450->SetTextSize(0.03);
+    plab450->Draw();
+    TLatex* plab000 = new TLatex(0.31, 0.020, "0 e");
+    plab000->SetNDC();
+    plab000->SetTextFont(42);
+    plab000->SetTextSize(0.03);
+    plab000->Draw();
+    TLatex* plab400 = new TLatex(0.70, 0.020, "400k e");
+    plab400->SetNDC();
+    plab400->SetTextFont(42);
+    plab400->SetTextSize(0.03);
+    plab400->Draw();
+  }
   return 0;
 }
 

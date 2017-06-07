@@ -119,7 +119,7 @@ int AdcBinarySampleReader::read() const {
   }
   // Loop over block reads.
   SampleIndex l1 = 1;
-  const int nsambuf = l1 << 19;
+  const int nsambuf = l1 << 22;
   AdcCode buff[nsambuf];
   cout << myname << "Buffer size: " << setw(10) << nsambuf << endl;
   SampleIndex ksamNext = 0; // next buffer position in the stream

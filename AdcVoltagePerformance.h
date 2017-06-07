@@ -63,13 +63,8 @@ public:
   Count count(Index iv) const;
   Float eff(Index iv) const;       // Efficiency fraction good
   Float deff(Index iv) const;      // Uncertainty on efficiency
+  Float devMean(Index iv) const;   // Deviation (measured - true) mean
   Float devRms(Index iv) const;    // Deviation (measured - true) RMS
-/*
-  Float resMean(Index iv) const;   // Mean good Vres
-  Float resRms(Index iv) const;    // RMS good Vres
-  Float resRmslo(Index iv) const;  // RMS good Vres < mean
-  Float resRmshi(Index iv) const;  // RMS good Vres > mean
-*/
 
 public:
 
@@ -82,13 +77,8 @@ public:
   Float vmax;                  // Max voltage
   CountVector vinCounts;
   FloatVector vinEffs;
+  FloatVector vinDevMeans;
   FloatVector vinDevRmss;
-/*
-  FloatVector vinResMeans;
-  FloatVector vinResRmss;
-  FloatVector vinResRmslos;
-  FloatVector vinResRmshis;
-*/
 
 };
 

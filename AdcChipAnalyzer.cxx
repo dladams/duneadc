@@ -49,6 +49,8 @@ void AdcChipAnalyzer::help(Name prefix) {
   cout << prefix << "   fdsb - Ultimate resolution distribution for bad channels." << endl;
   cout << prefix << "   fnds - RMS distribution for the input calibration." << endl;
   cout << prefix << "   veff - Efficiency (good fraction) vs. input voltage." << endl;
+  cout << prefix << "   vdev - Mean (measured-true) vs. input voltage." << endl;
+  cout << prefix << "   vrms - RMS(measured - true) vs. input voltage." << endl;
   cout << prefix << "   perf - Efficiency, resolution and tail fraction vs. input voltage." << endl;
   cout << prefix << " sumfdr - Linear-fit resolution distribution summed over channels." << endl;
   cout << prefix << " sumfds - Ultimate resolution distribution summed over channels." << endl;
@@ -298,6 +300,8 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     else if ( splot == "fnds" ) { ph = asa.phns; }
     else if ( splot == "fdsb" ) { ph = asa.phdsb; }
     else if ( splot == "veff" ) { ph = asa.phveff; ppad->SetGridx(); gridx = true; gridy = true; }
+    else if ( splot == "vrms" ) { ph = asa.phvrms; ppad->SetGridx(); gridx = true; gridy = true; }
+    else if ( splot == "vdev" ) { ph = asa.phvdev; ppad->SetGridx(); gridx = true; gridy = true; }
     else if ( splot == "perf" ) {
       ppad->SetGridx();
       asa.drawperf();

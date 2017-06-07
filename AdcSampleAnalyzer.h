@@ -45,12 +45,25 @@ public:
 
 public:
 
+  // Configuration parameters.
   unsigned int adcUnderflow = 0;
   unsigned int adcOverflow = 4095;
   unsigned int minCountForStats = 2;
   bool tailFracUsesPull = false;
-  TH2* phf = nullptr;   // Vin vs ADC without under, over and stuck bits
-  TH2* phc = nullptr;   // Vin vs ADC
+  Index iadcfitmin = 0;        // Min adc code for linear reponse fit
+  Index iadcfitmax = 0;        // Max adc code for linear reponse fit
+  double vinfitmin = 0.0;      // Min Vin for linear reponse fit
+  double vinfitmax = 0.0;      // Max Vin for linear reponse fit
+  bool fitusestuck = false;    // If true, exclude classic stuck codes (LSB6=0,63) in linear fit
+  double pullthresh = 5.0;     // Threhold for identifying tails with pull
+  double tailWindow = 5.0;     // Threshold [mV] for identifying tails w/o pull.
+  double pedCorVin = 300.0;    // Input voltage at which pedestal correction is made.
+  Index pedCorHalfWindow = 20; // Pedestal correction evaluation range is +- this value.
+
+  // Output histograms.
+  // Except phvn, the following are all vs. ADC bin
+  TH2* phc = nullptr;   // Vin
+  TH2* phf = nullptr;   // Vin without under, over and stuck bits (used in linear fit)
   TH2* phd = nullptr;   // ADC diff from linear fit
   TH2* phdw = nullptr;  // ADC diff from linear fit with broader range and coarser binning
   TH2* phn = nullptr;   // ADC diff from nominal calibration
@@ -69,32 +82,31 @@ public:
   TH1* phdr = nullptr;  // Mean ADC fitted RMS distribution
   TH1* phds = nullptr;  // Mean ADC fitted sigma distribution for ADC > 64, classic non stuck
   TH1* phdsb = nullptr; // Mean ADC fitted sigma distribution for ADC > 64, classic stuck
+
+  // Linear response fit.
   TF1* pfit = nullptr;
-  Index iadcfitmin = 0;      // Min adc code for linear reponse fit
-  Index iadcfitmax = 0;      // Max adc code for linear reponse fit
-  double vinfitmin = 0.0;    // Min Vin for linear reponse fit
-  double vinfitmax = 0.0;    // Max Vin for linear reponse fit
-  bool fitusestuck = false;  // If true, classic stuck codes (LSB6=0,63) are excluded from linear response fit.
-  // Nominal calibration.
-  const AdcChannelCalibration* pcalNominal = nullptr;
-  bool manageCalNominal =false;
-  double nominalGain = 0.0;
-  double nominalOffset = 0.0;
-  // Linear fit.
   double fitGain;
   double fitOffset;
-  AdcVoltageResponseVector voltageResponses;
-  //std::vector<double> voltageEfficiencies;
-  AdcVoltagePerformanceVector vperfs;
-  TH1* phveff = nullptr;   // Efficiency vs Vin.
-  TH1* phvrms = nullptr;   // Mean RMS(Vin_cal - Vin_true) for good bins.
-  TH1* phvtail = nullptr;   // Tail fraction vs Vin.
-  TLineVector g80bars;
-  TLineVector g100bars;
+
+  // Nominal calibration.
+  // The caller may provide this and may indicate that its offset should be adjusted
+  // to agree with the data near bin 300.
+  // If it is not provided, the calibration derived from the data is used.
+  const AdcChannelCalibration* pcalNominal = nullptr;
+  bool manageCalNominal =false;
+
+  // Perfomance results. All in the same input voltage bins.
+  AdcVoltageResponseVector voltageResponses;   // # of samples in each ADC bin
+  AdcVoltagePerformanceVector vperfs;    // Efficiency and RMS deviation
+  TH1* phveff = nullptr;   // Efficiency (fraction of samples in good ADC bins) vs Vin.
+  TH1* phvdev = nullptr;   // Mean calibration deviation for good bins.
+  TH1* phvrms = nullptr;   // RMS of the calibration deviation for good bins.
+  TH1* phvadv = nullptr;   // Abs of the mean calibration deviation for good bins.
+  TH1* phvtail = nullptr;  // Tail fraction vs Vin.
+  TLineVector g80bars;     // (10,90)% range for the calibratin RMS
+  TLineVector g100bars;    // (0,100)% range for the calibration RMS
+
   // Threshold for pull fractions.
-  double pullthresh = 5.0;
-  // Threshold [mV] for tail window.
-  double tailWindow = 5.0;
   bool evaluateReadData =false;   // Flag indicating if data was read for performance evaluation.
 
   // Read in and process the data using calibration from pcal.
@@ -177,7 +189,8 @@ public:
   //   tail fraction = expected or actual fraction of samples with pull > 5.0
   // This adds an entry to vperfs.
   // If readData is true, the data is reread and used to calculate resolution and tail fraction
-  const AdcVoltagePerformance::FloatVector& evaluateVoltageEfficiencies(double rmsmax, bool readData, bool dropTails =false);
+  const AdcVoltagePerformance::FloatVector&
+  evaluateVoltageEfficiencies(double rmsmax, bool readData, bool dropTails =false);
 
   // Overlay efficiency, resolution and tail all vs. Vin.
   // Returns 0 for success.

@@ -74,9 +74,10 @@ int AdcBinRecord::findPeaks(SampleIndex a_minGap) {
   m_peaks.clear();
   SampleIndexVector peakSams;
   Index ipeak = 0;
-  for ( SampleIndex ksam=0; ksam<samples().size(); ++ksam ) {
-    bool last = ksam+1 == samples().size();
-    SampleIndex isam = samples()[ksam];
+  // Loop one past the lsat sample so we can record the last peak.
+  for ( SampleIndex ksam=0; ksam<=samples().size(); ++ksam ) {
+    bool last = ksam == samples().size();
+    SampleIndex isam = last ? 99999 : samples()[ksam];
     // If this is the end of a peak, record it.
     if ( peakSams.size() ) {
       bool bigGap = isam - peakSams.back() > minGap();

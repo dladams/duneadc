@@ -11,7 +11,7 @@ int test_AdcBinRecord() {
   const string myname = "test_AdcBinRecord: ";
   ErrorCount ec(myname + "ERROR: Test failed: ");
   cout << myname << "Creating recorder." << endl;
-  AdcBinRecord::AdcCode code = 1234;
+  AdcCode code = 1234;
   AdcBinRecord abr(code);
   ec.check(abr.code() == code, "abr.code() == code");
   ec.check(abr.samples().size() == 0, "abr.samples().size() == 0");
@@ -50,8 +50,8 @@ int test_AdcBinRecord() {
   ec.check(abr.peak(0).high == 15,        "abr.peak(0).high");
   ec.check(abr.peak(0).meanOffset == 2.0, "abr.peak(0).meanOffset");
   ec.check(abr.peak(0).truncMean == 13,   "abr.peak(0).truncMean");
-  ec.check(abr.peak(0).mean == 13.0;      "abr.peak(0).mean");
-  ec.check(abr.peak(0).width == 4;        "abr.peak(0).width");
+  ec.check(abr.peak(0).mean() == 13.0,    "abr.peak(0).mean()");
+  ec.check(abr.peak(0).width() == 4,      "abr.peak(0).width()");
   ec.check(abr.peak(1).size ==  4,        "abr.peak(1).size");
   ec.check(abr.peak(1).low  == 21,        "abr.peak(1).low");
   ec.check(abr.peak(1).high == 28,        "abr.peak(1).high");

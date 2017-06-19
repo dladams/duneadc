@@ -1,7 +1,12 @@
 int test_all() {
   vector<string> names = {
+    "AdcChannelId",
     "AdcCalibrationTree",
-    "AdcBinRecord" };
+    "AdcBinRecord",
+    "AdcChipAnalyzer",
+    "AdcLinearChannelCalibration",
+    "AdcPedestalChannelCalibration"
+  };
   string line = "=============================================================";
   for ( string name : names ) {
     cout << endl;

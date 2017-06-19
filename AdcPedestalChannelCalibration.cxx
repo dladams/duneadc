@@ -13,7 +13,7 @@ evaluatePedestal(const AdcChannelCalibration& cal,
   for ( Index iadc=iadc1; iadc<iadc2; ++iadc ) {
     if ( iadc >= cal.size() ) break;
     double rms = cal.calRms(iadc);
-    if ( rms > 0 && rms < rmsmax ) {
+    if ( rms >= 0 && rms < rmsmax ) {
       vsum += cal.calMean(iadc);
       ++nbin;
     }

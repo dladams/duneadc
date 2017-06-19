@@ -32,7 +32,7 @@ void checkCal(ErrorCount& ec, const AdcChannelCalibration& cal) {
   ec.check(cal.chip() == chip(), "Checking chip");
   ec.check(cal.time() == time(), "Checking time");
   cout << myname << "..Testing calibration." << endl;
-  ec.checkequal(cal.calMean(21),  52, "calMean(21)");
+  ec.checkequal(   cal.calMean(21),   52, "calMean(21)");
   ec.checkequal(  cal.calMean(121),  252, "calMean(121)");
   ec.checkequal( cal.calMean(1021), 2052, "calMean(1021)");
   ec.checkequal(cal.calMean(10021),    0, "calMean(10021)");

@@ -131,6 +131,12 @@ to the ctor. See the header for more information.
 ## Validation
 
 There are a few tests in duneadc but not near as many as I would like.
+
+To run all tests with default arguments:
+```
+root> .X test_all.C
+```
+
 To verify you can properly read some data files (and so they are installed) use:
 ```
 root> .L test_AdcSampleFinder.cxx+

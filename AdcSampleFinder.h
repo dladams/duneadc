@@ -19,8 +19,16 @@ public:
   using Name = std::string;
   using AdcSampleReaderPtr = std::unique_ptr<AdcSampleReader>;
 
+  // Directory where ADC data files are found.
+  // Non-blank value is used to set the value on the first call.
+  // If no value is provided on the first call, the default
+  // $HOME/data/dune/adc is used.
+  // After the first call, the argument is ignored.
+  static Name defaultTopdir(Name setValue ="");
+
   // Ctor specifying the location of the data files.
-  explicit AdcSampleFinder(Name topdir ="$HOME/data/dune/adc");
+  // If blank, defaultTopdir() is used.
+  explicit AdcSampleFinder(Name a_topdir ="");
 
   // Return the location of the data files.
   Name topdir() const  { return m_topdir; }

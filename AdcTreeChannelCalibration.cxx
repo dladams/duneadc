@@ -1,6 +1,7 @@
 // AdcTreeChannelCalibration.cxx
 
 #include "AdcTreeChannelCalibration.h"
+#include "AdcSampleFinder.h"
 #include "TFile.h"
 #include "TTree.h"
 #include <iostream>
@@ -47,8 +48,15 @@ AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
   Name fname = "calib_" + dataset + ".root";
   TFile* pfile = TFile::Open(fname.c_str());
   if ( pfile==nullptr || !pfile->IsOpen() ) {
-    cout << myname << "Unable to find file " << fname << endl;
-    return nullptr;
+    string dir = AdcSampleFinder::defaultTopdir() + "/calib";
+    string longfname = dir + "/" + fname;
+    delete pfile;
+    pfile = TFile::Open(longfname.c_str());
+    if ( pfile==nullptr || !pfile->IsOpen() ) {
+      cout << myname << "Unable to find file " << fname << endl;
+      cout << myname << "Please copy file to pwd or " << dir << endl;
+      return nullptr;
+    }
   }
   TTree* ptree = dynamic_cast<TTree*>(pfile->Get("adccalib"));
   if ( ptree==nullptr ) {

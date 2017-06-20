@@ -27,12 +27,32 @@ using AdcSampleReaderPtr = AdcSampleFinder::AdcSampleReaderPtr;
 
 //**********************************************************************
 
-AdcSampleFinder::AdcSampleFinder(Name topdir) {
+Name AdcSampleFinder::defaultTopdir(Name setValue) {
+  const string myname = "AdcSampleFinder::topdir: ";
+  static string mytopdirRaw = "$HOME/data/dune/adc";
+  static string mytopdir;
+  static bool firstCall = true;
+  if ( setValue.size() ) {
+    if ( firstCall ) mytopdirRaw = setValue;
+    else if ( setValue != mytopdirRaw && setValue != mytopdir ) {
+      cout << myname << " WARNING: New value ignored: " << setValue << endl;
+    }
+  }
+  if ( firstCall ) {
+    mytopdir = gSystem->ExpandPathName(mytopdirRaw.c_str());
+  }
+  firstCall = false;
+  return mytopdir;
+}
+
+//**********************************************************************
+
+AdcSampleFinder::AdcSampleFinder(Name a_topdir) {
   const string myname = "AdcSampleFinder::ctor: ";
-  const string deftopdir = "$HOME/data/dune/adc";
-  m_topdir = gSystem->ExpandPathName(deftopdir.c_str());
-  if ( topdir != deftopdir ) {
-    cout << myname << " WARNING: Location must be set to " << deftopdir << endl;
+  if ( a_topdir.size() ) {
+    m_topdir = gSystem->ExpandPathName(a_topdir.c_str());
+  } else {
+    m_topdir = defaultTopdir();
   }
 }
 

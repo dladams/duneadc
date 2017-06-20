@@ -10,14 +10,14 @@
   gROOT->ProcessLine(".L ErrorCount.cxx+");
   gROOT->ProcessLine(".L FileDirectory.cxx+");
   gROOT->ProcessLine(".L AdcChannelId.cxx+");
-  gROOT->ProcessLine(".L AdcTreeChannelCalibration.cxx+");
-  gROOT->ProcessLine(".L AdcCalibrationTree.cxx+");
   gROOT->ProcessLine(".L AdcSampleReader.cxx+");
   gROOT->ProcessLine(".L AdcBorderFinder.cxx+");
   gROOT->ProcessLine(".L AdcBorderExtremaFinder.cxx+");
   gROOT->ProcessLine(".L AdcTestSampleReader.cxx+");
   gROOT->ProcessLine(".L AdcBinarySampleReader.cxx+");
   gROOT->ProcessLine(".L AdcSampleFinder.cxx+");
+  gROOT->ProcessLine(".L AdcTreeChannelCalibration.cxx+");
+  gROOT->ProcessLine(".L AdcCalibrationTree.cxx+");
   gROOT->ProcessLine(".L AdcBinRecord.cxx+");
   gROOT->ProcessLine(".L AdcVoltageResponse.cxx+");
   gROOT->ProcessLine(".L AdcVoltagePerformance.cxx+");

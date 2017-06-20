@@ -1,6 +1,7 @@
 // AdcCalibrationTree.cxx
 
 #include "AdcCalibrationTree.h"
+#include "AdcSampleFinder.h"
 #include <iostream>
 #include <iomanip>
 #include "TFile.h"
@@ -26,8 +27,21 @@ AdcCalibrationTree(Name fname, Name tname, Name opt)
   m_pfile = TFile::Open(fname.c_str(), opt.c_str());
   m_status = 12;
   if ( m_pfile == nullptr || !m_pfile->IsOpen() ) {
-    cout << myname << "ERROR: Unable to open file " << fname << endl;
-    return;
+    // For readonly request, also search the calib area.
+    string searchDirs = "pwd";
+    if ( opt == "READ" ) {
+      string dir = AdcSampleFinder::defaultTopdir() + "/calib";
+      searchDirs += " or " + dir;
+      string longfname = dir + "/" + fname;
+      delete m_pfile;
+      m_pfile = TFile::Open(longfname.c_str(), opt.c_str());
+    }
+    if ( m_pfile == nullptr || !m_pfile->IsOpen() ) {
+      cout << myname << "ERROR: Unable to open file " << fname << endl;
+      cout << myname << "Please copy file to " + searchDirs << endl;
+      delete m_pfile;
+      return;
+    }
   }
   m_status = 13;
   m_ptree = dynamic_cast<TTree*>(m_pfile->Get(m_tname.c_str()));

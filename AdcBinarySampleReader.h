@@ -18,10 +18,6 @@ class TCanvas;
 
 class AdcBinarySampleReader : public AdcSampleReader {
 
-public:
-
-  using Name = std::string;
-
 public:  // static members
 
   static SampleIndex badAdcCode() { return 1<<15; }
@@ -50,27 +46,6 @@ public:  // non-static members
 
   // Sample name.
   Name sample() const override { return m_sample; }
-
-  // Set the sample fuction that specifies vin.
-  void setSampleFunction(const SampleFunction* samfun) { m_samfun = samfun; }
-
-  // Underflow code.
-  AdcCode underflowCode() const { return m_underflowCode; }
-
-  // Overflow code.
-  AdcCode overflowCode() const { return m_overflowCode; }
-
-  // Mask to remove channel number.
-  AdcCode chanMask() const { return m_chanMask; }
-
-  // Shift to extract channel number.
-  Index chanShift() const { return m_chanShift; }
-
-  // File/stream name.
-  Name fileName() { return m_fname; }
-
-  // Input stream.
-  std::istream* inputStream() { return m_pin; }
 
   // Return the dataset name.
   Name dataset() const override { return m_dsname; }
@@ -114,6 +89,26 @@ public:  // non-static members
   // The input voltage (mV) for sample isam.
   double vin(SampleIndex isam) const override;
 
+  // Set the sample function that specifies vin.
+  void setSampleFunction(const SampleFunction* samfun) { m_samfun = samfun; }
+
+  // Underflow code.
+  AdcCode underflowCode() const { return m_underflowCode; }
+
+  // Overflow code.
+  AdcCode overflowCode() const { return m_overflowCode; }
+
+  // Mask to remove channel number.
+  AdcCode chanMask() const { return m_chanMask; }
+
+  // Shift to extract channel number.
+  Index chanShift() const { return m_chanShift; }
+
+  // File/stream name.
+  Name fileName() { return m_fname; }
+
+  // Input stream.
+  std::istream* inputStream() { return m_pin; }
 
   // Return the tree. Non-const builds tree if needed.
   TTree* tree();

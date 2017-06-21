@@ -2,6 +2,7 @@ int test_all() {
   vector<string> names = {
     "AdcChannelId",
     "AdcSampleFinder",
+    "AdcFembTreeSampleReader",
     "AdcCalibrationTree",
     "AdcBinRecord",
     "AdcSampleAnalyzer",

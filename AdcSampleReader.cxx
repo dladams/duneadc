@@ -25,7 +25,7 @@ TH1* AdcSampleReader::
 histdata(SampleIndex idat0, SampleIndex ndatin,
          int sshow, bool usetime) const {
   if ( idat0 >= nsample() ) return 0;
-  if ( sshow == 1 ) return 0;
+  if ( sshow == 0 ) return 0;
   unsigned int show = std::abs(sshow);
   bool binned = sshow < 0;
   double samper = 1.0;
@@ -86,7 +86,7 @@ histvin(SampleIndex idat0, SampleIndex ndatin,
     xlab = "time [sec]";
     samper = 1.0/samplingFrequency();
   }
-  string hname = "hwf";
+  string hname = "hvin";
   ostringstream sstitl;
   sstitl << sample();
   if ( channel() != badChannel() ) sstitl << " channel " << channel();

@@ -38,8 +38,13 @@ public:
   // Channel is not checked if it is set to badChannel().
   AdcSampleReaderPtr find(Name asample, Index icha = badChannel(), SampleIndex maxsam =0) const;
 
+private:
+
   // Return a binary reader.
   AdcSampleReaderPtr findBinaryReader(Name asample, Index icha = badChannel(), SampleIndex maxsam =0) const;
+
+  // Returna  FEMB reader.
+  AdcSampleReaderPtr findFembReader(Name asample, Index icha, SampleIndex maxsam =0) const;
 
   // Convert channel snumber to string.
   Name schan(Index icha) const;

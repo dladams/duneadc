@@ -20,7 +20,7 @@ string line() {
 
 }
 
-int test_AdcFembTreeSampleReader() {
+int test_AdcFembTreeSampleReader(SampleIndex isam0 =0, SampleIndex nsam =5000) {
 
   const string myname = "test_AdcFembTreeSampleReader: ";
   ErrorCount ec(myname + "Test failed: ");
@@ -30,12 +30,16 @@ int test_AdcFembTreeSampleReader() {
   string fname = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
   string fullname = AdcSampleFinder::defaultTopdir() + "/justin2/" + fname;
   Index chan = 3;
-  AdcFembTreeSampleReader rdr(fullname, chan);
+  AdcFembTreeSampleReader rdr(fullname, chan, isam0, nsam);
   ec.check(rdr.inputFile(), "inputFile()");
   ec.check(rdr.inputTree(), "inputTree()");
   cout << myname << "Data count: " << rdr.nsample() << endl;
   ec.checkequal(rdr.channel(), chan, "inputTree()");
-  ec.checkequal(rdr.nsample(), 50400u, "nsample");
+  ec.checkequal(rdr.nsample(), 5000u, "nsample");
+  ec.checkequal(rdr.chip(), 0u, "chip");
+  ec.checkequal(rdr.adcSerial(), 26, "adcSerial");
+  ec.checkequal(rdr.feSerial(), -1, "feSerial");
+  ec.checkequal(int(rdr.samplingFrequency()), 2000000, "samplingFrequency");
 
   cout << line() << endl;
   cout << myname << "Check values." << endl;
@@ -45,7 +49,7 @@ int test_AdcFembTreeSampleReader() {
   cout << line() << endl;
   cout << myname << "Draw waveform." << endl;
   Index t0 = 0;
-  Index nt = 5000;
+  Index nt = nsam;
   Index rebin = 1;
   Index usetime = false;
   TH1* phd = rdr.histdata(t0, nt, rebin, usetime);

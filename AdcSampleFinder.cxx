@@ -3,6 +3,7 @@
 #include "AdcSampleFinder.h"
 #include "AdcTestSampleReader.h"
 #include "AdcBinarySampleReader.h"
+#include "AdcFembTreeSampleReader.h"
 #include "AdcBorderExtremaFinder.h"
 #include "AdcBinExtremaFinder.h"
 #include "Sawtooth.h"
@@ -24,6 +25,59 @@ using std::setw;
 using Name = std::string;
 using NameVector = std::vector<Name>;
 using AdcSampleReaderPtr = AdcSampleFinder::AdcSampleReaderPtr;
+
+//**********************************************************************
+// Local definitions.
+//**********************************************************************
+
+namespace {
+
+// Function that finds extrema with two extreama finders and returns the
+// results of one if they are consistent.
+int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
+                AdcExtremaFinder& finder1,
+                AdcBinExtremaFinder& finder2) {
+  const string myname = "AdcSampleFinder::findExtrema: " ;
+  AdcExtrema exts1;
+  int rstat = finder1.find(*prdr, exts1);
+  if ( rstat ) cout << myname << "Border extrema search returned error " << rstat << endl;
+  AdcExtrema exts2;
+  finder2.find(*prdr, exts2);
+  // Display extrema.
+  if ( true ) {
+    cout << myname << "Border extrema:" << endl;
+    for ( AdcExtremum ext : exts1 ) {
+      cout << myname << setw(12) << ext.tick() << " " << ext.isMax() << endl;
+    }
+    cout << myname << "Bin extrema:" << endl;
+    for ( AdcExtremum ext : exts2 ) {
+      cout << myname << setw(12) << ext.tick() << " " << ext.isMax() << endl;
+    }
+  }
+  // Check extrema are consistent.
+  Index next = 0;
+  if ( exts1.size() == exts2.size() ) next = exts1.size();
+  SampleIndex maxdext = 10000;
+  for ( Index iext=0; iext<next; ++iext ) {
+    AdcExtremum ext1 = exts1[iext];
+    AdcExtremum ext2 = exts2[iext];
+    if ( ext1.isMin() != ext2.isMin() ) next = 0;
+    else {
+      SampleIndex dext = ext2.tick() > ext1.tick() ?
+                         ext2.tick() - ext1.tick() :
+                         ext1.tick() - ext2.tick();
+      if ( dext > maxdext ) next = 0;
+    }
+  }
+  if ( next == 0 ) {
+    cout << myname << "ERROR: No extrema found." << endl;
+    return 1;
+  }
+  exts = exts2;
+  return 0;
+}
+
+}  // end unnamed namespace
 
 //**********************************************************************
 
@@ -73,8 +127,11 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
   if ( ssam.substr(0,7) == "201703b" ) {
     SampleIndex maxsam201703b = 39600000;  // Must cut off the data to avoid problem at end.
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
-cout << myname << "maxsam = " << maxsam << endl;
     return findBinaryReader(ssam, icha, maxsam);
+  }
+  // DUNE test data summer 2017
+  if ( ssam.substr(0,7) == "DUNE17_" ) {
+    return findFembReader(ssam, icha, maxsam);
   }
   cout << myname << "ERROR: Unable to find reader for sample " << ssam << endl;
   return nullptr;
@@ -143,49 +200,50 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam);
   AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
-  AdcExtrema borderExts;
-  {
-    AdcBorderExtremaFinder ef(5000000, 50, 4095, 500, 3500);
-    int rstat = ef.find(*prdr, borderExts);
-    if ( rstat ) cout << myname << "Border extrema search returned error " << rstat << endl;
-  }
-  AdcExtrema binExts;
-  {
-    AdcBinExtremaFinder ef(50000, 500, 500);
-    ef.find(*prdr, binExts);
-  }
-  // Display extrema.
-  if ( true ) {
-    cout << myname << "Border extrema:" << endl;
-    for ( AdcExtremum ext : borderExts ) {
-      cout << myname << setw(12) << ext.tick() << " " << ext.isMax() << endl;
-    }
-    cout << myname << "Bin extrema:" << endl;
-    for ( AdcExtremum ext : binExts ) {
-      cout << myname << setw(12) << ext.tick() << " " << ext.isMax() << endl;
-    }
-  }
-  // Check extrema are consistent.
-  Index next = 0;
-  if ( borderExts.size() == binExts.size() ) next = borderExts.size();
-  SampleIndex maxdext = 10000;
-  for ( Index iext=0; iext<next; ++iext ) {
-    AdcExtremum ext1 = borderExts[iext];
-    AdcExtremum ext2 = binExts[iext];
-    if ( ext1.isMin() != ext2.isMin() ) next = 0;
-    else {
-      SampleIndex dext = ext2.tick() > ext1.tick() ?
-                         ext2.tick() - ext1.tick() :
-                         ext1.tick() - ext2.tick();
-      if ( dext > maxdext ) next = 0;
-    }
-  }
-  if ( next == 0 ) {
-    cout << myname << "ERROR: No extrema found." << endl;
+  AdcBorderExtremaFinder ef1(5000000, 50, 4095, 500, 3500);
+  AdcBinExtremaFinder ef2(50000, 500, 500);
+  AdcExtrema exts;
+  if ( findExtrema(&*prdr, exts, ef1, ef2) ) {
+    cout << myname << "Unable to find extrema." << endl;
   } else {
-    SampleFunction* pfun = new Sawtooth(-300, 1700, binExts);
+    SampleFunction* pfun = new Sawtooth(-300, 1700, exts);
     prdrFull->setSampleFunction(pfun);
   }
+  // Build ADC-voltage table.
+  prdr->buildTableFromWaveform(20000, 0.1, -300.0);
+  return prdr;
+}
+
+//**********************************************************************
+
+AdcSampleReaderPtr AdcSampleFinder::
+findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
+  const string myname = "AdcSampleFinder::findFembReader: ";
+  string ssam = asample;
+  AdcFembTreeSampleReader* prdrFemb = nullptr;
+  string fname;
+  string::size_type ipos = 0;
+  if ( asample.substr(0,14) == "DUNE17_justin2" ) {
+    string basename = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
+    fname = AdcSampleFinder::defaultTopdir() + "/justin2/" + basename;
+    ipos = 14;
+  } else {
+    cout << myname << "Unable to find FEMB sample " << ssam << endl;
+  }
+  SampleIndex isam0 = 0;
+  SampleIndex nsam = 0;
+  if ( ssam.size() > ipos ) {
+    ipos = ssam.find("_", ipos);
+    string::size_type jpos = ssam.find("_", ipos+1);
+    if ( jpos != string::npos ) {
+      istringstream ssisam0(ssam.substr(ipos+1, jpos-ipos-1));
+      ssisam0 >> isam0;
+      istringstream ssnsam(ssam.substr(jpos+1));
+      ssnsam >> nsam;
+    }
+  }
+  prdrFemb = new AdcFembTreeSampleReader(fname, icha, isam0, nsam);
+  AdcSampleReaderPtr prdr(prdrFemb);
   // Build ADC-voltage table.
   prdr->buildTableFromWaveform(20000, 0.1, -300.0);
   return prdr;

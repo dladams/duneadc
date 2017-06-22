@@ -406,6 +406,10 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     cout << myname << "Reading data for channel " << icha << endl;
     AdcSampleFinder asf;
     AdcSampleFinder::AdcSampleReaderPtr prdr = asf.find(sampleName(), icha);
+    if ( ! prdr ) {
+      cout << myname << "Sample " << sampleName() << " not found for channel "
+           << icha << "." << endl;
+    }
     AdcChannelCalibration* pcal = nullptr;
     if ( datasetCalib().size() ) {
       AdcCalibrationTree act(datasetCalib());
@@ -461,6 +465,9 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     // Fetch the waveform histograms.
     const AdcSampleReader& rdr = *asa.reader();
     int rebin = 1000;
+    if ( rdr.nsample() < 1000000 ) rebin = 100;
+    if ( rdr.nsample() < 100000 ) rebin = 10;
+    if ( rdr.nsample() < 10000 ) rebin = 1;
     TH1* ph = rdr.histdata(0, 0, -rebin, true);
     ph->SetLineWidth(2);
     ph->SetMinimum(-500);

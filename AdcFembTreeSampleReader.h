@@ -21,8 +21,9 @@ class AdcFembTreeSampleReader : public AdcSampleReader {
 
 public:  // non-static members
 
-  // Ctor from input file name.
-  AdcFembTreeSampleReader(Name fname, Index chan);
+  // Ctor from input file name, channel and range of ticks (nsam==0 ==> all).
+  AdcFembTreeSampleReader(Name fname, Index chan,
+                          SampleIndex isam0 =0, SampleIndex nsam =0);
 
   // Dtor.
   ~AdcFembTreeSampleReader();
@@ -64,6 +65,10 @@ public:  // non-static members
   // The input voltage (mV) for sample isam.
   double vin(SampleIndex isam) const override;
 
+  // Set the sample function that specifies vin.
+  // If this is not called, function is taken from input tree.
+  void setSampleFunction(const SampleFunction* samfun) { m_samfun = samfun; }
+
   // File/stream name.
   Name inputFileName() { return m_fname; }
 
@@ -78,6 +83,11 @@ public:  // non-static members
 
   // Overflow code.
   AdcCode overflowCode() const { return m_overflowCode; }
+
+  // Metadata.
+  long adcSerial() const { return m_adcSerial; }
+  long feSerial() const { return m_feSerial; }
+  long vinRate() const { return m_vinRate; }
 
 public:  // Flags
 
@@ -96,13 +106,22 @@ private:
   Index m_channel = badChannel();
   double m_fsamp = 0.0;
   AdcTime m_time;
+  SampleIndex m_isam0;
+  SampleIndex m_nsam;
   TFile* m_pinFile;
   TTree* m_pinTree;
+  TTree* m_pmdTree;
   std::vector<int>* m_pdata;
   std::vector<float>* m_pvin;
   TTree* m_poutTree;
   AdcCode m_underflowCode = 0;
   AdcCode m_overflowCode = 4095;
+  const SampleFunction* m_samfun = nullptr;
+
+  // Metadata.
+  long m_adcSerial =0;
+  long m_feSerial =0;
+  unsigned long m_vinRate =0u;
 
 };
 

@@ -1102,6 +1102,7 @@ int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax
   manageHist(phsb);
   if ( zmax == 0 ) {
     zmax = 4*nsample/nvin;
+    if ( zmax == 0 ) zmax = 10;
     cout << myname << "zmax = " << zmax << endl;
     for ( TH1* ph : hists2d ) ph->SetMaximum(zmax); 
   }

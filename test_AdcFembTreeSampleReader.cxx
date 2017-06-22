@@ -14,7 +14,7 @@ using std::endl;
 
 namespace {
 
-string line() {
+string fembline() {
   return "-----------------------------------------";
 }
 
@@ -25,7 +25,7 @@ int test_AdcFembTreeSampleReader(SampleIndex isam0 =0, SampleIndex nsam =5000) {
   const string myname = "test_AdcFembTreeSampleReader: ";
   ErrorCount ec(myname + "Test failed: ");
 
-  cout << line() << endl;
+  cout << fembline() << endl;
   cout << myname << "Opening file." << endl;
   string fname = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
   string fullname = AdcSampleFinder::defaultTopdir() + "/justin2/" + fname;
@@ -41,12 +41,12 @@ int test_AdcFembTreeSampleReader(SampleIndex isam0 =0, SampleIndex nsam =5000) {
   ec.checkequal(rdr.feSerial(), -1, "feSerial");
   ec.checkequal(int(rdr.samplingFrequency()), 2000000, "samplingFrequency");
 
-  cout << line() << endl;
+  cout << fembline() << endl;
   cout << myname << "Check values." << endl;
   ec.checkequal(rdr.code(500), 1108, "code[500]");
   ec.checkequal(int(rdr.vin(500)), 356, "vin[500]");
 
-  cout << line() << endl;
+  cout << fembline() << endl;
   cout << myname << "Draw waveform." << endl;
   Index t0 = 0;
   Index nt = nsam;
@@ -65,6 +65,6 @@ int test_AdcFembTreeSampleReader(SampleIndex isam0 =0, SampleIndex nsam =5000) {
   phd->Draw();
   phv->Draw("same");
 
-  cout << line() << endl;
+  cout << fembline() << endl;
   return ec.count();
 }

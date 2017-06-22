@@ -40,16 +40,17 @@ int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
   const string myname = "AdcSampleFinder::findExtrema: " ;
   AdcExtrema exts1;
   int rstat = finder1.find(*prdr, exts1);
-  if ( rstat ) cout << myname << "Border extrema search returned error " << rstat << endl;
+  if ( rstat ) cout << myname << "Extrema 1 search returned error " << rstat << endl;
   AdcExtrema exts2;
-  finder2.find(*prdr, exts2);
+  rstat = finder2.find(*prdr, exts2);
+  if ( rstat ) cout << myname << "Extrema 2 search returned error " << rstat << endl;
   // Display extrema.
   if ( true ) {
-    cout << myname << "Border extrema:" << endl;
+    cout << myname << "Extrema 1:" << endl;
     for ( AdcExtremum ext : exts1 ) {
       cout << myname << setw(12) << ext.tick() << " " << ext.isMax() << endl;
     }
-    cout << myname << "Bin extrema:" << endl;
+    cout << myname << "Extrema 2:" << endl;
     for ( AdcExtremum ext : exts2 ) {
       cout << myname << setw(12) << ext.tick() << " " << ext.isMax() << endl;
     }

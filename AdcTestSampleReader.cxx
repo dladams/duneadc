@@ -61,7 +61,12 @@ int AdcTestSampleReader::read() {
   string dirname;
   const string aschanold[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
   const string aschan[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
+  const string alschan[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
   Index chan = channel();
+  if ( chan > 15 ) {
+    cout << myname << "Invalid channel number: " << chan << endl;
+    return 1;
+  }
   string schan = aschanold[chan];
   string ssam = sample();
   cout << myname << "Sample " << ssam << " channel " << chan << endl;
@@ -183,7 +188,7 @@ int AdcTestSampleReader::read() {
     string subdir;
     string schp;
     string topsubdir;
-    schanPrefix = "LN_2MHz_chn";
+    schanPrefix = "LN_2MHz_chn" + aschan[chan];
     m_dvdt = 200.0;
     m_vinmin = -300.0;
     vinmax = 1700;
@@ -195,7 +200,7 @@ int AdcTestSampleReader::read() {
           topsubdir = "/201701/P1_ADC_Data";
         } else if ( ssam[6] == 'd' ) {
           topsubdir = "/201701/P1_ADC_Data";
-          schanPrefix = "LN_1MHz_chn";
+          schanPrefix = "LN_1MHz_chn" + aschan[chan];
           m_dvdt = 400.0;
         } else if ( ssam[6] == 'b' ) {
           static std::set<string> update_schps_part1 =   {"03", "07", "21", "25", "26", "32", "35"};
@@ -254,6 +259,31 @@ int AdcTestSampleReader::read() {
       } else {
         bad = 1;
       }
+    // COTS boards.
+    // Chan 0-4 are ad7274
+    // Chan 5-9 are ad77883
+    // Chan 10-15 are ads7049
+    } else if ( ssam.substr(0, 11) == "201706_cots" ) {
+      string dir1 = "201706";
+      string sbrd = ssam.substr(11, 1);
+      istringstream ssbrd(sbrd);
+      Index ibrd;
+      ssbrd >> ibrd;
+      m_chip = ibrd;    // Chip number holds the board number
+      string smodel;
+      if ( chan <= 4 ) {
+        smodel = "ad7274";
+        vinmax = 1900.0;
+      } else if ( chan <= 9 ) {
+        smodel = "ad7883";
+        vinmax = 2600.0;
+      } else {
+        smodel = "ads7049";
+        vinmax = 2600.0;
+      }
+      vinmax = ibrd > 4 ? 2600.0 : 1900.0;
+      dirname = m_topdir + "/201706/COTS_ADC_TEST_DATA_06222017/Board" + sbrd + "/";
+      schanPrefix = smodel + "_60p_brd" + sbrd + "_LN_chn0x" + alschan[chan];
     } else {
       bad = 1;
     }
@@ -279,7 +309,7 @@ int AdcTestSampleReader::read() {
       return 3;
     }
     FileDirectory filedir(dirname);
-    string spat = schanPrefix + aschan[chan];
+    string spat = schanPrefix;
     FileDirectory::FileMap files = filedir.find(spat);
     if ( files.size() == 1 ) {
       fname = filedir.dirname + "/" + files.begin()->first;

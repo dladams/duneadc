@@ -21,8 +21,9 @@ class AdcFembTreeSampleReader : public AdcSampleReader {
 
 public:  // non-static members
 
-  // Ctor from input file name, channel and range of ticks (nsam==0 ==> all).
-  AdcFembTreeSampleReader(Name fname, Index chan,
+  // Ctor from input file name, channel, dataset name and range of ticks (nsam==0 ==> all).
+  // Sample name adds chipc, channel and time from metadata.
+  AdcFembTreeSampleReader(Name fname, Index chan, Name dataset,
                           SampleIndex isam0 =0, SampleIndex nsam =0);
 
   // Dtor.
@@ -84,10 +85,14 @@ public:  // non-static members
   // Overflow code.
   AdcCode overflowCode() const { return m_overflowCode; }
 
-  // Metadata.
+  // Metadata (in s, mV).
   long adcSerial() const { return m_adcSerial; }
   long feSerial() const { return m_feSerial; }
-  long vinRate() const { return m_vinRate; }
+  long vinAmp() const { return m_vinAmp; }
+  long vinOffset() const { return m_vinOffset; }
+  long vinMin() const { return -vinAmp() + vinOffset(); }
+  long vinMax() const { return vinAmp() + vinOffset(); }
+  long vinFreq() const { return m_vinFreq; }
 
 public:  // Flags
 
@@ -122,6 +127,9 @@ private:
   long m_adcSerial =0;
   long m_feSerial =0;
   unsigned long m_vinRate =0u;
+  double m_vinAmp =0.0;
+  double m_vinOffset =0.0;
+  double m_vinFreq =0.0;
 
 };
 

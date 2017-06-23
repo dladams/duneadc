@@ -42,11 +42,22 @@ AdcBorderFinder(SampleIndex fenceWidth,
 
 int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& borders) const {
   const Name myname = "AdcBorderFinder::find: ";
+  Index dbg = 1;
+  if ( dbg ) {
+    cout << myname << "Starting border search." << endl;
+    cout << myname << "  fenceWidth = " << fenceWidth() << endl;
+    cout << myname << "   minThresh = " << minThresh() << endl;
+    cout << myname << "   maxThresh = " << maxThresh() << endl;
+    cout << myname << "    minLimit = " << minLimit() << endl;
+    cout << myname << "    maxLimit = " << maxLimit() << endl;
+  }
   borders.clear();
   bool foundStartingFence = false; // Flag indicating initial block of good samples is found.
   State state = UNKNOWN;      // Current stream state.
   SampleIndex nsamFence = 0;  // # samples in the curent fence
   SampleRange range;          // Current range
+  Index maxerr = 200;
+  Index nerr = 0;
   for ( SampleIndex isam=0; isam<reader.nsample(); ++isam ) {
     SampleValue code = reader.code(isam);
     bool sampleIsUnderThresh = code <= minThresh();
@@ -60,7 +71,7 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
         ++nsamFence;
         if ( nsamFence >= fenceWidth() ) {
           SampleRange tmprange(isam+1-fenceWidth(), isam+1);
-          cout << myname << "Found starting fence: ";
+          cout << myname << "Found starting fence at sample " << isam;
           //tmprange.print();
           cout << endl;
           foundStartingFence = true;
@@ -97,9 +108,14 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
     // outside of fence thresholds.
     } else {
       if ( sampleIsUnderThresh ) {
-        cout << myname << "Starting min border at ADC[" << isam << "] = " << code << endl;
+        if ( nerr < maxerr ) {
+          cout << myname << "Starting min border at ADC[" << isam << "] = " << code << endl;
+        }
         if ( nsamFence < fenceWidth() ) {
-          cout << myname << "Too few samples in fence: " << nsamFence << " < " << fenceWidth() << endl;
+          if ( ++nerr < maxerr ) {
+            cout << myname << "Too few samples in fence: " << nsamFence << " < " << fenceWidth()
+                 << ". Consider a larger value for minLimit." << endl;
+          }
           sampleIsFence = true;
           //return 9;
         } else {
@@ -109,9 +125,14 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
           nsamFence = 0;
         }
       } else if ( sampleIsOverThresh ) {
-        cout << myname << "Starting max border at ADC[" << isam << "] = " << code << endl;
+        if ( nerr < maxerr ) {
+          cout << myname << "Starting max border at ADC[" << isam << "] = " << code << endl;
+        }
         if ( nsamFence < fenceWidth() ) {
-          cout << myname << "Too few samples in fence: " << nsamFence << " < " << fenceWidth() << endl;
+          if ( ++nerr < maxerr ) {
+            cout << myname << "Too few samples in fence: " << nsamFence << " < " << fenceWidth()
+                 << ". Consider a smaller value for maxLimit." << endl;
+          }
           sampleIsFence = true;
           //return 10;
         } else {
@@ -125,6 +146,9 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
     }
   }
   cout << myname << "Processed all samples." << endl;
+  Index nrep = nerr > maxerr ? maxerr : nerr;
+  if ( nerr ) cout << myname << "Reported " << nrep << " of " << nerr << " errors." << endl;
+  if ( dbg ) cout << myname << "# borders found: " << borders.size() << endl;
   return 0;
 }
 

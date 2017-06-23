@@ -224,10 +224,17 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   AdcFembTreeSampleReader* prdrFemb = nullptr;
   string fname;
   string::size_type ipos = 0;
+  string dsname = "DUNE17";
   if ( asample.substr(0,14) == "DUNE17_justin2" ) {
     string basename = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
     fname = AdcSampleFinder::defaultTopdir() + "/justin2/" + basename;
     ipos = 14;
+    dsname += "-test2";
+  } else if ( asample.substr(0,14) == "DUNE17_justin3" ) {
+    string basename = "adcTestData_20170622T183049_chip0_functype3_freq4.000_offset0.700_amplitude1.000.root";
+    fname = AdcSampleFinder::defaultTopdir() + "/justin3/" + basename;
+    ipos = 14;
+    dsname += "-test2";
   } else {
     cout << myname << "Unable to find FEMB sample " << ssam << endl;
   }
@@ -243,10 +250,46 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
       ssnsam >> nsam;
     }
   }
-  prdrFemb = new AdcFembTreeSampleReader(fname, icha, isam0, nsam);
+  prdrFemb = new AdcFembTreeSampleReader(fname, icha, dsname, isam0, nsam);
   AdcSampleReaderPtr prdr(prdrFemb);
+  // Find extrema.
+  bool calculateVin = true;
+  if ( calculateVin ) {
+    double vinRate = prdrFemb->vinFreq();
+    if ( vinRate <= 0.0 ) {
+      vinRate = 4;
+      cout << myname << "Generator frequency not found. Assuming " << vinRate << " Hz." << endl;
+    }
+    double sampFreq = prdrFemb->samplingFrequency();
+    if ( sampFreq <= 0.0 ) {
+      sampFreq = 2000000;
+      cout << myname << "Sampling frequency not found. Assuming " << sampFreq << " Hz." << endl;
+    }
+    double tickPeriod = sampFreq/vinRate;
+    double borderWidth = 0.2*tickPeriod;
+    AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 700, 3800);
+    AdcExtrema exts;
+    int rstat = ef.find(*prdr, exts);
+    if ( rstat ) {
+      cout << myname << "Extrema finding failed with error " << rstat << "." << endl;
+    } else if ( exts.size() == 0 ) {
+      cout << myname << "No extrema found." << endl;
+    } else {
+      cout << myname << "Extrema:" << endl;
+      for ( Index iext=0; iext<exts.size(); ++iext ) {
+        AdcExtremum ext = exts[iext];
+        cout << myname << setw(12) << ext.tick() << " " << ext.isMax();
+        if ( iext ) cout << setw(12) << ext.tick() - exts[iext-1].tick();
+        cout << endl;
+      }
+      SampleFunction* pfun = new Sawtooth(-300, 1700, exts);
+      prdrFemb->setSampleFunction(pfun);
+    }
+  }
   // Build ADC-voltage table.
+  cout << myname << "Building ADC-Vin table." << endl;
   prdr->buildTableFromWaveform(20000, 0.1, -300.0);
+  cout << myname << "Done building ADC-Vin table." << endl;
   return prdr;
 }
 

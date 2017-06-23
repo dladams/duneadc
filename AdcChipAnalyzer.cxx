@@ -458,7 +458,7 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
             cout << " Old-->new size = " << oldsize << "-->" << newsize << "." << endl;
           }
         } else {
-          cout << "Not adding channel " << asa.channel() << " to perf DB." << endl;
+          cout << myname << "Not adding channel " << asa.channel() << " to perf DB." << endl;
         }
       }
     }
@@ -468,11 +468,12 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     if ( rdr.nsample() < 1000000 ) rebin = 100;
     if ( rdr.nsample() < 100000 ) rebin = 10;
     if ( rdr.nsample() < 10000 ) rebin = 1;
-    TH1* ph = rdr.histdata(0, 0, -rebin, true);
+    bool xIsTime = false;
+    TH1* ph = rdr.histdata(0, 0, -rebin, xIsTime);
     ph->SetLineWidth(2);
     ph->SetMinimum(-500);
     ph->SetMaximum(4500);
-    TH1* ph2 = rdr.histvin(0, 0, rebin, true);
+    TH1* ph2 = rdr.histvin(0, 0, rebin, xIsTime);
     ph2->SetLineWidth(2);
     ph2->SetLineColor(2);
     string ylab = "ADC code, Input voltage [mV]";

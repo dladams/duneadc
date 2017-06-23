@@ -56,6 +56,10 @@ void filldb03a(Index chip1=1, Index nchip =77, int chan1=0, int nchan =16) {
     TDatime dt1;
     dt1.Print();
     AdcChipAnalyzer chipper(dschip, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
+    bool save = true;
+    chipper.draw("rawv", save);
+    chipper.draw("diff", save);
+    chipper.draw("perf", save);
     TDatime dt2;
     dt2.Print();
     cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;

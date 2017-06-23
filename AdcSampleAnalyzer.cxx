@@ -59,8 +59,11 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
     cout << myname << "ERROR: Reader table is empty." << endl;
     return;
   }
-  iadcfitmin = nadc()==4096 ? 128 : 1;
-  iadcfitmax = nadc() - 1;
+  if ( iadcfitmin == 0 ) {
+    iadcfitmin = nadc()==4096 ? 128 : 1;
+    if ( rdr.sample().substr(0,6) == "DUNE17" ) iadcfitmin = 400;
+  }
+  if ( iadcfitmax == 0 ) iadcfitmax = nadc() - 1;
   vinfitmin = 0.0;
   vinfitmax = 1600.0;
   fitusestuck = false;

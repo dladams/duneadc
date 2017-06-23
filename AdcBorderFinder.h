@@ -4,13 +4,16 @@
 //
 // A fence is a contiguous region of a waveform with at least
 // fenceWidth samples where the sample values are all above
-// minThresh and below max thresh.
+// minThresh and below maxThresh.
 //
 // A min border is a contiguous region of a waveform between
 // two fences where all samples have ADC count below minLimit.
 //
 // A max border is a contiguous region of a waveform between
 // two fences where all samples have ADC count below maxLimit.
+//
+// Set minLimit > minThresh and maxLimit < maxThresh if there are
+// significant sample-to-sample fluctutations.
 
 #ifndef AdcBorderFinder_H
 #define AdcBorderFinder_H

@@ -121,6 +121,7 @@ double AdcSampleReader::vinCenter(Index ivin) const {
 
 int AdcSampleReader::buildTableFromWaveform(Index a_nvin, double a_dvin, double a_vinmin) {
   const Name myname = "AdcSampleReader::buildTableFromWaveform: ";
+  const SampleIndex buildLogPeriod = 0;
   if ( nsample() == 0 ) {
     cout << myname << "ERROR: Waveform is empty." << endl;
     return 1;
@@ -144,6 +145,10 @@ int AdcSampleReader::buildTableFromWaveform(Index a_nvin, double a_dvin, double 
   for ( SampleIndex isam=0; isam<nsample(); ++isam ) {
     Code iadc = code(isam);
     double xvin = vin(isam);
+    if ( buildLogPeriod && isam && buildLogPeriod*(isam/buildLogPeriod) == isam ) {
+      cout << myname << "Table build is at sample " << isam << " of " << nsample()
+           << " (" << int((100.0*isam)/nsample()) << "%)" << endl;
+    }
     if ( xvin < vinmin() ) {
       ++nunderflow;
       continue;

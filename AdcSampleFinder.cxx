@@ -308,7 +308,10 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     double tickPeriod = sampFreq/vinRate;
     double borderWidth = 0.2*tickPeriod;
     //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500, 3800);
-    AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
+    //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
+    // Setting maxLimit = 0 helps with large fluctuations after overflow.
+    // Large minThresh fixes t0 offset due to fluctuations near that value.
+    AdcBorderExtremaFinder ef(borderWidth, 1000, 4000, 1500,    0);
     AdcExtrema exts;
     int rstat = ef.find(*prdr, exts);
     if ( rstat ) {

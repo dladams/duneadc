@@ -131,7 +131,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     return findBinaryReader(ssam, icha, maxsam);
   }
   // DUNE test data summer 2017
-  if ( ssam.substr(0,7) == "DUNE17_" ) {
+  if ( ssam.substr(0,7) == "DUNE17-" ) {
     return findFembReader(ssam, icha, maxsam);
   }
   cout << myname << "ERROR: Unable to find reader for sample " << ssam << endl;
@@ -220,24 +220,64 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
 AdcSampleReaderPtr AdcSampleFinder::
 findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   const string myname = "AdcSampleFinder::findFembReader: ";
+  // Check channel.
+  if ( icha > 15 ) {
+    cout << myname << "Invalid channel: " << icha << endl;
+    return nullptr;
+  }
   string ssam = asample;
   AdcFembTreeSampleReader* prdrFemb = nullptr;
   string fname;
-  string::size_type ipos = 0;
-  string dsname = "DUNE17";
-  if ( asample.substr(0,14) == "DUNE17_justin2" ) {
+  string dir;
+  string::size_type ipos = asample.find("_");
+  string dsname = asample.substr(0, ipos);
+  vector<string> sels;
+  sels.push_back("adcTestData");
+  sels.push_back("functype3");
+  sels.push_back("sampleRate2000000");
+  if ( asample.substr(0,14) == "DUNE17-test2" ) {
     string basename = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
     fname = AdcSampleFinder::defaultTopdir() + "/justin2/" + basename;
     ipos = 14;
     dsname += "-test2";
-  } else if ( asample.substr(0,14) == "DUNE17_justin3" ) {
+  } else if ( asample.substr(0,14) == "DUNE17-test3" ) {
     string basename = "adcTestData_20170622T183049_chip0_functype3_freq4.000_offset0.700_amplitude1.000.root";
     fname = AdcSampleFinder::defaultTopdir() + "/justin3/" + basename;
     ipos = 14;
     dsname += "-test2";
+  } else if ( dsname == "DUNE17-cold" ) {
+    dir = AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_cold/";
+    if ( asample.substr(ipos, 5) != "_chip" ) {
+      cout << myname << "Chip ID not found." << endl;
+      return nullptr;
+    }
+    string::size_type jpos = asample.find("_", ipos+5);
+    ++ipos;
+    string sfieldChip = asample.substr(ipos, jpos-ipos);
+    sels.push_back(sfieldChip);
   } else {
     cout << myname << "Unable to find FEMB sample " << ssam << endl;
   }
+  // Find the file.
+  if ( fname.size() == 0 ) {
+    FileDirectory filedir(dir);
+    for ( string sel : sels ) filedir.select(sel);
+    unsigned int nfile = filedir.files.size();
+    if ( nfile == 1 ) {
+      fname = filedir.dirname + "/" + filedir.files.begin()->first;
+    } else if ( nfile == 0 ) {
+      cout << myname << "ERROR: Unable to find file with the following patterns:" << endl;
+      for ( string sel : sels ) cout << myname << "  " << sel << endl;
+      cout << myname << "Searched directory " << filedir.dirname << endl;
+      return nullptr;
+    } else {
+      cout << myname << "ERROR: Found multiple files:" << endl;
+      for ( const auto& file : filedir.files ) cout << myname << "  " << file.first << endl;
+      cout << myname << "Searched directory " << filedir.dirname << endl;
+      return nullptr;
+    }
+  }
+  // Find the sample range.
   SampleIndex isam0 = 0;
   SampleIndex nsam = 0;
   if ( ssam.size() > ipos ) {
@@ -250,7 +290,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
       ssnsam >> nsam;
     }
   }
-  prdrFemb = new AdcFembTreeSampleReader(fname, icha, dsname, isam0, nsam);
+  prdrFemb = new AdcFembTreeSampleReader(fname, icha, ssam, isam0, nsam);
   AdcSampleReaderPtr prdr(prdrFemb);
   // Find extrema.
   bool calculateVin = true;

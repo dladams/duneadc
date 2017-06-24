@@ -21,14 +21,17 @@ using Name = AdcFembTreeSampleReader::Name;
 //**********************************************************************
 
 AdcFembTreeSampleReader::
-AdcFembTreeSampleReader(Name fname, Index chan, Name dsname,
+AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
                         SampleIndex isam0, SampleIndex nsam)
-: m_fname(fname), m_channel(chan), m_dsname(dsname),
+: m_fname(fname), m_channel(chan), m_sample(ssam),
   m_isam0(isam0), m_nsam(nsam),
   m_pinTree(nullptr), 
   m_pdata(nullptr), m_pvin(nullptr) {
   const string myname = "AdcFembTreeSampleReader::ctor: ";
   const int dbg = 1;
+  // Find DS name.
+  string::size_type ipos = ssam.find("_");
+  m_dsname = ssam.substr(0, ipos);
   // Open input file.
   std::ifstream* pin = new std::ifstream;
   TDirectory* pdirIn = gDirectory;
@@ -62,7 +65,6 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name dsname,
   // Fetch metadata.
   string mdtname = "metadata";
   TTree* pmdt = dynamic_cast<TTree*>(inputFile()->Get(mdtname.c_str()));
-  m_sample = m_dsname;
   if ( pmdt == nullptr ) {
     cout << myname << "ERROR: " << "Metadata tree not found: " << mdtname << endl;
   } else {
@@ -106,7 +108,7 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name dsname,
     ostringstream sssname;
     sssname << dataset() << "_chip" << chip() << "_chan" << channel()
             << "_" << date;
-    m_sample = sssname.str();
+    //m_sample = sssname.str();
   }
   // Debug display.
   if ( dbg ) {

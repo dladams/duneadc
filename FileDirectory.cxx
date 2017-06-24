@@ -36,7 +36,6 @@ void FileDirectory::open(string a_dirname) {
   } else {
     cout << "Can not open directory " << dirname << endl;
   }
-
 }
 
 //**********************************************************************
@@ -56,6 +55,13 @@ FileMap FileDirectory::find(std::string spat) const {
     }
   }
   return outfiles;
+}
+
+//**********************************************************************
+
+unsigned int FileDirectory::select(std::string spat) {
+  if ( spat.size() ) files = find(spat);
+  return files.size();
 }
 
 //**********************************************************************

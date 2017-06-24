@@ -238,6 +238,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     doChannelSum = true;
     splot = splotin.substr(3);
   }
+  Index ndraw = 0;
   for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
     Index icha = channel(kcha);
     if ( nChannel() ) ppad = pcan->cd(kcha + 1 );
@@ -255,6 +256,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
       cout << myname << "ERROR: Reader channel differs from input: " << asa.channel() << " != " << icha << "." << endl;
       return 2;
     };
+    ++ndraw;
     TH1* ph = nullptr;
     TH1* ph2 = nullptr;
     string sarg = "hist";
@@ -383,11 +385,13 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     }
   }
   if ( savePlot ) {
-    string fchan;
-    if ( nChannel() != 16 ) fchan = "_chan" + schan;
-    string fnamesuff = "_" + sampleName() + fchan + ".png";
-    string fname = splotin + fnamesuff; 
-    pcan->Print(fname.c_str());
+    if ( ndraw ) {
+      string fchan;
+      if ( nChannel() != 16 ) fchan = "_chan" + schan;
+      string fnamesuff = "_" + sampleName() + fchan + ".png";
+      string fname = splotin + fnamesuff; 
+      pcan->Print(fname.c_str());
+    }
   }
   return 0;
 }
@@ -409,6 +413,7 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     if ( ! prdr ) {
       cout << myname << "Sample " << sampleName() << " not found for channel "
            << icha << "." << endl;
+      return nullptr;
     }
     AdcChannelCalibration* pcal = nullptr;
     if ( datasetCalib().size() ) {

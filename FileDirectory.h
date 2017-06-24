@@ -31,6 +31,11 @@ public:
   // Find files with the indicated string in their names.
   FileMap find(std::string spat) const;
 
+  // Select files with the indicated string in their names.
+  // Returns the # selected files.
+  // Use spat = "" to select all.
+  unsigned int select(std::string spat ="");
+
 };
 
 #endif

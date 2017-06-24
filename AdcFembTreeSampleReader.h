@@ -21,9 +21,9 @@ class AdcFembTreeSampleReader : public AdcSampleReader {
 
 public:  // non-static members
 
-  // Ctor from input file name, channel, dataset name and range of ticks (nsam==0 ==> all).
+  // Ctor from input file name, channel, sample name and range of ticks (nsam==0 ==> all).
   // Sample name adds chipc, channel and time from metadata.
-  AdcFembTreeSampleReader(Name fname, Index chan, Name dataset,
+  AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
                           SampleIndex isam0 =0, SampleIndex nsam =0);
 
   // Dtor.

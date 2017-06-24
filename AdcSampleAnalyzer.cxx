@@ -930,45 +930,57 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     phvrms->SetMarkerStyle(34);
     phvrms->DrawCopy("p same");
   }
-  if ( phvadv != nullptr ) {
+  bool showadv = pcalNominal != nullptr && phvadv != nullptr;
+  if ( showadv ) {
     phvadv->SetMarkerStyle(8);
     phvadv->DrawCopy("p same");
   }
-  TLegend* pleg = new TLegend(0.3, 0.68, 0.55, 0.87);
+  double xleg1 = 0.30;
+  if ( sampleName().find("_cots") != string::npos ) xleg1 = 0.15;
+  double xleg2 = xleg1 + 0.25;
+  double yleg1 = showadv ? 0.68 : 0.72;
+  double yleg2 = 0.87;
+  TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
   pleg->SetBorderSize(0);
   pleg->SetFillStyle(0);
   pleg->AddEntry(phax, "Efficiency", "l");
   pleg->AddEntry(g80bars[0], "Uncertainty (80%)", "l");
   if ( phvrms != nullptr ) pleg->AddEntry(phvrms, "Deviation RMS", "p");
-  if ( phvadv != nullptr ) pleg->AddEntry(phvadv, "Deviation |mean|", "p");
+  if ( showadv ) pleg->AddEntry(phvadv, "Deviation |mean|", "p");
   pleg->AddEntry(phts, "Tail fraction", "f");
   pleg->Draw();
   TLine* pline = new TLine(x1, 0.0, x2, 0.0);
   pline->Draw();
   bool decorate = true;
   if ( decorate ) {
-    TLine* pl001 = new TLine(300, 0, 1330, 1.03);
+    double xe0 = 300.0;
+    double ymax = 1.03;
+    double xe0p1 = xe0 + ymax/0.001;
+    double xe400 = xe0 + 400000*14/6240.0;
+    TLine* pl001 = new TLine(xe0, 0.0, xe0p1, ymax);
     pl001->SetLineStyle(2);
     pl001->Draw();
-    TLatex* plab001 = new TLatex(0.78, 0.91, "0.1%");
-    plab001->SetNDC();
+    double ylabhi = ymax + 0.03*ymax;
+    double ylablo = -0.07*ymax;
+    TLatex* plab001 = new TLatex(xe0p1, ylabhi, "0.1%");
     plab001->SetTextFont(42);
     plab001->SetTextSize(0.03);
+    plab001->SetTextAlign(22);
     plab001->Draw();
     TLatex* plab450 = new TLatex(0.91, 0.865, "450 e");
     plab450->SetNDC();
     plab450->SetTextFont(42);
     plab450->SetTextSize(0.03);
     plab450->Draw();
-    TLatex* plab000 = new TLatex(0.31, 0.020, "0 e");
-    plab000->SetNDC();
+    TLatex* plab000 = new TLatex(xe0, ylablo, "0 e");
     plab000->SetTextFont(42);
     plab000->SetTextSize(0.03);
+    plab000->SetTextAlign(22);
     plab000->Draw();
-    TLatex* plab400 = new TLatex(0.70, 0.020, "400k e");
-    plab400->SetNDC();
+    TLatex* plab400 = new TLatex(xe400, ylablo, "400k e");
     plab400->SetTextFont(42);
     plab400->SetTextSize(0.03);
+    plab400->SetTextAlign(22);
     plab400->Draw();
   }
   return 0;

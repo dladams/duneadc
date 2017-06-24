@@ -260,6 +260,7 @@ int AdcTestSampleReader::read() {
         bad = 1;
       }
     // COTS boards.
+    // 201706_cotsB where B = board/chip number.
     // Chan 0-4 are ad7274
     // Chan 5-9 are ad77883
     // Chan 10-15 are ads7049
@@ -271,6 +272,7 @@ int AdcTestSampleReader::read() {
       ssbrd >> ibrd;
       m_chip = ibrd;    // Chip number holds the board number
       string smodel;
+      m_vinmin = -100.0;
       if ( chan <= 4 ) {
         smodel = "ad7274";
         vinmax = 1900.0;
@@ -281,7 +283,7 @@ int AdcTestSampleReader::read() {
         smodel = "ads7049";
         vinmax = 2600.0;
       }
-      vinmax = ibrd > 4 ? 2600.0 : 1900.0;
+      m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
       dirname = m_topdir + "/201706/COTS_ADC_TEST_DATA_06222017/Board" + sbrd + "/";
       schanPrefix = smodel + "_60p_brd" + sbrd + "_LN_chn0x" + alschan[chan];
     } else {
@@ -385,7 +387,8 @@ int AdcTestSampleReader::read() {
     nline = m_data.size();
     m_nsample = m_data.size();
     // Construct table from waveform.
-    buildTableFromWaveform(20000, 0.1, -200.0);
+    //buildTableFromWaveform(20000, 0.1, -200.0);
+    buildTableFromWaveform(m_nvin, 0.1, m_vinmin);
   } else {
     m_table.clear();
     m_table.resize(nadc());

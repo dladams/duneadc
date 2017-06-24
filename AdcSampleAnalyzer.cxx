@@ -779,7 +779,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
         }
       }
     }
-    double eff = effSum/countSum;
+    double eff = countSum > 0 ? effSum/countSum : 0;
     double rmsInt0 = 0.0;    // 0% point of the calibration RMS
     double rmsInt10 = 0.00;  // 10% point of the calibration RMS
     double rmsInt90 = 0.00;  // 90% point of the calibration RMS

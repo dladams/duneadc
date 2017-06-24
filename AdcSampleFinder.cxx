@@ -308,7 +308,8 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     }
     double tickPeriod = sampFreq/vinRate;
     double borderWidth = 0.2*tickPeriod;
-    AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 700, 3800);
+    //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500, 3800);
+    AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
     AdcExtrema exts;
     int rstat = ef.find(*prdr, exts);
     if ( rstat ) {

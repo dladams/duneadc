@@ -47,7 +47,8 @@ void rankChips(string dataset, int chip1 =1, int chip2 =80) {
   for ( unsigned int  chip=chip1; chip<=chip2; ++chip ) {
     cout << myname << "Chip " << chip << endl;
     AdcChipMetric acm(dataset, chip);
-    acm.evaluate();
+    int estat = acm.evaluate();
+    if ( estat != 0 ) continue;
     double effavg = acm.chipMetric("EffAvg");
     double effprd = acm.chipMetric("EffProd");
     double efflow = acm.chipMetric("EffLow");

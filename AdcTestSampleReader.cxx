@@ -265,8 +265,15 @@ int AdcTestSampleReader::read() {
     // Chan 5-9 are ad77883
     // Chan 10-15 are ads7049
     } else if ( ssam.substr(0, 11) == "201706_cots" ) {
+      string::size_type ipos = 11;
+      string stemp = "LN";
+      if ( ssam[11] == 'w' ) {
+        ipos = 12;
+        stemp = "RT";
+      }
       string dir1 = "201706";
-      string sbrd = ssam.substr(11, 1);
+      string::size_type jpos = ssam.find("_", ipos+1);
+      string sbrd = ssam.substr(ipos, jpos-ipos);
       istringstream ssbrd(sbrd);
       Index ibrd;
       ssbrd >> ibrd;
@@ -285,7 +292,7 @@ int AdcTestSampleReader::read() {
       }
       m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
       dirname = m_topdir + "/201706/COTS_ADC_TEST_DATA_06222017/Board" + sbrd + "/";
-      schanPrefix = smodel + "_60p_brd" + sbrd + "_LN_chn0x" + alschan[chan];
+      schanPrefix = smodel + "_60p_brd" + sbrd + "_" + stemp + "_chn0x" + alschan[chan];
     } else {
       bad = 1;
     }

@@ -97,7 +97,7 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
       TDatime tda(year, month, day, hour, min, sec);
       m_time = tda.Convert();
     }
-    m_chip = iChip;
+    m_chip = t_adcSerial;
     m_fsamp = t_sampleRate;
     m_adcSerial = t_adcSerial;
     m_feSerial = t_feSerial;

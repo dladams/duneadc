@@ -73,7 +73,7 @@ public:
   AdcTime time;                // Time (unix sec) data was taken
   Float vuncmax;               // Threshold for declaring channels bad (mV).
   Index nv;                    // # voltage bins
-  Float vmin;                  // Min volatage
+  Float vmin;                  // Min voltage
   Float vmax;                  // Max voltage
   CountVector vinCounts;
   FloatVector vinEffs;

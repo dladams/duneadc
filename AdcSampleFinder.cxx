@@ -131,6 +131,12 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
     return findBinaryReader(ssam, icha, maxsam);
   }
+  // DUNE test data analyzed same as March data.
+  if ( ssam.substr(0,11) == "DUNE17-test" ) {
+    SampleIndex maxsamHere = 19800000UL;  // Must cut off the data to avoid problem at end.
+    if ( maxsam == 0 || maxsam > maxsamHere ) maxsam = maxsamHere;
+    return findBinaryReader(ssam, icha, maxsam);
+  }
   // DUNE test data summer 2017
   if ( ssam.substr(0,7) == "DUNE17-" ) {
     return findFembReader(ssam, icha, maxsam);
@@ -152,6 +158,11 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   string dir;            // Directory where file resides.
   string spat;           // String pattern that specifies the file.
   double fsamp = 2.0e6;  // Sampling frequency [Hz]
+  SampleIndex ef1BorderWidth = 5000000;
+  SampleValue ef1MinThresh =   50;
+  SampleValue ef1MaxThresh = 4095;
+  SampleValue ef1MinLimit =   500;
+  SampleValue ef1MaxLimit =  3500;
   if ( ssam.substr(0, 7) == "201703b" ) {
     if ( ssam.size() != 14 ||
          ssam.substr(7,2) != "_D" ||
@@ -171,6 +182,24 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string subdir = "P1_S7_" + schp + "_" + sday;
     dir = m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir;
     spat = subdir + "_LN_2MHz_chn" + scha;
+  } else if ( ssam.substr(0,11) == "DUNE17-test" ) {
+    string::size_type ipos = 11;
+    dsname = ssam.substr(0, ipos);
+    if ( ssam.substr(ipos, 5) != "_chip" ) {
+      cout << myname << "Chip ID not found." << endl;
+      return nullptr;
+    }
+    ipos += 5;
+    string::size_type jpos = ssam.find("_", ipos);
+    schp = ssam.substr(ipos, jpos-ipos);
+    scha = schan(icha);
+    dir = m_topdir + "/DUNE17t/P1_ADC_Test_Data_06262017/P1_ADC_Test_Data_0615/P1_S7_0" + schp;
+    spat = "P1_S7_0" + schp + "_LN_2MHz_chn" + scha;
+    ef1BorderWidth = 2000000;
+    ef1MinThresh =  700;
+    ef1MaxThresh = 4000;
+    ef1MinLimit  = 2000;
+    ef1MaxLimit  =    0;
   }
   // Find the file.
   FileDirectory filedir(dir);
@@ -202,7 +231,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam);
   AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
-  AdcBorderExtremaFinder ef1(5000000, 50, 4095, 500, 3500);
+  AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
   AdcBinExtremaFinder ef2(50000, 500, 500);
   AdcExtrema exts;
   if ( findExtrema(&*prdr, exts, ef1, ef2) ) {

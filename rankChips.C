@@ -3,7 +3,7 @@ using RankMap = multimap<double, unsigned int>;
 
 void writePython(string name, const RankMap& chips);
 
-void rankChips(string dataset, int chip1 =1, int chip2 =80) {
+TH1* rankChips(string dataset, int chip1 =1, int chip2 =80) {
   string myname = "rankChips: ";
   RankMap rankedChipsAvg;
   RankMap rankedChipsPrd;
@@ -25,7 +25,11 @@ void rankChips(string dataset, int chip1 =1, int chip2 =80) {
   vector<TH1*> hists;
   vector<string> slabs;
   string htitl = dataset + " ADC chip quality; Q; # chips";
-  hists.push_back(new TH1F("heffprd", htitl.c_str(), nhbin, 0, 1.0));
+  string hname = "heffprd_" + dataset;
+  for ( string::size_type ipos=0; ipos<hname.size(); ++ipos ) {
+    if ( hname[ipos] == '-' ) hname[ipos] = '_';
+  }
+  hists.push_back(new TH1F(hname.c_str(), htitl.c_str(), nhbin, 0, 1.0));
   slabs.push_back("All");
   if ( isMarSurvey ) {
     htitl = dataset + " ADC chip quality for Quik-Pak; Q; # chips";
@@ -44,6 +48,8 @@ void rankChips(string dataset, int chip1 =1, int chip2 =80) {
     ph->SetLineWidth(2);
   }
   if ( hists.size() > 1 ) hists[0]->SetLineWidth(3);
+  cout << endl;
+  cout << myname << dataset << endl;
   for ( unsigned int  chip=chip1; chip<=chip2; ++chip ) {
     cout << myname << "Chip " << chip << endl;
     AdcChipMetric acm(dataset, chip);
@@ -118,6 +124,7 @@ void rankChips(string dataset, int chip1 =1, int chip2 =80) {
   pleg->Draw();
   string fname = "chipQuality_" + dataset + ".png";
   pcan->Print(fname.c_str());
+  return hists[0];
 }
 
 void writePython(string name, const RankMap& chips) {
@@ -128,4 +135,27 @@ void writePython(string name, const RankMap& chips) {
     cout << rc.second;
   }
   cout << "]" << endl;
+}
+
+void rankChipsRef(string dataset ="DUNE17-cold", int chip1 =20, int chip2 =70,
+                  string dataset2 ="201703a_mar25", int chip21 =1, int chip22 =80) {
+  TH1* phr = rankChips(dataset2, chip21, chip22);
+  if ( phr == nullptr ) return;
+  TH1* pht = rankChips(dataset, chip1, chip2);
+  if ( pht == nullptr ) return;
+  phr->SetLineWidth(4);
+  phr->SetLineColor(28);
+  phr->SetLineStyle(2);
+  double ymaxr = phr->GetMaximum();
+  double ymaxt = pht->GetMaximum();
+  if ( ymaxr > ymaxt ) pht->SetMaximum(1.03*ymaxt);
+  pht->Draw();
+  phr->Draw("same");
+  pht->Draw("same");
+  TLegend* pleg = new TLegend(0.20, 0.73, 0.50, 0.85);
+  pleg->SetBorderSize(0);
+  pleg->SetFillStyle(0);
+  pleg->AddEntry(phr, dataset2.c_str(), "l");
+  pleg->AddEntry(pht, dataset.c_str(), "l");
+  pleg->Draw();
 }

@@ -48,6 +48,7 @@ int AdcChipMetric::evaluate() {
       ++nbad;
       chanEffProd = 0.0;
       chanEffLow = 0.0;
+      break;
     } else {
       const AdcVoltagePerformance& avp = *pavp;
       double vin = avp.vmin;

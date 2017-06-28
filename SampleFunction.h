@@ -19,7 +19,8 @@ public:
   virtual ~SampleFunction() = default;
 
   // Return the value for a given bin.
-  virtual double value(SampleIndex isam) const = 0;
+  // If pdvds is not null, the slope dvalue/sample may be returned there.
+  virtual double value(SampleIndex isam, double* pdvds =nullptr) const = 0;
 
   // Return the limits of validity.
   virtual SampleIndex xmin() const = 0;

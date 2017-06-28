@@ -13,9 +13,9 @@ public:
   Sawtooth(double vmin, double vmax, const AdcExtrema exts);
 
   // Return the value for a given bin.
-  double value(SampleIndex isam) const override;
+  double value(SampleIndex isam, double* pdvds) const override;
 
-  // Return ranfge of validity.
+  // Return range of validity.
   SampleIndex xmin() const override { return m_isamLow; }
   SampleIndex xmax() const override { return m_isamHigh; }
 

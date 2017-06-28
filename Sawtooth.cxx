@@ -19,14 +19,22 @@ Sawtooth::Sawtooth(double vmin, double vmax, const AdcExtrema exts)
 
 //**********************************************************************
 
-double Sawtooth::value(SampleIndex isam) const {
+double Sawtooth::value(SampleIndex isam, double* pdvds) const {
   if ( m_vmax <= m_vmin ) return 0.0;
   if ( m_wsam == 0 ) return 0.0;
   SampleIndex xsam = isam > m_isamMin ? isam - m_isamMin : m_isamMin - isam;
   SampleIndex xmod2w = xsam%(2*m_wsam);
   double dxsam = xmod2w < m_wsam ? xmod2w : 2*m_wsam - xmod2w;
   double frac = dxsam/m_wsam;
-  return (1.0-frac)*m_vmin + frac*m_vmax;
+  double val = (1.0-frac)*m_vmin + frac*m_vmax;
+  if ( pdvds != nullptr ) {
+    double dv = m_vmax - m_vmin;
+    double ds = m_wsam;
+    double dvds = (ds == 0.0) ? 0.0 : dv/ds;
+    if ( frac > 1.0 ) dvds *= -1.0;
+    *pdvds = dvds;
+  }
+  return val;
 }
 
 //**********************************************************************

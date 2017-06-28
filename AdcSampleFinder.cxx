@@ -36,7 +36,8 @@ namespace {
 // results of one if they are consistent.
 int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
                 AdcExtremaFinder& finder1,
-                AdcBinExtremaFinder& finder2) {
+                AdcBinExtremaFinder& finder2,
+                SampleIndex maxdext) {
   const string myname = "AdcSampleFinder::findExtrema: " ;
   AdcExtrema exts1;
   int rstat = finder1.find(*prdr, exts1);
@@ -58,7 +59,6 @@ int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
   // Check extrema are consistent.
   Index next = 0;
   if ( exts1.size() == exts2.size() ) next = exts1.size();
-  SampleIndex maxdext = 10000;
   for ( Index iext=0; iext<next; ++iext ) {
     AdcExtremum ext1 = exts1[iext];
     AdcExtremum ext2 = exts2[iext];
@@ -67,13 +67,20 @@ int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
       SampleIndex dext = ext2.tick() > ext1.tick() ?
                          ext2.tick() - ext1.tick() :
                          ext1.tick() - ext2.tick();
-      if ( dext > maxdext ) next = 0;
+      if ( dext > maxdext ) {
+        cout << myname << "ERROR: Too large dext: " << dext << " > " << maxdext << endl;
+        next = 0;
+      } else if ( dext > 10000 ) {
+        cout << myname << "WARNING: Allowing large dext: " << dext << " < " << maxdext << endl;
+      }
     }
   }
   if ( next == 0 ) {
     cout << myname << "ERROR: No extrema found." << endl;
     return 1;
   }
+  // Use results from bin extrema finder.
+  // Border finder is biased because it starts search from smaller ticks.
   exts = exts2;
   return 0;
 }
@@ -163,6 +170,11 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   SampleValue ef1MaxThresh = 4095;
   SampleValue ef1MinLimit =   500;
   SampleValue ef1MaxLimit =  3500;
+  Index ef2NbinThresh = 500;
+  Index ef2MinGapBin = 50000;
+  SampleIndex maxdext = 10000;
+  double vinMin = -300.0;
+  double vinMax = 1700.0;
   if ( ssam.substr(0, 7) == "201703b" ) {
     if ( ssam.size() != 14 ||
          ssam.substr(7,2) != "_D" ||
@@ -195,11 +207,16 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     scha = schan(icha);
     dir = m_topdir + "/DUNE17t/P1_ADC_Test_Data_06262017/P1_ADC_Test_Data_0615/P1_S7_0" + schp;
     spat = "P1_S7_0" + schp + "_LN_2MHz_chn" + scha;
-    ef1BorderWidth = 2000000;
+    ef1BorderWidth = 1500000;
     ef1MinThresh =  700;
     ef1MaxThresh = 4000;
     ef1MinLimit  = 2000;
     ef1MaxLimit  =    0;
+    //ef2MinGapBin = 5000000;
+    ef2NbinThresh = 200;
+    maxdext = 100000;
+    vinMin = -200.0;
+    vinMax = 1800.0;
   }
   // Find the file.
   FileDirectory filedir(dir);
@@ -232,12 +249,12 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   AdcSampleReaderPtr prdr(prdrFull);
   // Find extrema.
   AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
-  AdcBinExtremaFinder ef2(50000, 500, 500);
+  AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);
   AdcExtrema exts;
-  if ( findExtrema(&*prdr, exts, ef1, ef2) ) {
+  if ( findExtrema(&*prdr, exts, ef1, ef2, maxdext) ) {
     cout << myname << "Unable to find extrema." << endl;
   } else {
-    SampleFunction* pfun = new Sawtooth(-300, 1700, exts);
+    SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
     prdrFull->setSampleFunction(pfun);
   }
   // Build ADC-voltage table.

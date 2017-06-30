@@ -56,6 +56,10 @@ Some of the available sample names are
 |             |             |
 | 201703a_DCC | March 2017 BNL scan of 77 P1 chips. The chip number is CC = 01, 03, ..., 79. |
 | 201703b_D02_TT | BNL  long-term study of chip D02. The time sample is TT = 1a, 2a, ..., 9c. |
+| 201706_cots | BNL study of LN COTS (commercial off-the-shelf) chips in Jun 2017. |
+| 201706_cotsw | As above but at RT (room temperature)
+| 201706_cotsb | Repeat of parts of 201706_cots. |
+| 201706_cotsbw | As above but at RT (room temperature)
 | DUNE17-cold_chipCC | Standard (4 MHz signal gen) BNL testing of protoDUNE chips. |
 | DUNE17-test_chipCC | Subset of protoDUNE chips tested is same way as samples 201703a. |
 

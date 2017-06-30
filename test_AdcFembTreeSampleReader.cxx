@@ -30,7 +30,8 @@ int test_AdcFembTreeSampleReader(SampleIndex isam0 =0, SampleIndex nsam =5000) {
   string fname = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
   string fullname = AdcSampleFinder::defaultTopdir() + "/justin2/" + fname;
   Index chan = 3;
-  AdcFembTreeSampleReader rdr(fullname, chan, isam0, nsam);
+  string ssam = "D17t2";
+  AdcFembTreeSampleReader rdr(fullname, chan, ssam, isam0, nsam);
   ec.check(rdr.inputFile(), "inputFile()");
   ec.check(rdr.inputTree(), "inputTree()");
   cout << myname << "Data count: " << rdr.nsample() << endl;

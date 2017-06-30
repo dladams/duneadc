@@ -75,7 +75,8 @@ public:  // For waveforms
   virtual Code code(SampleIndex isam) const =0;
 
   // The input voltage (mV) for sample isam.
-  virtual double vin(SampleIndex isam) const { return 0.0; }
+  // Implementer *may* return dVin/dtick in *pdvds.
+  virtual double vin(SampleIndex isam, double* pdvds =nullptr) const { return 0.0; }
   double vinForTF1(double* x, double*) const;
   TF1* vinTF1(Name name = "sampleVin") const;
 

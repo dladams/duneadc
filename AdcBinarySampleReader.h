@@ -87,7 +87,7 @@ public:  // non-static members
   AdcCode code(SampleIndex isam) const override;
 
   // The input voltage (mV) for sample isam.
-  double vin(SampleIndex isam) const override;
+  double vin(SampleIndex isam, double* pdvds =nullptr) const override;
 
   // Set the sample function that specifies vin.
   void setSampleFunction(const SampleFunction* samfun) { m_samfun = samfun; }

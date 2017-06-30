@@ -217,9 +217,9 @@ AdcCode AdcBinarySampleReader::code(SampleIndex isam) const {
 
 //**********************************************************************
 
-double AdcBinarySampleReader::vin(SampleIndex isam) const {
+double AdcBinarySampleReader::vin(SampleIndex isam, double* pdvds) const {
   if ( m_samfun == nullptr ) return 0.0;
-  return m_samfun->value(isam);
+  return m_samfun->value(isam, pdvds);
 }
 
 //**********************************************************************

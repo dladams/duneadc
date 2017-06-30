@@ -155,8 +155,8 @@ AdcCode AdcFembTreeSampleReader::code(SampleIndex isam) const {
 
 //**********************************************************************
 
-double AdcFembTreeSampleReader::vin(SampleIndex isam) const {
-  if ( m_samfun != nullptr ) return m_samfun->value(isam);
+double AdcFembTreeSampleReader::vin(SampleIndex isam, double* pdvds) const {
+  if ( m_samfun != nullptr ) return m_samfun->value(isam, pdvds);
   if ( m_pvin == nullptr ) return 0;
   auto vin = *m_pvin;
   SampleIndex ksam = m_isam0 + isam;

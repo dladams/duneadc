@@ -64,6 +64,8 @@ public:
   // Except phvn, the following are all vs. ADC bin
   TH2* phc = nullptr;   // Vin
   TH2* phf = nullptr;   // Vin without under, over and stuck bits (used in linear fit)
+  TH2* phfu = nullptr;  // Fit distribution for dVin/dt > 0
+  TH2* phfd = nullptr;  // Fit distribution for dVin/dt < 0
   TH2* phd = nullptr;   // ADC diff from linear fit
   TH2* phdw = nullptr;  // ADC diff from linear fit with broader range and coarser binning
   TH2* phn = nullptr;   // ADC diff from nominal calibration

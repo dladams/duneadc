@@ -132,6 +132,10 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
   cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
   pfit = phf->GetFunction("pol1");
+  if ( pfit == nullptr ) {
+    cout << myname << "ERROR: Fit failed." << endl;
+    return;
+  }
   fitOffset = pfit->GetParameter(0);
   fitGain = pfit->GetParameter(1);
   localCalib().data().gain = fitGain;

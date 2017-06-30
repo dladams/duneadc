@@ -266,9 +266,16 @@ int AdcTestSampleReader::read() {
     // Chan 10-15 are ads7049
     } else if ( ssam.substr(0, 11) == "201706_cots" ) {
       string::size_type ipos = 11;
-      string stemp = "LN";
-      if ( ssam[11] == 'w' ) {
+      string mydir = "COTS_ADC_TEST_DATA_06222017";
+      string sboardPrefix = "Board";
+      if ( ssam[ipos] == 'b' ) {
         ipos = 12;
+        mydir = "COTS_ADC_Data_Update_0628";
+        sboardPrefix = "board";
+      }
+      string stemp = "LN";
+      if ( ssam[ipos] == 'w' ) {
+        ipos += 1;
         stemp = "RT";
       }
       string dir1 = "201706";
@@ -291,7 +298,7 @@ int AdcTestSampleReader::read() {
         vinmax = 2600.0;
       }
       m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
-      dirname = m_topdir + "/201706/COTS_ADC_TEST_DATA_06222017/Board" + sbrd + "/";
+      dirname = m_topdir + "/201706/" + mydir + "/" + sboardPrefix + sbrd + "/";
       schanPrefix = smodel + "_60p_brd" + sbrd + "_" + stemp + "_chn0x" + alschan[chan];
     } else {
       bad = 1;

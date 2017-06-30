@@ -17,20 +17,21 @@ using std::endl;
 using std::ostringstream;
 using std::vector;
 
-void filldbd17c(Index chip1, Index nchip, Index chan1=0, Index nchan =16, SampleIndex isam0 =0, SampleIndex nsam =0) {
+void filldbd17c(Index chip1, Index nchip, Index chan1=0, Index nchan =16,
+                SampleIndex isam0 =0, SampleIndex nsam =0, bool fill =true) {
   const string myname = "filldb17c: ";
   if ( chan1 + nchan > 16 ) {
     cout << myname << "ERROR: Invalid channel range." << endl;
     return;
   }
   string datasetCalib = "";
-  bool fillCalTree = true;
+  bool fillCalTree = fill;
   unsigned int nv = 90;
   double vmin = -200.0;
   double vmax = 1600.0;
   double vresmax = 1.0;
   bool dropTails = false;
-  bool fillPerfTree = true;
+  bool fillPerfTree = fill;
   for ( Index chip=chip1; chip<chip1+nchip; ++chip ) {
     string dataset = "DUNE17-cold";
     ostringstream sssam;

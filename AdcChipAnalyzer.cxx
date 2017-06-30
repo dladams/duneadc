@@ -73,6 +73,7 @@ AdcChipAnalyzer(string a_sampleName,
 : m_sampleName(a_sampleName),
   m_icha1(0),
   m_ncha(0),
+  m_layout(0), 
   m_datasetCalib(a_datasetCalib),
   m_saveCalib(a_saveCalib),
   m_vmin(a_vmin),
@@ -142,7 +143,16 @@ int AdcChipAnalyzer::setChannels(Index a_icha1, Index a_ncha, int cleanFlag) {
       Index icha = firstChannel() + kcha;
       m_chans.push_back(icha);
     }
+    Index icha1 = m_icha1;
+    Index icha2 = icha1 + m_ncha;
+    if ( m_ncha == 1 ) m_layout = 10;
+    else if ( icha1 > 12 )              m_layout = 44;
+    else if ( icha1 > 8 && icha2 < 12 ) m_layout = 43;
+    else if ( icha1 > 4 && icha2 <  8 ) m_layout = 42;
+    else if (              icha2 <  4 ) m_layout = 41;
+    else m_layout = 160;
   }
+  cout << myname << "Drawing layout: " << m_layout << endl;
   m_clean = cleanFlag;
   if ( cleanFlag == 2 && nChannel() == 1 ) m_clean = false;
   // Fetch the analyzer for each channel.
@@ -162,15 +172,20 @@ int AdcChipAnalyzer::setChannels(Index a_icha1, Index a_ncha, int cleanFlag) {
 TCanvas* AdcChipAnalyzer::newCanvas(string splot, string canName) const {
   gStyle->SetOptStat(110111);
   Index npadx = 1;
-  bool onePad = nChannel() == 1 ||
-                splot.substr(0,3) == "sum" ||
-                splot == "gain" ||
-                splot == "offset";
-  if ( ! onePad ) {
-    if ( nChannel() > 4 ) {
-      npadx = 4;
-    } else if ( nChannel() > 1 ) {
-      npadx = 2;
+  if ( m_layout == 160 ) npadx = 4;
+  else if ( m_layout > 40 && m_layout < 45 ) npadx = 2;
+  else if ( m_layout == 10 ) npadx = 1;
+  else {
+    bool onePad = nChannel() == 1 ||
+                  splot.substr(0,3) == "sum" ||
+                  splot == "gain" ||
+                  splot == "offset";
+    if ( ! onePad ) {
+      if ( nChannel() > 4 ) {
+        npadx = 4;
+      } else if ( nChannel() > 1 ) {
+        npadx = 2;
+      }
     }
   }
   Index npady = npadx;
@@ -241,7 +256,14 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
   Index ndraw = 0;
   for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
     Index icha = channel(kcha);
-    if ( nChannel() ) ppad = pcan->cd(kcha + 1 );
+    Index ipad = kcha + 1;
+    if      ( m_layout ==  10 ) ipad = 0;
+    else if ( m_layout ==  41 ) ipad = icha +  1;
+    else if ( m_layout ==  42 ) ipad = icha -  3;
+    else if ( m_layout ==  43 ) ipad = icha -  7;
+    else if ( m_layout ==  44 ) ipad = icha - 11;
+    else if ( m_layout == 160 ) ipad = icha +  1;
+    if ( nChannel() ) ppad = pcan->cd(ipad);
     AdcSampleAnalyzer* pasa = sampleAnalyzer(icha);
     if ( pasa == nullptr ) {
       cout << myname << "WARNING: Skipping channel " << icha << endl;
@@ -250,6 +272,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc == nullptr ) {
       cout << myname << "ERROR: Unable to analyze channel " << icha << endl;
+      continue;
       return 1;
     };
     if ( asa.channel() != icha ) {
@@ -278,6 +301,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
       sarg = "e0 x0";
       ph->GetYaxis()->SetTitleOffset(1.3);
       doLine = true;
+      rightMargin = 0.05;
     }
     else if ( splot == "resp" ) { ph = asa.phc; sarg = "colz"; rightMargin = 0.12; doLine = true; }
     else if ( splot == "zres" ) {
@@ -475,14 +499,18 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     if ( rdr.nsample() < 10000 ) rebin = 1;
     bool xIsTime = false;
     TH1* ph = rdr.histdata(0, 0, -rebin, xIsTime);
-    ph->SetLineWidth(2);
-    ph->SetMinimum(-500);
-    ph->SetMaximum(4500);
+    if ( ph != nullptr ) {
+      ph->SetLineWidth(2);
+      ph->SetMinimum(-500);
+      ph->SetMaximum(4500);
+    }
     TH1* ph2 = rdr.histvin(0, 0, rebin, xIsTime);
-    ph2->SetLineWidth(2);
-    ph2->SetLineColor(2);
-    string ylab = "ADC code, Input voltage [mV]";
-    if ( ph2 != nullptr ) ph->GetYaxis()->SetTitle(ylab.c_str());
+    if ( ph2 != nullptr ) {
+      ph2->SetLineWidth(2);
+      ph2->SetLineColor(2);
+      string ylab = "ADC code, Input voltage [mV]";
+      if ( ph != nullptr ) ph->GetYaxis()->SetTitle(ylab.c_str());
+    }
     m_rawHists[icha] = ph;
     m_vinHists[icha] = ph2;
     // If flag is set, clean the analyzer.

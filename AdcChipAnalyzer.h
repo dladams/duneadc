@@ -104,6 +104,7 @@ private:
   Name   m_sampleName;
   Index  m_icha1;
   Index  m_ncha;
+  Index  m_layout;   // 10, 41, 42, 43, 44, 160
   Name   m_datasetCalib;
   bool   m_saveCalib;
   double m_vmin;

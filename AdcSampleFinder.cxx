@@ -275,7 +275,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   string ssam = asample;
   AdcFembTreeSampleReader* prdrFemb = nullptr;
   string fname;
-  string dir;
+  vector<string> dirs;
   string::size_type ipos = asample.find("_");
   string dsname = asample.substr(0, ipos);
   vector<string> sels;
@@ -293,7 +293,8 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     ipos = 14;
     dsname += "-test2";
   } else if ( dsname == "DUNE17-cold" ) {
-    dir = AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_cold/";
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_cold/");
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_hothdaq4_cold/");
     if ( asample.substr(ipos, 5) != "_chip" ) {
       cout << myname << "Chip ID not found." << endl;
       return nullptr;
@@ -307,20 +308,35 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   }
   // Find the file.
   if ( fname.size() == 0 ) {
-    FileDirectory filedir(dir);
-    for ( string sel : sels ) filedir.select(sel);
-    unsigned int nfile = filedir.files.size();
+    map<string, string> files;
+    for ( string dir : dirs ) {
+      FileDirectory filedir(dir);
+      for ( string sel : sels ) filedir.select(sel);
+      for ( auto ent : filedir.files ) {
+        string fname = ent.first;
+        if ( files.find(fname) != files.end() ) {
+           cout << myname << "WARNING: Skipping duplicate file entry." << endl;
+        } else {
+          string fullname = filedir.dirname + "/" + fname;
+        }
+      }
+    }
+    unsigned int nfile = files.size();
     if ( nfile == 1 ) {
-      fname = filedir.dirname + "/" + filedir.files.begin()->first;
+      fname = files.begin()->second;
     } else if ( nfile == 0 ) {
       cout << myname << "ERROR: Unable to find file with the following patterns:" << endl;
       for ( string sel : sels ) cout << myname << "  " << sel << endl;
-      cout << myname << "Searched directory " << filedir.dirname << endl;
+      cout << myname << "Search directories:" << endl;
+      for ( string dir : dirs ) cout << myname << "  " << dir << endl;
+      cout << endl;
       return nullptr;
     } else {
       cout << myname << "ERROR: Found multiple files:" << endl;
-      for ( const auto& file : filedir.files ) cout << myname << "  " << file.first << endl;
-      cout << myname << "Searched directory " << filedir.dirname << endl;
+      for ( const auto& filepath : files ) cout << myname << "  " << filepath.second << endl;
+      cout << myname << "Searched directories:" << endl;
+      for ( string dir : dirs ) cout << myname << "  " << dir << endl;
+      cout << endl;
       return nullptr;
     }
   }

@@ -3,7 +3,7 @@ using RankMap = multimap<double, unsigned int>;
 
 void writePython(string name, const RankMap& chips);
 
-TH1* rankChips(string dataset, int chip1 =1, int chip2 =80) {
+TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) {
   string myname = "rankChips: ";
   RankMap rankedChipsAvg;
   RankMap rankedChipsPrd;
@@ -110,8 +110,11 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80) {
   cout << sspymprd.str() << endl;
   cout << sspymlow.str() << endl;
   cout << sspyrank.str() << endl;
-  TCanvas* pcan = new TCanvas;
-  pcan->SetRightMargin(0.03);
+  TCanvas* pcan = nullptr;
+  if ( makeCan ) {
+    pcan = new TCanvas;
+    pcan->SetRightMargin(0.03);
+  }
   hists[0]->Draw();
   TLegend* pleg = new TLegend(0.20, 0.70, 0.40, 0.85);
   pleg->SetBorderSize(0);
@@ -124,7 +127,7 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80) {
   }
   pleg->Draw();
   string fname = "chipQuality_" + dataset + ".png";
-  pcan->Print(fname.c_str());
+  if ( pcan != nullptr ) pcan->Print(fname.c_str());
   return hists[0];
 }
 
@@ -140,23 +143,33 @@ void writePython(string name, const RankMap& chips) {
 
 void rankChipsRef(string dataset ="DUNE17-cold", int chip1 =20, int chip2 =70,
                   string dataset2 ="201703a_mar25", int chip21 =1, int chip22 =80) {
-  TH1* phr = rankChips(dataset2, chip21, chip22);
+  pcan = new TCanvas;
+  pcan->SetRightMargin(0.03);
+  bool makeCan = false;
+  TH1* phr = rankChips(dataset2, chip21, chip22, makeCan);
   if ( phr == nullptr ) return;
-  TH1* pht = rankChips(dataset, chip1, chip2);
+  TH1* pht = rankChips(dataset, chip1, chip2, makeCan);
   if ( pht == nullptr ) return;
+  int nchip = pht->GetEntries();
+  cout << "Test dataset chip count: " << nchip << endl;
   phr->SetLineWidth(4);
   phr->SetLineColor(28);
   phr->SetLineStyle(2);
   double ymaxr = phr->GetMaximum();
   double ymaxt = pht->GetMaximum();
-  if ( ymaxr > ymaxt ) pht->SetMaximum(1.03*ymaxt);
+  if ( ymaxr > ymaxt ) pht->SetMaximum(1.03*ymaxr);
   pht->Draw();
   phr->Draw("same");
   pht->Draw("same");
-  TLegend* pleg = new TLegend(0.20, 0.73, 0.50, 0.85);
+  TLegend* pleg = new TLegend(0.20, 0.73, 0.60, 0.85);
   pleg->SetBorderSize(0);
   pleg->SetFillStyle(0);
+  ostringstream sslab;
+  sslab << dataset << " (" << nchip << " chips)";
+  string slab = sslab.str();
   pleg->AddEntry(phr, dataset2.c_str(), "l");
-  pleg->AddEntry(pht, dataset.c_str(), "l");
+  pleg->AddEntry(pht, slab.c_str(), "l");
   pleg->Draw();
+  string fname = "rank_" + dataset + "_ref" + dataset2 + ".png";
+  pcan->Print(fname.c_str());
 }

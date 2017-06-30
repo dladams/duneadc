@@ -198,6 +198,7 @@ TCanvas* AdcChipAnalyzer::newCanvas(string splot, string canName) const {
   }
   TCanvas* pcan = new TCanvas(canName.c_str(), canName.c_str(), wwx, wwy);
   if ( npadx ) pcan->Divide(npadx, npadx);
+cout << "XXXXXXXXXXXXXX Creating canvas with dimansion " << npadx << endl;
   return pcan;
 }
 
@@ -223,6 +224,17 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
   if ( splotin == "help" ) {
     help(myname);
     return 0;
+  }
+  // First make sure we have the sample analyzers.
+  // Do this before creating canvas because they might modify it.
+  Index count = 0;
+  for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
+    Index icha = channel(kcha);
+    if ( sampleAnalyzer(icha) != nullptr ) ++count;
+  }
+  if ( count == 0 ) {
+    cout << myname << "Skipping draw because no channesls have an analyzer." << endl;
+    return 1;
   }
   // Fill the map of histograms that are summed over channels..
   if ( m_hsums.size() == 0 ) {
@@ -254,6 +266,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     splot = splotin.substr(3);
   }
   Index ndraw = 0;
+  // Now add the plot for each 
   for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
     Index icha = channel(kcha);
     Index ipad = kcha + 1;
@@ -273,7 +286,6 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     if ( asa.phc == nullptr ) {
       cout << myname << "ERROR: Unable to analyze channel " << icha << endl;
       continue;
-      return 1;
     };
     if ( asa.channel() != icha ) {
       cout << myname << "ERROR: Reader channel differs from input: " << asa.channel() << " != " << icha << "." << endl;

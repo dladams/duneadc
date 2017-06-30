@@ -198,7 +198,6 @@ TCanvas* AdcChipAnalyzer::newCanvas(string splot, string canName) const {
   }
   TCanvas* pcan = new TCanvas(canName.c_str(), canName.c_str(), wwx, wwy);
   if ( npadx ) pcan->Divide(npadx, npadx);
-cout << "XXXXXXXXXXXXXX Creating canvas with dimansion " << npadx << endl;
   return pcan;
 }
 

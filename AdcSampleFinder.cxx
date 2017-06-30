@@ -315,9 +315,10 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
       for ( auto ent : filedir.files ) {
         string fname = ent.first;
         if ( files.find(fname) != files.end() ) {
-           cout << myname << "WARNING: Skipping duplicate file entry." << endl;
+          cout << myname << "WARNING: Skipping duplicate file entry." << endl;
         } else {
           string fullname = filedir.dirname + "/" + fname;
+          files[fname] = fullname;
         }
       }
     }

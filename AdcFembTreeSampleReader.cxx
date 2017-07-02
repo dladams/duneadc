@@ -104,11 +104,6 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
     m_vinAmp = 1000.0*t_funcAmp;
     m_vinOffset = 1000.0*t_funcOffset;
     m_vinFreq = t_funcFreq;
-    // Build sample name.
-    ostringstream sssname;
-    sssname << dataset() << "_chip" << chip() << "_chan" << channel()
-            << "_" << date;
-    //m_sample = sssname.str();
   }
   // Debug display.
   if ( dbg ) {

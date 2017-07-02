@@ -37,7 +37,7 @@ int test_AdcFembTreeSampleReader(SampleIndex isam0 =0, SampleIndex nsam =5000) {
   cout << myname << "Data count: " << rdr.nsample() << endl;
   ec.checkequal(rdr.channel(), chan, "inputTree()");
   ec.checkequal(rdr.nsample(), 5000u, "nsample");
-  ec.checkequal(rdr.chip(), 0u, "chip");
+  ec.checkequal(rdr.chip(), 26u, "chip");
   ec.checkequal(rdr.adcSerial(), 26, "adcSerial");
   ec.checkequal(rdr.feSerial(), -1, "feSerial");
   ec.checkequal(int(rdr.samplingFrequency()), 2000000, "samplingFrequency");

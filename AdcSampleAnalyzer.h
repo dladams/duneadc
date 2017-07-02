@@ -55,17 +55,16 @@ public:
   double vinfitmin = 0.0;      // Min Vin for linear reponse fit
   double vinfitmax = 0.0;      // Max Vin for linear reponse fit
   bool fitusestuck = false;    // If true, exclude classic stuck codes (LSB6=0,63) in linear fit
-  double pullthresh = 5.0;     // Threhold for identifying tails with pull
+  double pullthresh = 5.0;     // Threshold for identifying tails with pull
   double tailWindow = 5.0;     // Threshold [mV] for identifying tails w/o pull.
   double pedCorVin = 300.0;    // Input voltage at which pedestal correction is made.
   Index pedCorHalfWindow = 20; // Pedestal correction evaluation range is +- this value.
+  bool doUpDownFits =true;     // If true and tables are present, up and down fits are done
 
   // Output histograms.
   // Except phvn, the following are all vs. ADC bin
   TH2* phc = nullptr;   // Vin
   TH2* phf = nullptr;   // Vin without under, over and stuck bits (used in linear fit)
-  TH2* phfu = nullptr;  // Fit distribution for dVin/dt > 0
-  TH2* phfd = nullptr;  // Fit distribution for dVin/dt < 0
   TH2* phd = nullptr;   // ADC diff from linear fit
   TH2* phdw = nullptr;  // ADC diff from linear fit with broader range and coarser binning
   TH2* phn = nullptr;   // ADC diff from nominal calibration
@@ -87,8 +86,20 @@ public:
 
   // Linear response fit.
   TF1* pfit = nullptr;
-  double fitGain;
-  double fitOffset;
+  double fitGain = 0.0;
+  double fitOffset = 0.0;
+
+  // Linear response hists and fits separate for up and down slopes.
+  // Thees are only filled if doUpDownFits is set true.
+  bool haveUpDownHists = false;
+  TH2* phfu = nullptr;  // Fit distribution for dVin/dt > 0
+  TH2* phfd = nullptr;  // Fit distribution for dVin/dt < 0
+  TF1* pfitU = nullptr;
+  double fitGainU = 0.0;
+  double fitOffsetU = 0.0;
+  TF1* pfitD = nullptr;
+  double fitGainD = 0.0;
+  double fitOffsetD = 0.0;
 
   // Input and nominal calibration.
   // The nominal calibration is used to evaluate calibration difference histograms and

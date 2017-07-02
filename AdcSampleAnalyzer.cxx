@@ -45,7 +45,6 @@ bool sticky(Index iadc) {
 AdcSampleAnalyzer::
 AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal, bool fixped)
 : pcalInput(pcal), pcalNominal(pcal),
-  pfit(nullptr), fitGain(0.0), fitOffset(0.0),
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
   m_sampleName(rdr.sample()),
@@ -100,9 +99,15 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   // Create the fit and response histograms.
   Index nfill = 0;
   Index nskip = 0;
+  Index countu = 0;
+  Index countd = 0;
   for ( Index iadc=0; iadc<nadc(); ++iadc ) {
     for ( Index ivin=0; ivin<nvin; ++ivin ) {
       double vin = rdr.vinCenter(ivin);
+      if ( haveUpDownHists ) {
+        countu = rdr.countTableU()[iadc][ivin];
+        countd = rdr.countTableD()[iadc][ivin];
+      }
       Index count = rdr.countTable()[iadc][ivin];
       phc->Fill(iadc, vin, count);
       if ( iadc > iadcfitmin && iadc < iadcfitmax && vin > vinfitmin && vin < vinfitmax ) {
@@ -114,12 +119,48 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
         } else {
           ++nfill;
           phf->Fill(iadc, vin, count);
+          if ( haveUpDownHists ) {
+            phfu->Fill(iadc, vin, countu);
+            phfd->Fill(iadc, vin, countd);
+          }
         }
       }
     }
   }
   cout << myname << "Response fit histogram nfill=" << nfill << ", nskip=" << nskip << endl;
   if ( nfill == 0 ) return;
+  // Tune Vin offset by compering the upward and downward sloping data.
+  if ( haveUpDownHists ) {
+    cout << myname << "Filling up/down response histograms." << endl;
+    if ( phfu->Integral() > 10 ) {
+      phfu->Fit("pol1", "Q");
+      pfitU = phfu->GetFunction("pol1");
+      if ( pfitU != nullptr ) {
+        fitOffsetU = pfitU->GetParameter(0);
+        fitGainU = pfitU->GetParameter(1);
+        cout << myname << "Fit gain u: " << fitGainU << " mV/ADC, offset: " << fitOffsetU << " mV" << endl;
+      } else {
+        cout << myname << "Fit failed for up data." << endl;
+      }
+    } else {
+      cout << myname << "Up data fit histogram has too few entries: " << phfd->Integral() << endl;
+    }
+    if ( phfd->Integral() > 10 ) {
+      TFitResultPtr pres = phfd->Fit("pol1", "Q");
+      pfitD = phfd->GetFunction("pol1");
+      if ( pfitD != nullptr ) {
+        fitOffsetD = pfitD->GetParameter(0);
+        fitGainD = pfitD->GetParameter(1);
+        cout << myname << "Fit gain d: " << fitGainD << " mV/ADC, offset: " << fitOffsetD << " mV" << endl;
+      } else {
+        cout << myname << "Fit failed for down data." << endl;
+      }
+    } else {
+      cout << myname << "Down data fit histogram has too few entries: " << phfd->Integral() << endl;
+    }
+  } else {
+    cout << myname << "Vin slope tables not found." << endl;
+  }
   // Fit the response histogram.
   cout << myname << "Fitting..." << endl;
   bool isBatch = gROOT->IsBatch();
@@ -127,7 +168,6 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   TCanvas* pcantmp = new TCanvas;
   if ( ! isBatch ) gROOT->SetBatch(false);
   phf->Fit("pol1", "Q");
-  delete pcantmp;
   cout << myname << "  fitusestuck: " << fitusestuck << endl;
   cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
   cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
@@ -141,6 +181,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   localCalib().data().gain = fitGain;
   localCalib().data().offset = fitOffset;
   cout << myname << "Fit gain: " << fitGain << " mV/ADC, offset: " << fitOffset << " mV" << endl;
+  delete pcantmp;
   ostringstream ssdif;
   ssdif.precision(3);
   ssdif << "V_{in} - (" << fitGain << " ADC + " << fitOffset << ") [mV]";
@@ -1061,6 +1102,19 @@ int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax
   phds = createManagedHistogram(hnamds, stitle, nd, 0, smax);
   phdsb = createManagedHistogram(hnamdsb, stitldsb, nd, 0, smax);
   vector<TH1*> hists2d = {phf, phc, phd};
+  // IF requested and data are available, create the up/down hists.
+  if ( doUpDownFits ) {
+    if ( reader()->haveVinSlopeTables() ) {
+      haveUpDownHists = true;
+      cout << myname << "Adding up/down response fit hists." << endl;
+      phfu = createManaged2dHistogram(hnamf, stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+      phfd = createManaged2dHistogram(hnamf, stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+      hists2d.push_back(phfu);
+      hists2d.push_back(phfd);
+    } else {
+      cout << myname << "Unable to fill up/down hists because those tables are not present." << endl;
+    }
+  }
   vector<TH1*> dhists = {phdr, phds, phdsb, phdw};
   // Add calibration histograms.
   if ( pcalNominal != nullptr ) {

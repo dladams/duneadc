@@ -370,33 +370,55 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
       cout << myname << "Sampling frequency not found. Assuming " << sampFreq << " Hz." << endl;
     }
     double tickPeriod = sampFreq/vinRate;
-    double borderWidth = 0.2*tickPeriod;
-    //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500, 3800);
-    //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
-    // Setting maxLimit = 0 helps with large fluctuations after overflow.
-    // Large minThresh fixes t0 offset due to fluctuations near that value.
-    AdcBorderExtremaFinder ef(borderWidth, 1000, 4000, 1500,    0);
-    AdcExtrema exts;
-    int rstat = ef.find(*prdr, exts);
-    if ( rstat ) {
-      cout << myname << "Extrema finding failed with error " << rstat << "." << endl;
-    } else if ( exts.size() == 0 ) {
-      cout << myname << "No extrema found." << endl;
-    } else {
-      cout << myname << "Extrema:" << endl;
-      for ( Index iext=0; iext<exts.size(); ++iext ) {
-        AdcExtremum ext = exts[iext];
-        cout << myname << setw(12) << ext.tick() << " " << ext.isMax();
-        if ( iext ) cout << setw(12) << ext.tick() - exts[iext-1].tick();
-        cout << endl;
+    double ef1BorderWidth = 0.2*tickPeriod;
+    SampleValue ef1MinThresh =  1000;
+    SampleValue ef1MaxThresh =  4000;
+    SampleValue ef1MinLimit =   1500;
+    SampleValue ef1MaxLimit =      0;
+    double vinMin = -300.0;
+    double vinMax = 1700.0;
+    if ( 0 ) {
+      // Find extrema.
+      AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      Index ef2NbinThresh = 500;
+      Index ef2MinGapBin = 50000;
+      SampleIndex maxdext = 10000;
+      AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);
+      AdcExtrema exts;
+      if ( findExtrema(&*prdr, exts, ef1, ef2, maxdext) ) {
+        cout << myname << "Unable to find extrema." << endl;
+      } else {
+        SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
+        prdrFemb->setSampleFunction(pfun);
       }
-      SampleFunction* pfun = new Sawtooth(-300, 1700, exts);
-      prdrFemb->setSampleFunction(pfun);
+    } else {
+      //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500, 3800);
+      //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
+      // Setting maxLimit = 0 helps with large fluctuations after overflow.
+      // Large minThresh fixes t0 offset due to fluctuations near that value.
+      AdcBorderExtremaFinder ef(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      AdcExtrema exts;
+      int rstat = ef.find(*prdr, exts);
+      if ( rstat ) {
+        cout << myname << "Extrema finding failed with error " << rstat << "." << endl;
+      } else if ( exts.size() == 0 ) {
+        cout << myname << "No extrema found." << endl;
+      } else {
+        cout << myname << "Extrema:" << endl;
+        for ( Index iext=0; iext<exts.size(); ++iext ) {
+          AdcExtremum ext = exts[iext];
+          cout << myname << setw(12) << ext.tick() << " " << ext.isMax();
+          if ( iext ) cout << setw(12) << ext.tick() - exts[iext-1].tick();
+          cout << endl;
+        }
+        SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
+        prdrFemb->setSampleFunction(pfun);
+      }
     }
   }
   // Build ADC-voltage table.
   cout << myname << "Building ADC-Vin table." << endl;
-  prdr->buildTableFromWaveform(20000, 0.1, -300.0);
+  prdr->buildTableFromWaveform(20000, 0.1, -300.0, true, true);
   cout << myname << "Done building ADC-Vin table." << endl;
   return prdr;
 }

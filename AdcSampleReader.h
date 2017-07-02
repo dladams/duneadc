@@ -95,7 +95,7 @@ public:  // For waveforms
   // If histtime, then ploat is vs time instead of tick.
   virtual TH1* histvin(SampleIndex idat =0, SampleIndex ndat =0,
                        unsigned int nshow =1, bool histtime = false) const;
-
+ 
 public:  // Table description.
 
   // There are nvin() input voltage bins. Bin ivin starts at
@@ -105,9 +105,11 @@ public:  // Table description.
   double vinmin() const { return m_vinmin; }
   double vinmax() const { return vinmin() + nvin()*dvin(); }
 
-  // Count table.
+  // Count tables.
   // The # samples for ADC code iadc and input voltage bin ivin is count[iadc][ivin];
   const CountTable& countTable() const { return m_table; }
+  const CountTable& countTableU() const { return m_tableu; }
+  const CountTable& countTableD() const { return m_tabled; }
 
   // Return the low edge of an input voltage bin.
   double vinLow(Index ivin) const;
@@ -115,17 +117,25 @@ public:  // Table description.
   // Return the center of an input voltage bin.
   double vinCenter(Index ivin) const;
 
+  // If true, this analyzer holds separate tables for upward and downward sloping
+  // data. Data for dVin/ds > 0 is in countTableU() and < 0 in countTableD().
+  bool haveVinSlopeTables() const { return m_haveVinSlopeTables; }
+
   // Build table from waveform.
   // Table will have nvin voltage bins width dvin starting at vinmin.
-  int buildTableFromWaveform(Index nvin, double dvin, double vinmin);
+  int buildTableFromWaveform(Index nvin, double dvin, double vinmin,
+                             bool doAllTable =true, bool doSlopeTables =false);
 
 protected:  // data: subclasses should fill this
 
-  // Data describing the table.
+  // Vin-ADC tables
   Index m_nvin = 0;
   double m_dvin = 0.0;
   double m_vinmin = 0.0;
   CountTable m_table;
+  CountTable m_tableu;
+  CountTable m_tabled;
+  bool m_haveVinSlopeTables =false;
 
 };
 

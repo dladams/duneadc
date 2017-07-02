@@ -119,7 +119,9 @@ double AdcSampleReader::vinCenter(Index ivin) const {
 
 //**********************************************************************
 
-int AdcSampleReader::buildTableFromWaveform(Index a_nvin, double a_dvin, double a_vinmin) {
+int AdcSampleReader::
+buildTableFromWaveform(Index a_nvin, double a_dvin, double a_vinmin,
+                       bool doAllTable, bool doSlopeTables) {
   const Name myname = "AdcSampleReader::buildTableFromWaveform: ";
   const SampleIndex buildLogPeriod = 0;
   if ( nsample() == 0 ) {
@@ -138,13 +140,23 @@ int AdcSampleReader::buildTableFromWaveform(Index a_nvin, double a_dvin, double 
   m_dvin = a_dvin;
   m_vinmin = a_vinmin;
   m_table.clear();
+  m_tableu.clear();
+  m_tabled.clear();
   m_table.resize(nadc());
   for ( CountVector& vec : m_table ) vec.resize(nvin());
+  if ( doSlopeTables ) {
+    m_tableu.resize(nadc());
+    for ( CountVector& vec : m_tableu ) vec.resize(nvin());
+    m_tabled.resize(nadc());
+    for ( CountVector& vec : m_tabled ) vec.resize(nvin());
+  }
   Index nunderflow = 0;
   Index noverflow = 0;
   for ( SampleIndex isam=0; isam<nsample(); ++isam ) {
     Code iadc = code(isam);
-    double xvin = vin(isam);
+    double dvds = 0.0;
+    double* pdvds = doSlopeTables ? &dvds : nullptr;
+    double xvin = vin(isam, pdvds);
     if ( buildLogPeriod && isam && buildLogPeriod*(isam/buildLogPeriod) == isam ) {
       cout << myname << "Table build is at sample " << isam << " of " << nsample()
            << " (" << int((100.0*isam)/nsample()) << "%)" << endl;
@@ -161,11 +173,15 @@ int AdcSampleReader::buildTableFromWaveform(Index a_nvin, double a_dvin, double 
     if ( ivin >= nvin() ) {
       cout << myname << "ERROR: Voltage index is out of range: " << ivin << " >= " << nvin() << endl;
       m_table.clear();
+      m_tableu.clear();
+      m_tabled.clear();
       return 11;
     }
     if ( iadc >= m_table.size() ) {
       cout << myname << "ERROR: Invalid ADC code: " << iadc << endl;
       m_table.clear();
+      m_tableu.clear();
+      m_tabled.clear();
       return 12;
     }
     if ( ivin >= m_table[iadc].size() ) {
@@ -174,10 +190,15 @@ int AdcSampleReader::buildTableFromWaveform(Index a_nvin, double a_dvin, double 
       cout << myname << "ERROR:   isam = " << isam << endl;
       cout << myname << "ERROR:   Vin = " << xvin << endl;
       m_table.clear();
+      m_tableu.clear();
+      m_tabled.clear();
       return 13;
     }
     ++m_table[iadc][ivin];
+    if ( dvds > 0.0 ) ++m_tableu[iadc][ivin];
+    if ( dvds < 0.0 ) ++m_tabled[iadc][ivin];
   }
+  m_haveVinSlopeTables = doSlopeTables;
   if ( nunderflow ) cout << myname << "Table underflow count: " << nunderflow << endl;
   if ( noverflow ) cout << myname << "Table overflow count: " << noverflow << endl;
   return 0;

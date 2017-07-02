@@ -38,7 +38,11 @@ root> auto prdr = asf.find("201703a_D60", 8);
 root> cout << "Sample " << prdr->sample() << " tick count: " << prdr->nsample() << endl;
 ```
 
-The (smart) pointer prdr is type `AdcSampleReader`.
+The (smart) pointer prdr is to type `AdcSampleReader`.
+
+In addition to reading and opening the input file, the sample reader ensures that the table
+summary and input voltage calibration are available. It determinse the data format from the sample
+name and then creates a reader of the appropriate type.
 
 Some of the available sample names are
 
@@ -66,13 +70,20 @@ Some of the available sample names are
 All are P1, cold (LN2), 2 MHz waveforms unless otherwise indicated.
 
 Data is found in `$HOME/data/dune/adc`. Contact me for help in obtaining data or adding samples.
+A failed attempt to open a sample should produce a message showing the expected file name
+and location.
 
-The classes `AdcTestSampleReader` is used to read table and CSV files and `AdcBinarySampleReader`
-is used read files in binary format.
-Clients are expected to use `AdcSampleFinder`. Otherwise, the metadata, voltage calibration and table
-will not be filled for binary files.
+The classes `AdcTestSampleReader` is used to read table and CSV files, `AdcBinarySampleReader`
+to read files in binary format and `AdcFembTreeSampleReader` for those in the Root tree format..
+Clients are recommended to use `AdcSampleFinder`. Otherwise, the metadata, voltage calibration and table
+may not be available.
 
-## Calibration
+## Input voltage calibration
+
+Data files typically do not provide an accurate input voltage calibration. As noted above, the reader
+or finder adds this information which is then available through the reader interface.
+
+## Response calibration
 
 At present, two calibrations for an ADC channel are supported: linear and ultimate.
 
@@ -95,7 +106,7 @@ fraction of input voltage samples that are more than some distance from the mean
 studies this limit has been set to 5 mV.
 
 The linear and ultimate calibration data are stored in the class
-[AdcChannelCalibration](AdcChannelCalibration.h} and include the above variables:
+[AdcChannelCalibration](AdcChannelCalibration.h) and include the above variables:
 
 | [Type](AdcTypes.h) | Name |
 |------|------|
@@ -130,7 +141,7 @@ in a root tree and later retrieving it from that tree. The tree variable names a
 
 ## Perfomance evaluation
 
-The class [AdcChipAnalyzer] may be used to carry out calibration and performance analysis,
+The class [AdcChipAnalyzer](AdcChipAnalyzer.h) may be used to carry out calibration and performance analysis,
 fill the corresponding trees and generate plots with behavior controlled by parameters passed
 to the ctor. See the header for more information.
 

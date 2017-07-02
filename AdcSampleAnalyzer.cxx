@@ -129,7 +129,16 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   }
   cout << myname << "Response fit histogram nfill=" << nfill << ", nskip=" << nskip << endl;
   if ( nfill == 0 ) return;
-  // Tune Vin offset by compering the upward and downward sloping data.
+  // Fit the response histograms.
+  cout << myname << "Fitting..." << endl;
+  bool isBatch = gROOT->IsBatch();
+  if ( ! isBatch ) gROOT->SetBatch(true);
+  TCanvas* pcantmp = new TCanvas;
+  if ( ! isBatch ) gROOT->SetBatch(false);
+  cout << myname << "  fitusestuck: " << fitusestuck << endl;
+  cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
+  cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
+  // Fit up/down responses.
   if ( haveUpDownHists ) {
     cout << myname << "Filling up/down response histograms." << endl;
     if ( phfu->Integral() > 10 ) {
@@ -138,7 +147,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
       if ( pfitU != nullptr ) {
         fitOffsetU = pfitU->GetParameter(0);
         fitGainU = pfitU->GetParameter(1);
-        cout << myname << "Fit gain u: " << fitGainU << " mV/ADC, offset: " << fitOffsetU << " mV" << endl;
+        cout << myname << "  Up fit gain: " << fitGainU << " mV/ADC, offset: " << fitOffsetU << " mV" << endl;
       } else {
         cout << myname << "Fit failed for up data." << endl;
       }
@@ -151,7 +160,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
       if ( pfitD != nullptr ) {
         fitOffsetD = pfitD->GetParameter(0);
         fitGainD = pfitD->GetParameter(1);
-        cout << myname << "Fit gain d: " << fitGainD << " mV/ADC, offset: " << fitOffsetD << " mV" << endl;
+        cout << myname << "Down fit gain: " << fitGainD << " mV/ADC, offset: " << fitOffsetD << " mV" << endl;
       } else {
         cout << myname << "Fit failed for down data." << endl;
       }
@@ -161,16 +170,8 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   } else {
     cout << myname << "Vin slope tables not found." << endl;
   }
-  // Fit the response histogram.
-  cout << myname << "Fitting..." << endl;
-  bool isBatch = gROOT->IsBatch();
-  if ( ! isBatch ) gROOT->SetBatch(true);
-  TCanvas* pcantmp = new TCanvas;
-  if ( ! isBatch ) gROOT->SetBatch(false);
+  // Fit combined reponse.
   phf->Fit("pol1", "Q");
-  cout << myname << "  fitusestuck: " << fitusestuck << endl;
-  cout << myname << "  ADC fit range: (" << iadcfitmin << ", " << iadcfitmax << ")" << endl;
-  cout << myname << "  Vin fit range: (" << vinfitmin << ", " << vinfitmax << ")" << endl;
   pfit = phf->GetFunction("pol1");
   if ( pfit == nullptr ) {
     cout << myname << "ERROR: Fit failed." << endl;
@@ -180,7 +181,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
   fitGain = pfit->GetParameter(1);
   localCalib().data().gain = fitGain;
   localCalib().data().offset = fitOffset;
-  cout << myname << "Fit gain: " << fitGain << " mV/ADC, offset: " << fitOffset << " mV" << endl;
+  cout << myname << "Full fit gain: " << fitGain << " mV/ADC, offset: " << fitOffset << " mV" << endl;
   delete pcantmp;
   ostringstream ssdif;
   ssdif.precision(3);

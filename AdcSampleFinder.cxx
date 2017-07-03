@@ -59,14 +59,24 @@ int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
   }
   // Check extrema are consistent.
   Index next = 0;
-  if ( exts1.size() + 1 == exts2.size() ) {
-    cout << myname << "Dropping last entry in extrema 2" << endl;
-    exts2.pop_back();
+  Index d12 = 0;
+  if ( exts1.size() == exts2.size() ) {
+    next = exts1.size();
+  } else if ( exts1.size() + 1 == exts2.size() ) {
+    if ( exts1[0].isMin() != exts2[0].isMin() ) {
+      cout << myname << "ERROR: Ignoring first bin extremum." << endl;
+      d12 = 1;
+    } else {
+      cout << myname << "ERROR: Ignoring last bin extremum." << endl;
+    }
+    next = exts1.size();
+  } else {
+    cout << myname << "ERROR: Inconsistent extrema counts." << endl;
   }
-  if ( exts1.size() == exts2.size() ) next = exts1.size();
-  for ( Index iext=0; iext<next; ++iext ) {
-    AdcExtremum ext1 = exts1[iext];
-    AdcExtremum ext2 = exts2[iext];
+  for ( Index iext1=0; iext1<next; ++iext1 ) {
+    Index iext2 = iext1 + d12;
+    AdcExtremum ext1 = exts1[iext1];
+    AdcExtremum ext2 = exts2[iext2];
     if ( ext1.isMin() != ext2.isMin() ) next = 0;
     else {
       SampleIndex dext = ext2.tick() > ext1.tick() ?

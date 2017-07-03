@@ -6,6 +6,7 @@
 #include "AdcFembTreeSampleReader.h"
 #include "AdcBorderExtremaFinder.h"
 #include "AdcBinExtremaFinder.h"
+#include "RollbackFinder.h"
 #include "Sawtooth.h"
 #include "FileDirectory.h"
 #include "TSystem.h"
@@ -58,6 +59,10 @@ int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
   }
   // Check extrema are consistent.
   Index next = 0;
+  if ( exts1.size() + 1 == exts2.size() ) {
+    cout << myname << "Dropping last entry in extrema 2" << endl;
+    exts2.pop_back();
+  }
   if ( exts1.size() == exts2.size() ) next = exts1.size();
   for ( Index iext=0; iext<next; ++iext ) {
     AdcExtremum ext1 = exts1[iext];
@@ -356,6 +361,8 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   }
   prdrFemb = new AdcFembTreeSampleReader(fname, icha, ssam, isam0, nsam);
   AdcSampleReaderPtr prdr(prdrFemb);
+  // Mitigate rollback.
+  prdr->addMitigator(new RollbackFinder(*prdr, 100000));
   // Find extrema.
   bool calculateVin = true;
   if ( calculateVin ) {

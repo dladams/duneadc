@@ -31,7 +31,7 @@ double AdcSampleReader::vinForTF1(double* x, double*) const {
 
 TH1* AdcSampleReader::
 histdata(SampleIndex idat0, SampleIndex ndatin,
-         int sshow, bool usetime) const {
+         int sshow, bool usetime, bool mitigated) const {
   if ( idat0 >= nsample() ) return 0;
   if ( sshow == 0 ) return 0;
   unsigned int show = std::abs(sshow);
@@ -61,10 +61,10 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
   for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
     unsigned int idat = show*ipt;
     if ( binned ) {
-      double adcMin = code(idat);
+      double adcMin = mitigated ? mitigatedCode(idat) : code(idat);
       double adcMax = adcMin;
       for ( SampleIndex jdat=idat+1; jdat<idat+show; ++jdat ) {
-        double adcj = code(jdat);
+        double adcj = mitigated ? mitigatedCode(idat) : code(jdat);
         if ( adcj < adcMin ) adcMin = adcj;
         if ( adcj > adcMax ) adcMax = adcj;
       }
@@ -73,7 +73,7 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
       ph->SetBinContent(ipt+1, adcMean);
       ph->SetBinError(ipt+1, adcErr);
     } else {
-      AdcCode adc = code(idat);
+      AdcCode adc = mitigated ? mitigatedCode(idat) : code(idat);
       ph->SetBinContent(ipt+1, adc);
     }
   }

@@ -2,6 +2,18 @@
 
 #include "RollbackFinder.h"
 #include "AdcSampleReader.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
+namespace {
+
+int dbgRollbackFinder() {
+  return 1;
+}
+
+}
 
 //**********************************************************************
 
@@ -12,6 +24,8 @@ RollbackFinder(const AdcSampleReader& a_rdr,
 : m_rdr(a_rdr),
   m_maxRollback(a_maxRollback),
   m_maxCode(a_maxCode) {
+  const string myname = "RollbackFinder::ctor: ";
+  bool dbg = dbgRollbackFinder();
   SampleIndex nsam = a_rdr.nsample();
   if ( nsam == 0 ) return;
   SampleIndex nsatHere = 0;   //  # saturated samples preceding the current sample
@@ -22,6 +36,7 @@ RollbackFinder(const AdcSampleReader& a_rdr,
   SampleRegion region(nsam,0);
   bool inRegion = false;  // True if last sample is in a region of saturation.
   for ( SampleIndex isam=0; isam<a_rdr.nsample(); ++isam ) {
+    if ( dbg && isam > 500000 ) dbg = false;
     code = a_rdr.mitigatedCode(isam);
     bool saturated = code >= m_maxCode;
     bool saveRegion = false;
@@ -32,12 +47,14 @@ RollbackFinder(const AdcSampleReader& a_rdr,
       } else {
         ++nunsHere;
         if ( nunsHere >= m_maxRollback ) {
+          if ( dbg ) cout << myname << "Ending saturation at sample " << isam << endl;
           saveRegion = true;
           inRegion = false;
         }
       }
     } else {
       if ( saturated ) {
+        if ( dbg ) cout << myname << "Starting saturation at sample " << isam << endl;
         region.first = isam;
         region.second = isam;
         inRegion = true;

@@ -20,7 +20,7 @@ int AdcBinRecordBuilder::fill(const AdcSampleReader& reader) {
   m_abrs.reserve(nadc);
   for ( AdcCode code=0; code<nadc; ++code ) m_abrs.emplace_back(code, false);
   for ( SampleIndex isam=0; isam<reader.nsample(); ++isam ) {
-    AdcCode code = reader.code(isam);
+    AdcCode code = reader.mitigatedCode(isam);
     if ( code >= m_abrs.size() ) {
       cout << myname << "Error: ADC code " << code << " >= " << reader.nadc() << endl;
       abort();

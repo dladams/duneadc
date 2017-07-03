@@ -89,9 +89,11 @@ public:  // For waveforms
   // Every nshow'th point is shown.
   // If histtime, then plot is vs time instead of tick.
   // If nshow < 0, then data is binned and error bars reflect range.
+  // if mitigated, the mitigated waveform is returned.
   // Caller is reponsible for manging the returned histogram.
   virtual TH1* histdata(SampleIndex idat =0, SampleIndex ndat =0,
-                        int nshow =1, bool histtime = false) const;
+                        int nshow =1, bool histtime = false,
+                        bool mitigated =false) const;
 
   // Return a histogram of the input voltage from sample idat to idat+ndat.
   // Every nshow'th point is shown.
@@ -138,6 +140,9 @@ public: // Mitigation.
 
   // Return the mitigated code for a sample.
   AdcCode mitigatedCode(SampleIndex isam) const;
+
+  // Return the vector of mitigators.
+  const AdcCodeMitigatorVector& mitigators() const { return m_mits; }
 
 protected:  // data: subclasses should fill this
 

@@ -24,6 +24,8 @@ class AdcSampleReader;
 
 class RollbackFinder : public AdcCodeMitigator {
 
+public:
+
   using SampleRegion = std::pair<SampleIndex, SampleIndex>;
   using SampleRegionVector = std::vector<SampleRegion>;
 

@@ -64,11 +64,15 @@ int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
     next = exts1.size();
   } else if ( exts1.size() + 1 == exts2.size() ) {
     if ( exts1[0].isMin() != exts2[0].isMin() ) {
-      cout << myname << "ERROR: Ignoring first bin extremum." << endl;
+      cout << myname << "Border search did not find the first extremum." << endl;
       d12 = 1;
     } else {
-      cout << myname << "ERROR: Ignoring last bin extremum." << endl;
+      cout << myname << "Border search did not find the last extremum." << endl;
     }
+    next = exts1.size();
+  } else if ( exts1.size() + 2 == exts2.size() ) {
+    cout << myname << "Border search did not find the first and last extrema." << endl;
+    d12 = 1;
     next = exts1.size();
   } else {
     cout << myname << "ERROR: Inconsistent extrema counts." << endl;

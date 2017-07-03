@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 #include "AdcTypes.h"
+#include "AdcCodeMitigator.h"
+
 class TH1;
 class TF1;
 
@@ -25,13 +27,13 @@ public:
   using CountVector = std::vector<Count>;
   using CountTable = std::vector<CountVector>;
 
-  using Code = unsigned short;
-  using CodeVector = std::vector<Code>;
+  using AdcCodeVector = std::vector<AdcCode>;
+  using AdcCodeMitigatorVector = std::vector<const AdcCodeMitigator*>;
 
 public:  // General
 
   // Dtor.
-  virtual ~AdcSampleReader() =default;
+  virtual ~AdcSampleReader();
 
   // Set the channel number and read data for that channel.
   // Returns nonzero for error e.g. this sample does not hhave data for that channel.
@@ -57,7 +59,7 @@ public:  // General
   virtual Index nchannel() const { return 0; }
 
   // Number of ADC codes (4096 for the typical 12-bits)
-  virtual Code nadc() const { return 0; }
+  virtual AdcCode nadc() const { return 0; }
 
   // Time data was taken in unix sec.
   virtual AdcTime time() const { return 0; }
@@ -72,7 +74,7 @@ public:  // For waveforms
   virtual SampleIndex nsample() const =0;
 
   // Waveform. The ADC bin for tick isam.
-  virtual Code code(SampleIndex isam) const =0;
+  virtual AdcCode code(SampleIndex isam) const =0;
 
   // The input voltage (mV) for sample isam.
   // Implementer *may* return dVin/dtick in *pdvds.
@@ -128,6 +130,15 @@ public:  // Table description.
   int buildTableFromWaveform(Index nvin, double dvin, double vinmin,
                              bool doAllTable =true, bool doSlopeTables =false);
 
+public: // Mitigation.
+
+  // Add ADC code mitigator.
+  // This reader manages (deletes) its mitigators.
+  void addMitigator(const AdcCodeMitigator* pmit);
+
+  // Return the mitigated code for a sample.
+  AdcCode mitigatedCode(SampleIndex isam) const;
+
 protected:  // data: subclasses should fill this
 
   // Vin-ADC tables
@@ -138,6 +149,7 @@ protected:  // data: subclasses should fill this
   CountTable m_tableu;
   CountTable m_tabled;
   bool m_haveVinSlopeTables =false;
+  AdcCodeMitigatorVector m_mits;
 
 };
 

@@ -68,7 +68,7 @@ public:
   Index nchannel() const override { return 16; }
 
   // Number of ADC codes (4096 for the typical 12-bits)
-  Code nadc() const override { return m_nadc; }
+  AdcCode nadc() const override { return m_nadc; }
 
 public:  // Waveform info.
 
@@ -80,7 +80,7 @@ public:  // Waveform info.
   SampleIndex nsample() const override { return m_nsample; }
 
   // Return a sample.
-  Code code(SampleIndex isam) const override { return data()[isam]; }
+  AdcCode code(SampleIndex isam) const override { return data()[isam]; }
 
   // Return the voltage for a sample.
   double vin(SampleIndex isam, double* pdvds) const override {
@@ -97,7 +97,7 @@ public:  // Methods specific to this class
   int read();
 
   // Waveform.
-  const CodeVector& data() const { return m_data; }
+  const AdcCodeVector& data() const { return m_data; }
 
   // Rate at which voltage changes [mV/sec]
   double dvdt() const { return m_dvdt; }
@@ -116,7 +116,7 @@ private:
   Index m_chip;
   Name m_chipLabel;
   Index m_chan;
-  Code m_nadc;
+  AdcCode m_nadc;
   Index m_maxSample;
   SampleIndex m_nsample;
   double m_samplingFrequency;
@@ -124,7 +124,7 @@ private:
   double m_dvds;
   double m_nomVinPerAdc;
 
-  CodeVector m_data;
+  AdcCodeVector m_data;
 
 };
 

@@ -377,7 +377,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     SampleValue ef1MaxLimit =      0;
     double vinMin = -300.0;
     double vinMax = 1700.0;
-    if ( 0 ) {
+    if ( 1 ) {
       // Find extrema.
       AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
       Index ef2NbinThresh = 500;

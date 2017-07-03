@@ -38,6 +38,9 @@ bool sticky(Index iadc) {
   return false;
 }
 
+// Returning nonzero will log messages about histogram and other object management.
+//   > 1 for saved histograms
+//   > 2 for cleaned histograms
 int dbg_AdcSampleAnalyzer() { return 0; }
 
 };  // end unnamed namespace 

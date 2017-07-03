@@ -385,7 +385,7 @@ int AdcTestSampleReader::read() {
     // Read waveform.
     m_data.clear();
     while ( fin && ! fin.eof() ) {
-      Code iadc = 0.0;
+      AdcCode iadc = 0.0;
       string sline;
       getline(fin, sline);
       if ( ! fin ) {

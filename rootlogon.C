@@ -22,6 +22,7 @@
   gROOT->ProcessLine(".L AdcBinRecord.cxx+");
   gROOT->ProcessLine(".L AdcVoltageResponse.cxx+");
   gROOT->ProcessLine(".L AdcVoltagePerformance.cxx+");
+  gROOT->ProcessLine(".L RollbackFinder.cxx+");
   gROOT->ProcessLine(".L AdcBinRecordBuilder.cxx+");
   gROOT->ProcessLine(".L AdcBinExtremaFinder.cxx+");
   gROOT->ProcessLine(".L AdcPerformanceTree.cxx+");

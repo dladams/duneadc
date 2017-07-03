@@ -1,11 +1,19 @@
 // AdcSampleReader.cxx
 
 #include "AdcSampleReader.h"
+#include "AdcCodeMitigator.h"
 #include <sstream>
 #include "TH1.h"
 #include "TF1.h"
 
 using std::ostringstream;
+
+//**********************************************************************
+
+AdcSampleReader::~AdcSampleReader() {
+  for ( const AdcCodeMitigator* pmit : m_mits ) delete pmit;
+  m_mits.clear();
+}
 
 //**********************************************************************
 
@@ -65,7 +73,7 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
       ph->SetBinContent(ipt+1, adcMean);
       ph->SetBinError(ipt+1, adcErr);
     } else {
-      Code adc = code(idat);
+      AdcCode adc = code(idat);
       ph->SetBinContent(ipt+1, adc);
     }
   }
@@ -155,7 +163,7 @@ buildTableFromWaveform(Index a_nvin, double a_dvin, double a_vinmin,
   Index nunderflow = 0;
   Index noverflow = 0;
   for ( SampleIndex isam=0; isam<nsample(); ++isam ) {
-    Code iadc = code(isam);
+    AdcCode iadc = code(isam);
     double dvds = 0.0;
     double* pdvds = doSlopeTables ? &dvds : nullptr;
     double xvin = vin(isam, pdvds);
@@ -204,6 +212,23 @@ buildTableFromWaveform(Index a_nvin, double a_dvin, double a_vinmin,
   if ( nunderflow ) cout << myname << "Table underflow count: " << nunderflow << endl;
   if ( noverflow ) cout << myname << "Table overflow count: " << noverflow << endl;
   return 0;
+}
+
+//**********************************************************************
+
+void AdcSampleReader::addMitigator(const AdcCodeMitigator* pmit) {
+  m_mits.push_back(pmit);
+}
+
+//**********************************************************************
+
+AdcCode AdcSampleReader::mitigatedCode(SampleIndex isam) const {
+  AdcCode val = code(isam);
+  for ( const AdcCodeMitigator* pmit : m_mits ) {
+    if ( pmit == nullptr ) continue;
+    val = pmit->mitigatedCode(val, isam);
+  }
+  return val;
 }
 
 //**********************************************************************

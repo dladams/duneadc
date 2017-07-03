@@ -3,7 +3,7 @@
 // David Adams
 // June 2017
 //
-// Performance tree filler for DUNE17-cold--col test data for protoDUNE ADCs.
+// Performance tree filler for DUNE17-cold, cold test data for protoDUNE ADCs.
 
 #include <string>
 #include <iostream>

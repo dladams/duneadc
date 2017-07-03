@@ -38,6 +38,8 @@ bool sticky(Index iadc) {
   return false;
 }
 
+int dbg_AdcSampleAnalyzer() { return 0; }
+
 };  // end unnamed namespace 
 
 //**********************************************************************
@@ -360,22 +362,30 @@ AdcSampleAnalyzer(const AdcChannelCalibration& a_calib, Name a_sampleName, Name 
 //**********************************************************************
 
 AdcSampleAnalyzer::~AdcSampleAnalyzer() {
+  const string myname = "AdcSampleAnalyzer::dtor: ";
   clean();
   // Delete the long-term histograms.
-  for ( TH1* ph : m_saveHists ) delete ph;
+  for ( TH1* ph : m_saveHists ) {
+    if ( dbg_AdcSampleAnalyzer() > 1 ) cout << myname << "Deleting " << ph->GetName() << endl;
+    delete ph;
+  }
   m_saveHists.clear();
   // Clear the bars. Saves a little space but spoils on-screen performance plots.
   bool rembars = gROOT->IsBatch();
   if ( rembars ) {
+    if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting g80 bars." << endl;
     for ( TLine* pline : g80bars ) delete pline;
     g80bars.clear();
+    if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting g100 bars." << endl;
     for ( TLine* pline : g100bars ) delete pline;
     g100bars.clear();
   }
   if ( pcalNominal != pcalInput ) {
+    if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting nominal calibration." << endl;
     delete pcalNominal;
     pcalNominal = nullptr;
   }
+  if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Done." << endl;
 }
 
 //**********************************************************************
@@ -390,21 +400,34 @@ void AdcSampleAnalyzer::manageHist(TH1* ph, bool cleaned) const {
       return;
     }
   }
-  if ( cleaned ) m_cleanHists.push_back(ph);
-  else m_saveHists.push_back(ph);
+  if ( cleaned ) {
+    if ( dbg_AdcSampleAnalyzer() > 2 ) cout << myname << "Adding to histogram clean list: " << ph->GetName() << endl;
+    ph->SetDirectory(nullptr);
+    m_cleanHists.push_back(ph);
+  } else {
+    if ( dbg_AdcSampleAnalyzer() > 1 ) cout << myname << "Adding to histogram save list: " << ph->GetName() << endl;
+    ph->SetDirectory(nullptr);
+    m_saveHists.push_back(ph);
+  }
 }
 
 //**********************************************************************
 
 void AdcSampleAnalyzer::clean() {
+  const string myname = "AdcSampleAnalyz:er::clean: ";
   // Delete the histograms managed locally.
-  for ( TH1* ph : m_cleanHists ) delete ph;
+  for ( TH1* ph : m_cleanHists ) {
+    if ( dbg_AdcSampleAnalyzer() > 2 ) cout << myname << "Deleting " << ph->GetName() << endl;
+    delete ph;
+  }
   m_cleanHists.clear();
   // Delete the analyzer if it is managed here.
   if ( m_preaderManaged ) {
+    if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting reader." << endl;
     m_preaderManaged.reset(nullptr);
     m_preader = nullptr;
   }
+  if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Done." << endl;
 }
 
 //**********************************************************************
@@ -1108,8 +1131,8 @@ int AdcSampleAnalyzer::createHistograms(Index nvin, double vinmin, double vinmax
     if ( reader()->haveVinSlopeTables() ) {
       haveUpDownHists = true;
       cout << myname << "Adding up/down response fit hists." << endl;
-      phfu = createManaged2dHistogram(hnamf, stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
-      phfd = createManaged2dHistogram(hnamf, stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+      phfu = createManaged2dHistogram(hnamf + "u", stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
+      phfd = createManaged2dHistogram(hnamf + "d", stitle, npadc, 0, padcmax, npvin, pvinmin, pvinmax);
       hists2d.push_back(phfu);
       hists2d.push_back(phfd);
     } else {

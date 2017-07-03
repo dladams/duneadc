@@ -49,6 +49,7 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
   double t2 = samper*(t1 + ndat);
   TH1* ph = new TH1F(hname.c_str(), htitl.c_str(), npt, t1, t2);
   ph->SetStats(0);
+  ph->SetDirectory(nullptr);
   for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
     unsigned int idat = show*ipt;
     if ( binned ) {
@@ -98,6 +99,7 @@ histvin(SampleIndex idat0, SampleIndex ndatin,
   double t2 = samper*(t1 + ndat);
   TH1* ph = new TH1F(hname.c_str(), htitl.c_str(), npt, t1, t2);
   ph->SetStats(0);
+  ph->SetDirectory(nullptr);
   for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
     unsigned int idat = show*ipt;
     ph->SetBinContent(ipt+1, vin(idat));

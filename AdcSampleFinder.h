@@ -26,6 +26,10 @@ public:
   // After the first call, the argument is ignored.
   static Name defaultTopdir(Name setValue ="");
 
+  // Return if a DUNE17 sample is bad.
+  // if chan = badChannel(), then returns if any of the channels are bad.
+  static bool isBadDune17(Index chip, Index chan =badChannel(), AdcTime time =0);
+
   // Ctor specifying the location of the data files.
   // If blank, defaultTopdir() is used.
   explicit AdcSampleFinder(Name a_topdir ="");

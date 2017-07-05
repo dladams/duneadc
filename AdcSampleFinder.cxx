@@ -128,6 +128,20 @@ Name AdcSampleFinder::defaultTopdir(Name setValue) {
 
 //**********************************************************************
 
+bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
+  bool anyChannel = chan == badChannel();
+  if ( chan > 15 && !anyChannel ) return true;
+  if ( chip == 27 ) {
+    // Waveform looks ok for chan 0-4 but does not quite reach saturation.
+    if ( time == 1498657500 ) return true;
+  } else if ( chip == 28 ) {
+    if ( time == 1498854600 ) return true;
+  }
+  return false;
+}
+
+//**********************************************************************
+
 AdcSampleFinder::AdcSampleFinder(Name a_topdir) {
   const string myname = "AdcSampleFinder::ctor: ";
   if ( a_topdir.size() ) {
@@ -142,6 +156,7 @@ AdcSampleFinder::AdcSampleFinder(Name a_topdir) {
 AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxsam) const {
   const string myname = "AdcSampleFinder::find: ";
   // CSV samples from Hucheng et al.
+  AdcSampleReaderPtr prdr;
   if ( ssam.substr(0,4) == "2016" ||
        ssam.substr(0,6) == "201701" ||
        ssam.substr(0,6) == "201702" ||
@@ -165,10 +180,12 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
   }
   // DUNE test data summer 2017
   if ( ssam.substr(0,7) == "DUNE17-" ) {
-    return findFembReader(ssam, icha, maxsam);
+    prdr = findFembReader(ssam, icha, maxsam);
   }
-  cout << myname << "ERROR: Unable to find reader for sample " << ssam << endl;
-  return nullptr;
+  if ( ! prdr ) {
+    cout << myname << "ERROR: Unable to find reader for sample " << ssam << endl;
+  }
+  return prdr;
 }
 
 //**********************************************************************
@@ -301,6 +318,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   sels.push_back("adcTestData");
   sels.push_back("functype3");
   sels.push_back("sampleRate2000000");
+  bool isDune17 = false;
   if ( asample.substr(0,14) == "DUNE17-test2" ) {
     string basename = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
     fname = AdcSampleFinder::defaultTopdir() + "/justin2/" + basename;
@@ -320,8 +338,11 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     }
     string::size_type jpos = asample.find("_", ipos+5);
     ++ipos;
-    string sfieldChip = asample.substr(ipos, jpos-ipos);
-    sels.push_back(sfieldChip);
+    string::size_type len = jpos == string::npos ? string::npos : jpos-ipos;
+    string sfieldChip = asample.substr(ipos, len);
+    sels.push_back(sfieldChip + "_");
+    isDune17 = true;
+    if ( jpos != string::npos ) sels.push_back(asample.substr(jpos+1));
   } else {
     cout << myname << "Unable to find FEMB sample " << ssam << endl;
   }
@@ -354,16 +375,15 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     } else {
       cout << myname << "ERROR: Found multiple files:" << endl;
       for ( const auto& filepath : files ) cout << myname << "  " << filepath.second << endl;
-      cout << myname << "Searched directories:" << endl;
-      for ( string dir : dirs ) cout << myname << "  " << dir << endl;
-      cout << endl;
       return nullptr;
     }
   }
+  cout << myname << "Sample file name: " << fname << endl;
   // Find the sample range.
   SampleIndex isam0 = 0;
   SampleIndex nsam = 0;
-  if ( ssam.size() > ipos ) {
+  // Drop the option for samples because the suffix is now used to select between multiple versions.
+  if ( false && ssam.size() > ipos ) {
     ipos = ssam.find("_", ipos);
     string::size_type jpos = ssam.find("_", ipos+1);
     if ( jpos != string::npos ) {
@@ -375,6 +395,14 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   }
   prdrFemb = new AdcFembTreeSampleReader(fname, icha, ssam, isam0, nsam);
   AdcSampleReaderPtr prdr(prdrFemb);
+  if ( isDune17 ) {
+    if ( isBadDune17(prdr->chip(), prdr->channel(), prdr->time()) ) {
+      cout << myname << "DUNE17 sample " << prdr->sample() << " channel " << icha
+           << " is flagged bad." << endl;
+      prdr.reset(nullptr);
+      return prdr;
+    }
+  }
   // Mitigate rollback.
   prdr->addMitigator(new RollbackFinder(*prdr, 100000));
   // Find extrema.

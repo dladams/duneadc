@@ -10,7 +10,7 @@ using std::endl;
 namespace {
 
 int dbgRollbackFinder() {
-  return 1;
+  return 0;
 }
 
 }

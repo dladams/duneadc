@@ -37,18 +37,27 @@ void filldbd17c(Index chip1, Index nchip, Index chan1=0, Index nchan =16,
     ostringstream sssam;
     sssam << dataset << "_chip" << chip;
     if ( isam0 > 0 || nsam > 0 ) sssam << "_" << isam0 << "_" << nsam;
-    string ssam = sssam.str();
-    cout << endl;
-    cout << "*************  " << ssam << "  *****************" << endl;
-    TDatime dt1;
-    dt1.Print();
-    AdcChipAnalyzer chipper(ssam, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
-    bool save = true;
-    chipper.draw("rawv", save);
-    chipper.draw("diff", save);
-    chipper.draw("perf", save);
-    TDatime dt2;
-    dt2.Print();
-    cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;
+    vector<string> sufs(1);
+    if ( chip == 29 ) { sufs[0] = "0630"; sufs.push_back("0701"); }
+    if ( chip == 30 ) { sufs[0] = "0703"; }  // 0630 is bad
+    if ( chip == 61 ) { sufs[0] = "0626"; sufs.push_back("0628"); }
+    if ( chip == 63 ) { sufs[0] = "0628T17"; sufs.push_back("0628T21"); sufs.push_back("0628T22"); }
+    string ssambase = sssam.str();
+    for ( string suf : sufs ) {
+      string ssam = ssambase;
+      if ( suf.size() ) ssam += "_" + suf;
+      cout << endl;
+      cout << "*************  " << ssam << "  *****************" << endl;
+      TDatime dt1;
+      dt1.Print();
+      AdcChipAnalyzer chipper(ssam, chan1, nchan, datasetCalib, fillCalTree, vmin, vmax, nv, vresmax, dropTails, fillPerfTree);
+      bool save = true;
+      chipper.draw("rawv", save);
+      chipper.draw("diff", save);
+      chipper.draw("perf", save);
+      TDatime dt2;
+      dt2.Print();
+      cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;
+    }
   }
 }

@@ -86,6 +86,7 @@ public:
   TH1* gainHist()      const { return m_phGain; }
   TH1* offsetHist()    const { return m_phOffset; }
   const TH1Vector& rawHists() const { return m_rawHists; }
+  const TH1Vector& ramHists() const { return m_ramHists; }
   const TH1Vector& vinHists() const { return m_vinHists; }
 
   // Return the channel number for a channel index.
@@ -120,6 +121,7 @@ private:
   std::vector<Index> m_chans;
   TH1Vector m_hists;
   TH1Vector m_rawHists;
+  TH1Vector m_ramHists;
   TH1Vector m_vinHists;
   std::vector<TCanvas*> m_cans;
   TH1* m_phGain;

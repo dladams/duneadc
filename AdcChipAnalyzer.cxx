@@ -32,6 +32,7 @@ void AdcChipAnalyzer::help(Name prefix) {
   cout << prefix << "Display plots with aca.draw(plotName, doPrint)" << endl;
   cout << prefix << "Supported plot names:" << endl;
   cout << prefix << "   rawv - Raw waveform plus Vin." << endl;
+  cout << prefix << "   ramv - Mitigated waveform plus Vin." << endl;
   cout << prefix << "   resp - Inverse response (V{in} vs. ADC bin)." << endl;
   cout << prefix << "   zres - Inverse response for ADC bin < 300." << endl;
   cout << prefix << "   diff - Linear-fit residual." << endl;
@@ -113,6 +114,8 @@ AdcChipAnalyzer::~AdcChipAnalyzer() {
   m_hists.clear();
   for ( TH1* ph : m_rawHists ) delete ph;
   m_rawHists.clear();
+  for ( TH1* ph : m_ramHists ) delete ph;
+  m_ramHists.clear();
   for ( TH1* ph : m_vinHists ) delete ph;
   m_vinHists.clear();
   for ( const AdcChannelCalibration* pcal : m_pcals ) delete pcal;
@@ -304,10 +307,10 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
     bool doLine = false;  // Draw a line for the x-axis.
     TLine* pline = nullptr;
     // Find the histogram(s) for the plot name.
-    if ( splot == "rawv" ) {
+    if ( splot == "rawv" || splot == "ramv" ) {
       gridx = true;
       gridy = true;
-      ph = m_rawHists[icha];
+      ph = splot == "rawv" ? m_rawHists[icha] : m_ramHists[icha];
       ph2 = m_vinHists[icha];
       sarg = "e0 x0";
       ph->GetYaxis()->SetTitleOffset(1.3);
@@ -438,6 +441,7 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
   if ( m_haveAsa.size() < icha+1 ) m_haveAsa.resize(icha+1, false);
   if ( m_asas.size() < icha+1 ) m_asas.resize(icha+1, nullptr);
   if ( m_rawHists.size() < icha+1 ) m_rawHists.resize(icha+1, nullptr);
+  if ( m_ramHists.size() < icha+1 ) m_ramHists.resize(icha+1, nullptr);
   if ( m_vinHists.size() < icha+1 ) m_vinHists.resize(icha+1, nullptr);
   AdcSampleAnalyzer*& pasa = m_asas[icha];
   if ( ! m_haveAsa[icha] ) {
@@ -509,11 +513,18 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
     if ( rdr.nsample() < 100000 ) rebin = 10;
     if ( rdr.nsample() < 10000 ) rebin = 1;
     bool xIsTime = false;
-    TH1* ph = rdr.histdata(0, 0, -rebin, xIsTime);
+    TH1* ph = rdr.histdata(0, 0, -rebin, xIsTime, false);
     if ( ph != nullptr ) {
       ph->SetLineWidth(2);
       ph->SetMinimum(-500);
       ph->SetMaximum(4500);
+    }
+    TH1* phm = rdr.histdata(0, 0, -rebin, xIsTime, true);
+    if ( phm != nullptr ) {
+      phm->SetLineWidth(2);
+      phm->SetMinimum(-500);
+      phm->SetMaximum(4500);
+      phm->SetLineColor(kGreen+3);
     }
     TH1* ph2 = rdr.histvin(0, 0, rebin, xIsTime);
     if ( ph2 != nullptr ) {
@@ -523,6 +534,7 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
       if ( ph != nullptr ) ph->GetYaxis()->SetTitle(ylab.c_str());
     }
     m_rawHists[icha] = ph;
+    m_ramHists[icha] = phm;
     m_vinHists[icha] = ph2;
     // If flag is set, clean the analyzer.
     // This deletes some less-critical histograms and deletes the reader.

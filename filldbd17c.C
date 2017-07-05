@@ -38,10 +38,18 @@ void filldbd17c(Index chip1, Index nchip, Index chan1=0, Index nchan =16,
     sssam << dataset << "_chip" << chip;
     if ( isam0 > 0 || nsam > 0 ) sssam << "_" << isam0 << "_" << nsam;
     vector<string> sufs(1);
+    if ( chip ==  2 ) { sufs[0] = "0705"; }  // 0702 test is bad
+    if ( chip ==  3 ) { sufs[0] = "0702T16"; }  // 0702T15 test is bad
+    if ( chip == 12 ) { sufs[0] = "70705T1142"; }  // 0701 tests and earlier 0705 test are bad
     if ( chip == 29 ) { sufs[0] = "0630"; sufs.push_back("0701"); }
     if ( chip == 30 ) { sufs[0] = "0703"; }  // 0630 is bad
     if ( chip == 61 ) { sufs[0] = "0626"; sufs.push_back("0628"); }
     if ( chip == 63 ) { sufs[0] = "0628T17"; sufs.push_back("0628T21"); sufs.push_back("0628T22"); }
+    if ( chip == 65 ) { sufs[0] = "0629"; }  // Four samples from 0628 are bad
+    if ( chip == 67 ) { sufs[0] = "0629T10"; sufs.push_back("0629T14"); }
+    if ( chip == 71 ) { sufs[0] = "0628T12"; sufs.push_back("0628T17"); }
+    if ( chip == 75 ) { sufs.clear(); }  // 0628 two tests look bad. 0629 ADC looks bad.
+    if ( chip == 92 ) { sufs[0] = "0630T13"; sufs.push_back("0630T17"); }
     string ssambase = sssam.str();
     for ( string suf : sufs ) {
       string ssam = ssambase;

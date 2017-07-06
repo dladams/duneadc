@@ -50,6 +50,10 @@ public:
   const AdcVoltagePerformance* find(AdcChannelId id, float vrmsmax =0) const;
   const AdcVoltagePerformance* find(Index chip, Index chan, float vrmsmax =0) const;
 
+  // Find the next entry starting at ient.
+  // ient is updated to pint at the entry.
+  const AdcVoltagePerformance* findNext(Index& ient, Index chip, Index chan) const;
+
   // Accessors.
   int status() const { return m_status; }
   TFile* file() const { return m_pfile; }

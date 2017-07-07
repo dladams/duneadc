@@ -129,3 +129,17 @@ find(Index chip, Index chan, float vuncmax) const {
 }
 
 //**********************************************************************
+
+const AdcVoltagePerformance* AdcPerformanceTree::
+findNext(Index& ient, Index chip, Index chan) const {
+  if ( status() ) return nullptr;
+  for ( ; ient<size(); ++ient ) {
+    find(ient);
+    if ( m_pperf == nullptr ) continue;
+    if ( m_pperf->chip == chip && m_pperf->chan == chan ) return m_pperf;
+  }
+  find(0);
+  return nullptr;
+}
+
+//**********************************************************************

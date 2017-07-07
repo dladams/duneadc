@@ -131,11 +131,21 @@ Name AdcSampleFinder::defaultTopdir(Name setValue) {
 bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
   bool anyChannel = chan == badChannel();
   if ( chan > 15 && !anyChannel ) return true;
-  if ( chip == 27 ) {
+  if ( chip ==  1 ) {
+    if ( time == 1498867440 ) return true;   // square wf
+  } else if ( chip == 27 ) {
     // Waveform looks ok for chan 0-4 but does not quite reach saturation.
     if ( time == 1498657500 ) return true;
   } else if ( chip == 28 ) {
     if ( time == 1498854600 ) return true;
+  } else if ( chip == 62 ) {
+    if ( time == 1498668840 ) return true;   // wf is very ugly
+  } else if ( chip == 85 ) {
+    if ( time == 1498828620 ) return true;   // wf empty
+  } else if ( chip == 88 ) {
+    if ( time == 1498835580 ) return true;   // wf mostly empty
+  } else if ( chip == 89 ) {
+    if ( time == 1498837620 ) return true;   // square wf
   }
   return false;
 }

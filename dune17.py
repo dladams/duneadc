@@ -51,8 +51,8 @@ def dune17cDatasets():
   for chip in range(84,91): dss.append(pre + str(chip))
   dss.append(pre + "92_0630T13")
   dss.append(pre + "92_0630T17")
-  for chip in range(93,98): dss.append(pre + str(chip))
-  for chip in range(99,102): dss.append(pre + str(chip))
+  for chip in range(93,102): dss.append(pre + str(chip))
+  dss.append(pre + "105")
   dss.append(pre + "110")
   return dss  
 

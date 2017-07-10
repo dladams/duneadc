@@ -14,9 +14,11 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
   RankMap fairChips;
   RankMap poorChips;
   RankMap badChips;
+  ostringstream sspymdst;
   ostringstream sspymavg;
   ostringstream sspymprd;
   ostringstream sspymlow;
+  sspymdst << "effdst = \"" << dataset << "\"";
   sspymavg << "effavg = {";
   sspymprd << "effprd = {";
   sspymlow << "efflow = {";
@@ -106,10 +108,15 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
   writePython("fair", fairChips);
   writePython("poor", poorChips);
   writePython("bad",  badChips);
-  cout << sspymavg.str() << endl;
-  cout << sspymprd.str() << endl;
-  cout << sspymlow.str() << endl;
-  cout << sspyrank.str() << endl;
+  string ofname = "rank_" + dataset + ".py";
+  for ( char& ch : ofname ) if ( ch == '-' ) ch = '_';
+  ofstream outp(ofname.c_str());
+  outp << sspymdst.str() << endl;
+  outp << sspymavg.str() << endl;
+  outp << sspymprd.str() << endl;
+  outp << sspymlow.str() << endl;
+  outp << sspyrank.str() << endl;
+  cout << "Python output file: " << ofname << endl;
   TCanvas* pcan = nullptr;
   if ( makeCan ) {
     pcan = new TCanvas;

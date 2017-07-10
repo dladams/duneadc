@@ -36,24 +36,6 @@ vector<string> dune17cDatasets() {
 
 //**********************************************************************
 
-// Special actions specified by name:
-//                 count - Show number of datasets
-//                  list - List all datasets
-//   DUNE17-cold_chipXXX - Process that dataset
-void filldbd17c(string sact) {
-  string myname = "filldbd17c: ";
-  if ( sact == "count" ) {
-    cout << "DUNE17-cold dataset count: " << dune17cDatasets().size() << endl;
-  } else if ( sact == "list" ) {
-    vector<string> dss = dune17cDatasets();
-    for ( string ds : dss ) cout << ds << endl;
-  } else {
-    cout << myname << "ERROR: Unknown command: " << sact << endl;
- }
-}
-
-//**********************************************************************
-
 // Process a given list of datasets.
 // Not really specific to DUNE17-cold except the AdcChipAnalyzer parameters
 // are hardwired.
@@ -81,6 +63,27 @@ void filldbd17c(const vector<string>& ssams, Index chan1=0, Index nchan =16, boo
     dt2.Print();
     cout << "Elapsed time: " << (dt2.Convert() - dt1.Convert())/60.0 << " minutes" << endl;
   }
+}
+
+//**********************************************************************
+
+// Special actions specified by name:
+//                 count - Show number of datasets
+//                  list - List all datasets
+//   DUNE17-cold_chipXXX - Process that dataset
+void filldbd17c(string sact) {
+  string myname = "filldbd17c: ";
+  if ( sact == "count" ) {
+    cout << "DUNE17-cold dataset count: " << dune17cDatasets().size() << endl;
+  } else if ( sact == "list" ) {
+    vector<string> dss = dune17cDatasets();
+    for ( string ds : dss ) cout << ds << endl;
+  } else if ( sact.substr(0,16) == "DUNE17-cold_chip" ) {
+    vector<string> dss(1, sact);
+    filldbd17c(dss, 0, 16, true);
+  } else {
+    cout << myname << "ERROR: Unknown command: " << sact << endl;
+ }
 }
 
 //**********************************************************************

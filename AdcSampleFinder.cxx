@@ -133,6 +133,10 @@ bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
   if ( chan > 15 && !anyChannel ) return true;
   if ( chip ==  1 ) {
     if ( time == 1498867440 ) return true;   // square wf
+  } else if ( chip == 19 ) {
+    if ( time == 1499436420 ) return true;   // empty wf
+  } else if ( chip == 24 ) {
+    if ( time == 1499465100 ) return true;   // empty wf
   } else if ( chip == 27 ) {
     // Waveform looks ok for chan 0-4 but does not quite reach saturation.
     if ( time == 1498657500 ) return true;

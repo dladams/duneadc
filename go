@@ -9,7 +9,7 @@ fi
 LOGDIR=logs_$DSNAME
 if [ "$2" = clean ]; then
   echo Cleaning dataset $DSNAME...
-  rm -f $LOGDIR
+  rm -rf $LOGDIR
   rm -f calib_$DSNAME.root
   rm -f perf_$DSNAME.root
   rm -f *.png
@@ -30,7 +30,8 @@ for NAME in `cat $DSNAME.txt`; do
     echo "Skipping $NAME."
   else
     echo "Processing $NAME on "`date`
-    root.exe -b -q 'filldbd17c.C("'$NAME'")' >$LOG 2>&1
+    //root.exe -b -q 'filldbd17c.C("'$NAME'")' >$LOG 2>&1
+    root.exe -b -q 'processDataset.C("'$NAME'")' >$LOG 2>&1
     if test -r stop; then
       echo Found stop file. Exiting.
       exit 0

@@ -45,7 +45,8 @@ public:
   // Ctors.
   AdcVoltagePerformance();
   AdcVoltagePerformance(AdcChannelId aid);
-  AdcVoltagePerformance(Index a_chip, Index a_chan, AdcTime a_time,
+  AdcVoltagePerformance(std::string a_sampleName,
+                        Index a_chip, Index a_chan, AdcTime a_time,
                         Float a_vuncmax,
                         Index a_nv, Float a_vmin, Float a_vmax);
 
@@ -68,6 +69,7 @@ public:
 
 public:
 
+  std::string sampleName;      // Sample name, e.g. dataset, chip, date
   Index chip;                  // Chip index
   Index chan;                  // Channel number
   AdcTime time;                // Time (unix sec) data was taken

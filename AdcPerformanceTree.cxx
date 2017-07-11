@@ -143,3 +143,17 @@ findNext(Index& ient, Index chip, Index chan) const {
 }
 
 //**********************************************************************
+
+const AdcVoltagePerformance* AdcPerformanceTree::
+findSample(Index& ient, Name sampleName) const {
+  if ( status() ) return nullptr;
+  for ( ; ient<size(); ++ient ) {
+    find(ient);
+    if ( m_pperf == nullptr ) continue;
+    if ( m_pperf->sampleName == sampleName ) return m_pperf;
+  }
+  find(0);
+  return nullptr;
+}
+
+//**********************************************************************

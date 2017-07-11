@@ -13,10 +13,12 @@ AdcVoltagePerformance::AdcVoltagePerformance()
 //**********************************************************************
 
 AdcVoltagePerformance::
-AdcVoltagePerformance(Index a_chip, Index a_chan, AdcTime a_time,
+AdcVoltagePerformance(std::string a_sampleName,
+                      Index a_chip, Index a_chan, AdcTime a_time,
                       Float a_vuncmax,
                       Index a_nv, Float a_vmin, Float a_vmax)
-: chip(a_chip), chan(a_chan), time(a_time),
+: sampleName(a_sampleName),
+  chip(a_chip), chan(a_chan), time(a_time),
   vuncmax(a_vuncmax),
   nv(a_nv), vmin(a_vmin), vmax(a_vmax),
   vinCounts(nv, 0),

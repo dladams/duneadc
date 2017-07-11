@@ -50,9 +50,14 @@ public:
   const AdcVoltagePerformance* find(AdcChannelId id, float vrmsmax =0) const;
   const AdcVoltagePerformance* find(Index chip, Index chan, float vrmsmax =0) const;
 
-  // Find the next entry starting at ient.
-  // ient is updated to pint at the entry.
+  // Find the next entry matching a chip and channel starting at ient.
+  // ient is updated to point at the entry.
   const AdcVoltagePerformance* findNext(Index& ient, Index chip, Index chan) const;
+
+  // Find the next entry with the given sample name starting at ient.
+  // If found, ient is set to its entry number.
+  // If not found, null is returned and ient is set to the # entries.
+  const AdcVoltagePerformance* findSample(Index& ient, Name sampleName) const;
 
   // Accessors.
   int status() const { return m_status; }

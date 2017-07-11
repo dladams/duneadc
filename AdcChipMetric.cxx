@@ -26,6 +26,17 @@ AdcChipMetric(Name a_dataset, Index a_chip, Index a_firstChannel, Index a_nChann
   
 //**********************************************************************
 
+AdcChipMetric::
+AdcChipMetric(Name a_dataset, Name a_sampleName, Index a_firstChannel, Index a_nChannel)
+: m_dataset(a_dataset),
+  m_sampleName(a_sampleName),
+  m_chip(badChip()),
+  m_firstChannel(a_firstChannel),
+  m_nChannel(a_nChannel),
+  m_chanEff(m_nChannel, -1.0) { }
+  
+//**********************************************************************
+
 int AdcChipMetric::evaluate() {
   const Name myname = "AdcChipMetric::evaluate: ";
   Name fname = "perf_" + dataset() + ".root";
@@ -40,44 +51,83 @@ int AdcChipMetric::evaluate() {
   double chanEffProd = 1.0;
   unsigned int nchan = 0;
   double chanEffLow = 1.0;
-  for ( Index chan=firstChannel(); chan<endChannel; ++chan ) {
-    const AdcVoltagePerformance* pavp = apt.find(chip(), chan);
-    if ( pavp == nullptr ) {
-      cout << myname << "Unable to find chip " << chip() << " channel " << chan << endl;
-      setChannelEfficiency(chan, 0.0);
+  // Find the entries for the specified channel range.
+  Index nent = apt.size();
+  IndexVector ents(nChannel(), nent);
+  if ( m_sampleName.size() ) {
+    Index ient = 0;
+    while ( ient < nent ) {
+      const AdcVoltagePerformance* pavp = apt.findSample(ient, m_sampleName);
+      if ( pavp != nullptr ) {
+        Index icha = pavp->chan;
+        if ( icha >= firstChannel() && icha < endChannel ) {
+          Index kcha = icha - firstChannel();
+          if ( ents[kcha] == nent ) {
+            ents[kcha] = ient;
+          } else {
+            cout << myname << "Skipping duplicate channel " << icha << " for sample " << m_sampleName << endl;
+          }
+        }
+      }
+      ++ient;
+    }
+  } else {
+    for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
+      Index chan = firstChannel() + kcha;
+      Index ient = 0;
+      const AdcVoltagePerformance* pavp = apt.findNext(ient, chip(), chan);
+      if ( pavp == nullptr ) {
+        cout << myname << "Unable to find chip " << chip() << " channel " << chan << endl;
+        setChannelEfficiency(chan, 0.0);
+        ++nbad;
+        chanEffProd = 0.0;
+        chanEffLow = 0.0;
+        break;
+      } else {
+        ents[kcha] = ient;
+      }
+    }
+  }
+  // Loop over channel entries.
+  Index icha = firstChannel();
+  for ( Index ient : ents ) {
+    if ( ient == nent ) {
+      cout << myname << "Unable to find channel " << icha << endl;
+      setChannelEfficiency(icha, 0.0);
       ++nbad;
       chanEffProd = 0.0;
       chanEffLow = 0.0;
-      break;
-    } else {
-      const AdcVoltagePerformance& avp = *pavp;
-      double vin = avp.vmin;
-      double vmin = 200.0;
-      double vmax = 1200.0;
-      double close = 1.0;
-      double v1 = 0.0;
-      double v2 = avp.vmin;
-      double dv = (avp.vmax - avp.vmin)/avp.nv;
-      double effsum = 0.0;
-      double neff = 0;
-      for ( Index iv=0; iv<avp.nv; ++iv ) {
-        v1 = v2;
-        v2 += dv;
-        if ( v1 + close < vmin ) continue;
-        if ( v2 - close > vmax ) break;
-        double eff = avp.eff(iv);
-        // cout << chan << " " << iv << ": " << eff << endl;
-        ++neff;
-        effsum += eff;
-      }
-      double chanEff = effsum/neff;
-      setChannelEfficiency(chan, chanEff);
-      chanEffSum += chanEff;
-      chanEffProd *= chanEff;
-      if ( chanEff < chanEffLow ) chanEffLow = chanEff;
-      //cout << chip() << " " << chan << ": " << chanEff << endl;
-      ++nchan;
+      continue;
     }
+    const AdcVoltagePerformance* pavp = apt.find(ient);
+    const AdcVoltagePerformance& avp = *pavp;
+    double vin = avp.vmin;
+    double vmin = 200.0;
+    double vmax = 1200.0;
+    double close = 1.0;
+    double v1 = 0.0;
+    double v2 = avp.vmin;
+    double dv = (avp.vmax - avp.vmin)/avp.nv;
+    double effsum = 0.0;
+    double neff = 0;
+    for ( Index iv=0; iv<avp.nv; ++iv ) {
+      v1 = v2;
+      v2 += dv;
+      if ( v1 + close < vmin ) continue;
+      if ( v2 - close > vmax ) break;
+      double eff = avp.eff(iv);
+      // cout << chan << " " << iv << ": " << eff << endl;
+      ++neff;
+      effsum += eff;
+    }
+    double chanEff = effsum/neff;
+    setChannelEfficiency(avp.chan, chanEff);
+    chanEffSum += chanEff;
+    chanEffProd *= chanEff;
+    if ( chanEff < chanEffLow ) chanEffLow = chanEff;
+    //cout << chip() << " " << chan << ": " << chanEff << endl;
+    ++icha;
+    ++nchan;
   }
   double chipEffAvg = 0.0;
   if ( nchan > 0 && nchan == nChannel() ) chipEffAvg = chanEffSum/nchan;

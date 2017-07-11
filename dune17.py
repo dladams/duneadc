@@ -5,15 +5,8 @@
 
 # List of available DUNE17 datasets.
 
-ds0710 = False
-
-def setDs0710():
-  global ds0710
-  ds0710 = True
-
 def dune17cDatasets():
   pre = "DUNE17-cold_chip"
-  global ds0710  # For 7/10 processing
   dss = []
   dss.append(pre + "2_0705")
   dss.append(pre + "3_0702T16")
@@ -21,21 +14,16 @@ def dune17cDatasets():
   dss.append(pre + "12_0705T1142")
   for chip in range(13,17): dss.append(pre + str(chip))
   dss.append(pre + "18")
-  if ds0710: dss.append(pre + "19")
   dss.append(pre + "20")
-  if ds0710: dss.append(pre + "21")
-  else:      dss.append(pre + "21_0626")
+  dss.append(pre + "21_0626")
   dss.append(pre + "21_0706")
   dss.append(pre + "22_0627")
   dss.append(pre + "22_0706")
-  if ds0710: dss.append(pre + "23")
-  else:      dss.append(pre + "23_0627")
+  dss.append(pre + "23_0627")
   dss.append(pre + "23_0706")
-  if ds0710: dss.append(pre + "24")
-  else:      dss.append(pre + "24_0627")
-  if ds0710: dss.append(pre + "25")
-  else:      dss.append(pre + "25_0627")
-  if not ds0710: dss.append(pre + "25_0706")
+  dss.append(pre + "24_0627")
+  dss.append(pre + "25_0627")
+  dss.append(pre + "25_0706")
   dss.append(pre + "26")
   dss.append(pre + "27_0707")
   dss.append(pre + "29_0630")
@@ -69,7 +57,15 @@ def dune17cDatasets():
   for chip in range(93,107): dss.append(pre + str(chip))
   dss.append(pre + "108")
   dss.append(pre + "110")
+  dss.append(pre + "111")
   dss.append(pre + "112")
+  dss.append(pre + "113")
+  dss.append(pre + "114")
+  for chip in range(116,121): dss.append(pre + str(chip))
+  dss.append(pre + "122")
+  dss.append(pre + "123")
+  dss.append(pre + "125")
+  dss.append(pre + "128")
   return dss  
  
 # Return the chip number for a dataset.

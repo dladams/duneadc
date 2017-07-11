@@ -656,7 +656,7 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   // Create voltage performance object.
   double v1 = voltageResponses[0].vmin;
   double v2 = voltageResponses[nvr-1].vmax;
-  vperfs.emplace_back(chip(), channel(), time(), rmsmax, nvr, v1, v2);
+  vperfs.emplace_back(sampleName(), chip(), channel(), time(), rmsmax, nvr, v1, v2);
   AdcVoltagePerformance& vperf = vperfs.back();
   string hnambase = "h" + sampleName() + "_" + schan + "_";
   // Create efficiency histogram.

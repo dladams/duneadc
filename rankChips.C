@@ -1,10 +1,12 @@
-using MetricMap = map<unsigned int, double>;
-using RankMap = multimap<double, unsigned int>;
+using MetricMap = map<string, double>;
+using RankMap = multimap<double, string>;
 
 void writePython(string name, const RankMap& chips);
 
-TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) {
+// Performanc is taken from perf_dsperf
+TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
   string myname = "rankChips: ";
+  string dslist = a_dslist.size() ? a_dslist : dataset;
   RankMap rankedChipsAvg;
   RankMap rankedChipsPrd;
   MetricMap metricPrd;
@@ -15,13 +17,16 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
   RankMap poorChips;
   RankMap badChips;
   ostringstream sspymdst;
+  ostringstream sspymsam;
+  ostringstream sspymchp;
   ostringstream sspymavg;
   ostringstream sspymprd;
   ostringstream sspymlow;
-  sspymdst << "effdst = \"" << dataset << "\"";
-  sspymavg << "effavg = {";
-  sspymprd << "effprd = {";
-  sspymlow << "efflow = {";
+  sspymdst << "datasetName = \"" << dataset << "\"";
+  sspymdst << "datasetList = \"" << dslist << "\"";
+  sspymavg << "effAvg = {";
+  sspymprd << "effProduct = {";
+  sspymlow << "effLow = {";
   int nhbin = 20;
   bool isMarSurvey = dataset == "201703a";
   vector<TH1*> hists;
@@ -52,9 +57,28 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
   if ( hists.size() > 1 ) hists[0]->SetLineWidth(3);
   cout << endl;
   cout << myname << dataset << endl;
-  for ( unsigned int  chip=chip1; chip<=chip2; ++chip ) {
-    cout << myname << "Chip " << chip << endl;
-    AdcChipMetric acm(dataset, chip);
+  string dsfname = dslist + ".txt";
+  ifstream dsfile(dsfname.c_str());
+  if ( ! dsfile ) {
+    cout << myname << "Dastaset file not found: " << dsfname << endl;
+    return nullptr;
+  }
+  bool first = true;
+  vector<string> ssams;
+  Index wsam = 0;
+  while ( dsfile ) {
+    string ssam;
+    dsfile >> ssam;
+    if ( dsfile.eof() ) break;
+    ssams.push_back(ssam);
+    Index lsam = ssam.size();
+    if ( lsam > wsam ) wsam = lsam;
+  }
+  wsam += 4;
+  for ( string ssam : ssams ) {
+    cout << myname << "Sample " << ssam << endl;
+    //AdcChipMetric acm(dataset, chip);
+    AdcChipMetric acm(dataset, ssam);
     int estat = acm.evaluate();
     if ( estat != 0 ) continue;
     double effavg = acm.chipMetric("EffAvg");
@@ -62,43 +86,44 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
     double efflow = acm.chipMetric("EffLow");
     double rankavg = 1.0 - effavg;
     double rankprd = 1.0 - effprd;
-    std::pair<double, unsigned int> valavg(rankavg, chip);
-    std::pair<double, unsigned int> valprd(rankprd, chip);
+    std::pair<double, string> valavg(rankavg, ssam);
+    std::pair<double, string> valprd(rankprd, ssam);
     rankedChipsAvg.insert(valavg);
     rankedChipsPrd.insert(valprd);
-    metricPrd[chip] = effprd;
-    metricAvg[chip] = effavg;
-    metricLow[chip] = efflow;
+    metricPrd[ssam] = effprd;
+    metricAvg[ssam] = effavg;
+    metricLow[ssam] = efflow;
     if ( effprd > 0.95 ) goodChips.insert(valavg);
     else if ( effprd > 0.85 ) fairChips.insert(valavg);
     else if ( effprd > 0.7 ) poorChips.insert(valavg);
     else badChips.insert(valavg);
-    string prefix = chip > chip1 ? ", " : "";
-    if ( chip%10 == 0 ) prefix += "\n";
-    sspymavg << prefix << chip << ":" << effavg;
-    sspymprd << prefix << chip << ":" << effprd;
-    sspymlow << prefix << chip << ":" << efflow;
+    string prefix = first ? "" : ",";
+    prefix += "\n";
+    string qsam = "\"" + ssam + "\"";
+    sspymavg << prefix << setw(wsam) << qsam << ":" << effavg;
+    sspymprd << prefix << setw(wsam) << qsam << ":" << effprd;
+    sspymlow << prefix << setw(wsam) << qsam << ":" << efflow;
     hists[0]->Fill(effprd);
-    if ( isMarSurvey && chip < 41 ) hists[1]->Fill(effprd);
-    if ( isMarSurvey && chip > 40 ) hists[2]->Fill(effprd);
+    //if ( isMarSurvey && chip < 41 ) hists[1]->Fill(effprd);
+    //if ( isMarSurvey && chip > 40 ) hists[2]->Fill(effprd);
   }
-  sspymavg << "}";
-  sspymprd << "}";
-  sspymlow << "}";
+  sspymavg << "\n}";
+  sspymprd << "\n}";
+  sspymlow << "\n}";
   cout.precision(3);
   int rank = 0;
   ostringstream sspyrank;
   sspyrank << "effrank = [";
   for ( auto& rc : rankedChipsPrd ) {
-    unsigned int chip = rc.second;
-    double effprd = metricPrd[chip];
-    double effavg = metricAvg[chip];
-    double efflow = metricLow[chip];
+    string ssam = rc.second;
+    double effprd = metricPrd[ssam];
+    double effavg = metricAvg[ssam];
+    double efflow = metricLow[ssam];
     ++rank;
     if ( rank > 1 ) sspyrank << ", ";
     if ( rank%10 == 0 ) sspyrank << "\n";
-    sspyrank << chip;
-    cout << setw(4) << rank << ": " << setw(4) << chip
+    sspyrank << ssam;
+    cout << setw(4) << rank << ": " << setw(4) << ssam
          << ": " << fixed << effprd
          << ", " << fixed << effavg
          << ", " << fixed << efflow << endl;
@@ -108,7 +133,7 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
   writePython("fair", fairChips);
   writePython("poor", poorChips);
   writePython("bad",  badChips);
-  string ofname = "rank_" + dataset + ".py";
+  string ofname = "rank_" + dslist + ".py";
   for ( char& ch : ofname ) if ( ch == '-' ) ch = '_';
   ofstream outp(ofname.c_str());
   outp << sspymdst.str() << endl;
@@ -123,16 +148,16 @@ TH1* rankChips(string dataset, int chip1 =1, int chip2 =80, bool makeCan =true) 
     pcan->SetRightMargin(0.03);
   }
   hists[0]->Draw();
-  TLegend* pleg = new TLegend(0.20, 0.70, 0.40, 0.85);
-  pleg->SetBorderSize(0);
-  pleg->SetFillStyle(0);
-  for ( unsigned int ih=0; ih<hists.size(); ++ih ) {
-    TH1* ph = hists[ih];
-    string slab = slabs[ih];
-    ph->Draw("same");
-    pleg->AddEntry(ph, slab.c_str(), "l");
-  }
-  pleg->Draw();
+  //TLegend* pleg = new TLegend(0.20, 0.70, 0.40, 0.85);
+  //pleg->SetBorderSize(0);
+  //pleg->SetFillStyle(0);
+  //for ( unsigned int ih=0; ih<hists.size(); ++ih ) {
+    //TH1* ph = hists[ih];
+    //string slab = slabs[ih];
+    //ph->Draw("same");
+    //pleg->AddEntry(ph, slab.c_str(), "l");
+  //}
+  //pleg->Draw();
   string fname = "chipQuality_" + dataset + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   return hists[0];
@@ -148,14 +173,14 @@ void writePython(string name, const RankMap& chips) {
   cout << "]" << endl;
 }
 
-void rankChipsRef(string dataset ="DUNE17-cold", int chip1 =20, int chip2 =70,
-                  string dataset2 ="201703a_mar25", int chip21 =1, int chip22 =80) {
+void rankChipsRef(string dataset ="DUNE17-cold", string dslist ="",
+                  string dataset2 ="201703a_mar25", string dslist2 ="") {
   pcan = new TCanvas;
   pcan->SetRightMargin(0.03);
   bool makeCan = false;
-  TH1* phr = rankChips(dataset2, chip21, chip22, makeCan);
+  TH1* phr = rankChips(dataset2, dslist2, makeCan);
   if ( phr == nullptr ) return;
-  TH1* pht = rankChips(dataset, chip1, chip2, makeCan);
+  TH1* pht = rankChips(dataset, dslist, makeCan);
   if ( pht == nullptr ) return;
   int nchip = pht->GetEntries();
   cout << "Test dataset chip count: " << nchip << endl;

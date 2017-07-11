@@ -1,5 +1,8 @@
-using MetricMap = map<string, double>;
-using RankMap = multimap<double, string>;
+using SampleMetricMap = map<string, double>;
+using ChipSample = std::pair<Index, string>;
+using ValueChipSample = std::pair<double, ChipSample>;
+using ChipMetricMap = map<Index, ValueChipSample>;
+using RankMap = multimap<double, ChipSample>;
 
 void writePython(string name, const RankMap& chips);
 
@@ -7,49 +10,37 @@ void writePython(string name, const RankMap& chips);
 TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
   string myname = "rankChips: ";
   string dslist = a_dslist.size() ? a_dslist : dataset;
-  RankMap rankedChipsAvg;
   RankMap rankedChipsPrd;
-  MetricMap metricPrd;
-  MetricMap metricAvg;
-  MetricMap metricLow;
+  SampleMetricMap metricPrd;
+  SampleMetricMap metricAvg;
+  SampleMetricMap metricLow;
+  ChipMetricMap chipMetricPrd;
   RankMap goodChips;
   RankMap fairChips;
   RankMap poorChips;
   RankMap badChips;
   ostringstream sspymdst;
+  ostringstream sspymdsl;
   ostringstream sspymsam;
   ostringstream sspymchp;
   ostringstream sspymavg;
   ostringstream sspymprd;
   ostringstream sspymlow;
   sspymdst << "datasetName = \"" << dataset << "\"";
-  sspymdst << "datasetList = \"" << dslist << "\"";
+  sspymdsl << "datasetList = \"" << dslist << "\"";
   sspymavg << "effAvg = {";
   sspymprd << "effProduct = {";
   sspymlow << "effLow = {";
   int nhbin = 20;
-  bool isMarSurvey = dataset == "201703a";
   vector<TH1*> hists;
   vector<string> slabs;
-  string htitl = dataset + " ADC chip quality; Q; # chips";
+  string htitl = dataset + " ADC chip quality; Q_{max}; # chips";
   string hname = "heffprd_" + dataset;
   for ( string::size_type ipos=0; ipos<hname.size(); ++ipos ) {
     if ( hname[ipos] == '-' ) hname[ipos] = '_';
   }
   hists.push_back(new TH1F(hname.c_str(), htitl.c_str(), nhbin, 0, 1.0));
   slabs.push_back("All");
-  if ( isMarSurvey ) {
-    htitl = dataset + " ADC chip quality for Quik-Pak; Q; # chips";
-    hists.push_back(new TH1F("heffprdQuik", htitl.c_str(), nhbin, 0, 1.0));
-    hists.back()->SetLineColor(kRed+1);
-    slabs.push_back("Quik-Pak");
-    hists.back()->SetLineStyle(2);
-    htitl = dataset + " ADC chip quality for MOSIS; Q; # chips";
-    hists.push_back(new TH1F("heffprdMosis", htitl.c_str(), nhbin, 0, 1.0));
-    hists.back()->SetLineColor(kGreen+2);
-    hists.back()->SetLineStyle(3);
-    slabs.push_back("MOSIS");
-  }
   for ( TH1* ph : hists ) {
     ph->SetStats(0);
     ph->SetLineWidth(2);
@@ -63,7 +54,6 @@ TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
     cout << myname << "Dastaset file not found: " << dsfname << endl;
     return nullptr;
   }
-  bool first = true;
   vector<string> ssams;
   Index wsam = 0;
   while ( dsfile ) {
@@ -75,60 +65,86 @@ TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
     if ( lsam > wsam ) wsam = lsam;
   }
   wsam += 4;
+  bool first = true;
+  // Loop over samples.
   for ( string ssam : ssams ) {
-    cout << myname << "Sample " << ssam << endl;
     //AdcChipMetric acm(dataset, chip);
     AdcChipMetric acm(dataset, ssam);
     int estat = acm.evaluate();
+    Index chip = acm.chip();    // Must call this after evaluate.
+    cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
     if ( estat != 0 ) continue;
     double effavg = acm.chipMetric("EffAvg");
     double effprd = acm.chipMetric("EffProd");
     double efflow = acm.chipMetric("EffLow");
     double rankavg = 1.0 - effavg;
     double rankprd = 1.0 - effprd;
-    std::pair<double, string> valavg(rankavg, ssam);
-    std::pair<double, string> valprd(rankprd, ssam);
-    rankedChipsAvg.insert(valavg);
-    rankedChipsPrd.insert(valprd);
+    ChipSample chipsam(chip, ssam);
+    ValueChipSample valprd(rankprd, chipsam);
     metricPrd[ssam] = effprd;
     metricAvg[ssam] = effavg;
     metricLow[ssam] = efflow;
-    if ( effprd > 0.95 ) goodChips.insert(valavg);
-    else if ( effprd > 0.85 ) fairChips.insert(valavg);
-    else if ( effprd > 0.7 ) poorChips.insert(valavg);
-    else badChips.insert(valavg);
+    auto iprd = chipMetricPrd.find(chip);
+    if ( iprd == chipMetricPrd.end() ||
+         effprd > iprd->second.first ) {
+      chipMetricPrd[chip] = valprd;
+    }
     string prefix = first ? "" : ",";
     prefix += "\n";
     string qsam = "\"" + ssam + "\"";
     sspymavg << prefix << setw(wsam) << qsam << ":" << effavg;
     sspymprd << prefix << setw(wsam) << qsam << ":" << effprd;
     sspymlow << prefix << setw(wsam) << qsam << ":" << efflow;
+    first = false;
+  }
+  // Loop over chips.
+  int count = 0;
+  for ( auto iprd : chipMetricPrd ) {
+    Index chip = iprd.first;
+    ValueChipSample valprd = iprd.second;
+    double rankprd = valprd.first;
+    double effprd = 1.0 - rankprd;
+    ChipSample chipsam = valprd.second;
+    ValueChipSample vcs(effprd, chipsam);
+    rankedChipsPrd.insert(vcs);
+    if ( effprd > 0.95 ) goodChips.insert(vcs);
+    else if ( effprd > 0.85 ) fairChips.insert(vcs);
+    else if ( effprd > 0.7 ) poorChips.insert(vcs);
+    else badChips.insert(vcs);
     hists[0]->Fill(effprd);
-    //if ( isMarSurvey && chip < 41 ) hists[1]->Fill(effprd);
-    //if ( isMarSurvey && chip > 40 ) hists[2]->Fill(effprd);
   }
   sspymavg << "\n}";
   sspymprd << "\n}";
   sspymlow << "\n}";
   cout.precision(3);
   int rank = 0;
-  ostringstream sspyrank;
-  sspyrank << "effrank = [";
+  ostringstream sspyrankSample;
+  ostringstream sspyrankChip;
+  sspyrankSample << "rankSample = [";
+  sspyrankChip   << "rankChip = [";
   for ( auto& rc : rankedChipsPrd ) {
-    string ssam = rc.second;
+    Index chip = rc.second.first;
+    string ssam = rc.second.second;
     double effprd = metricPrd[ssam];
     double effavg = metricAvg[ssam];
     double efflow = metricLow[ssam];
     ++rank;
-    if ( rank > 1 ) sspyrank << ", ";
-    if ( rank%10 == 0 ) sspyrank << "\n";
-    sspyrank << ssam;
+    if ( rank > 1 ) {
+      sspyrankSample << ", ";
+      sspyrankChip << ", ";
+    }
+    sspyrankSample << "\n  ";
+    sspyrankChip << "\n  ";
+    string qsam = "\"" + ssam + "\"";
+    sspyrankSample << qsam;
+    sspyrankChip << chip;
     cout << setw(4) << rank << ": " << setw(4) << ssam
          << ": " << fixed << effprd
          << ", " << fixed << effavg
          << ", " << fixed << efflow << endl;
   }
-  sspyrank << "]";
+  sspyrankSample << "]";
+  sspyrankChip << "]";
   writePython("good", goodChips);
   writePython("fair", fairChips);
   writePython("poor", poorChips);
@@ -137,29 +153,28 @@ TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
   for ( char& ch : ofname ) if ( ch == '-' ) ch = '_';
   ofstream outp(ofname.c_str());
   outp << sspymdst.str() << endl;
+  outp << sspymdsl.str() << endl;
   outp << sspymavg.str() << endl;
   outp << sspymprd.str() << endl;
   outp << sspymlow.str() << endl;
-  outp << sspyrank.str() << endl;
+  outp << sspyrankSample.str() << endl;
+  outp << sspyrankChip.str() << endl;
   cout << "Python output file: " << ofname << endl;
   TCanvas* pcan = nullptr;
   if ( makeCan ) {
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
   }
+  Index nchip = rankedChipsPrd.size();
+  ostringstream sshtitl;
+  sshtitl << dataset << " ADC chip quality (" << nchip << " chips)";
+  htitl = sshtitl.str();
+  hists[0]->SetTitle(htitl.c_str());
   hists[0]->Draw();
-  //TLegend* pleg = new TLegend(0.20, 0.70, 0.40, 0.85);
-  //pleg->SetBorderSize(0);
-  //pleg->SetFillStyle(0);
-  //for ( unsigned int ih=0; ih<hists.size(); ++ih ) {
-    //TH1* ph = hists[ih];
-    //string slab = slabs[ih];
-    //ph->Draw("same");
-    //pleg->AddEntry(ph, slab.c_str(), "l");
-  //}
-  //pleg->Draw();
   string fname = "chipQuality_" + dataset + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
+  cout << "Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;
+  cout << "  Chip count: " << nchip << endl;
   return hists[0];
 }
 
@@ -168,7 +183,7 @@ void writePython(string name, const RankMap& chips) {
   cout << "\"" << name << "\" : [";
   for ( auto& rc : chips ) {
     if ( count++ ) cout << ", ";
-    cout << rc.second;
+    cout << rc.second.second;
   }
   cout << "]" << endl;
 }

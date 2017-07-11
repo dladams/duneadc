@@ -68,6 +68,12 @@ int AdcChipMetric::evaluate() {
             cout << myname << "Skipping duplicate channel " << icha << " for sample " << m_sampleName << endl;
           }
         }
+        if ( chip() == badChip() ) {
+          m_chip = pavp->chip;
+        } else if ( pavp->chip != chip() ) {
+          cout << myname << "WARNING: Chips have inconsistent numbering (" << chip() << ", "
+               << pavp->chip << ") for sample " << sampleName() << endl;
+        }
       }
       ++ient;
     }

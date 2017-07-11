@@ -43,6 +43,7 @@ public:
   virtual int evaluate();
 
   // Return the chip description.
+  Name sampleName() const { return m_sampleName; }
   Name dataset() const { return m_dataset; }
   Index chip() const { return m_chip; }
   Index firstChannel() const { return m_firstChannel; }

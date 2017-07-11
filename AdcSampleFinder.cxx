@@ -137,6 +137,8 @@ bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
     if ( time == 1499436420 ) return true;   // empty wf
   } else if ( chip == 24 ) {
     if ( time == 1499465100 ) return true;   // empty wf
+  } else if ( chip == 25 ) {
+    if ( time == 1499387520 ) return true;   // empty wf
   } else if ( chip == 27 ) {
     // Waveform looks ok for chan 0-4 but does not quite reach saturation.
     if ( time == 1498657500 ) return true;
@@ -150,6 +152,18 @@ bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
     if ( time == 1498835580 ) return true;   // wf mostly empty
   } else if ( chip == 89 ) {
     if ( time == 1498837620 ) return true;   // square wf
+  } else if ( chip == 109 ) {
+    if ( time == 1499781660 ) return true;   // bad wf
+  } else if ( chip == 114 ) {
+    if ( time == 1499781900 ) return true;   // bad wf
+  } else if ( chip == 116 ) {
+    if ( time == 1499708640 ) return true;   // bad wf
+  } else if ( chip == 117 ) {
+    if ( time == 1499713680 ) return true;   // bad wf
+  } else if ( chip == 123 ) {
+    if ( time == 1499727120 ) return true;   // bad wf
+  } else if ( chip == 128 ) {
+    if ( time == 1499734440 ) return true;   // bad wf
   }
   return false;
 }

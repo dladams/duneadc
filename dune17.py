@@ -5,15 +5,18 @@
 
 # List of available DUNE17 datasets.
 
-def dune17cDatasets():
+def dune17cDatasets(isBad =False):
   pre = "DUNE17-cold_chip"
   dss = []
+  baddss = []
+  baddss.append(pre + "1")
   dss.append(pre + "2_0705")
   dss.append(pre + "3_0702T16")
   for chip in range(6,12): dss.append(pre + str(chip))
   dss.append(pre + "12_0705T1142")
   for chip in range(13,17): dss.append(pre + str(chip))
   dss.append(pre + "18")
+  baddss.append(pre + "19")
   dss.append(pre + "20")
   dss.append(pre + "21_0626")
   dss.append(pre + "21_0706")
@@ -22,9 +25,13 @@ def dune17cDatasets():
   dss.append(pre + "23_0627")
   dss.append(pre + "23_0706")
   dss.append(pre + "24_0627")
+  baddss.append(pre + "24_0707")
   dss.append(pre + "25_0627")
+  baddss.append(pre + "25_0706")
   dss.append(pre + "26")
+  baddss.append(pre + "27_0628")
   dss.append(pre + "27_0707")
+  baddss.append(pre + "28")
   dss.append(pre + "29_0630")
   dss.append(pre + "29_0701")
   dss.append(pre + "29_0706")
@@ -32,6 +39,7 @@ def dune17cDatasets():
   for chip in range(39,61): dss.append(pre + str(chip))
   dss.append(pre + "61_0626")
   dss.append(pre + "61_0628")
+  baddss.append(pre + "62")
   dss.append(pre + "63_0628T17")
   dss.append(pre + "63_0628T21")
   dss.append(pre + "63_0628T22")
@@ -48,35 +56,40 @@ def dune17cDatasets():
   # 75 0628 two tests look bad. 0629 ADC looks bad.
   for chip in range(78,83): dss.append(pre + str(chip))
   dss.append(pre + "84")
+  baddss.append(pre + "85")
   dss.append(pre + "86")
   dss.append(pre + "87")
+  baddss.append(pre + "88")
+  baddss.append(pre + "89")
   dss.append(pre + "90")
   dss.append(pre + "92_0630T13")
   dss.append(pre + "92_0630T17")
   for chip in range(93,107): dss.append(pre + str(chip))
-  #dss.append(pre + "109")
+  baddss.append(pre + "109")
   dss.append(pre + "108")
+  baddss.append(pre + "109")
   dss.append(pre + "110")
   dss.append(pre + "111")
   dss.append(pre + "112")
   dss.append(pre + "113")
   dss.append(pre + "114_0710")
-  #dss.append(pre + "114_0711")
+  baddss.append(pre + "114_0711")
   dss.append(pre + "115")
-  #dss.append(pre + "116")
-  #dss.append(pre + "117")
+  baddss.append(pre + "116")
+  baddss.append(pre + "117")
   dss.append(pre + "118")
   dss.append(pre + "119")
   dss.append(pre + "120")
   dss.append(pre + "122")
-  #dss.append(pre + "123")
+  baddss.append(pre + "123")
   dss.append(pre + "125")
-  dss.append(pre + "126")
+  baddss.append(pre + "126")
   dss.append(pre + "127")
-  #dss.append(pre + "128")
-  dss.append(pre + "131")
+  baddss.append(pre + "128")
+  baddss.append(pre + "131")
   dss.append(pre + "133")
-  return dss  
+  if isBad: return baddss
+  else: return dss  
  
 # Return the chip number for a dataset.
 def dune17cChip(ds):

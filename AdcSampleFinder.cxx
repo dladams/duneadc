@@ -162,6 +162,8 @@ bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
     if ( time == 1499713680 ) return true;   // bad wf
   } else if ( chip == 123 ) {
     if ( time == 1499727120 ) return true;   // bad wf
+  } else if ( chip == 126 ) {
+    if ( time == 1499803680 ) return true;   // bad wf
   } else if ( chip == 128 ) {
     if ( time == 1499734440 ) return true;   // bad wf
   }

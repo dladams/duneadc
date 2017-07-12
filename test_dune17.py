@@ -12,15 +12,19 @@ from dune17 import dune17cDatasets
 writeDsfile = True
 
 dss = dune17cDatasets()
+baddss = dune17cDatasets(isBad =True)
 
-print "Dataset count: " + str(len(dss))
-
-outfName = "DUNE17-cold.txt"
-if writeDsfile:
-  outf = open(outfName, "w")
-
-for ds in dss:
-  print ds
-  if writeDsfile: outf.write(ds + "\n")
+print "Bad dataset count is " + str(len(baddss))
+print "Good dataset count is " + str(len(dss))
   
-print "Dataset list written to " + outfName
+if writeDsfile:
+  outfName = "DUNE17-cold-bad.txt"
+  outf = open(outfName, "w")
+  for ds in baddss:
+    if writeDsfile: outf.write(ds + "\n")
+  print "Good dataset list written to " + outfName
+  outfName = "DUNE17-cold.txt"
+  outf = open(outfName, "w")
+  for ds in dss:
+    if writeDsfile: outf.write(ds + "\n")
+  print "Good dataset list written to " + outfName

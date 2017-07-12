@@ -921,9 +921,12 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     return 2;
   }
   double ymax = 1.03;
-  if ( phvrms != nullptr ) {
-    double rmsmax = phvrms->GetMaximum();
-    if ( rmsmax > ymax ) ymax = rmsmax;
+  bool rescale = false;
+  if ( rescale ) {
+    if ( phvrms != nullptr ) {
+      double rmsmax = phvrms->GetMaximum();
+      if ( rmsmax > ymax ) ymax = rmsmax;
+    }
   }
   TH1* ph = phveff;
   string hnam;

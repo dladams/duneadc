@@ -71,7 +71,11 @@ def dune17cDatasets():
   dss.append(pre + "122")
   #dss.append(pre + "123")
   dss.append(pre + "125")
+  dss.append(pre + "126")
+  dss.append(pre + "127")
   #dss.append(pre + "128")
+  dss.append(pre + "131")
+  dss.append(pre + "133")
   return dss  
  
 # Return the chip number for a dataset.

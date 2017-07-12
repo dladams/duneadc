@@ -372,6 +372,14 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     sels.push_back(sfieldChip + "_");
     isDune17 = true;
     if ( jpos != string::npos ) sels.push_back(asample.substr(jpos+1));
+  } else if ( dsname == "DUNE17-longramp" ) {
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/longramp/");
+    if ( asample.substr(ipos, 5) != "_chip" ) {
+      cout << myname << "Chip ID not found." << endl;
+      return nullptr;
+    }
+    cout << myname << "Need more code here..." << endl;
+    return nullptr;
   } else {
     cout << myname << "Unable to find FEMB sample " << ssam << endl;
   }

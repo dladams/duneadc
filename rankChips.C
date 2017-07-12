@@ -6,8 +6,8 @@ using RankMap = multimap<double, ChipSample>;
 
 void writePython(string name, const RankMap& chips);
 
-// Performanc is taken from perf_dsperf
-TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
+// Performance is taken from perf_dsperf
+TH1* rankChips(string dataset, string a_dslist ="") {
   string myname = "rankChips: ";
   string dslist = a_dslist.size() ? a_dslist : dataset;
   RankMap rankedChipsPrd;
@@ -122,7 +122,9 @@ TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
   ostringstream sspyrankChip;
   sspyrankSample << "rankSample = [";
   sspyrankChip   << "rankChip = [";
-  for ( auto& rc : rankedChipsPrd ) {
+  //for ( auto& rc : rankedChipsPrd ) {
+  for ( auto irc=rankedChipsPrd.rbegin(); irc!=rankedChipsPrd.rend(); ++irc ) {
+    auto rc = *irc;
     Index chip = rc.second.first;
     string ssam = rc.second.second;
     double effprd = metricPrd[ssam];
@@ -160,11 +162,9 @@ TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
   outp << sspyrankSample.str() << endl;
   outp << sspyrankChip.str() << endl;
   cout << "Python output file: " << ofname << endl;
-  TCanvas* pcan = nullptr;
-  if ( makeCan ) {
-    pcan = new TCanvas;
-    pcan->SetRightMargin(0.03);
-  }
+  // Draw quality histogram.
+  pcan = new TCanvas;
+  pcan->SetRightMargin(0.03);
   Index nchip = rankedChipsPrd.size();
   ostringstream sshtitl;
   sshtitl << dataset << " ADC chip quality (" << nchip << " chips)";
@@ -173,6 +173,25 @@ TH1* rankChips(string dataset, string a_dslist ="", bool makeCan =true) {
   hists[0]->Draw();
   string fname = "chipQuality_" + dataset + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
+  // Plot metric vs metric.
+  vector<double> valAvg;
+  for ( SampleMetricMap::value_type ient : metricAvg ) valAvg.push_back(pow(ient.second,16));
+  vector<double> valPrd;
+  for ( SampleMetricMap::value_type ient : metricPrd ) valPrd.push_back(ient.second);
+  TGraph* pgr = new TGraph(valAvg.size(), &valPrd.front(), &valAvg.front());
+  sshtitl.str("");
+  sshtitl << "Metric correlation (" << valAvg.size() << " samples); Q = #Pi #varepsilon_{chan}; <#varepsilon_{chan}>^{16}";
+  htitl = sshtitl.str();
+  TH2* phax = new TH2F("haxmcor", htitl.c_str(), 10, 0, 1, 10, 0, 1);
+  phax->SetStats(0);
+  pcan = new TCanvas;
+  pcan->SetRightMargin(0.03);
+  pgr->SetMarkerStyle(2);
+  phax->Draw();
+  pgr->Draw("p");
+  fname = "chipQualityCorrelation_" + dataset + ".png";
+  if ( pcan != nullptr ) pcan->Print(fname.c_str());
+  // Log summary.
   cout << "Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;
   cout << "  Chip count: " << nchip << endl;
   return hists[0];
@@ -186,37 +205,4 @@ void writePython(string name, const RankMap& chips) {
     cout << rc.second.second;
   }
   cout << "]" << endl;
-}
-
-void rankChipsRef(string dataset ="DUNE17-cold", string dslist ="",
-                  string dataset2 ="201703a_mar25", string dslist2 ="") {
-  pcan = new TCanvas;
-  pcan->SetRightMargin(0.03);
-  bool makeCan = false;
-  TH1* phr = rankChips(dataset2, dslist2, makeCan);
-  if ( phr == nullptr ) return;
-  TH1* pht = rankChips(dataset, dslist, makeCan);
-  if ( pht == nullptr ) return;
-  int nchip = pht->GetEntries();
-  cout << "Test dataset chip count: " << nchip << endl;
-  phr->SetLineWidth(4);
-  phr->SetLineColor(28);
-  phr->SetLineStyle(2);
-  double ymaxr = phr->GetMaximum();
-  double ymaxt = pht->GetMaximum();
-  if ( ymaxr > ymaxt ) pht->SetMaximum(1.03*ymaxr);
-  pht->Draw();
-  phr->Draw("same");
-  pht->Draw("same");
-  TLegend* pleg = new TLegend(0.20, 0.73, 0.60, 0.85);
-  pleg->SetBorderSize(0);
-  pleg->SetFillStyle(0);
-  ostringstream sslab;
-  sslab << dataset << " (" << nchip << " chips)";
-  string slab = sslab.str();
-  pleg->AddEntry(phr, dataset2.c_str(), "l");
-  pleg->AddEntry(pht, slab.c_str(), "l");
-  pleg->Draw();
-  string fname = "rank_" + dataset + "_ref" + dataset2 + ".png";
-  pcan->Print(fname.c_str());
 }

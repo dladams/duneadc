@@ -11,8 +11,12 @@ def dune17cDatasets(isBad =False):
   baddss = []
   baddss.append(pre + "1")
   dss.append(pre + "2_0705")
+  baddss.append(pre + "3_0702T15")       # square wave
   dss.append(pre + "3_0702T16")
   for chip in range(6,12): dss.append(pre + str(chip))
+  baddss.append(pre + "12_0701T16")      # square wave
+  baddss.append(pre + "12_0701T17")      # square wave
+  baddss.append(pre + "12_0705T1141")    # waveform is missing
   dss.append(pre + "12_0705T1142")
   for chip in range(13,17): dss.append(pre + str(chip))
   dss.append(pre + "18")
@@ -35,6 +39,7 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "29_0630")
   dss.append(pre + "29_0701")
   dss.append(pre + "29_0706")
+  baddss.append(pre + "30_0630")    # square wave
   dss.append(pre + "30_0703")
   for chip in range(39,61): dss.append(pre + str(chip))
   dss.append(pre + "61_0626")
@@ -44,16 +49,23 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "63_0628T21")
   dss.append(pre + "63_0628T22")
   dss.append(pre + "64")
-  dss.append(pre + "65_0629")       # Four 0628 datasets are bad
+  baddss.append(pre + "65_0628T193")    # waveform near zero
+  baddss.append(pre + "65_0628T194")    # waveform near zero
+  baddss.append(pre + "65_0628T195")    # waveform near zero
+  baddss.append(pre + "65_0628T200")    # waveform near zero
+  dss.append(pre + "65_0629")
   dss.append(pre + "66")
   dss.append(pre + "67_0629T10")
   dss.append(pre + "67_0629T14")
   dss.append(pre + "69")
   dss.append(pre + "70")
   dss.append(pre + "71_0628T12")
+  #dss.append(pre + "71_0628T17")     # new good
   dss.append(pre + "72")
   dss.append(pre + "74")
-  # 75 0628 two tests look bad. 0629 ADC looks bad.
+  baddss.append(pre + "75_0628T2220")  # bad test?
+  baddss.append(pre + "75_0628T2228")  # bad test?
+  baddss.append(pre + "75_0629")       # bad waveform?
   for chip in range(78,83): dss.append(pre + str(chip))
   dss.append(pre + "84")
   baddss.append(pre + "85")
@@ -82,6 +94,7 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "120")
   dss.append(pre + "122")
   baddss.append(pre + "123")
+  #dss.append(pre + "124")       # new good
   dss.append(pre + "125")
   baddss.append(pre + "126")
   dss.append(pre + "127")

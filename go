@@ -12,7 +12,6 @@ if [ -r rmsmax.dat ]; then
 fi
 
 echo RMS max: $RMSMAX
-exit 1
 
 LOGDIR=logs_$DSNAME
 if [ "$2" = clean ]; then

@@ -60,8 +60,8 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "69")
   dss.append(pre + "70")
   dss.append(pre + "71_0628T12")
-  dss.append(pre + "71_0628T17")     # new good
-  dss.append(pre + "72")
+  dss.append(pre + "71_0628T17")
+  dss.append(pre + "72")    # waveforms a bit ugly
   dss.append(pre + "74")
   baddss.append(pre + "75_0628T2220")  # bad test?
   baddss.append(pre + "75_0628T2228")  # bad test?
@@ -95,25 +95,25 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "121")   # 7/13
   dss.append(pre + "122")
   baddss.append(pre + "123")
-  dss.append(pre + "124")       # new good
+  dss.append(pre + "124")
   dss.append(pre + "125")
   baddss.append(pre + "126")
   dss.append(pre + "127")
   baddss.append(pre + "128")
-  dss.append(pre + "129")   # 7/13
-  dss.append(pre + "130")   # 7/13
+  dss.append(pre + "129")
+  baddss.append(pre + "130")   # waveforms near zero
   baddss.append(pre + "131")
   dss.append(pre + "133_0711")
-  dss.append(pre + "133_0712")   # 7/13
-  dss.append(pre + "136")   # 7/13
-  dss.append(pre + "363")   # 7/13
-  dss.append(pre + "366_0712T1810")   # 7/13
-  dss.append(pre + "366_0712T1810")   # 7/13
-  dss.append(pre + "368")   # 7/13
-  dss.append(pre + "370")   # 7/13
-  dss.append(pre + "371")   # 7/13
-  dss.append(pre + "373")   # 7/13
-  dss.append(pre + "384")   # 7/13
+  dss.append(pre + "133_0712")
+  dss.append(pre + "136")
+  dss.append(pre + "363")   # ugly waveforms
+  baddss.append(pre + "366_0712T1810")   # waveform empty
+  dss.append(pre + "366_0712T1812")   # 7/13
+  dss.append(pre + "368")
+  dss.append(pre + "370")
+  dss.append(pre + "371")
+  dss.append(pre + "373")
+  dss.append(pre + "384")
   if isBad: return baddss
   else: return dss  
  

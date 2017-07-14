@@ -1,4 +1,5 @@
 using SampleMetricMap = map<string, double>;
+using SampleIndexMap = map<string, Index>;
 using ChipSample = std::pair<Index, string>;
 using ValueChipSample = std::pair<double, ChipSample>;
 using ChipMetricMap = map<Index, ValueChipSample>;
@@ -14,7 +15,8 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   SampleMetricMap metricPrd;
   SampleMetricMap metricAvg;
   SampleMetricMap metricLow;
-  SampleMetricMap metricLo2;
+  SampleIndexMap metricLo2;
+  SampleMetricMap metricN80;
   ChipMetricMap chipMetricPrd;
   RankMap goodChips;
   RankMap fairChips;
@@ -92,6 +94,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
     metricAvg[ssam] = effavg;
     metricLow[ssam] = efflow;
     metricLo2[ssam] = efflo2;
+    metricN80[ssam] = n80;
     auto iprd = chipMetricPrd.find(chip);
     if ( iprd == chipMetricPrd.end() ||
          effprd > iprd->second.first ) {
@@ -109,6 +112,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   }
   // Loop over chips.
   int count = 0;
+  vector<Index> n80count(17,0);
   for ( auto iprd : chipMetricPrd ) {
     Index chip = iprd.first;
     ValueChipSample valprd = iprd.second;
@@ -122,6 +126,8 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
     else if ( effprd > 0.7 ) poorChips.insert(vcs);
     else badChips.insert(vcs);
     hists[0]->Fill(effprd);
+    Index n80 = metricN80[chipsam.second];
+    ++n80count[n80];
   }
   sspymavg << "\n}";
   sspymprd << "\n}";
@@ -225,6 +231,14 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   fname = "chipQualityLowCorrelation_" + dataset + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Log summary.
+  cout << "N80 counts:" << endl;
+  Index csum = 0;
+  for ( Index count=16; count<=16; --count ) {
+    Index nchan = n80count[count];
+    csum += nchan;
+    cout << setw(4) << count << ":" << setw(5) << nchan << setw(6) << csum << endl;
+    if ( count == 0 ) break;
+  }
   cout << "Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;
   cout << "  Chip count: " << nchip << endl;
   if ( pmets != nullptr ) {

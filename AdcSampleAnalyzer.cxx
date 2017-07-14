@@ -91,6 +91,7 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
          << (fixped ? "enabled" : "disabled") << "." << endl;
   }
   nsample = rdr.nsample();
+  localCalib().data().sample = sampleName();
   localCalib().data().chip = chip();
   localCalib().data().chan = channel();
   localCalib().data().time = time();

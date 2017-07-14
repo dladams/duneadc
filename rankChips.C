@@ -7,7 +7,7 @@ using RankMap = multimap<double, ChipSample>;
 void writePython(string name, const RankMap& chips);
 
 // Performance is taken from perf_dsperf
-TH1* rankChips(string dataset, string a_dslist ="") {
+TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =nullptr) {
   string myname = "rankChips: ";
   string dslist = a_dslist.size() ? a_dslist : dataset;
   RankMap rankedChipsPrd;
@@ -179,10 +179,11 @@ TH1* rankChips(string dataset, string a_dslist ="") {
   vector<double> valPrd;
   for ( SampleMetricMap::value_type ient : metricPrd ) valPrd.push_back(ient.second);
   TGraph* pgr = new TGraph(valAvg.size(), &valPrd.front(), &valAvg.front());
+  string hnam = "haxmcor_" + dslist;
   sshtitl.str("");
   sshtitl << "Metric correlation (" << valAvg.size() << " samples); Q = #Pi #varepsilon_{chan}; <#varepsilon_{chan}>^{16}";
   htitl = sshtitl.str();
-  TH2* phax = new TH2F("haxmcor", htitl.c_str(), 10, 0, 1, 10, 0, 1);
+  TH2* phax = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
   phax->SetStats(0);
   pcan = new TCanvas;
   pcan->SetRightMargin(0.03);
@@ -194,6 +195,9 @@ TH1* rankChips(string dataset, string a_dslist ="") {
   // Log summary.
   cout << "Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;
   cout << "  Chip count: " << nchip << endl;
+  if ( pmets != nullptr ) {
+    *pmets = metricPrd;
+  }
   return hists[0];
 }
 

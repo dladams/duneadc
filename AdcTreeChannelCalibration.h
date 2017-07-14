@@ -21,17 +21,23 @@
 #include "AdcChannelId.h"
 #include "AdcTypes.h"
 
+class TTree;
+class TFile;
+
 // This is the data held in one ADC calibration tree entry.
 class AdcTreeChannelCalibrationData {
 public:
   AdcTreeChannelCalibrationData() = default;
-  AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime =badIndex(),
+  AdcTreeChannelCalibrationData(std::string asample,
+                                ShortIndex achip, ShortIndex achan, AdcTime atime =badIndex(),
                                 Float again =0.0, Float aoffset =0.0);
-  AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
+  AdcTreeChannelCalibrationData(std::string asample,
+                                ShortIndex achip, ShortIndex achan, AdcTime atime,
                                 Float again, Float aoffset,
                                 const FloatVector& acalMeans,
                                 const FloatVector& acalRmss,
                                 const ShortIndexVector& acalCounts);
+  std::string sample;
   ShortIndex chip = badShortIndex();
   ShortIndex chan = badShortIndex();
   AdcTime time = badIndex();
@@ -47,14 +53,30 @@ class AdcTreeChannelCalibration : public AdcChannelCalibration {
 
 public:
 
+  // Sublass that holds pointers to a tree and its file and closes
+  // the file when it is deleted.
+  class TreeWrapper {
+  public:
+    TreeWrapper(TTree* aptree, TFile* apfile) : m_ptree(aptree), m_pfile(apfile) { }
+    ~TreeWrapper();
+    TTree* tree() { return m_ptree; }
+  private:
+    TTree* m_ptree;
+    TFile* m_pfile;
+  };
+
+  // Find the tree for a given dataset name.
+  static TreeWrapper findTree(std::string dataset);
+
   // Load an existing calibration from a Root TTree.
+  static const AdcTreeChannelCalibration* find(std::string dataset, std::string asample);
   static const AdcTreeChannelCalibration* find(std::string dataset, AdcChannelId aid);
   static const AdcTreeChannelCalibration* find(std::string dataset, ShortIndex chip, ShortIndex chan);
 
   // Ctors.
   AdcTreeChannelCalibration();
-  AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime);
-  AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime,
+  AdcTreeChannelCalibration(std::string asample, AdcChannelId aid, AdcTime atime);
+  AdcTreeChannelCalibration(std::string asample, AdcChannelId aid, AdcTime atime,
                             Float again, Float aoffset,
                             const FloatVector& acalMeans,
                             const FloatVector& acalRmss,
@@ -77,6 +99,7 @@ public:
 
   // Full calibration for each ADC code.
   std::string name() const override;
+  std::string sample() const override;
   Index chip() const override;
   Index channel() const override;
   Index time() const override;

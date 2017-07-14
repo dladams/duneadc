@@ -23,6 +23,9 @@ public:
   // Return a name for this calibration.
   virtual std::string name() const { return "UnnamedCalib"; }
 
+  // Return the sample name for this calibration.
+  virtual std::string sample() const { return "UnspecifiedSample"; }
+
   // Return the chip (or other context index) for this channel.
   virtual Index chip() const { return 0; }
 

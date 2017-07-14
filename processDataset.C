@@ -3,14 +3,13 @@
 // David Adams
 // July 2017
 
-void processDataset(string ssam, Index chan1=0, Index nchan =16, bool fill =true) {
+void processDataset(string ssam, double vresmax=1.0, Index chan1=0, Index nchan =16, bool fill =true) {
   string myname = "processDataset: ";
   bool fillCalTree = fill;
   string datasetCalib = "";
   unsigned int nv = 90;
   double vmin = -200.0;
   double vmax = 1600.0;
-  double vresmax = 1.0;
   bool dropTails = false;
   bool fillPerfTree = fill;
   bool savePlots = true;

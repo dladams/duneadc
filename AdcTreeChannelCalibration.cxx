@@ -6,47 +6,55 @@
 #include "TTree.h"
 #include <iostream>
 
+using std::string;
 using std::cout;
 using std::endl;
 using Name = std::string;
-using CalibMap = std::map<AdcChannelId, const AdcTreeChannelCalibration*>;
-using CalibMapMap = std::map<Name, CalibMap>;
+using NameCalibMap = std::map<Name, const AdcTreeChannelCalibration*>;
+using NameCalibMapMap = std::map<Name, NameCalibMap>;
+using IdCalibMap = std::map<AdcChannelId, const AdcTreeChannelCalibration*>;
+using IdCalibMapMap = std::map<Name, IdCalibMap>;
 
 //**********************************************************************
 // Subclass methods.
 //**********************************************************************
 
 AdcTreeChannelCalibrationData::
-AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
+AdcTreeChannelCalibrationData(string asample,
+                              ShortIndex achip, ShortIndex achan, AdcTime atime,
                               Float again, Float aoffset,
                               const FloatVector& acalMeans,
                               const FloatVector& acalRmss,
                               const ShortIndexVector& acalCounts)
-: chip(achip), chan(achan), time(atime), gain(again), offset(aoffset),
+: sample(asample), chip(achip), chan(achan), time(atime), gain(again), offset(aoffset),
   calMeans(acalMeans), calRmss(acalRmss), calCounts(acalCounts) { }
 
 //**********************************************************************
 
 AdcTreeChannelCalibrationData::
-AdcTreeChannelCalibrationData(ShortIndex achip, ShortIndex achan, AdcTime atime,
+AdcTreeChannelCalibrationData(string asample,
+                              ShortIndex achip, ShortIndex achan, AdcTime atime,
                               Float again, Float aoffset)
-: chip(achip), chan(achan), time(atime), gain(again), offset(aoffset) { }
+: sample(asample), chip(achip), chan(achan), time(atime), gain(again), offset(aoffset) { }
+
+//**********************************************************************
+
+AdcTreeChannelCalibration::TreeWrapper::~TreeWrapper() {
+  if ( m_pfile != nullptr ) m_pfile->Close();
+  m_ptree = nullptr;
+  m_pfile = nullptr;
+}
 
 //**********************************************************************
 // Static class methods.
 //**********************************************************************
 
-const AdcTreeChannelCalibration*
-AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
-  static CalibMapMap calibmaps;
-  const Name myname = "AdcTreeChannelCalibration::find: ";
-  CalibMap& calibmap = calibmaps[dataset];
-  CalibMap::iterator icm = calibmap.find(aid);
-  if ( icm != calibmap.end() ) return icm->second;
-  const AdcTreeChannelCalibration*& pcalout = calibmap[aid];
-  pcalout = nullptr;
+AdcTreeChannelCalibration::TreeWrapper
+AdcTreeChannelCalibration::findTree(std::string dataset) {
+  const Name myname = "AdcTreeChannelCalibration::findTree: ";
   Name fname = "calib_" + dataset + ".root";
   TFile* pfile = TFile::Open(fname.c_str());
+  TTree* ptree = nullptr;
   if ( pfile==nullptr || !pfile->IsOpen() ) {
     string dir = AdcSampleFinder::defaultTopdir() + "/calib";
     string longfname = dir + "/" + fname;
@@ -55,15 +63,59 @@ AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
     if ( pfile==nullptr || !pfile->IsOpen() ) {
       cout << myname << "Unable to find file " << fname << endl;
       cout << myname << "Please copy file to pwd or " << dir << endl;
-      return nullptr;
     }
   }
-  TTree* ptree = dynamic_cast<TTree*>(pfile->Get("adccalib"));
-  if ( ptree==nullptr ) {
-    cout << myname << "Unable to find tree adccalib in file " << fname << endl;
-    return nullptr;
+  if ( pfile != nullptr ) {
+    ptree = dynamic_cast<TTree*>(pfile->Get("adccalib"));
+    if ( ptree==nullptr ) {
+      cout << myname << "Unable to find tree adccalib in file " << fname << endl;
+    }
   }
+  return TreeWrapper(ptree, pfile);
+}
+
+//**********************************************************************
+
+const AdcTreeChannelCalibration*
+AdcTreeChannelCalibration::find(string dataset, std::string asample) {
+  static NameCalibMapMap calibmaps;
+  const Name myname = "AdcTreeChannelCalibration::find: ";
+  NameCalibMap& calibmap = calibmaps[dataset];
+  NameCalibMap::iterator icm = calibmap.find(asample);
+  if ( icm != calibmap.end() ) return icm->second;
+  const AdcTreeChannelCalibration*& pcalout = calibmap[asample];
+  pcalout = nullptr;
   const AdcTreeChannelCalibrationData* pdat = new AdcTreeChannelCalibrationData;
+  TreeWrapper wtree = findTree(dataset);
+  TTree* ptree = wtree.tree();
+  if ( ptree == nullptr ) return nullptr;
+  ptree->SetBranchAddress("cal", &pdat);
+  for ( unsigned int ient=0; ient<ptree->GetEntries(); ++ient ) {
+    ptree->GetEntry(ient);
+    if ( pdat->sample == asample ) {
+      pcalout = new AdcTreeChannelCalibration(*pdat);
+      break;
+    }
+  }
+  delete pdat;
+  return pcalout;
+}
+
+//**********************************************************************
+
+const AdcTreeChannelCalibration*
+AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
+  static IdCalibMapMap calibmaps;
+  const Name myname = "AdcTreeChannelCalibration::find: ";
+  IdCalibMap& calibmap = calibmaps[dataset];
+  IdCalibMap::iterator icm = calibmap.find(aid);
+  if ( icm != calibmap.end() ) return icm->second;
+  const AdcTreeChannelCalibration*& pcalout = calibmap[aid];
+  pcalout = nullptr;
+  const AdcTreeChannelCalibrationData* pdat = new AdcTreeChannelCalibrationData;
+  TreeWrapper wtree = findTree(dataset);
+  TTree* ptree = wtree.tree();
+  if ( ptree == nullptr ) return nullptr;
   ptree->SetBranchAddress("cal", &pdat);
   for ( unsigned int ient=0; ient<ptree->GetEntries(); ++ient ) {
     ptree->GetEntry(ient);
@@ -73,8 +125,6 @@ AdcTreeChannelCalibration::find(std::string dataset, AdcChannelId aid) {
     }
   }
   delete pdat;
-  pfile->Close();
-  delete pfile;
   return pcalout;
 }
 
@@ -93,18 +143,20 @@ AdcTreeChannelCalibration::AdcTreeChannelCalibration() { }
 
 //**********************************************************************
 
-AdcTreeChannelCalibration::AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime)
-: m_data(aid.chip, aid.chan, atime) { }
+AdcTreeChannelCalibration::
+AdcTreeChannelCalibration(std::string asample, AdcChannelId aid, AdcTime atime)
+: m_data(asample, aid.chip, aid.chan, atime) { }
 
 //**********************************************************************
 
 AdcTreeChannelCalibration::
-AdcTreeChannelCalibration(AdcChannelId aid, AdcTime atime,
+AdcTreeChannelCalibration(std::string asample,
+                          AdcChannelId aid, AdcTime atime,
                           Float again, Float aoffset,
                           const FloatVector& acalMeans,
                           const FloatVector& acalRmss,
                           const ShortIndexVector& acalCounts)
-: m_data(aid.chip, aid.chan, atime, again, aoffset, acalMeans, acalRmss, acalCounts) { }
+: m_data(asample, aid.chip, aid.chan, atime, again, aoffset, acalMeans, acalRmss, acalCounts) { }
 
 //**********************************************************************
 
@@ -143,6 +195,12 @@ void AdcTreeChannelCalibration::setName(Name cname) {
 
 string AdcTreeChannelCalibration::name() const {
   return m_name;
+}
+
+//**********************************************************************
+
+string AdcTreeChannelCalibration::sample() const {
+  return m_data.sample;
 }
 
 //**********************************************************************

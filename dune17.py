@@ -5,15 +5,23 @@
 
 # List of available DUNE17 datasets.
 
-def dune17cDatasets(isBad =False):
+def dune17cDatasets(isBad =False, isFail=False):
   pre = "DUNE17-cold_chip"
   dss = []
   baddss = []
+  faildss = []
   baddss.append(pre + "1")
+  baddss.append(pre + "2_0702")          # waveform very small
   dss.append(pre + "2_0705")
   baddss.append(pre + "3_0702T15")       # square wave
   dss.append(pre + "3_0702T16")
-  for chip in range(6,12): dss.append(pre + str(chip))
+  dss.append(pre + "6")
+  dss.append(pre + "7")
+  dss.append(pre + "8_0704")
+  baddss.append(pre + "8_0713")   # Bad waveforms.
+  dss.append(pre + "9")
+  dss.append(pre + "10")
+  dss.append(pre + "11")
   baddss.append(pre + "12_0701T16")      # square wave
   baddss.append(pre + "12_0701T17")      # square wave
   baddss.append(pre + "12_0705T1141")    # waveform is missing
@@ -77,7 +85,6 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "92_0630T13")
   dss.append(pre + "92_0630T17")
   for chip in range(93,107): dss.append(pre + str(chip))
-  baddss.append(pre + "109")
   dss.append(pre + "108")
   baddss.append(pre + "109")
   dss.append(pre + "110")
@@ -92,7 +99,9 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "118")
   dss.append(pre + "119")
   dss.append(pre + "120")
-  dss.append(pre + "121")   # 7/13
+  baddss.append(pre + "121_0711T16")   # waveform is very small
+  baddss.append(pre + "121_0711T18")   # No wave
+  dss.append(pre + "121_0713")
   dss.append(pre + "122")
   baddss.append(pre + "123")
   dss.append(pre + "124")
@@ -103,18 +112,36 @@ def dune17cDatasets(isBad =False):
   dss.append(pre + "129")
   baddss.append(pre + "130")   # waveforms near zero
   baddss.append(pre + "131")
+  dss.append(pre + "132")
   dss.append(pre + "133_0711")
   dss.append(pre + "133_0712")
+  baddss.append(pre + "135")   # Bad waveforms
   dss.append(pre + "136")
-  dss.append(pre + "363")   # ugly waveforms
+  baddss.append(pre + "144")  # Distorted waveforms
+  faildss.append(pre + "349")  # crashes in extremum finding for channel 15
+  dss.append(pre + "362")
+  dss.append(pre + "363_0712T13")
+  baddss.append(pre + "363_0712T15")   # distorted waveforms
+  dss.append(pre + "364")
+  dss.append(pre + "365")
   baddss.append(pre + "366_0712T1810")   # waveform empty
-  dss.append(pre + "366_0712T1812")   # 7/13
+  dss.append(pre + "366_0712T1812")
   dss.append(pre + "368")
+  dss.append(pre + "369")
   dss.append(pre + "370")
   dss.append(pre + "371")
+  dss.append(pre + "372")
   dss.append(pre + "373")
+  dss.append(pre + "374")
+  baddss.append(pre + "378")   # Bad waveforms
+  dss.append(pre + "379")
+  dss.append(pre + "380")
+  faildss.append(pre + "382")   # Voltage calibration fails
+  dss.append(pre + "383")
   dss.append(pre + "384")
+  baddss.append(pre + "-999999999")
   if isBad: return baddss
+  if isFail: return faildss
   else: return dss  
  
 # Return the chip number for a dataset.

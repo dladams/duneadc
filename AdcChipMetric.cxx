@@ -51,6 +51,8 @@ int AdcChipMetric::evaluate() {
   double chanEffProd = 1.0;
   unsigned int nchan = 0;
   double chanEffLow = 1.0;
+  double chanEffLow2 = 1.0;
+  int n80 = 0;
   // Find the entries for the specified channel range.
   Index nent = apt.size();
   IndexVector ents(nChannel(), nent);
@@ -88,6 +90,7 @@ int AdcChipMetric::evaluate() {
         ++nbad;
         chanEffProd = 0.0;
         chanEffLow = 0.0;
+        chanEffLow2 = 0.0;
         break;
       } else {
         ents[kcha] = ient;
@@ -103,6 +106,7 @@ int AdcChipMetric::evaluate() {
       ++nbad;
       chanEffProd = 0.0;
       chanEffLow = 0.0;
+      chanEffLow2 = 0.0;
       continue;
     }
     const AdcVoltagePerformance* pavp = apt.find(ient);
@@ -130,7 +134,13 @@ int AdcChipMetric::evaluate() {
     setChannelEfficiency(avp.chan, chanEff);
     chanEffSum += chanEff;
     chanEffProd *= chanEff;
-    if ( chanEff < chanEffLow ) chanEffLow = chanEff;
+    if ( chanEff < chanEffLow ) {
+      chanEffLow2 = chanEffLow;
+      chanEffLow = chanEff;
+    } else if ( chanEff < chanEffLow2 ) {
+      chanEffLow2 = chanEff;
+    }
+    if ( chanEff > 0.80 ) ++n80;
     //cout << chip() << " " << chan << ": " << chanEff << endl;
     ++icha;
     ++nchan;
@@ -139,7 +149,9 @@ int AdcChipMetric::evaluate() {
   if ( nchan > 0 && nchan == nChannel() ) chipEffAvg = chanEffSum/nchan;
   setChipMetric("EffAvg", chipEffAvg);
   setChipMetric("EffProd", chanEffProd);
-  setChipMetric("EffLow", chanEffLow);
+  setChipMetric( "EffLow", chanEffLow);
+  setChipMetric("EffLow2", chanEffLow2);
+  setChipMetric(    "N80", n80);
   return nbad;
 }
     

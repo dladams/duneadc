@@ -7,13 +7,14 @@ using RankMap = multimap<double, ChipSample>;
 void writePython(string name, const RankMap& chips);
 
 // Performance is taken from perf_dsperf
-TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =nullptr) {
+TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMap* pmets =nullptr) {
   string myname = "rankChips: ";
   string dslist = a_dslist.size() ? a_dslist : dataset;
   RankMap rankedChipsPrd;
   SampleMetricMap metricPrd;
   SampleMetricMap metricAvg;
   SampleMetricMap metricLow;
+  SampleMetricMap metricLo2;
   ChipMetricMap chipMetricPrd;
   RankMap goodChips;
   RankMap fairChips;
@@ -26,11 +27,15 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
   ostringstream sspymavg;
   ostringstream sspymprd;
   ostringstream sspymlow;
+  ostringstream sspymlo2;
+  ostringstream sspymn80;
   sspymdst << "datasetName = \"" << dataset << "\"";
   sspymdsl << "datasetList = \"" << dslist << "\"";
   sspymavg << "effAvg = {";
   sspymprd << "effProduct = {";
   sspymlow << "effLow = {";
+  sspymlo2 << "effLow2 = {";
+  sspymn80 << "n80 = {";
   int nhbin = 20;
   vector<TH1*> hists;
   vector<string> slabs;
@@ -77,6 +82,8 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
     double effavg = acm.chipMetric("EffAvg");
     double effprd = acm.chipMetric("EffProd");
     double efflow = acm.chipMetric("EffLow");
+    double efflo2 = acm.chipMetric("EffLow2");
+    int n80 = acm.chipMetric("N80");
     double rankavg = 1.0 - effavg;
     double rankprd = 1.0 - effprd;
     ChipSample chipsam(chip, ssam);
@@ -84,6 +91,7 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
     metricPrd[ssam] = effprd;
     metricAvg[ssam] = effavg;
     metricLow[ssam] = efflow;
+    metricLo2[ssam] = efflo2;
     auto iprd = chipMetricPrd.find(chip);
     if ( iprd == chipMetricPrd.end() ||
          effprd > iprd->second.first ) {
@@ -95,6 +103,8 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
     sspymavg << prefix << setw(wsam) << qsam << ":" << effavg;
     sspymprd << prefix << setw(wsam) << qsam << ":" << effprd;
     sspymlow << prefix << setw(wsam) << qsam << ":" << efflow;
+    sspymlo2 << prefix << setw(wsam) << qsam << ":" << efflo2;
+    sspymn80 << prefix << setw(wsam) << qsam << ":" << n80;
     first = false;
   }
   // Loop over chips.
@@ -116,6 +126,8 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
   sspymavg << "\n}";
   sspymprd << "\n}";
   sspymlow << "\n}";
+  sspymlo2 << "\n}";
+  sspymn80 << "\n}";
   cout.precision(3);
   int rank = 0;
   ostringstream sspyrankSample;
@@ -159,6 +171,8 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
   outp << sspymavg.str() << endl;
   outp << sspymprd.str() << endl;
   outp << sspymlow.str() << endl;
+  outp << sspymlo2.str() << endl;
+  outp << sspymn80.str() << endl;
   outp << sspyrankSample.str() << endl;
   outp << sspyrankChip.str() << endl;
   cout << "Python output file: " << ofname << endl;
@@ -173,15 +187,18 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
   hists[0]->Draw();
   string fname = "chipQuality_" + dataset + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
-  // Plot metric vs metric.
+  // Build metric vectors.
   vector<double> valAvg;
   for ( SampleMetricMap::value_type ient : metricAvg ) valAvg.push_back(pow(ient.second,16));
   vector<double> valPrd;
   for ( SampleMetricMap::value_type ient : metricPrd ) valPrd.push_back(ient.second);
+  vector<double> valLow;
+  for ( SampleMetricMap::value_type ient : metricLow ) valLow.push_back(ient.second);
+  // Plot Eavg vs Q.
   TGraph* pgr = new TGraph(valAvg.size(), &valPrd.front(), &valAvg.front());
   string hnam = "haxmcor_" + dslist;
   sshtitl.str("");
-  sshtitl << "Metric correlation (" << valAvg.size() << " samples); Q = #Pi #varepsilon_{chan}; <#varepsilon_{chan}>^{16}";
+  sshtitl << "<#varepsilon>-Q correlation (" << valAvg.size() << " samples); Q = #Pi #varepsilon_{chan}; <#varepsilon_{chan}>^{16}";
   htitl = sshtitl.str();
   TH2* phax = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
   phax->SetStats(0);
@@ -190,7 +207,22 @@ TH1* rankChips(string dataset, string a_dslist ="", SampleMetricMap* pmets =null
   pgr->SetMarkerStyle(2);
   phax->Draw();
   pgr->Draw("p");
-  fname = "chipQualityCorrelation_" + dataset + ".png";
+  fname = "chipQualityAvgCorrelation_" + dataset + ".png";
+  if ( pcan != nullptr ) pcan->Print(fname.c_str());
+  // Plot Emin vs Q.
+  TGraph* pgr2 = new TGraph(valPrd.size(), &valPrd.front(), &valLow.front());
+  hnam = "haxmcor_" + dslist;
+  sshtitl.str("");
+  sshtitl << "#varepsilon_{min}-Q correlation (" << valLow.size() << " samples); Q = #Pi #varepsilon_{chan}; min(#varepsilon_{chan})";
+  htitl = sshtitl.str();
+  TH2* phax2 = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
+  phax2->SetStats(0);
+  pcan = new TCanvas;
+  pcan->SetRightMargin(0.03);
+  pgr2->SetMarkerStyle(2);
+  phax2->Draw();
+  pgr2->Draw("p");
+  fname = "chipQualityLowCorrelation_" + dataset + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Log summary.
   cout << "Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;

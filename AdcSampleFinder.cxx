@@ -363,6 +363,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   } else if ( dsname == "DUNE17-cold" ) {
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_cold/");
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_hothdaq4_cold/");
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_hothdaq5_cold/");
     if ( asample.substr(ipos, 5) != "_chip" ) {
       cout << myname << "Chip ID not found." << endl;
       return nullptr;

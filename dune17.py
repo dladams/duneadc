@@ -140,8 +140,8 @@ def dune17cDatasets(isBad =False, isFail=False):
   faildss.append(pre + "382")   # Voltage calibration fails
   dss.append(pre + "383")
   dss.append(pre + "384")
-  dss.append(pre + "385")  # 7/15
-  dss.append(pre + "387")  # 7/15
+  dss.append(pre + "385")
+  dss.append(pre + "387")
   dss.append(pre + "390")
   dss.append(pre + "393")
   baddss.append(pre + "-999999999")

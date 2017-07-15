@@ -54,6 +54,7 @@ public:
   const AdcTreeChannelCalibration* find(AdcChannelId id, Index& ient) const;
   const AdcTreeChannelCalibration* find(Index chip, Index chan, Index& ient) const;
   const AdcTreeChannelCalibration* find(Index chip, Index chan, AdcTime time, Index& ient) const;
+  const AdcTreeChannelCalibration* find(Name ssam, Index chan, Index& ient) const;
 
   // Same as find(...) but return an always-valid copy managed by the caller.
   AdcTreeChannelCalibration get(Index ient) const;

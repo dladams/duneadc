@@ -143,6 +143,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   //for ( auto& rc : rankedChipsPrd ) {
   string outsumName = "rank_" + dslist + ".txt";
   ofstream outsum(outsumName.c_str());
+  outsum << setw(4) << "Rank" << setw(5) << "Chip" << setw(10) << "Q" << setw(4) << "N80" << endl;
   for ( auto irc=rankedChipsPrd.rbegin(); irc!=rankedChipsPrd.rend(); ++irc ) {
     auto rc = *irc;
     Index chip = rc.second.first;
@@ -150,6 +151,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
     double effprd = metricPrd[ssam];
     double effavg = metricAvg[ssam];
     double efflow = metricLow[ssam];
+    Index n80 = metricN80[ssam];
     ++rank;
     if ( rank > 1 ) {
       sspyrankSample << ", ";
@@ -164,7 +166,9 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
          << ": " << fixed << effprd
          << ", " << fixed << effavg
          << ", " << fixed << efflow << endl;
-    outsum << setw(4) << rank << setw(5) << chip << setw(10) << effprd << endl;
+    outsum << setw(4) << rank << setw(5) << chip
+           << setw(10) << fixed << setprecision(3) << effprd
+           << setw(4) << n80 << endl;
   }
   cout << "Summary output file: " << outsumName << endl;
   sspyrankSample << "]";
@@ -191,7 +195,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   pcan->SetRightMargin(0.03);
   Index nchip = rankedChipsPrd.size();
   ostringstream sshtitl;
-  sshtitl << dataset << " ADC chip quality (" << nchip << " chips)";
+  sshtitl << dslist << " ADC chip quality (" << nchip << " chips)";
   htitl = sshtitl.str();
   hists[0]->SetTitle(htitl.c_str());
   hists[0]->Draw();
@@ -208,7 +212,8 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   TGraph* pgr = new TGraph(valAvg.size(), &valPrd.front(), &valAvg.front());
   string hnam = "haxmcor_" + dslist;
   sshtitl.str("");
-  sshtitl << "<#varepsilon>-Q correlation (" << valAvg.size() << " samples); Q = #Pi #varepsilon_{chan}; <#varepsilon_{chan}>^{16}";
+  sshtitl << dslist << " <#varepsilon>-Q correlation (" << valAvg.size()
+          << " samples); Q = #Pi #varepsilon_{chan}; <#varepsilon_{chan}>^{16}";
   htitl = sshtitl.str();
   TH2* phax = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
   phax->SetStats(0);
@@ -223,7 +228,8 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   TGraph* pgr2 = new TGraph(valPrd.size(), &valPrd.front(), &valLow.front());
   hnam = "haxmcor_" + dslist;
   sshtitl.str("");
-  sshtitl << "#varepsilon_{min}-Q correlation (" << valLow.size() << " samples); Q = #Pi #varepsilon_{chan}; min(#varepsilon_{chan})";
+  sshtitl << dslist << " #varepsilon_{min}-Q correlation (" << valLow.size()
+          << " samples); Q = #Pi #varepsilon_{chan}; min(#varepsilon_{chan})";
   htitl = sshtitl.str();
   TH2* phax2 = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
   phax2->SetStats(0);

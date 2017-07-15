@@ -173,6 +173,20 @@ find(Index chip, Index chan, AdcTime time, Index& ient) const {
 
 //**********************************************************************
 
+const AdcTreeChannelCalibration* AdcCalibrationTree::
+find(Name ssam, Index chan, Index& ient) const {
+  if ( status() ) return nullptr;
+  Index nent = m_ptree->GetEntries();
+  for ( ; ient<nent; ++ient ) {
+    const AdcTreeChannelCalibration* pcal = find(ient);
+    if ( pcal->sample() == ssam &&
+         pcal->channel() == chan ) return pcal;
+  }
+  return find(ient);
+}
+
+//**********************************************************************
+
 AdcTreeChannelCalibration AdcCalibrationTree::
 get(Index ient) const {
   const AdcTreeChannelCalibration* pcal = find(ient);

@@ -141,6 +141,8 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   sspyrankSample << "rankSample = [";
   sspyrankChip   << "rankChip = [";
   //for ( auto& rc : rankedChipsPrd ) {
+  string outsumName = "rank_" + dslist + ".txt";
+  ofstream outsum(outsumName.c_str());
   for ( auto irc=rankedChipsPrd.rbegin(); irc!=rankedChipsPrd.rend(); ++irc ) {
     auto rc = *irc;
     Index chip = rc.second.first;
@@ -162,7 +164,9 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
          << ": " << fixed << effprd
          << ", " << fixed << effavg
          << ", " << fixed << efflow << endl;
+    outsum << setw(4) << rank << setw(5) << chip << setw(10) << effprd << endl;
   }
+  cout << "Summary output file: " << outsumName << endl;
   sspyrankSample << "]";
   sspyrankChip << "]";
   writePython("good", goodChips);

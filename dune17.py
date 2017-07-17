@@ -145,6 +145,7 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "385")
   dss.append(pre + "387")
   dss.append(pre + "390")
+  dss.append(pre + "392")
   dss.append(pre + "393")
   baddss.append(pre + "391")
   dss.append(pre + "394_0715")

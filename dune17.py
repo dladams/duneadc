@@ -117,7 +117,7 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "133_0712")
   baddss.append(pre + "135")   # Bad waveforms
   dss.append(pre + "136")
-  dss.append(pre + "138")  # 7/15
+  dss.append(pre + "138")
   baddss.append(pre + "144")  # Distorted waveforms
   faildss.append(pre + "349")  # crashes in extremum finding for channel 15
   dss.append(pre + "362")
@@ -134,6 +134,7 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "372")
   dss.append(pre + "373")
   dss.append(pre + "374")
+  dss.append(pre + "376")  # 7/17
   baddss.append(pre + "378")   # Bad waveforms
   dss.append(pre + "379")
   dss.append(pre + "380")
@@ -144,6 +145,7 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "387")
   dss.append(pre + "390")
   dss.append(pre + "393")
+  dss.append(pre + "394")  # 7/17
   baddss.append(pre + "-999999999")
   if isBad: return baddss
   if isFail: return faildss

@@ -64,7 +64,8 @@ Some of the available sample names are
 | 201706_cotsw | As above but at RT (room temperature)
 | 201706_cotsb | Repeat of parts of 201706_cots. |
 | 201706_cotsbw | As above but at RT (room temperature)
-| DUNE17-cold_chipCC | Standard (4 MHz signal gen) BNL testing of protoDUNE chips. |
+| DUNE17-cold_chipCC | BNL sandard (4 MHz signal gen) testing of protoDUNE chips. |
+| DUNE17ts-cold_chipCC | BNL test stand (1 MHz signal gen) testing of protoDUNE chips. |
 | DUNE17-test_chipCC | Subset of protoDUNE chips tested is same way as samples 201703a. |
 
 All are P1, cold (LN2), 2 MHz waveforms unless otherwise indicated.

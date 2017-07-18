@@ -43,7 +43,7 @@ public:
   // default for plotting.
   AdcChipAnalyzer(std::string sampleName,
                   Index icha1 =0,
-                  Index ncha =0,
+                  Index ncha =1,
                   std::string datasetCalib ="",
                   bool saveCalib =false,
                   float vmin = 0.0,

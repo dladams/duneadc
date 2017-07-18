@@ -203,6 +203,11 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
     return findBinaryReader(ssam, icha, maxsam);
   }
+  if ( ssam.substr(0,9) == "DUNE17ts-" ) {
+    SampleIndex maxsamHere = 19800000;  // Must cut off the data to avoid problem at end.
+    if ( maxsam == 0 || maxsam > maxsamHere ) maxsam = maxsamHere;
+    return findBinaryReader(ssam, icha, maxsam);
+  }
   // DUNE test data analyzed same as March data.
   if ( ssam.substr(0,11) == "DUNE17-test" ) {
     SampleIndex maxsamHere = 19800000UL;  // Must cut off the data to avoid problem at end.
@@ -229,8 +234,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   string schp;           // Chip index within the dataset.
   string schpLabel;      // Global chip label.
   string scha;           // Channel number
-  string dir;            // Directory where file resides.
-  string spat;           // String pattern that specifies the file.
+  vector<string> searchDirs;   // Directories to search for data files.
+  vector<string> searchPats;   // File patterns in those directories.
   double fsamp = 2.0e6;  // Sampling frequency [Hz]
   SampleIndex ef1BorderWidth = 5000000;
   SampleValue ef1MinThresh =   50;
@@ -259,8 +264,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       return nullptr;
     }
     string subdir = "P1_S7_" + schp + "_" + sday;
-    dir = m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir;
-    spat = subdir + "_LN_2MHz_chn" + scha;
+    searchDirs.push_back(m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir);
+    searchPats.push_back(subdir + "_LN_2MHz_chn" + scha);
   } else if ( ssam.substr(0,11) == "DUNE17-test" ) {
     string::size_type ipos = 11;
     dsname = ssam.substr(0, ipos);
@@ -272,8 +277,42 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string::size_type jpos = ssam.find("_", ipos);
     schp = ssam.substr(ipos, jpos-ipos);
     scha = schan(icha);
-    dir = m_topdir + "/DUNE17t/P1_ADC_Test_Data_06262017/P1_ADC_Test_Data_0615/P1_S7_0" + schp;
-    spat = "P1_S7_0" + schp + "_LN_2MHz_chn" + scha;
+    searchDirs.push_back(m_topdir + "/DUNE17t/P1_ADC_Test_Data_06262017/P1_ADC_Test_Data_0615/P1_S7_0" + schp);
+    searchPats.push_back("P1_S7_0" + schp + "_LN_2MHz_chn" + scha);
+    ef1BorderWidth = 1500000;
+    ef1MinThresh =  700;
+    ef1MaxThresh = 4000;
+    ef1MinLimit  = 2000;
+    ef1MaxLimit  =    0;
+    //ef2MinGapBin = 5000000;
+    ef2NbinThresh = 200;
+    maxdext = 100000;
+    vinMin = -200.0;
+    vinMax = 1800.0;
+  } else if ( ssam.substr(0,14) == "DUNE17ts-cold_" ) {
+    string::size_type ipos = 14;
+    dsname = ssam.substr(0, ipos);
+    if ( ssam.substr(ipos, 4) != "chip" ) {
+      cout << myname << "Chip ID not found." << endl;
+      return nullptr;
+    }
+    ipos += 4;
+    string::size_type jpos = ssam.find("_", ipos);
+    schp = ssam.substr(ipos, jpos-ipos);
+    scha = schan(icha);
+    vector<string> subdirs = {
+      "P1_ADC_07172017"
+    };
+    string dirpat = "P1_S7_" + schp + "_";
+    for ( string subdir : subdirs ) {
+      string searchDir = m_topdir + "/DUNE17ts/" + subdir;
+      FileDirectory fd(searchDir);
+      for ( FileDirectory::FileMap::value_type ent : fd.find(dirpat) ) {
+        string subsubdir = ent.first;
+        searchDirs.push_back(searchDir + "/" + subsubdir);
+        searchPats.push_back(subsubdir + "_LN_2MHz_chn" + scha + "_07_");
+      }
+    }
     ef1BorderWidth = 1500000;
     ef1MinThresh =  700;
     ef1MaxThresh = 4000;
@@ -286,14 +325,30 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     vinMax = 1800.0;
   }
   // Find the file.
-  FileDirectory filedir(dir);
-  FileDirectory::FileMap files = filedir.find(spat);
+  vector<string> foundFiles;
+  for ( Index isrc=0; isrc<searchDirs.size(); ++isrc ) {
+    string sdir = searchDirs[isrc];
+    string spat = searchPats[isrc];
+    FileDirectory fd(sdir);
+    for ( FileDirectory::FileMap::value_type ent : fd.find(spat) ) {
+      foundFiles.push_back(sdir + "/" + ent.first);
+    }
+  }
   Name fname;
-  if ( files.size() == 1 ) {
-    fname = filedir.dirname + "/" + files.begin()->first;
+  if ( foundFiles.size() == 1 ) {
+    fname = foundFiles.front();
+  } else if ( foundFiles.size() == 0 ) {
+    cout << myname << "ERROR: Unable to find file." << endl;
+    cout << myname << "Search dirs and patterns:" << endl;
+    for ( Index isrc=0; isrc<searchDirs.size(); ++isrc ) {
+      string sdir = searchDirs[isrc];
+      string spat = searchPats[isrc];
+      cout << myname << "  " << sdir << ": " << spat  << endl;
+    }
+    return nullptr;
   } else {
-    cout << myname << "ERROR: Unable to find file with pattern " << spat
-         << " in directory " << filedir.dirname << endl;
+    cout << myname << "ERROR: Multiple file match: " << endl;
+    for ( string foundFile : foundFiles ) cout << myname << "  " << foundFile << endl;
     return nullptr;
   }
   istringstream sschp(schp);

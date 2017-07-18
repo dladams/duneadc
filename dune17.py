@@ -4,7 +4,7 @@
 # July 2017
 
 # List of available DUNE17 datasets.
-def dune17cDatasets(isBad =False, isFail=False):
+def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   pre = "DUNE17-cold_chip"
   dss = []
   baddss = []
@@ -118,7 +118,16 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "136")
   dss.append(pre + "138")
   baddss.append(pre + "144")  # Distorted waveforms
+  dss.append(pre + "194")
+  baddss.append(pre + "199")   # Bad waveforms
+  dss.append(pre + "201")
+  dss.append(pre + "205")
+  dss.append(pre + "206_0717T16")
+  dss.append(pre + "206_0717T20")
+  dss.append(pre + "207")
   baddss.append(pre + "211")  # Some waveforms are bad
+  dss.append(pre + "212")
+  dss.append(pre + "213")
   faildss.append(pre + "349")  # crashes in extremum finding for channel 15
   dss.append(pre + "362")
   dss.append(pre + "363_0712T13")
@@ -142,6 +151,8 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "383")
   dss.append(pre + "384")
   dss.append(pre + "385")
+  dss.append(pre + "386")
+  baddss.append(pre + "389")   # Bad waveforms
   dss.append(pre + "387")
   dss.append(pre + "390")
   dss.append(pre + "392")
@@ -150,12 +161,22 @@ def dune17cDatasets(isBad =False, isFail=False):
   dss.append(pre + "394_0715")
   dss.append(pre + "394_0717")
   baddss.append(pre + "-999999999")
-  if isBad: return baddss
-  if isFail: return faildss
-  else: return dss  
+  if isBad: outsams = baddss
+  elif isFail: outsams = faildss
+  else: outsams = dss  
+  if skipSel:
+    skipChips = selChips()
+    keepsams = []
+    for sam in outsams:
+      chip = dune17cChip(sam)
+      print "Chip " + str(chip)
+      if chip not in skipChips:
+        keepsams.append(sam)
+    return keepsams
+  return outsams
  
 # List of available DUNE17ts-cold datasets.
-def dune17tscDatasets(isBad =False, isFail=False):
+def dune17tscDatasets(isBad =False, isFail=False, skipSel=False):
   pre = "DUNE17ts-cold_chip"
   dss = []
   baddss = []
@@ -185,9 +206,18 @@ def dune17tscDatasets(isBad =False, isFail=False):
   dss.append(pre + "183")
   dss.append(pre + "184")
   dss.append(pre + "185")
-  if isBad: return baddss
-  if isFail: return faildss
-  else: return dss  
+  if isBad: outsams = baddss
+  elif isFail: outsams = faildss
+  else: outsams = dss  
+  if skipSel:
+    skipChips = selChips()
+    keepsams = []
+    for sam in outsams:
+      chip = dune17cChip(sam)
+      if chip not in skipChips:
+        keepsams.append(sam)
+    return keepsams
+  return outsams
 
 # Return the chip number for a dataset.
 def dune17cChip(ds):
@@ -215,21 +245,34 @@ def dune17cSuffix(ds):
   return suf
 
 # Return the chips in DUNE17-cold
-def dune17cChips():
+def dune17cChips(skipSel=False):
   chips = []
+  skipChips = []
+  if skipSel: skipChips = selChips()
   for ds in dune17cDatasets():
     chip = dune17cChip(ds)
-    if chip not in chips: chips.append(chip)
+    if chip not in chips:
+      if chip not in skipChips:
+        chips.append(chip)
   return chips
 
 # Return the chips in DUNE17ts-cold
-def dune17tscChips():
+def dune17tscChips(skipSel=False):
   chips = []
+  skipChips = []
+  if skipSel: skipChips = selChips()
   for ds in dune17tscDatasets():
     chip = dune17cChip(ds)
-    if chip not in chips: chips.append(chip)
+    if chip not in chips:
+      if chip not in skipChips:
+        chips.append(chip)
   return chips
 
 # Datasets with single ramp in protoDUNE test stand.
 def dune17csrDatasets():
   dss = []
+
+# Selected chips.
+selApa1 = [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 18, 20, 22, 25, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 60, 64, 65, 67, 70, 71, 74, 78, 79, 80, 81, 82, 84, 86, 87, 90, 92, 93, 94, 95, 96, 97, 101, 105, 108, 110, 114, 115, 118, 119, 124, 127, 129, 132, 136, 138, 363, 364, 365, 366, 369, 373, 379, 380, 383, 384, 385, 387]
+def selChips():
+  return selApa1

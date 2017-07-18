@@ -17,44 +17,59 @@ writeDsfile = True
 def testDataset(dsname, writeDsFile, showChips):
 
   if dsname == "DUNE17-cold":
-    sams = dune17cDatasets()
-    badsams = dune17cDatasets(isBad =True)
+    sams     = dune17cDatasets()
+    remsams  = dune17cDatasets(skipSel=True)
+    badsams  = dune17cDatasets(isBad =True)
     failsams = dune17cDatasets(isFail =True)
     chips = dune17cChips()
+    remchips = dune17cChips(skipSel=True)
   elif dsname == "DUNE17ts-cold":
     sams = dune17tscDatasets()
-    badsams = dune17cDatasets(isBad =True)
-    failsams = dune17cDatasets(isFail =True)
+    remsams = dune17tscDatasets(skipSel=True)
+    badsams = dune17tscDatasets(isBad=True)
+    failsams = dune17tscDatasets(isFail=True)
     chips = dune17tscChips()
+    remchips = dune17tscChips(skipSel=True)
   else:
     print "Invalid dsname: " + dsname
     return
 
   print dsname + ":"
-  print "  Bad sample count is " + str(len(badsams))
-  print " Fail sample count is " + str(len(failsams))
-  print " Good sample count is " + str(len(sams))
-  print "   Good chip count is " + str(len(chips))
+  print "    Bad sample count is " + str(len(badsams))
+  print "   Fail sample count is " + str(len(failsams))
+  print "    Rem sample count is " + str(len(remsams))
+  print "   Good sample count is " + str(len(sams))
+  print "     Good chip count is " + str(len(chips))
+  print " Rem good chip count is " + str(len(remchips))
 
   if showChips:
-    print "Chips: " + str(chips)
+    print "Rem chips: " + str(remchips)
   
   if writeDsfile:
+    # Failed samples
     outfName = dsname + "-fail.txt"
     outf = open(outfName, "w")
     for ds in failsams:
       if writeDsfile: outf.write(ds + "\n")
-    print "Fail dataset list written to " + outfName
+    print "Fail sample list written to " + outfName
+    # Bad samples
     outfName = dsname + "-bad.txt"
     outf = open(outfName, "w")
     for ds in badsams:
       if writeDsfile: outf.write(ds + "\n")
-    print "Bad dataset list written to " + outfName
+    print "Bad sample list written to " + outfName
+    # Good unselected samples
+    outfName = dsname + "-rem.txt"
+    outf = open(outfName, "w")
+    for ds in remsams:
+      if writeDsfile: outf.write(ds + "\n")
+    print "Rem good sample list written to " + outfName
+    # Good samples
     outfName = dsname + ".txt"
     outf = open(outfName, "w")
     for ds in sams:
       if writeDsfile: outf.write(ds + "\n")
-    print "Good dataset list written to " + outfName
+    print "Good sample list written to " + outfName
 
 showChips = True
 print

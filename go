@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DSNAME=DUNE17-cold
-RMSMAX=1.0
+RMSMAX=2.0
 
 if [ -n "$1" -a "$1" != . ]; then
   DSNAME=$1
@@ -9,6 +9,9 @@ fi
 
 if [ -r rmsmax.dat ]; then
   RMSMAX=`cat rmsmax.dat`
+else
+  echo Unable to find rmsmax.dat
+  exit 1
 fi
 
 echo RMS max: $RMSMAX

@@ -4,7 +4,6 @@
 # July 2017
 
 # List of available DUNE17 datasets.
-
 def dune17cDatasets(isBad =False, isFail=False):
   pre = "DUNE17-cold_chip"
   dss = []
@@ -155,9 +154,45 @@ def dune17cDatasets(isBad =False, isFail=False):
   if isFail: return faildss
   else: return dss  
  
+# List of available DUNE17ts-cold datasets.
+def dune17tscDatasets(isBad =False, isFail=False):
+  pre = "DUNE17ts-cold_chip"
+  dss = []
+  baddss = []
+  faildss = []
+  dss.append(pre + "160")
+  dss.append(pre + "161")
+  dss.append(pre + "162")
+  dss.append(pre + "163")
+  dss.append(pre + "164")
+  dss.append(pre + "165")
+  dss.append(pre + "166")
+  dss.append(pre + "168")
+  dss.append(pre + "169")
+  dss.append(pre + "170")
+  dss.append(pre + "171")
+  dss.append(pre + "172")
+  dss.append(pre + "173")
+  dss.append(pre + "174")
+  dss.append(pre + "175")
+  dss.append(pre + "176")
+  dss.append(pre + "177")
+  dss.append(pre + "178")
+  dss.append(pre + "179")
+  dss.append(pre + "180")
+  dss.append(pre + "181")
+  dss.append(pre + "182")
+  dss.append(pre + "183")
+  dss.append(pre + "184")
+  dss.append(pre + "185")
+  if isBad: return baddss
+  if isFail: return faildss
+  else: return dss  
+
 # Return the chip number for a dataset.
 def dune17cChip(ds):
-  ads = ds[16:]
+  ipos = ds.find("_chip")
+  ads = ds[ipos+5:]
   ipos = ads.find("_")
   if ipos >= 0: schip = ads[:ipos]
   else: schip = ads
@@ -183,6 +218,14 @@ def dune17cSuffix(ds):
 def dune17cChips():
   chips = []
   for ds in dune17cDatasets():
+    chip = dune17cChip(ds)
+    if chip not in chips: chips.append(chip)
+  return chips
+
+# Return the chips in DUNE17ts-cold
+def dune17tscChips():
+  chips = []
+  for ds in dune17tscDatasets():
     chip = dune17cChip(ds)
     if chip not in chips: chips.append(chip)
   return chips

@@ -8,7 +8,7 @@ using RankMap = multimap<double, ChipSample>;
 void writePython(string name, const RankMap& chips);
 
 // Performance is taken from perf_dsperf
-TH1* rankChips(string datasetString="DUNE17-cold", string a_dslist ="", SampleMetricMap* pmets =nullptr) {
+TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-cold-rem", SampleMetricMap* pmets =nullptr) {
   string myname = "rankChips: ";
   string::size_type ipos = 0;
   vector<string> datasets;
@@ -53,13 +53,23 @@ TH1* rankChips(string datasetString="DUNE17-cold", string a_dslist ="", SampleMe
   int nhbin = 20;
   vector<TH1*> hists;
   vector<string> slabs;
-  string htitl = dslist + " ADC chip quality; Q_{max}; # chips";
-  string hname = "heffprd_" + dslist;
-  for ( string::size_type ipos=0; ipos<hname.size(); ++ipos ) {
-    if ( hname[ipos] == '-' ) hname[ipos] = '_';
+  Index ndst = datasets.size();
+  Index nhst = 1;
+  vector<string> histDatasetNames;
+  if ( ndst > 1 ) nhst = ndst + 1;
+  // Create Qmax histos.
+  for ( Index ihst=0; ihst<nhst; ++ihst ) {
+    string dsname = ihst==0 ? dslist : datasets[ihst-1];
+    histDatasetNames.push_back(dsname);
+    slabs.push_back(dsname);
+    string hname = "heffprd_" + dsname;
+    for ( string::size_type ipos=0; ipos<hname.size(); ++ipos ) {
+      if ( hname[ipos] == '-' ) hname[ipos] = '_';
+    }
+    string htitl = dsname + " ADC chip quality; Q_{max}; # chips";
+    hists.push_back(new TH1F(hname.c_str(), htitl.c_str(), nhbin, 0, 1.0));
   }
-  hists.push_back(new TH1F(hname.c_str(), htitl.c_str(), nhbin, 0, 1.0));
-  slabs.push_back("All");
+  if ( nhst > 1 ) slabs[0] = "All";
   for ( TH1* ph : hists ) {
     ph->SetStats(0);
     ph->SetLineWidth(2);
@@ -86,19 +96,24 @@ TH1* rankChips(string datasetString="DUNE17-cold", string a_dslist ="", SampleMe
   wsam += 4;
   bool first = true;
   // Loop over samples.
+  map<string,Index> datasetIndex;    // Dataset index for each sample. ndst if not found.
   for ( string ssam : ssams ) {
     //AdcChipMetric acm(dataset, chip);
     std::unique_ptr<AdcChipMetric> pacm;
     int estat = 99;
-    for ( string dataset : datasets ) {
+    Index idst = 0;
+    string dataset;
+    for ( ; idst<datasets.size(); ++idst ) {
+      dataset = datasets[idst];
       pacm.reset(new AdcChipMetric(dataset, ssam));
       estat = pacm->evaluate();
       if ( estat == 0 ) break;
     }
-    if ( estat != 0 ) {
+    if ( idst == datasets.size() || estat != 0 ) {
       cout << myname << "Unable to find performance for " << ssam << endl;
       continue;
     }
+    datasetIndex[ssam] = idst;
     AdcChipMetric& acm = *pacm;
     Index chip = acm.chip();    // Must call this after evaluate.
     cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
@@ -148,6 +163,10 @@ TH1* rankChips(string datasetString="DUNE17-cold", string a_dslist ="", SampleMe
     else if ( effprd > 0.7 ) poorChips.insert(vcs);
     else badChips.insert(vcs);
     hists[0]->Fill(effprd);
+    if ( nhst > 1 ) {
+      Index idst = datasetIndex[chipsam.second];
+      hists[idst+1]->Fill(effprd);
+    }
     Index n80 = metricN80[chipsam.second];
     ++n80count[n80];
   }
@@ -218,9 +237,47 @@ TH1* rankChips(string datasetString="DUNE17-cold", string a_dslist ="", SampleMe
   Index nchip = rankedChipsPrd.size();
   ostringstream sshtitl;
   sshtitl << dslist << " ADC chip quality (" << nchip << " chips)";
+  dylab = 0.05*nhst;
+  double ylab2 = 0.85;
+  double ylab1 = ylab2 - dylab;
   htitl = sshtitl.str();
-  hists[0]->SetTitle(htitl.c_str());
-  hists[0]->Draw();
+  TH1* ph0 = hists[0];
+  double ymax = ph0->GetMaximum();
+  double ybinmax = 0.0;
+  for ( ibin=4; ibin<=ph0->GetNbinsX(); ++ibin ) {
+    double ybin = ph0->GetBinContent(ibin);
+    if ( ybin > ybinmax ) ybinmax = ybin;
+  }
+  if ( ybinmax < 0.7*ymax ) {
+    ymax = 1.05*ybinmax;
+    ph0->SetMaximum(ymax);
+  }
+  if ( nhst > 1 ) {
+    hists[0]->Draw();
+    TLegend* pleg = new TLegend(0.20, ylab1, 0.50, ylab2);
+    pleg->SetBorderSize(0);
+    pleg->SetFillStyle(0);
+    for ( Index ihst=0; ihst<nhst; ++ihst ) {
+      TH1* ph = hists[ihst];
+      ostringstream sslab;
+      sslab << slabs[ihst] << " (" << ph->GetEntries() << " samples)";
+      string slab = sslab.str();
+      if ( ihst == 1 ) ph->SetLineColor(46);
+      if ( ihst == 2 ) ph->SetLineColor(8);
+      if ( ihst == 1 ) ph->SetLineStyle(2);
+      if ( ihst == 2 ) ph->SetLineStyle(3);
+      ph->Draw("same");
+      pleg->AddEntry(ph, slab.c_str(), "l");
+    }
+    pleg->Draw();
+  } else {
+    TH1* ph = hists[0];
+    ostringstream sstitl;
+    sstitl << ph->GetTitle() << " (" << ph->GetEntries() << " samples)";
+    string htitl = sshtitl.str();
+    ph->SetTitle(htitl.c_str());
+    ph->Draw();
+  }
   string fname = "chipQuality_" + dslist + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Build metric vectors.

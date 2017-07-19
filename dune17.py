@@ -124,7 +124,8 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "194")
   dss.append(pre + "196")
   dss.append(pre + "197")
-  baddss.append(pre + "198")   # Very small waveforms
+  dss.append(pre + "198_0718")   # 7/19
+  dss.append(pre + "198_0719")   # 7/19
   baddss.append(pre + "199")   # Bad waveforms
   dss.append(pre + "201")
   baddss.append(pre + "203")
@@ -133,23 +134,25 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "206_0717T16")
   dss.append(pre + "206_0717T20")
   dss.append(pre + "207")
-  dss.append(pre + "208")  # 7/19
-  dss.append(pre + "209")  # 7/19
+  dss.append(pre + "208")
+  dss.append(pre + "209")
   baddss.append(pre + "211")  # Some waveforms are bad
   dss.append(pre + "212")
   dss.append(pre + "213")
-  dss.append(pre + "214")  # 7/19
-  dss.append(pre + "215_0718T1834")  # 7/19
-  dss.append(pre + "215_0718T1844")  # 7/19
-  dss.append(pre + "216")  # 7/19
-  dss.append(pre + "217")  # 7/19
-  dss.append(pre + "218")  # 7/19
-  dss.append(pre + "223")  # 7/19
-  dss.append(pre + "224")  # 7/19
-  dss.append(pre + "225")  # 7/19
-  dss.append(pre + "232")  # 7/19
-  dss.append(pre + "233")  # 7/19
-  dss.append(pre + "244")  # 7/19
+  dss.append(pre + "214")
+  baddss.append(pre + "215_0718T1834")  # Very poor waveforms
+  baddss.append(pre + "215_0718T1844")  # Very poor waveforms
+  dss.append(pre + "216")
+  dss.append(pre + "217")
+  dss.append(pre + "218")
+  dss.append(pre + "223")
+  dss.append(pre + "224")
+  dss.append(pre + "225")
+  baddss.append(pre + "226")  # Bad waveforms
+  dss.append(pre + "232")
+  dss.append(pre + "233")
+  dss.append(pre + "234")
+  dss.append(pre + "244")
   faildss.append(pre + "349")  # crashes in extremum finding for channel 15
   dss.append(pre + "362")
   dss.append(pre + "363_0712T13")
@@ -229,18 +232,18 @@ def dune17tscDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "184")
   dss.append(pre + "185")
   dss.append(pre + "186")
-  dss.append(pre + "187") # 7/19
-  dss.append(pre + "189") # 7/19
-  dss.append(pre + "250") # 7/19
-  dss.append(pre + "251") # 7/19
-  dss.append(pre + "252") # 7/19
-  dss.append(pre + "253") # 7/19
-  dss.append(pre + "254") # 7/19
-  dss.append(pre + "255") # 7/19
-  dss.append(pre + "256") # 7/19
-  dss.append(pre + "257") # 7/19
-  dss.append(pre + "258") # 7/19
-  dss.append(pre + "259") # 7/19
+  dss.append(pre + "187")
+  dss.append(pre + "189")
+  dss.append(pre + "250")
+  dss.append(pre + "251")
+  dss.append(pre + "252")
+  dss.append(pre + "253")
+  dss.append(pre + "254")
+  dss.append(pre + "255")
+  dss.append(pre + "256")
+  dss.append(pre + "257")
+  dss.append(pre + "258")
+  dss.append(pre + "259")
   if isBad: outsams = baddss
   elif isFail: outsams = faildss
   else: outsams = dss  

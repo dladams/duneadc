@@ -119,16 +119,16 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "138")
   baddss.append(pre + "144")  # Distorted waveforms
   dss.append(pre + "190")
-  dss.append(pre + "191")  # 7/19
-  dss.append(pre + "192")  # 7/19
+  dss.append(pre + "191")
+  dss.append(pre + "192")
   dss.append(pre + "194")
-  dss.append(pre + "196")  # 7/19
-  dss.append(pre + "197")  # 7/19
-  dss.append(pre + "198")  # 7/19
+  dss.append(pre + "196")
+  dss.append(pre + "197")
+  baddss.append(pre + "198")   # Very small waveforms
   baddss.append(pre + "199")   # Bad waveforms
   dss.append(pre + "201")
-  dss.append(pre + "203")  # 7/19
-  dss.append(pre + "204")  # 7/19
+  baddss.append(pre + "203")
+  dss.append(pre + "204")
   dss.append(pre + "205")
   dss.append(pre + "206_0717T16")
   dss.append(pre + "206_0717T20")
@@ -228,7 +228,7 @@ def dune17tscDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "183")
   dss.append(pre + "184")
   dss.append(pre + "185")
-  dss.append(pre + "186") # 7/19
+  dss.append(pre + "186")
   dss.append(pre + "187") # 7/19
   dss.append(pre + "189") # 7/19
   dss.append(pre + "250") # 7/19

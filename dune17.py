@@ -124,8 +124,8 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "194")
   dss.append(pre + "196")
   dss.append(pre + "197")
-  dss.append(pre + "198_0718")   # 7/19
-  dss.append(pre + "198_0719")   # 7/19
+  baddss.append(pre + "198_0718")   # Bad waveforms
+  dss.append(pre + "198_0719")
   baddss.append(pre + "199")   # Bad waveforms
   dss.append(pre + "201")
   baddss.append(pre + "203")

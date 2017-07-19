@@ -301,7 +301,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     schp = ssam.substr(ipos, jpos-ipos);
     scha = schan(icha);
     vector<string> subdirs = {
-      "P1_ADC_07172017"
+      "P1_ADC_07172017",
+      "P1_ADC_0718"
     };
     string dirpat = "P1_S7_" + schp + "_";
     for ( string subdir : subdirs ) {
@@ -325,6 +326,10 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     vinMax = 1800.0;
   }
   // Find the file.
+  if ( searchDirs.size() == 0 ) {
+    cout << myname << "ERROR: No search directories found for sample " << ssam << endl;
+    return nullptr;
+  }
   vector<string> foundFiles;
   for ( Index isrc=0; isrc<searchDirs.size(); ++isrc ) {
     string sdir = searchDirs[isrc];

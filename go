@@ -1,6 +1,9 @@
 #!/bin/sh
 
 DSNAME=DUNE17-cold
+if [ -r dsname.dat ]; then
+  DSNAME=`cat dsname.dat`
+fi
 RMSMAX=2.0
 
 if [ -n "$1" -a "$1" != . ]; then
@@ -14,7 +17,8 @@ else
   exit 1
 fi
 
-echo RMS max: $RMSMAX
+echo Dataset name: $DSNAME
+echo      RMS max: $RMSMAX
 
 LOGDIR=logs_$DSNAME
 if [ "$2" = clean ]; then

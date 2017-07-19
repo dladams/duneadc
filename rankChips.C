@@ -8,9 +8,21 @@ using RankMap = multimap<double, ChipSample>;
 void writePython(string name, const RankMap& chips);
 
 // Performance is taken from perf_dsperf
-TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMap* pmets =nullptr) {
+TH1* rankChips(string datasetString="DUNE17-cold", string a_dslist ="", SampleMetricMap* pmets =nullptr) {
   string myname = "rankChips: ";
-  string dslist = a_dslist.size() ? a_dslist : dataset;
+  string::size_type ipos = 0;
+  vector<string> datasets;
+  while ( ipos != string::npos ) {
+    string::size_type jpos = datasetString.find(":", ipos);
+    datasets.push_back(datasetString.substr(ipos, jpos-ipos));
+    ipos = jpos;
+    if ( ipos != string::npos ) ++ipos;
+  }
+  cout << myname << "Datasets assumed in performance evaluation:" << endl;
+  for ( string dst : datasets ) {
+    cout << myname << "  " << dst << endl;
+  }
+  string dslist = a_dslist.size() ? a_dslist : datasets[0];
   RankMap rankedChipsPrd;
   SampleMetricMap metricPrd;
   SampleMetricMap metricAvg;
@@ -31,7 +43,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   ostringstream sspymlow;
   ostringstream sspymlo2;
   ostringstream sspymn80;
-  sspymdst << "datasetName = \"" << dataset << "\"";
+  sspymdst << "datasetName = \"" << datasetString << "\"";
   sspymdsl << "datasetList = \"" << dslist << "\"";
   sspymavg << "effAvg = {";
   sspymprd << "effProduct = {";
@@ -41,8 +53,8 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   int nhbin = 20;
   vector<TH1*> hists;
   vector<string> slabs;
-  string htitl = dataset + " ADC chip quality; Q_{max}; # chips";
-  string hname = "heffprd_" + dataset;
+  string htitl = dslist + " ADC chip quality; Q_{max}; # chips";
+  string hname = "heffprd_" + dslist;
   for ( string::size_type ipos=0; ipos<hname.size(); ++ipos ) {
     if ( hname[ipos] == '-' ) hname[ipos] = '_';
   }
@@ -54,11 +66,11 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   }
   if ( hists.size() > 1 ) hists[0]->SetLineWidth(3);
   cout << endl;
-  cout << myname << dataset << endl;
+  cout << myname << dslist << endl;
   string dsfname = dslist + ".txt";
   ifstream dsfile(dsfname.c_str());
   if ( ! dsfile ) {
-    cout << myname << "Dastaset file not found: " << dsfname << endl;
+    cout << myname << "Dataset file not found: " << dsfname << endl;
     return nullptr;
   }
   vector<string> ssams;
@@ -76,8 +88,18 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   // Loop over samples.
   for ( string ssam : ssams ) {
     //AdcChipMetric acm(dataset, chip);
-    AdcChipMetric acm(dataset, ssam);
-    int estat = acm.evaluate();
+    std::unique_ptr<AdcChipMetric> pacm;
+    int estat = 99;
+    for ( string dataset : datasets ) {
+      pacm.reset(new AdcChipMetric(dataset, ssam));
+      estat = pacm->evaluate();
+      if ( estat == 0 ) break;
+    }
+    if ( estat != 0 ) {
+      cout << myname << "Unable to find performance for " << ssam << endl;
+      continue;
+    }
+    AdcChipMetric& acm = *pacm;
     Index chip = acm.chip();    // Must call this after evaluate.
     cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
     if ( estat != 0 ) continue;
@@ -199,7 +221,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   htitl = sshtitl.str();
   hists[0]->SetTitle(htitl.c_str());
   hists[0]->Draw();
-  string fname = "chipQuality_" + dataset + ".png";
+  string fname = "chipQuality_" + dslist + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Build metric vectors.
   vector<double> valAvg;
@@ -222,7 +244,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   pgr->SetMarkerStyle(2);
   phax->Draw();
   pgr->Draw("p");
-  fname = "chipQualityAvgCorrelation_" + dataset + ".png";
+  fname = "chipQualityAvgCorrelation_" + dslist + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Plot Emin vs Q.
   TGraph* pgr2 = new TGraph(valPrd.size(), &valPrd.front(), &valLow.front());
@@ -238,7 +260,7 @@ TH1* rankChips(string dataset="DUNE17-cold", string a_dslist ="", SampleMetricMa
   pgr2->SetMarkerStyle(2);
   phax2->Draw();
   pgr2->Draw("p");
-  fname = "chipQualityLowCorrelation_" + dataset + ".png";
+  fname = "chipQualityLowCorrelation_" + dslist + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Log summary.
   cout << "N80 counts:" << endl;

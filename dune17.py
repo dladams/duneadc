@@ -118,16 +118,38 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "136")
   dss.append(pre + "138")
   baddss.append(pre + "144")  # Distorted waveforms
+  dss.append(pre + "190")
+  dss.append(pre + "191")  # 7/19
+  dss.append(pre + "192")  # 7/19
   dss.append(pre + "194")
+  dss.append(pre + "196")  # 7/19
+  dss.append(pre + "197")  # 7/19
+  dss.append(pre + "198")  # 7/19
   baddss.append(pre + "199")   # Bad waveforms
   dss.append(pre + "201")
+  dss.append(pre + "203")  # 7/19
+  dss.append(pre + "204")  # 7/19
   dss.append(pre + "205")
   dss.append(pre + "206_0717T16")
   dss.append(pre + "206_0717T20")
   dss.append(pre + "207")
+  dss.append(pre + "208")  # 7/19
+  dss.append(pre + "209")  # 7/19
   baddss.append(pre + "211")  # Some waveforms are bad
   dss.append(pre + "212")
   dss.append(pre + "213")
+  dss.append(pre + "214")  # 7/19
+  dss.append(pre + "215_0718T1834")  # 7/19
+  dss.append(pre + "215_0718T1844")  # 7/19
+  dss.append(pre + "216")  # 7/19
+  dss.append(pre + "217")  # 7/19
+  dss.append(pre + "218")  # 7/19
+  dss.append(pre + "223")  # 7/19
+  dss.append(pre + "224")  # 7/19
+  dss.append(pre + "225")  # 7/19
+  dss.append(pre + "232")  # 7/19
+  dss.append(pre + "233")  # 7/19
+  dss.append(pre + "244")  # 7/19
   faildss.append(pre + "349")  # crashes in extremum finding for channel 15
   dss.append(pre + "362")
   dss.append(pre + "363_0712T13")

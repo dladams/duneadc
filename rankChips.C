@@ -184,7 +184,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   //for ( auto& rc : rankedChipsPrd ) {
   string outsumName = "rank_" + dslist + ".txt";
   ofstream outsum(outsumName.c_str());
-  outsum << setw(4) << "Rank" << setw(5) << "Chip" << setw(10) << "Q" << setw(4) << "N80" << endl;
+  int wds = 7;
+  for ( string dataset : datasets ) if ( dataset.size() > wds ) wds = dataset.size();
+  wds += 2;
+  outsum << setw(4) << "Rank" << setw(5) << "Chip" << setw(10) << "Q" << setw(4) << "N80";
+  if ( ndst > 1 ) outsum << setw(wds) << "Dataset";
+  outsum << endl;
   for ( auto irc=rankedChipsPrd.rbegin(); irc!=rankedChipsPrd.rend(); ++irc ) {
     auto rc = *irc;
     Index chip = rc.second.first;
@@ -207,9 +212,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
          << ": " << fixed << effprd
          << ", " << fixed << effavg
          << ", " << fixed << efflow << endl;
+    Index idst = datasetIndex[ssam];
     outsum << setw(4) << rank << setw(5) << chip
            << setw(10) << fixed << setprecision(3) << effprd
-           << setw(4) << n80 << endl;
+           << setw(4) << n80;
+    if ( ndst > 1 ) outsum << setw(wds) << datasets[idst];
+    outsum << endl;
   }
   cout << "Summary output file: " << outsumName << endl;
   sspyrankSample << "]";
@@ -237,9 +245,11 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   Index nchip = rankedChipsPrd.size();
   ostringstream sshtitl;
   sshtitl << dslist << " ADC chip quality (" << nchip << " chips)";
-  dylab = 0.05*nhst;
-  double ylab2 = 0.85;
-  double ylab1 = ylab2 - dylab;
+  dyleg = 0.05*nhst;
+  double xleg1 = 0.30;
+  double xleg2 = xleg1 + 0.30;
+  double yleg2 = 0.85;
+  double yleg1 = yleg2 - dyleg;
   htitl = sshtitl.str();
   TH1* ph0 = hists[0];
   double ymax = ph0->GetMaximum();
@@ -249,18 +259,18 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     if ( ybin > ybinmax ) ybinmax = ybin;
   }
   if ( ybinmax < 0.7*ymax ) {
-    ymax = 1.05*ybinmax;
+    ymax = int(1.3*ybinmax+0.5);
     ph0->SetMaximum(ymax);
   }
   if ( nhst > 1 ) {
     hists[0]->Draw();
-    TLegend* pleg = new TLegend(0.20, ylab1, 0.50, ylab2);
+    TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
     pleg->SetBorderSize(0);
     pleg->SetFillStyle(0);
     for ( Index ihst=0; ihst<nhst; ++ihst ) {
       TH1* ph = hists[ihst];
       ostringstream sslab;
-      sslab << slabs[ihst] << " (" << ph->GetEntries() << " samples)";
+      sslab << slabs[ihst] << " (" << ph->GetEntries() << " chips)";
       string slab = sslab.str();
       if ( ihst == 1 ) ph->SetLineColor(46);
       if ( ihst == 2 ) ph->SetLineColor(8);
@@ -273,7 +283,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   } else {
     TH1* ph = hists[0];
     ostringstream sstitl;
-    sstitl << ph->GetTitle() << " (" << ph->GetEntries() << " samples)";
+    sstitl << ph->GetTitle() << " (" << ph->GetEntries() << " chips)";
     string htitl = sshtitl.str();
     ph->SetTitle(htitl.c_str());
     ph->Draw();

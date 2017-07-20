@@ -302,7 +302,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     scha = schan(icha);
     vector<string> subdirs = {
       "P1_ADC_07172017",
-      "P1_ADC_0718"
+      "P1_ADC_0718",
+      "P1_ADC_0719"
     };
     string dirpat = "P1_S7_" + schp + "_";
     for ( string subdir : subdirs ) {

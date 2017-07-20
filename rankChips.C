@@ -269,8 +269,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     pleg->SetFillStyle(0);
     for ( Index ihst=0; ihst<nhst; ++ihst ) {
       TH1* ph = hists[ihst];
+      Index nbin = ph->GetNbinsX();
+      Index bin1 = nbin/2 + 1;
+      Index nhalf = ph->Integral(bin1, nbin+1);
+      Index ntot = ph->GetEntries();
       ostringstream sslab;
-      sslab << slabs[ihst] << " (" << ph->GetEntries() << " chips)";
+      sslab << slabs[ihst] << " (" << nhalf << "/" << ntot << " chips)";
       string slab = sslab.str();
       if ( ihst == 1 ) ph->SetLineColor(46);
       if ( ihst == 2 ) ph->SetLineColor(8);

@@ -145,8 +145,8 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "216")
   dss.append(pre + "217")
   dss.append(pre + "218")
-  dss.append(pre + "221")  # 7/20
-  dss.append(pre + "228")  # 7/20
+  dss.append(pre + "221")
+  dss.append(pre + "228")
   dss.append(pre + "223")
   dss.append(pre + "224")
   dss.append(pre + "225")
@@ -154,10 +154,10 @@ def dune17cDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "232")
   dss.append(pre + "233")
   dss.append(pre + "234")
-  dss.append(pre + "238")  # 7/20
-  dss.append(pre + "240")  # 7/20
+  dss.append(pre + "238")
+  dss.append(pre + "240")
   dss.append(pre + "244")
-  dss.append(pre + "245")  # 7/20
+  dss.append(pre + "245")
   faildss.append(pre + "349")  # crashes in extremum finding for channel 15
   dss.append(pre + "362")
   dss.append(pre + "363_0712T13")

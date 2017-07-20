@@ -247,6 +247,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   SampleIndex maxdext = 10000;
   double vinMin = -300.0;
   double vinMax = 1700.0;
+  Index maxRollback = 0; // If nonzero, rollback is removed for up to this many samples.
   if ( ssam.substr(0, 7) == "201703b" ) {
     if ( ssam.size() != 14 ||
          ssam.substr(7,2) != "_D" ||
@@ -325,6 +326,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     maxdext = 100000;
     vinMin = -200.0;
     vinMax = 1800.0;
+    maxRollback = 2000000;
   }
   // Find the file.
   if ( searchDirs.size() == 0 ) {
@@ -375,6 +377,10 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   // Read the data.
   AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam);
   AdcSampleReaderPtr prdr(prdrFull);
+  // Mitigate rollback.
+  if ( maxRollback ) {
+    prdr->addMitigator(new RollbackFinder(*prdr, maxRollback));
+  }
   // Find extrema.
   AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
   AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);

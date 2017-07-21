@@ -7,9 +7,9 @@
 # Tests dune17.py and creates the data file used by filldb17c
 # to find DUNE17-cold datasets.
 
-from dune17 import dune17cDatasets
+from dune17 import dune17cSamples
 from dune17 import dune17cChips
-from dune17 import dune17tscDatasets
+from dune17 import dune17tscSamples
 from dune17 import dune17tscChips
 
 writeDsfile = True
@@ -17,17 +17,17 @@ writeDsfile = True
 def testDataset(dsname, writeDsFile, showChips):
 
   if dsname == "DUNE17-cold":
-    sams     = dune17cDatasets()
-    remsams  = dune17cDatasets(skipSel=True)
-    badsams  = dune17cDatasets(isBad =True)
-    failsams = dune17cDatasets(isFail =True)
+    sams     = dune17cSamples()
+    remsams  = dune17cSamples(skipSel=True)
+    badsams  = dune17cSamples(isBad =True)
+    failsams = dune17cSamples(isFail =True)
     chips = dune17cChips()
     remchips = dune17cChips(skipSel=True)
   elif dsname == "DUNE17ts-cold":
-    sams = dune17tscDatasets()
-    remsams = dune17tscDatasets(skipSel=True)
-    badsams = dune17tscDatasets(isBad=True)
-    failsams = dune17tscDatasets(isFail=True)
+    sams = dune17tscSamples()
+    remsams = dune17tscSamples(skipSel=True)
+    badsams = dune17tscSamples(isBad=True)
+    failsams = dune17tscSamples(isFail=True)
     chips = dune17tscChips()
     remchips = dune17tscChips(skipSel=True)
   else:

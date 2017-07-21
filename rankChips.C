@@ -4,6 +4,7 @@ using ChipSample = std::pair<Index, string>;
 using ValueChipSample = std::pair<double, ChipSample>;
 using ChipMetricMap = map<Index, ValueChipSample>;
 using RankMap = multimap<double, ChipSample>;
+using ChanValMap = map<string, std::vector<double>>;
 
 void writePython(string name, const RankMap& chips);
 
@@ -34,6 +35,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   RankMap fairChips;
   RankMap poorChips;
   RankMap badChips;
+  ChanValMap chaneff;
   ostringstream sspymdst;
   ostringstream sspymdsl;
   ostringstream sspymsam;
@@ -97,6 +99,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   bool first = true;
   // Loop over samples.
   map<string,Index> datasetIndex;    // Dataset index for each sample. ndst if not found.
+  Index ncha = 0;
   for ( string ssam : ssams ) {
     //AdcChipMetric acm(dataset, chip);
     std::unique_ptr<AdcChipMetric> pacm;
@@ -115,6 +118,15 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     }
     datasetIndex[ssam] = idst;
     AdcChipMetric& acm = *pacm;
+    if ( acm.nChannel() == 0 ) {
+      cout << myname << "Channel count is zero for " << ssam << endl;
+      continue;
+    }
+    if ( ncha == 0 ) ncha = acm.nChannel();
+    if ( acm.nChannel() != ncha ) {
+      cout << myname << "Inconsistent channel count for " << ssam << endl;
+      continue;
+    }
     Index chip = acm.chip();    // Must call this after evaluate.
     cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
     if ( estat != 0 ) continue;
@@ -132,6 +144,9 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     metricLow[ssam] = efflow;
     metricLo2[ssam] = efflo2;
     metricN80[ssam] = n80;
+    for ( Index icha=0; icha<ncha; ++icha ) {
+      chaneff[ssam].push_back(acm.channelEfficiency(icha));
+    }
     auto iprd = chipMetricPrd.find(chip);
     if ( iprd == chipMetricPrd.end() ||
          effprd > iprd->second.first ) {
@@ -188,13 +203,14 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   ofstream outsum2(outsum2Name.c_str());
   ostringstream outl;
   int wds = 7;
+  int wval = 8;
   for ( string dataset : datasets ) if ( dataset.size() > wds ) wds = dataset.size();
   wds += 2;
-  outl << setw(4) << "Rank" << setw(5) << "Chip" << setw(10) << "Q" << setw(4) << "N80";
+  outl << setw(4) << "Rank" << setw(5) << "Chip" << setw(wval) << "Q" << setw(4) << "N80";
   if ( ndst > 1 ) outl << setw(wds) << "Dataset";
   outsum << outl.str() << endl;
   for ( Index icha=0; icha<ncha; ++icha ) {
-    outl << setw(8) << "eff";
+    outl << setw(wval-2) << "eff";
     if ( icha < 10 ) outl << 0;
     outl << icha;
   }
@@ -222,13 +238,19 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
          << ", " << fixed << effavg
          << ", " << fixed << efflow << endl;
     Index idst = datasetIndex[ssam];
-    outsum << setw(4) << rank << setw(5) << chip
-           << setw(10) << fixed << setprecision(3) << effprd
-           << setw(4) << n80;
-    if ( ndst > 1 ) outsum << setw(wds) << datasets[idst];
-    outsum << endl;
+    outl.str("");
+    outl << setw(4) << rank << setw(5) << chip
+         << setw(wval) << fixed << setprecision(3) << effprd
+         << setw(4) << n80;
+    if ( ndst > 1 ) outl << setw(wds) << datasets[idst];
+    outsum << outl.str() << endl;
+    for ( Index icha=0; icha<ncha; ++icha ) {
+      outl << setw(wval) << fixed << setprecision(3) << chaneff[ssam][icha];
+    }
+    outsum2 << outl.str() << endl;
   }
   cout << "Summary output file: " << outsumName << endl;
+  cout << "Long summary output file: " << outsum2Name << endl;
   sspyrankSample << "]";
   sspyrankChip << "]";
   writePython("good", goodChips);
@@ -249,8 +271,6 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   outp << sspyrankChip.str() << endl;
   cout << "Python output file: " << ofname << endl;
   // Draw quality histogram.
-  pcan = new TCanvas;
-  pcan->SetRightMargin(0.03);
   Index nchip = rankedChipsPrd.size();
   ostringstream sshtitl;
   sshtitl << dslist << " ADC chip quality (" << nchip << " chips)";
@@ -272,7 +292,11 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     ph0->SetMinimum(0.0);
     ph0->SetMaximum(ymax);
   }
+  string fnameQuality = "chipQuality_" + dslist + ".png";
+  // Draw quality overlaying chip lists.
   if ( nhst > 1 ) {
+    pcan = new TCanvas;
+    pcan->SetRightMargin(0.03);
     hists[0]->Draw();
     TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
     pleg->SetBorderSize(0);
@@ -294,16 +318,20 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
       pleg->AddEntry(ph, slab.c_str(), "l");
     }
     pleg->Draw();
-  } else {
-    TH1* ph = hists[0];
-    ostringstream sstitl;
-    sstitl << ph->GetTitle() << " (" << ph->GetEntries() << " chips)";
-    string htitl = sshtitl.str();
-    ph->SetTitle(htitl.c_str());
-    ph->Draw();
+    if ( pcan != nullptr ) pcan->Print(fnameQuality.c_str());
+    // Change name for combined plot if we also have multi-list plot.
+    fnameQuality = "chipQualityCombined_" + dslist + ".png";
   }
-  string fname = "chipQuality_" + dslist + ".png";
-  if ( pcan != nullptr ) pcan->Print(fname.c_str());
+  // Draw combined quality overlaying chip lists.
+  pcan = new TCanvas;
+  pcan->SetRightMargin(0.03);
+  TH1* ph = hists[0];
+  ostringstream sstitl;
+  sstitl << ph->GetTitle() << " (" << ph->GetEntries() << " chips)";
+  htitl = sstitl.str();
+  ph->SetTitle(htitl.c_str());
+  ph->Draw();
+  if ( pcan != nullptr ) pcan->Print(fnameQuality.c_str());
   // Build metric vectors.
   vector<double> valAvg;
   for ( SampleMetricMap::value_type ient : metricAvg ) valAvg.push_back(pow(ient.second,16));

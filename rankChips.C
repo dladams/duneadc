@@ -76,7 +76,6 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     ph->SetStats(0);
     ph->SetLineWidth(2);
   }
-  if ( hists.size() > 1 ) hists[0]->SetLineWidth(3);
   cout << endl;
   cout << myname << dslist << endl;
   string dsfname = dslist + ".txt";
@@ -96,6 +95,24 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     if ( lsam > wsam ) wsam = lsam;
   }
   wsam += 4;
+  // Read the samples for each dataset.
+  std::vector<vector<string>> datasetSamples(ndst);
+  for ( Index idst=0; idst<ndst; ++idst ) {
+    string dataset = datasets[idst];
+    string dsfname = dataset +".txt";
+    ifstream dsf(dsfname.c_str());
+    if ( ! dsf ) {
+      cout << myname << "Dataset description file not found: " << dsfname << endl;
+      return nullptr;
+    }
+    while ( dsf ) {
+      string ssam;
+      dsf >> ssam;
+      if ( dsf.eof() ) break;
+      datasetSamples[idst].push_back(ssam);
+    }
+    cout << "Dataset " << dataset << " sample count: " << datasetSamples[idst].size() << endl;
+  }
   bool first = true;
   // Loop over samples.
   map<string,Index> datasetIndex;    // Dataset index for each sample. ndst if not found.
@@ -108,9 +125,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     string dataset;
     for ( ; idst<datasets.size(); ++idst ) {
       dataset = datasets[idst];
-      pacm.reset(new AdcChipMetric(dataset, ssam));
-      estat = pacm->evaluate();
-      if ( estat == 0 ) break;
+      const vector<string>& sams = datasetSamples[idst];
+      if ( find(sams.begin(), sams.end(), ssam)  != sams.end() ) {
+        pacm.reset(new AdcChipMetric(dataset, ssam));
+        estat = pacm->evaluate();
+        if ( estat == 0 ) break;
+      }
     }
     if ( idst == datasets.size() || estat != 0 ) {
       cout << myname << "Unable to find performance for " << ssam << endl;
@@ -281,6 +301,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   double yleg1 = yleg2 - dyleg;
   htitl = sshtitl.str();
   TH1* ph0 = hists[0];
+  ph0->SetLineWidth(3);
   double ymax = ph0->GetMaximum();
   double ybinmax = 0.0;
   for ( ibin=4; ibin<=ph0->GetNbinsX(); ++ibin ) {
@@ -312,8 +333,13 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
       string slab = sslab.str();
       if ( ihst == 1 ) ph->SetLineColor(46);
       if ( ihst == 2 ) ph->SetLineColor(kGreen+3);
-      if ( ihst == 1 ) ph->SetLineStyle(2);
-      if ( ihst == 2 ) ph->SetLineStyle(3);
+      if ( ihst == 3 ) ph->SetLineColor(kMagenta+2);
+      if ( ihst == 1 ) ph->SetLineStyle(3);
+      if ( ihst == 2 ) ph->SetLineStyle(2);
+      if ( ihst == 3 ) ph->SetLineStyle(1);
+      if ( ihst == 1 ) ph->SetLineWidth(3);
+      if ( ihst == 2 ) ph->SetLineWidth(2);
+      if ( ihst == 3 ) ph->SetLineWidth(1);
       ph->Draw("same");
       pleg->AddEntry(ph, slab.c_str(), "l");
     }
@@ -380,7 +406,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     cout << setw(4) << count << ":" << setw(5) << nchan << setw(6) << csum << endl;
     if ( count == 0 ) break;
   }
-  cout << "Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;
+  cout << "Chip/Sample count: " << metricPrd.size() << "/" << ssams.size() << endl;
   cout << "  Chip count: " << nchip << endl;
   if ( pmets != nullptr ) {
     *pmets = metricPrd;

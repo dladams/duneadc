@@ -16,8 +16,12 @@ writeDsfile = True
 
 def testDataset(dsname, writeDsFile, showChips):
 
+  grpsams = []
   if dsname == "DUNE17-cold":
     sams     = dune17cSamples()
+    grpsams.append(sams)
+    grpsams.append(dune17cSamples(group=1))
+    grpsams.append(dune17cSamples(group=2))
     remsams  = dune17cSamples(skipSel=True)
     badsams  = dune17cSamples(isBad =True)
     failsams = dune17cSamples(isFail =True)
@@ -40,6 +44,9 @@ def testDataset(dsname, writeDsFile, showChips):
   print "    Rem sample count is " + str(len(remsams))
   print "   Good sample count is " + str(len(sams))
   print "     Good chip count is " + str(len(chips))
+  ngrp = len(grpsams)
+  for igrp in range(1,ngrp):
+    print "       Group " + str(igrp) +  " count is " + str(len(grpsams[igrp]))
   print " Rem good chip count is " + str(len(remchips))
 
   if showChips:
@@ -70,6 +77,19 @@ def testDataset(dsname, writeDsFile, showChips):
     for ds in sams:
       if writeDsfile: outf.write(ds + "\n")
     print "Good sample list written to " + outfName
+    if dsname == "DUNE17-cold":
+      # Old samples
+      outfName = dsname + "-old.txt"
+      outf = open(outfName, "w")
+      for ds in grpsams[1]:
+        if writeDsfile: outf.write(ds + "\n")
+      print "Good sample list written to " + outfName
+      # New samples
+      outfName = dsname + "-new.txt"
+      outf = open(outfName, "w")
+      for ds in grpsams[2]:
+        if writeDsfile: outf.write(ds + "\n")
+      print "Good sample list written to " + outfName
 
 showChips = True
 print

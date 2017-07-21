@@ -275,6 +275,7 @@ def dune17tscDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "265")
   dss.append(pre + "266")
   dss.append(pre + "267")
+  dss.append(pre + "268")
   dss.append(pre + "269")
   dss.append(pre + "270")
   dss.append(pre + "272")
@@ -282,6 +283,16 @@ def dune17tscDatasets(isBad =False, isFail=False, skipSel=False):
   dss.append(pre + "274")
   dss.append(pre + "275")
   dss.append(pre + "276")
+  dss.append(pre + "277")
+  dss.append(pre + "278")
+  dss.append(pre + "282")
+  dss.append(pre + "284")
+  dss.append(pre + "285")
+  dss.append(pre + "286")
+  dss.append(pre + "287")
+  dss.append(pre + "288")
+  dss.append(pre + "290")
+  dss.append(pre + "291")
   if isBad: outsams = baddss
   elif isFail: outsams = faildss
   else: outsams = dss  

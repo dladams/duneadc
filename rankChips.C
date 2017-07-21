@@ -183,13 +183,22 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   sspyrankChip   << "rankChip = [";
   //for ( auto& rc : rankedChipsPrd ) {
   string outsumName = "rank_" + dslist + ".txt";
+  string outsum2Name = "rank_" + dslist + "_long.txt";
   ofstream outsum(outsumName.c_str());
+  ofstream outsum2(outsum2Name.c_str());
+  ostringstream outl;
   int wds = 7;
   for ( string dataset : datasets ) if ( dataset.size() > wds ) wds = dataset.size();
   wds += 2;
-  outsum << setw(4) << "Rank" << setw(5) << "Chip" << setw(10) << "Q" << setw(4) << "N80";
-  if ( ndst > 1 ) outsum << setw(wds) << "Dataset";
-  outsum << endl;
+  outl << setw(4) << "Rank" << setw(5) << "Chip" << setw(10) << "Q" << setw(4) << "N80";
+  if ( ndst > 1 ) outl << setw(wds) << "Dataset";
+  outsum << outl.str() << endl;
+  for ( Index icha=0; icha<ncha; ++icha ) {
+    outl << setw(8) << "eff";
+    if ( icha < 10 ) outl << 0;
+    outl << icha;
+  }
+  outsum2 << outl.str() << endl;
   for ( auto irc=rankedChipsPrd.rbegin(); irc!=rankedChipsPrd.rend(); ++irc ) {
     auto rc = *irc;
     Index chip = rc.second.first;
@@ -260,6 +269,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   }
   if ( ybinmax < 0.7*ymax ) {
     ymax = int(1.3*ybinmax+0.5);
+    ph0->SetMinimum(0.0);
     ph0->SetMaximum(ymax);
   }
   if ( nhst > 1 ) {
@@ -277,7 +287,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
       sslab << slabs[ihst] << " (" << nhalf << "/" << ntot << " chips)";
       string slab = sslab.str();
       if ( ihst == 1 ) ph->SetLineColor(46);
-      if ( ihst == 2 ) ph->SetLineColor(8);
+      if ( ihst == 2 ) ph->SetLineColor(kGreen+3);
       if ( ihst == 1 ) ph->SetLineStyle(2);
       if ( ihst == 2 ) ph->SetLineStyle(3);
       ph->Draw("same");

@@ -214,7 +214,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   int rank = 0;
   ostringstream sspyrankSample;
   ostringstream sspyrankChip;
-  sspyrankSample << "rankSample = [";
+  sspyrankSample << "rankedSampleByChip = {";
   sspyrankChip   << "rankChip = [";
   //for ( auto& rc : rankedChipsPrd ) {
   string outsumName = "rank_" + dslist + ".txt";
@@ -251,8 +251,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     sspyrankSample << "\n  ";
     sspyrankChip << "\n  ";
     string qsam = "\"" + ssam + "\"";
-    sspyrankSample << qsam;
     sspyrankChip << chip;
+    sspyrankSample << chip << ":" << qsam;
     cout << setw(4) << rank << ": " << setw(4) << ssam
          << ": " << fixed << effprd
          << ", " << fixed << effavg
@@ -271,7 +271,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   }
   cout << "Summary output file: " << outsumName << endl;
   cout << "Long summary output file: " << outsum2Name << endl;
-  sspyrankSample << "]";
+  sspyrankSample << "}";
   sspyrankChip << "]";
   writePython("good", goodChips);
   writePython("fair", fairChips);

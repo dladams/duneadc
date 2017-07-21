@@ -325,7 +325,7 @@ def dune17cChip(ds):
 # Return all datasets for a given chip number.
 def dune17cChipSamples(chip):
   dso = []
-  for ds in dune17cSamples():
+  for ds in dune17cSamples() + dune17tscSamples():
     if dune17cChip(ds) == chip:
       dso.append(ds)
   return dso

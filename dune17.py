@@ -131,12 +131,12 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
   sams2.append(pre + "150")
   sams2.append(pre + "151")
   sams2.append(pre + "152")
-  sams2.append(pre + "154")  # 7/21
+  sams2.append(pre + "154")
   sams2.append(pre + "155")
-  sams2.append(pre + "156")  # 7/21
-  sams2.append(pre + "157_0721T1208")  # 7/21
-  sams2.append(pre + "157_0721T1252")  # 7/21
-  sams2.append(pre + "158")  # 7/21
+  sams2.append(pre + "156")
+  sams2.append(pre + "157_0721T1208")
+  sams2.append(pre + "157_0721T1252")
+  sams2.append(pre + "158")
   sams1.append(pre + "190")
   sams1.append(pre + "191")
   sams1.append(pre + "192")
@@ -186,9 +186,9 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
   sams2.append(pre + "248")
   badsams.append(pre + "249")
   failsams.append(pre + "349")  # crashes in extremum finding for channel 15
-  sams2.append(pre + "330")  # 7/21
-  sams2.append(pre + "331")  # 7/21
-  sams2.append(pre + "337")  # 7/21
+  sams2.append(pre + "330")
+  sams2.append(pre + "331")
+  sams2.append(pre + "337")
   sams1.append(pre + "362")
   sams1.append(pre + "363_0712T13")
   badsams.append(pre + "363_0712T15")   # distorted waveforms

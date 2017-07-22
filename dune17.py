@@ -17,8 +17,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
   badsams.append(pre + "3_0702T15")       # square wave
   sams1.append(pre + "3_0702T16")
   sams1.append(pre + "6")
-  sams1.append(pre + "7_0705")  # 7/21 replace
-  sams2.append(pre + "7_0721")  # 7/21
+  sams1.append(pre + "7_0705")
+  sams2.append(pre + "7_0721")
   sams1.append(pre + "8_0704")
   badsams.append(pre + "8_0713")   # Bad waveforms.
   sams1.append(pre + "9")

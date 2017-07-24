@@ -1062,7 +1062,7 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   double xleg1 = 0.30;
   if ( sampleName().find("_cots") != string::npos ) xleg1 = 0.15;
   double xleg2 = xleg1 + 0.25;
-  double yleg1 = showadv ? 0.68 : 0.72;
+  double yleg1 = showadv ? 0.69 : 0.73;
   double yleg2 = 0.87;
   TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
   pleg->SetBorderSize(0);
@@ -1076,7 +1076,10 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     if ( phvrmsScaled != nullptr ) pleg->AddEntry(phvrms, "RMS dev.", "p");
   }
   if ( showadv ) pleg->AddEntry(phvadv, "Deviation |mean|", "p");
-  pleg->AddEntry(phts, "Tail fraction", "f");
+  ostringstream sslab;
+  sslab << "Tail fraction (" << tailWindow << " mV)";
+  string slab = sslab.str();
+  pleg->AddEntry(phts, slab.c_str(), "f");
   pleg->Draw();
   TLine* pline = new TLine(x1, 0.0, x2, 0.0);
   pline->Draw();

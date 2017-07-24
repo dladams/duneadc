@@ -195,6 +195,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "338")
   badsams.append(pre + "339")  # Bad waveform in channels 0-4
   sams2.append(pre + "342")
+  sams2.append(pre + "343")  # 7/24
   badsams.append(pre + "344")   # Bad waveforms
   sams2.append(pre + "346")
   failsams.append(pre + "349")  # crashes in extremum finding for channel 15

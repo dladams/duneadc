@@ -6,8 +6,9 @@ if [ -r dsname.dat ]; then
 fi
 RMSMAX=2.0
 
+DSLIST=$DSNAME
 if [ -n "$1" -a "$1" != . ]; then
-  DSNAME=$1
+  DSLIST=$1
 fi
 
 if [ -r rmsmax.dat ]; then
@@ -18,10 +19,11 @@ else
 fi
 
 echo Dataset name: $DSNAME
+echo Dataset list: $DSLIST.txt
 echo      RMS max: $RMSMAX
 
 LOGDIR=logs_$DSNAME
-if [ "$2" = clean ]; then
+if [ "$1" = clean -o "$2" = clean ]; then
   echo Cleaning dataset $DSNAME...
   rm -rf $LOGDIR
   rm -f calib_$DSNAME.root
@@ -29,16 +31,17 @@ if [ "$2" = clean ]; then
   rm -f *.png
   exit 0
 fi
+echo Log dir: $LOGDIR
 
-if [ ! -r $DSNAME.txt ]; then
-  echo Datset name file not found: $DSNAME.txt
+if [ ! -r $DSLIST.txt ]; then
+  echo Datset list file not found: $DSLIST.txt
   exit 1
 fi
 
 if [ ! -r $LOGDIR ]; then mkdir $LOGDIR; fi
 
-echo Processing dataset $DSNAME
-for NAME in `cat $DSNAME.txt`; do
+echo Processing dataset $DSNAME from list $DSLIST.txt
+for NAME in `cat $DSLIST.txt`; do
   LOG=$LOGDIR/$NAME.log
   if [ -r $LOG ]; then
     echo "Skipping $NAME."

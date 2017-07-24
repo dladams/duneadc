@@ -5,7 +5,7 @@
 
 # List of available DUNE17 datasets.
 # group: 0 = all, 1=bad clock(before 7/19), 2=good clock
-def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
+def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=True):
   pre = "DUNE17-cold_chip"
   sams1 = []
   sams2 = []
@@ -188,16 +188,16 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
   failsams.append(pre + "349")  # crashes in extremum finding for channel 15
   sams2.append(pre + "330")
   sams2.append(pre + "331")
-  sams2.append(pre + "335")  # 7/22
+  badsams.append(pre + "335")  # Bad waveforms
   sams2.append(pre + "337")
-  sams2.append(pre + "339")  # 7/22
-  sams2.append(pre + "346")  # 7/22
-  sams2.append(pre + "351")  # 7/22
-  sams2.append(pre + "353")  # 7/22
-  sams2.append(pre + "357")  # 7/22
-  sams2.append(pre + "358")  # 7/22
-  sams2.append(pre + "359")  # 7/22
-  sams2.append(pre + "360")  # 7/22
+  badsams.append(pre + "339")  # Bad waveform in channels 0-4
+  sams2.append(pre + "346")
+  sams2.append(pre + "351")
+  sams2.append(pre + "353")
+  sams2.append(pre + "357")
+  sams2.append(pre + "358")
+  sams2.append(pre + "359")
+  sams2.append(pre + "360")
   sams1.append(pre + "362")
   sams1.append(pre + "363_0712T13")
   badsams.append(pre + "363_0712T15")   # distorted waveforms
@@ -222,8 +222,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
   sams1.append(pre + "385")
   sams1.append(pre + "386")
   sams1.append(pre + "387")
-  sams1.append(pre + "390_0714")  # 7/22 redo
-  sams2.append(pre + "390_0721")  # 7/22
+  sams1.append(pre + "390_0714")
+  sams2.append(pre + "390_0721")
   sams1.append(pre + "392")
   sams1.append(pre + "393")
   badsams.append(pre + "391")
@@ -237,12 +237,14 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False):
     elif group == 1: outsams = sams1
     elif group == 2: outsams = sams2
     else:            outsams = []
-  if skipSel:
-    skipChips = selChips()
+  if skipSel or skipBad:
+    skipChips = []
+    if skipSel: skipChips += selectedChips()
+    if skipBad: skipChips += badChips()
     keepsams = []
     for sam in outsams:
       chip = dune17cChip(sam)
-      print "Chip " + str(chip)
+      #print "Chip " + str(chip)
       if chip not in skipChips:
         keepsams.append(sam)
     return keepsams
@@ -345,7 +347,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False):
   elif isFail: outsams = failsams
   else: outsams = sams  
   if skipSel:
-    skipChips = selChips()
+    skipChips = selectedChips()
     keepsams = []
     for sam in outsams:
       chip = dune17cChip(sam)
@@ -380,10 +382,11 @@ def dune17cSuffix(ds):
   return suf
 
 # Return the chips in DUNE17-cold
-def dune17cChips(skipSel=False):
+def dune17cChips(skipSel=False, skipBad=True):
   chips = []
   skipChips = []
-  if skipSel: skipChips = selChips()
+  if skipSel: skipChips += selectedChips()
+  if skipBad: skipChips += badChips()
   for ds in dune17cSamples():
     chip = dune17cChip(ds)
     if chip not in chips:
@@ -392,14 +395,31 @@ def dune17cChips(skipSel=False):
   return chips
 
 # Return the chips in DUNE17ts-cold
-def dune17tscChips(skipSel=False):
+def dune17tscChips(skipSel=False, skipBad=True):
   chips = []
   skipChips = []
-  if skipSel: skipChips = selChips()
-  for ds in dune17tscSamples():
-    chip = dune17cChip(ds)
+  if skipSel: skipChips = selectedChips()
+  if skipBad: skipChips += badChips()
+  for sam in dune17tscSamples():
+    chip = dune17cChip(sam)
     if chip not in chips:
       if chip not in skipChips:
+        chips.append(chip)
+  return chips
+
+# Return chips that appear in bad samples.
+def dune17BadSampleChips(excludePdts=True, excludeCets=True):
+  chips = []
+  sams = []
+  sams += dune17cSamples(isBad=True)
+  sams += dune17tscSamples(isBad=True)
+  excludeChips = []
+  if excludePdts: excludeChips += dune17cChips()
+  if excludeCets: excludeChips += dune17tscChips()
+  for sam in sams:
+    chip = dune17cChip(sam)
+    if chip not in chips:
+      if chip not in excludeChips:
         chips.append(chip)
   return chips
 
@@ -414,6 +434,20 @@ def dune17DatasetName(sam):
   return "UnknownDataset"
 
 # Selected chips.
-selApa1 = [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 18, 20, 22, 25, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 60, 64, 65, 67, 70, 71, 74, 78, 79, 80, 81, 82, 84, 86, 87, 90, 92, 93, 94, 95, 96, 97, 101, 105, 108, 110, 114, 115, 118, 119, 124, 127, 129, 132, 136, 138, 363, 364, 365, 366, 369, 373, 379, 380, 383, 384, 385, 387]
-def selChips():
-  return selApa1
+def selectedChips():
+  chips = []
+  # Selection 16jul2017
+  chips += [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 18, 20, 22, 25, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 60, 64, 65, 67, 70, 71, 74, 78, 79, 80, 81, 82, 84, 86, 87, 90, 92, 93, 94, 95, 96, 97, 101, 105, 108, 110, 114, 115, 118, 119, 124, 127, 129, 132, 136, 138, 363, 364, 365, 366, 369, 373, 379, 380, 383, 384, 385, 387]
+  # Selection 23jul2017
+  chips += [316, 161, 214, 190, 225, 295, 304, 275, 201, 221, 273, 292, 176, 320, 228, 264, 357, 276, 278, 331, 189, 212, 266, 162, 147, 293, 263, 240, 277, 298, 351, 238, 257, 329, 269, 285, 261, 267, 150, 231, 325, 187, 289, 327, 163, 184, 256, 151, 282, 191, 258, 359, 170, 317, 299, 394, 302, 148, 158, 324, 140, 204, 146, 173, 376, 274, 255, 197, 247, 287, 253, 288, 165, 301, 330, 182, 245, 217, 265, 284]
+  chips.sort()
+  return chips
+
+# Chips declared bad.
+def badChips():
+  chips = []
+  #chips += [133, 167, 256]     # Matt "BAD" 23jul2017 These are FE numbers--not ADC numbers.
+  #chips += [49, 64]     # Matt "Damaged" 23jul2017i. These are FE numbers--not ADC numbers.
+  chips += [359, 111, 23, 284]  #  Matt missing chips 24jul2017
+  chips.sort()
+  return chips

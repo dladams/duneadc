@@ -11,6 +11,7 @@ from dune17 import dune17cSamples
 from dune17 import dune17cChips
 from dune17 import dune17tscSamples
 from dune17 import dune17tscChips
+from dune17 import badChips
 
 writeDsfile = True
 
@@ -97,6 +98,17 @@ testDataset("DUNE17-cold", True, showChips)
 print
 testDataset("DUNE17ts-cold", True, showChips)
 print
+print "Fetching bad chip list."
+chips = badChips()
+print "Bad chip count: " + str(len(chips))
+if writeDsfile:
+  fname = "DUNE17-badchips.txt"
+  outf = open(fname, "w")
+  for chip in chips:
+    outf.write(str(chip) + "\n")
+  print "Bad chip list written to " + fname
+print
+print "Fetching length all remaining chips."
 allRemSams = list(set(dune17cChips(skipSel=True) + dune17tscChips(skipSel=True)))
 print "All rem count: " + str(len(allRemSams))
 

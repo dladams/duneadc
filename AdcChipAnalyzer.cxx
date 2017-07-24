@@ -467,7 +467,8 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
       pcal = new AdcTreeChannelCalibration(*pcaltmp);
     }
     m_pcals.push_back(pcal);    // Record this for deletion in dtor.
-    pasa = new AdcSampleAnalyzer(std::move(prdr), pcal, fixped);
+    double tailWin = 5.0*vRmsMax();
+    pasa = new AdcSampleAnalyzer(std::move(prdr), pcal, fixped, tailWin);
     AdcSampleAnalyzer& asa = *pasa;
     if ( asa.phc != nullptr ) {
       // Create array of voltage responses.

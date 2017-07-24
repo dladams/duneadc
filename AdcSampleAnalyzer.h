@@ -120,10 +120,13 @@ public:
   TH1* phveff = nullptr;   // Efficiency (fraction of samples in good ADC bins) vs Vin.
   TH1* phvdev = nullptr;   // Mean calibration deviation for good bins.
   TH1* phvrms = nullptr;   // RMS of the calibration deviation for good bins.
+  mutable TH1* phvrmsScaled = nullptr;   // RMS of the calibration deviation for good bins.
   TH1* phvadv = nullptr;   // Abs of the mean calibration deviation for good bins.
   TH1* phvtail = nullptr;  // Tail fraction vs Vin.
   TLineVector g80bars;     // (10,90)% range for the calibratin RMS
   TLineVector g100bars;    // (0,100)% range for the calibration RMS
+  TLineVector g80barsScaled;   // Scaled (10,90)% range for the calibratin RMS
+  TLineVector g100barsScaled;  // Scaled (0,100)% range for the calibration RMS
 
   // Threshold for pull fractions.
   bool evaluateReadData =false;   // Flag indicating if data was read for performance evaluation.
@@ -136,14 +139,16 @@ public:
   //   fixped - If true the ref calib is adjusted to have the same response near bin 300
   AdcSampleAnalyzer(const AdcSampleReader& areader,
                     const AdcChannelCalibration* pcal =nullptr,
-                    bool fixped =false);
+                    bool fixped =false,
+                    double a_tailWindow = 5.0);
 
   // Same as previous except this object now manages the reader.
   // The reader will be deleted when this analyzer is deleted.
   // Caller must move the input pointer: AdcSampleyAnalyzer myobj(std::move(prdr), ...)
   AdcSampleAnalyzer(AdcSampleReaderPtr preader,
                     const AdcChannelCalibration* pcal =nullptr,
-                    bool fixped =false);
+                    bool fixped =false,
+                    double a_tailWindow = 5.0);
 
   // Construct analyzer from a channel calibration.
   // The dataset and sample names are needed for labels.

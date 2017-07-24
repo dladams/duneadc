@@ -48,8 +48,10 @@ int dbg_AdcSampleAnalyzer() { return 0; }
 //**********************************************************************
 
 AdcSampleAnalyzer::
-AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal, bool fixped)
-: pcalInput(pcal), pcalNominal(pcal),
+AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
+                  bool fixped, double a_tailWindow)
+: tailWindow(a_tailWindow),
+  pcalInput(pcal), pcalNominal(pcal),
   m_preader(&rdr),
   m_dataset(rdr.dataset()),
   m_sampleName(rdr.sample()),
@@ -309,8 +311,9 @@ AdcSampleAnalyzer(const AdcSampleReader& rdr, const AdcChannelCalibration* pcal,
 //**********************************************************************
 
 AdcSampleAnalyzer::
-AdcSampleAnalyzer(AdcSampleReaderPtr preader, const AdcChannelCalibration* pcal, bool fixped)
-: AdcSampleAnalyzer(*preader, pcal, fixped) {
+AdcSampleAnalyzer(AdcSampleReaderPtr preader, const AdcChannelCalibration* pcal,
+                  bool fixped, double a_tailWindow)
+: AdcSampleAnalyzer(*preader, pcal, fixped, a_tailWindow) {
   m_preaderManaged.swap(preader);
 }
 
@@ -380,9 +383,13 @@ AdcSampleAnalyzer::~AdcSampleAnalyzer() {
     if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting g80 bars." << endl;
     for ( TLine* pline : g80bars ) delete pline;
     g80bars.clear();
+    for ( TLine* pline : g80barsScaled ) delete pline;
+    g80barsScaled.clear();
     if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting g100 bars." << endl;
     for ( TLine* pline : g100bars ) delete pline;
     g100bars.clear();
+    for ( TLine* pline : g100barsScaled ) delete pline;
+    g100barsScaled.clear();
   }
   if ( pcalNominal != pcalInput ) {
     if ( dbg_AdcSampleAnalyzer() ) cout << myname << "Deleting nominal calibration." << endl;
@@ -897,13 +904,21 @@ AdcSampleAnalyzer::evaluateVoltageEfficiencies(double rmsmax, bool readData, boo
   }
   g80bars.clear();
   g100bars.clear();
+  g80barsScaled.clear();
+  g100barsScaled.clear();
   for ( unsigned int ivr=0; ivr<nvr; ++ivr ) {
     TLine* pline = new TLine(gx[ivr], gey10[ivr], gx[ivr], gey90[ivr]);
     pline->SetLineWidth(3);
     g80bars.push_back(pline);
+    pline = new TLine(gx[ivr], gey10[ivr]/rmsmax, gx[ivr], gey90[ivr]/rmsmax);
+    pline->SetLineWidth(3);
+    g80barsScaled.push_back(pline);
     pline = new TLine(gx[ivr], gey0[ivr], gx[ivr], gey100[ivr]);
     pline->SetLineWidth(1);
     g100bars.push_back(pline);
+    pline = new TLine(gx[ivr], gey0[ivr]/rmsmax, gx[ivr], gey100[ivr]/rmsmax);
+    pline->SetLineWidth(1);
+    g100barsScaled.push_back(pline);
   }
   return vperf.vinEffs;
 }
@@ -923,6 +938,10 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   }
   double ymax = 1.03;
   bool rescale = false;
+  bool doScaleunc = true;
+  double vuncmax = 1.0;
+  if ( vperfs.size() ) vuncmax = vperfs.back().vuncmax;
+  bool scaleunc = doScaleunc && vuncmax != 1.0;
   if ( rescale ) {
     if ( phvrms != nullptr ) {
       double rmsmax = phvrms->GetMaximum();
@@ -930,8 +949,8 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     }
   }
   TH1* ph = phveff;
-  string hnam;
   // Build scaled tail plot.
+  string hnam;
   hnam = phvtail->GetName();
   hnam += "_scaled";
   TH1* phts = dynamic_cast<TH1*>(phvtail->Clone(hnam.c_str()));
@@ -974,7 +993,13 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     phax->SetTitle(htitl.c_str());
   }
   string ylab = phax->GetYaxis()->GetTitle();
-  ylab += ", uncertainty [mV], deviation [mV]";
+  if ( scaleunc ) {
+    ostringstream sslab;
+    sslab << ylab << ", (unc, dev)/#sigma_{max} for #sigma_{max} = " << vuncmax << " mV";
+    ylab = sslab.str();
+  } else {
+    ylab += ", uncertainty [mV], deviation [mV]";
+  }
   phax->GetYaxis()->SetTitle(ylab.c_str());
   phax->SetMaximum(ymax);
   phax->SetDirectory(0);   // Leaking this preserves the line color/style in the legend
@@ -994,17 +1019,40 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   phts->DrawCopy("same");
   phax->DrawCopy("hist same");
   int lcol = 28;
-  for ( TLine* pline : g100bars ) {
-    pline->SetLineColor(lcol);
-    pline->Draw();
+  if ( scaleunc ) {
+    for ( TLine* pline : g100barsScaled ) {
+      pline->SetLineColor(lcol);
+      pline->Draw();
+    }
+    for ( TLine* pline : g80barsScaled ) {
+      pline->SetLineColor(lcol);
+      pline->Draw();
+    }
+  } else {
+    for ( TLine* pline : g100bars ) {
+      pline->SetLineColor(lcol);
+      pline->Draw();
+    }
+    for ( TLine* pline : g80bars ) {
+      pline->SetLineColor(lcol);
+      pline->Draw();
+    }
   }
-  for ( TLine* pline : g80bars ) {
-    pline->SetLineColor(lcol);
-    pline->Draw();
-  }
-  if ( phvrms != nullptr ) {
-    phvrms->SetMarkerStyle(34);
-    phvrms->DrawCopy("p same");
+  if ( scaleunc && phvrmsScaled == nullptr ) {
+    if ( phvrms != nullptr ) {
+      string hnam = phvrms->GetName();
+      hnam += "Scaled";
+      phvrmsScaled = dynamic_cast<TH1*>(phvrms->Clone(hnam.c_str()));
+      phvrmsScaled->SetDirectory(nullptr);
+      phvrmsScaled->SetMarkerStyle(34);
+      phvrmsScaled->Scale(1.0/vuncmax);
+    }
+    phvrmsScaled->DrawCopy("p same");
+  } else {
+    if ( phvrms != nullptr ) {
+      phvrms->SetMarkerStyle(34);
+      phvrms->DrawCopy("p same");
+    }
   }
   bool showadv = pcalNominal != nullptr && phvadv != nullptr;
   if ( showadv ) {
@@ -1020,8 +1068,13 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
   pleg->SetBorderSize(0);
   pleg->SetFillStyle(0);
   pleg->AddEntry(phax, "Efficiency", "l");
-  pleg->AddEntry(g80bars[0], "Uncertainty (80%)", "l");
-  if ( phvrms != nullptr ) pleg->AddEntry(phvrms, "Deviation RMS", "p");
+  if ( scaleunc ) {
+    pleg->AddEntry(g80barsScaled[0], "(80% unc.)/#sigma_{max}", "l");
+    if ( phvrmsScaled != nullptr ) pleg->AddEntry(phvrmsScaled, "(RMS dev.)/#sigma_{max}", "p");
+  } else {
+    pleg->AddEntry(g80bars[0], "Uncertainty (80%)", "l");
+    if ( phvrmsScaled != nullptr ) pleg->AddEntry(phvrms, "RMS dev.", "p");
+  }
   if ( showadv ) pleg->AddEntry(phvadv, "Deviation |mean|", "p");
   pleg->AddEntry(phts, "Tail fraction", "f");
   pleg->Draw();
@@ -1038,12 +1091,22 @@ int AdcSampleAnalyzer::drawperf(bool dolabtail) const {
     pl001->Draw();
     double ylabhi = ymax + 0.03*ymax;
     double ylablo = -0.07*ymax;
-    TLatex* plab001 = new TLatex(xe0p1, ylabhi, "0.1%");
+    double  qpmax = 0.1;
+    if ( scaleunc ) qpmax *= vuncmax;
+    ostringstream sslab;
+    sslab << qpmax << "%";
+    string slab = sslab.str();
+    TLatex* plab001 = new TLatex(xe0p1, ylabhi, slab.c_str());
     plab001->SetTextFont(42);
     plab001->SetTextSize(0.03);
     plab001->SetTextAlign(22);
     plab001->Draw();
-    TLatex* plab450 = new TLatex(0.91, 0.865, "450 e");
+    double qmax = 450;
+    if ( scaleunc ) qmax *= vuncmax;
+    sslab.str("");
+    sslab << qmax << " e";
+    slab = sslab.str();
+    TLatex* plab450 = new TLatex(0.91, 0.865, slab.c_str());
     plab450->SetNDC();
     plab450->SetTextFont(42);
     plab450->SetTextSize(0.03);

@@ -108,6 +108,7 @@ DUNE17-cold_chip133_0711
 DUNE17-cold_chip133_0712
 DUNE17-cold_chip136
 DUNE17-cold_chip138
+DUNE17-cold_chip171
 DUNE17-cold_chip190
 DUNE17-cold_chip191
 DUNE17-cold_chip192

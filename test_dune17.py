@@ -97,6 +97,6 @@ testDataset("DUNE17-cold", True, showChips)
 print
 testDataset("DUNE17ts-cold", True, showChips)
 print
-allRemSams = list(set(dune17cSamples(skipSel=True) + dune17tscSamples(skipSel=True)))
+allRemSams = list(set(dune17cChips(skipSel=True) + dune17tscChips(skipSel=True)))
 print "All rem count: " + str(len(allRemSams))
 

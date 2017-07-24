@@ -1,7 +1,6 @@
 DUNE17ts-cold_chip160
 DUNE17ts-cold_chip164
 DUNE17ts-cold_chip166
-DUNE17ts-cold_chip168
 DUNE17ts-cold_chip169
 DUNE17ts-cold_chip171
 DUNE17ts-cold_chip172

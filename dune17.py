@@ -258,7 +258,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   return outsams
  
 # List of available DUNE17ts-cold datasets.
-def dune17tscSamples(isBad =False, isFail=False, skipSel=False):
+def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   pre = "DUNE17ts-cold_chip"
   sams = []
   badsams = []
@@ -353,8 +353,10 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False):
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   else: outsams = sams  
-  if skipSel:
-    skipChips = selectedChips()
+  if skipSel or skipBad:
+    skipChips = []
+    if skipSel: skipChips += selectedChips()
+    if skipBad: skipChips += badChips()
     keepsams = []
     for sam in outsams:
       chip = dune17cChip(sam)
@@ -405,13 +407,14 @@ def dune17cChips(skipSel=False, skipBad=True):
 def dune17tscChips(skipSel=False, skipBad=True):
   chips = []
   skipChips = []
-  if skipSel: skipChips = selectedChips()
+  if skipSel: skipChips += selectedChips()
   if skipBad: skipChips += badChips()
   for sam in dune17tscSamples():
     chip = dune17cChip(sam)
     if chip not in chips:
       if chip not in skipChips:
         chips.append(chip)
+        print "Keep " + str(chip)
   return chips
 
 # Return chips that appear in bad samples.
@@ -446,7 +449,7 @@ def selectedChips():
   # Selection 16jul2017
   chips += [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 18, 20, 22, 25, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 60, 64, 65, 67, 70, 71, 74, 78, 79, 80, 81, 82, 84, 86, 87, 90, 92, 93, 94, 95, 96, 97, 101, 105, 108, 110, 114, 115, 118, 119, 124, 127, 129, 132, 136, 138, 363, 364, 365, 366, 369, 373, 379, 380, 383, 384, 385, 387]
   # Selection 23jul2017
-  chips += [316, 161, 214, 190, 225, 295, 304, 275, 201, 221, 273, 292, 176, 320, 228, 264, 357, 276, 278, 331, 189, 212, 266, 162, 147, 293, 263, 240, 277, 298, 351, 238, 257, 329, 269, 285, 261, 267, 150, 231, 325, 187, 289, 327, 163, 184, 256, 151, 282, 191, 258, 359, 170, 317, 299, 394, 302, 148, 158, 324, 140, 204, 146, 173, 376, 274, 255, 197, 247, 287, 253, 288, 165, 301, 330, 182, 245, 217, 265, 284]
+  chips += [316, 161, 214, 190, 225, 295, 304, 275, 201, 221, 273, 292, 176, 320, 228, 264, 357, 276, 278, 331, 189, 212, 266, 162, 147, 293, 263, 240, 277, 298, 351, 238, 257, 329, 269, 285, 261, 267, 150, 231, 325, 187, 289, 327, 163, 184, 256, 151, 282, 191, 258, 170, 317, 299, 394, 302, 148, 158, 324, 140, 204, 146, 173, 376, 274, 255, 197, 247, 287, 253, 288, 165, 301, 330, 182, 245, 217, 265, 248, 168]
   chips.sort()
   return chips
 

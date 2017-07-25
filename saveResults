@@ -14,7 +14,14 @@ else
   exit 1
 fi
 
+if [ ! -d $HOME/$XDIR ]; then
+  echo $0: ERROR: Transfer directory not found: $HOME/$XDIR
+  return 1
+fi
+
 cp calib_$DSNAME.root $HOME/$XDIR
 cp perf_$DSNAME.root $HOME/$XDIR
 mv rawv*.png diff*.png perf*.png $HOME/$XDIR
-sw9cp $HOME/$XDIR/* sw9:$XDIR
+if [ "$HOSTNAME" != atlassw9.phy.bnl.gov ]; then
+  sw9cp $HOME/$XDIR/* sw9:$XDIR
+fi

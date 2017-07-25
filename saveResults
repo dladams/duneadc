@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ -r xfdir.dat ]; then
+  XDIR=`cat xfdir.dat`
+else
+  echo $0: ERROR: File not found: xfdir.dat
+  exit 1
+fi
+
+if [ -r dsname.dat ]; then
+  DSNAME=`cat dsname.dat`
+else
+  echo $0: ERROR: File not found: dsname.dat
+  exit 1
+fi
+
+cp calib_$DSNAME.root $HOME/$XDIR
+cp perf_$DSNAME.root $HOME/$XDIR
+mv rawv*.png diff*.png perf*.png $HOME/$XDIR
+sw9cp $HOME/$XDIR/* sw9:$XDIR

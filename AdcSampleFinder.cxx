@@ -299,6 +299,13 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     }
     ipos += 4;
     string::size_type jpos = ssam.find("_", ipos);
+    string::size_type npos = jpos;
+    string suf;  // If there is a suffix, only dirs containing it are searched
+    if ( npos != string::npos ) {
+      npos = jpos - ipos;
+      suf = ssam.substr(jpos+1);
+      cout << "Suffix: " << suf << endl;
+    }
     schp = ssam.substr(ipos, jpos-ipos);
     scha = schan(icha);
     vector<string> subdirs = {
@@ -306,10 +313,13 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       "P1_ADC_0718",
       "P1_ADC_0719",
       "P1_ADC_0720",
-      "P1_ADC_0721"
+      "P1_ADC_0721",
+      "P1_ADC_0724"
     };
     string dirpat = "P1_S7_" + schp + "_";
     for ( string subdir : subdirs ) {
+      if ( suf.size() != 0 &&
+           subdir.find(suf) == string::npos ) continue;
       string searchDir = m_topdir + "/DUNE17ts/" + subdir;
       FileDirectory fd(searchDir);
       for ( FileDirectory::FileMap::value_type ent : fd.find(dirpat) ) {

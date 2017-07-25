@@ -138,7 +138,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "157_0721T1252")
   sams2.append(pre + "158")
   sams2.append(pre + "171")
-  sams2.append(pre + "180")  # 7/25
+  sams2.append(pre + "172")
+  sams2.append(pre + "180")
   sams1.append(pre + "190")
   sams1.append(pre + "191")
   sams1.append(pre + "192")

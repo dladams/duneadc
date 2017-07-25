@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ -r goIsRunning ]; then
+  echo Found goIsRunning.
+  exit 1
+fi
+touch goIsRunning
+
 DSNAME=DUNE17-cold
 if [ -r dsname.dat ]; then
   DSNAME=`cat dsname.dat`
@@ -55,3 +61,4 @@ for NAME in `cat $DSLIST.txt`; do
   fi
 done
 echo Done on `date`
+rm goIsRunning

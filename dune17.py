@@ -475,5 +475,6 @@ def badChips():
   #chips += [133, 167, 256]     # Matt "BAD" 23jul2017 These are FE numbers--not ADC numbers.
   #chips += [49, 64]     # Matt "Damaged" 23jul2017i. These are FE numbers--not ADC numbers.
   chips += [359, 111, 23, 284]  #  Matt missing chips 24jul2017
+  chips += [83]  # Elizabeth reports bent pin 25jul2017
   chips.sort()
   return chips

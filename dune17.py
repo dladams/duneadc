@@ -10,6 +10,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1 = []
   sams2 = []
   badsams = []
+  rollsams = []
   failsams = []
   badsams.append(pre + "1")
   badsams.append(pre + "2_0702")          # waveform very small
@@ -30,7 +31,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "12_0705T1142")
   for chip in range(13,17): sams1.append(pre + str(chip))
   sams1.append(pre + "18")
-  badsams.append(pre + "19")
+  badsams.append(pre + "19_0707")
+  sams2.append(pre + "19_0725")
   sams1.append(pre + "20")
   sams1.append(pre + "21_0626")
   sams1.append(pre + "21_0706")
@@ -45,7 +47,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "26")
   badsams.append(pre + "27_0628")
   sams1.append(pre + "27_0707")
-  badsams.append(pre + "28")
+  badsams.append(pre + "28_0630")
+  badsams.append(pre + "28_0725")
   sams1.append(pre + "29_0630")
   sams1.append(pre + "29_0701")
   sams1.append(pre + "29_0706")
@@ -78,7 +81,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   badsams.append(pre + "75_0629")       # bad waveform?
   for chip in range(78,83): sams1.append(pre + str(chip))
   sams1.append(pre + "84")
-  badsams.append(pre + "85")
+  badsams.append(pre + "85_0630")
+  badsams.append(pre + "85_0725")  # Very small waveforms
   sams1.append(pre + "86")
   sams1.append(pre + "87")
   badsams.append(pre + "88")
@@ -139,6 +143,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "158")
   sams2.append(pre + "171")
   sams2.append(pre + "172")
+  sams2.append(pre + "179")
   sams2.append(pre + "180")
   sams1.append(pre + "190")
   sams1.append(pre + "191")
@@ -149,6 +154,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   badsams.append(pre + "198_0718")   # Bad waveforms
   sams2.append(pre + "198_0719")
   badsams.append(pre + "199")   # Bad waveforms
+  sams2.append(pre + "200")
   sams1.append(pre + "201")
   badsams.append(pre + "202")  # Bad waveforms
   badsams.append(pre + "203")
@@ -168,11 +174,13 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "216")
   sams1.append(pre + "217")
   sams1.append(pre + "218")
+  rollsams.append(pre + "220")
   sams2.append(pre + "221")
   sams1.append(pre + "223")
   sams1.append(pre + "224")
   sams1.append(pre + "225")
   badsams.append(pre + "226")  # Bad waveforms
+  sams2.append(pre + "227")
   sams2.append(pre + "228")
   sams2.append(pre + "229")
   sams2.append(pre + "230")
@@ -188,15 +196,18 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "243")
   sams1.append(pre + "244")
   sams2.append(pre + "245")
-  sams2.append(pre + "247")
+  rollsams.append(pre + "247")
   sams2.append(pre + "248")
   badsams.append(pre + "249")
+  sams2.append(pre + "315")
   sams2.append(pre + "330")
   sams2.append(pre + "331")
+  sams2.append(pre + "334")
   badsams.append(pre + "335")  # Bad waveforms
   sams2.append(pre + "337")
   sams2.append(pre + "338")
   badsams.append(pre + "339")  # Bad waveform in channels 0-4
+  rollsams.append(pre + "340")
   sams2.append(pre + "341")
   sams2.append(pre + "342")
   sams2.append(pre + "343")
@@ -205,7 +216,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   failsams.append(pre + "349")  # crashes in extremum finding for channel 15
   sams2.append(pre + "351")
   sams2.append(pre + "353")
-  badsams.append(pre + "354")  # Rollback very wide
+  badsams.append(pre + "354")
   sams2.append(pre + "357")
   sams2.append(pre + "358")
   sams2.append(pre + "359")
@@ -225,6 +236,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "373")
   sams1.append(pre + "374")
   sams1.append(pre + "376")
+  rollsams.append(pre + "377")
   badsams.append(pre + "378")   # Bad waveforms
   sams1.append(pre + "379")
   sams1.append(pre + "380")
@@ -243,7 +255,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "394_0715")
   sams1.append(pre + "394_0717")
   badsams.append(pre + "-999999999")
-  if isBad: outsams = badsams
+  if isBad: outsams = badsams + rollsams
   elif isFail: outsams = failsams
   else:
     if   group == 0: outsams = sams1 + sams2

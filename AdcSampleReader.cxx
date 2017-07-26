@@ -59,7 +59,7 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
   ph->SetStats(0);
   ph->SetDirectory(nullptr);
   for ( unsigned int ipt=0; ipt<npt; ++ipt ) {
-    unsigned int idat = show*ipt;
+    unsigned int idat = idat0 + show*ipt;
     if ( binned ) {
       double adcMin = mitigated ? mitigatedCode(idat) : code(idat);
       double adcMax = adcMin;

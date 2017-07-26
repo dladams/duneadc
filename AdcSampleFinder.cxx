@@ -131,6 +131,7 @@ Name AdcSampleFinder::defaultTopdir(Name setValue) {
 bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
   bool anyChannel = chan == badChannel();
   if ( chan > 15 && !anyChannel ) return true;
+/*  This is now handled in dune17.py
   if ( chip ==  1 ) {
     if ( time == 1498867440 ) return true;   // square wf
   } else if ( chip == 19 ) {
@@ -167,6 +168,7 @@ bool AdcSampleFinder::isBadDune17(Index chip, Index chan, AdcTime time) {
   } else if ( chip == 128 ) {
     if ( time == 1499734440 ) return true;   // bad wf
   }
+*/
   return false;
 }
 

@@ -176,6 +176,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "218")
   rollsams.append(pre + "220")
   sams2.append(pre + "221")
+  sams2.append(pre + "222")   # 7/26
   sams1.append(pre + "223")
   sams1.append(pre + "224")
   sams1.append(pre + "225")
@@ -239,6 +240,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   rollsams.append(pre + "377")
   badsams.append(pre + "378")   # Bad waveforms
   sams1.append(pre + "379")
+  sams2.append(pre + "381")  # 7/26
   sams1.append(pre + "380")
   failsams.append(pre + "382")   # Voltage calibration fails
   sams1.append(pre + "383")
@@ -246,7 +248,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "385")
   sams1.append(pre + "386")
   sams1.append(pre + "387")
-  badsams.append(pre + "389")  # Bad waveforms.
+  badsams.append(pre + "389_0718")  # Bad waveforms.
+  sams2.append(pre + "389_726")   # 7/26
   sams1.append(pre + "390_0714")
   sams2.append(pre + "390_0721")
   sams1.append(pre + "392")

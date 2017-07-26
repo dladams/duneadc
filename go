@@ -56,6 +56,8 @@ for NAME in `cat $DSLIST.txt`; do
     root.exe -b -q 'processDataset.C("'$NAME'",'$RMSMAX')' >$LOG 2>&1
     if test -r stop; then
       echo Found stop file. Exiting.
+      rm goIsRunning
+      rm stop
       exit 0
     fi
   fi

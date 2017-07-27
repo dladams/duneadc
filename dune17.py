@@ -57,7 +57,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   for chip in range(39,61): sams1.append(pre + str(chip))
   sams1.append(pre + "61_0626")
   sams1.append(pre + "61_0628")
-  badsams.append(pre + "62")
+  badsams.append(pre + "62_0628")
+  sams2.append(pre + "62_0726")
   sams1.append(pre + "63_0628T17")
   sams1.append(pre + "63_0628T21")
   sams1.append(pre + "63_0628T22")
@@ -97,6 +98,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "111")
   sams1.append(pre + "112_0710")
   badsams.append(pre + "112_0720")  # Very small waveforms
+  sams2.append(pre + "112_0726")
   sams1.append(pre + "113")
   sams1.append(pre + "114_0710")
   badsams.append(pre + "114_0711")
@@ -124,7 +126,10 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "133_0712")
   badsams.append(pre + "135")   # Bad waveforms
   sams1.append(pre + "136")
+  sams2.append(pre + "137")
   sams1.append(pre + "138")
+  sams2.append(pre + "139_0726T16")
+  badsams.append(pre + "139_0726T17")  # Bad waveforms
   sams2.append(pre + "140")
   badsams.append(pre + "144")  # Distorted waveforms
   sams2.append(pre + "145")
@@ -148,6 +153,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "190")
   sams1.append(pre + "191")
   sams1.append(pre + "192")
+  sams2.append(pre + "193")
   sams1.append(pre + "194")
   sams1.append(pre + "196")
   sams1.append(pre + "197")
@@ -165,6 +171,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "207")
   sams1.append(pre + "208")
   sams1.append(pre + "209")
+  sams2.append(pre + "210")
   badsams.append(pre + "211")  # Some waveforms are bad
   sams1.append(pre + "212")
   sams1.append(pre + "213")
@@ -216,15 +223,20 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "343")
   badsams.append(pre + "344_0723")   # Bad waveforms
   sams2.append(pre + "344_0726")
+  sams2.append(pre + "345")  # 7/26
   sams2.append(pre + "346")
+  sams2.append(pre + "347")  # 7/26
   failsams.append(pre + "349")  # crashes in extremum finding for channel 15
   sams2.append(pre + "351")
+  sams2.append(pre + "352")  # 7/26
   sams2.append(pre + "353")
+  sams2.append(pre + "354")  # 7/26
   badsams.append(pre + "354")
   sams2.append(pre + "357")
   sams2.append(pre + "358")
   sams2.append(pre + "359")
   sams2.append(pre + "360")
+  sams2.append(pre + "361")  # 7/26
   sams1.append(pre + "362")
   sams1.append(pre + "363_0712T13")
   badsams.append(pre + "363_0712T15")   # distorted waveforms

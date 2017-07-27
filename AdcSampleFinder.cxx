@@ -317,7 +317,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       "P1_ADC_0720",
       "P1_ADC_0721",
       "P1_ADC_0724",
-      "P1_ADC_0725"
+      "P1_ADC_0725",
+      "P1_ADC_0726"
     };
     string dirpat = "P1_S7_" + schp + "_";
     for ( string subdir : subdirs ) {

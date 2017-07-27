@@ -287,10 +287,18 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams = []
   badsams = []
   failsams = []
+  sams.append(pre + "4")
+  sams.append(pre + "5")
   sams.append(pre + "109")
+  sams.append(pre + "116")
   sams.append(pre + "123")
   sams.append(pre + "126")
+  sams.append(pre + "128")
+  sams.append(pre + "131")
+  sams.append(pre + "134")
+  sams.append(pre + "135")
   sams.append(pre + "142")
+  sams.append(pre + "144")
   sams.append(pre + "153")
   sams.append(pre + "159")
   sams.append(pre + "160")
@@ -327,7 +335,12 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "187")
   sams.append(pre + "188")
   sams.append(pre + "189")
+  sams.append(pre + "199")
+  sams.append(pre + "203")
+  sams.append(pre + "211")
+  sams.append(pre + "215")
   sams.append(pre + "243")
+  sams.append(pre + "249")
   sams.append(pre + "250")
   sams.append(pre + "251")
   sams.append(pre + "252")
@@ -404,6 +417,9 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "328")
   sams.append(pre + "329")
   sams.append(pre + "333")
+  sams.append(pre + "335")
+  sams.append(pre + "339")
+  sams.append(pre + "378")
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   else: outsams = sams  

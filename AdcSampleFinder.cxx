@@ -321,6 +321,18 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       "P1_ADC_0726"
     };
     string dirpat = "P1_S7_" + schp + "_";
+    string filpat = dirpat;
+    // Special values for 7/26 DNL data.
+    string fileDate;    // Enough of file date pattern to distinuish samples, eg 07_25_16
+    if ( suf.substr(0,3) == "DNL" ) {
+      subdirs.clear();
+      subdirs.push_back("P1_ADC_0726_DNL_error");
+      //dirpat = "DNL error P1_SS7_" + schp + "_";
+      dirpat = "error P1_SS7_" + schp + "_";
+      filpat = "P1_S7_" + schp + "_";
+      if ( suf.size() > 3 ) fileDate = suf.substr(3);
+      suf = "";
+    }
     for ( string subdir : subdirs ) {
       if ( suf.size() != 0 &&
            subdir.find(suf) == string::npos ) continue;
@@ -328,8 +340,13 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       FileDirectory fd(searchDir);
       for ( FileDirectory::FileMap::value_type ent : fd.find(dirpat) ) {
         string subsubdir = ent.first;
+        string filepre = subsubdir;
+        if ( filepre.substr(0,17) == "DNL error P1_SS7_" ||
+             filepre.substr(0,17) == "DNL_error P1_SS7_" ) {
+          filepre.replace(0, 17, "P1_S7_");
+        }
         searchDirs.push_back(searchDir + "/" + subsubdir);
-        searchPats.push_back(subsubdir + "_LN_2MHz_chn" + scha + "_07_");
+        searchPats.push_back(filepre + "_LN_2MHz_chn" + scha + "_" + fileDate);
       }
     }
     ef1BorderWidth = 1500000;

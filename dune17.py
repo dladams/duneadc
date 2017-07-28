@@ -495,9 +495,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
 # Deduces the chip number from the sample name after
 # checking a map that handles misnamed samples.
 def dune17cChip(sam):
-  sampleToChipMap = {
-    "DUNE17ts-cold_chip288_0727":388
-  }
+  sampleToChipMap = { }     # Better not use this b/c chip # will still be wrong in root files.
   if sam in sampleToChipMap:
     return sampleToChipMap[sam]
   ipos = sam.find("_chip")
@@ -507,7 +505,7 @@ def dune17cChip(sam):
   else: schip = asam
   return int(schip)
  
-# Return all datasets for a given chip number.
+# Return all samples for a given chip number.
 def dune17cChipSamples(chip):
   dso = []
   for ds in dune17cSamples() + dune17tscSamples():

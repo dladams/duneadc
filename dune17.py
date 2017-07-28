@@ -294,7 +294,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   return outsams
  
 # List of available DUNE17ts-cold datasets.
-def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
+def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, isDNL=False):
   pre = "DUNE17ts-cold_chip"
   sams = []
   dnlsams = []
@@ -465,6 +465,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "378")
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
+  elif isDNL: outsams = dnlsams
   else: outsams = sams + dnlsams
   if skipSel or skipBad:
     skipChips = []

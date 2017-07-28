@@ -295,7 +295,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   ostringstream sshtitl;
   sshtitl << dslist << " ADC chip quality (" << nchip << " chips)";
   dyleg = 0.05*nhst;
-  double xleg1 = 0.30;
+  double xleg1 = 0.40;
   double xleg2 = xleg1 + 0.30;
   double yleg2 = 0.85;
   double yleg1 = yleg2 - dyleg;

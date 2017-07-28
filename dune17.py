@@ -491,13 +491,20 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
     return keepsams
   return outsams
 
-# Return the chip number for a dataset.
-def dune17cChip(ds):
-  ipos = ds.find("_chip")
-  ads = ds[ipos+5:]
-  ipos = ads.find("_")
-  if ipos >= 0: schip = ads[:ipos]
-  else: schip = ads
+# Return the chip number for a sample.
+# Deduces the chip number from the sample name after
+# checking a map that handles misnamed samples.
+def dune17cChip(sam):
+  sampleToChipMap = {
+    "DUNE17ts-cold_chip288_0727":388
+  }
+  if sam in sampleToChipMap:
+    return sampleToChipMap[sam]
+  ipos = sam.find("_chip")
+  asam = sam[ipos+5:]
+  ipos = asam.find("_")
+  if ipos >= 0: schip = asam[:ipos]
+  else: schip = asam
   return int(schip)
  
 # Return all datasets for a given chip number.

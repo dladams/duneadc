@@ -428,7 +428,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "286")
   sams.append(pre + "287")
   sams.append(pre + "288_0720")
-  sams.append(pre + "288_0727")
+  #sams.append(pre + "288_0727")  # Actually chip 388 Junbin Zhang 7/28/2017
   sams.append(pre + "289")
   sams.append(pre + "290")
   sams.append(pre + "291")
@@ -475,6 +475,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "375")
   sams.append(pre + "386")
   sams.append(pre + "378")
+  sams.append(pre + "388_fchip288_0727")  # Junbin Zhang 7/28/2017
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   elif isDNL: outsams = dnlsams

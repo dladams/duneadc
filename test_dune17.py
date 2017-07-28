@@ -18,6 +18,7 @@ writeDsfile = True
 def testDataset(dsname, writeDsFile, showChips):
 
   grpsams = []
+  isCETS = False
   if dsname == "DUNE17-cold":
     sams     = dune17cSamples()
     grpsams.append(sams)
@@ -33,8 +34,10 @@ def testDataset(dsname, writeDsFile, showChips):
     remsams = dune17tscSamples(skipSel=True)
     badsams = dune17tscSamples(isBad=True)
     failsams = dune17tscSamples(isFail=True)
+    dnlsams = dune17tscSamples(isDNL=True)
     chips = dune17tscChips()
     remchips = dune17tscChips(skipSel=True)
+    isCETS = True
   else:
     print "Invalid dsname: " + dsname
     return
@@ -43,6 +46,8 @@ def testDataset(dsname, writeDsFile, showChips):
   print "    Bad sample count is " + str(len(badsams))
   print "   Fail sample count is " + str(len(failsams))
   print "    Rem sample count is " + str(len(remsams))
+  if isCETS:
+    print "    DNL sample count is " + str(len(dnlsams))
   print "   Good sample count is " + str(len(sams))
   print "     Good chip count is " + str(len(chips))
   ngrp = len(grpsams)
@@ -66,6 +71,13 @@ def testDataset(dsname, writeDsFile, showChips):
     for ds in badsams:
       if writeDsfile: outf.write(ds + "\n")
     print "Bad sample list written to " + outfName
+    # DNL samples
+    if isCETS:
+      outfName = dsname + "-dnl.txt"
+      outf = open(outfName, "w")
+      for ds in dnlsams:
+        if writeDsfile: outf.write(ds + "\n")
+      print "DNL sample list written to " + outfName
     # Good unselected samples
     outfName = dsname + "-rem.txt"
     outf = open(outfName, "w")

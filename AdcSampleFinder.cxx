@@ -303,12 +303,27 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string::size_type jpos = ssam.find("_", ipos);
     string::size_type npos = jpos;
     string suf;  // If there is a suffix, only dirs containing it are searched
+    string schpFile = schp;
     if ( npos != string::npos ) {
       npos = jpos - ipos;
       suf = ssam.substr(jpos+1);
       cout << "Suffix: " << suf << endl;
+      // If suffix starts with fchipCCC then CCC is used as the chip in the file pattern. 
+      if ( suf.substr(0,5) == "fchip" ) {
+        schp = ssam.substr(ipos, npos);
+        ipos += 5;
+        jpos = ssam.find("_", ipos);
+        npos = jpos;
+        if ( npos != string::npos ) {
+          npos = jpos - ipos;
+          suf = ssam.substr(jpos+1);
+        } else {
+          suf = "";
+        }
+      } 
     }
-    schp = ssam.substr(ipos, jpos-ipos);
+    schpFile = ssam.substr(ipos, npos);
+    if ( schp == "" ) schp = schpFile;
     scha = schan(icha);
     vector<string> subdirs = {
       "P1_ADC_07172017",
@@ -322,16 +337,16 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       "P1_ADC_0727",
       "P1_ADC_0727_DNL_error"
     };
-    string dirpat = "P1_S7_" + schp + "_";
+    string dirpat = "P1_S7_" + schpFile + "_";
     string filpat = dirpat;
     // Special values for 7/26 DNL data.
     string fileDate;    // Enough of file date pattern to distinuish samples, eg 07_25_16
     if ( suf.substr(0,3) == "DNL" ) {
       subdirs.clear();
       subdirs.push_back("P1_ADC_0726_DNL_error");
-      //dirpat = "DNL error P1_SS7_" + schp + "_";
-      dirpat = "error P1_SS7_" + schp + "_";
-      filpat = "P1_S7_" + schp + "_";
+      //dirpat = "DNL error P1_SS7_" + schpFile + "_";
+      dirpat = "error P1_SS7_" + schpFile + "_";
+      filpat = "P1_S7_" + schpFile + "_";
       if ( suf.size() > 3 ) fileDate = suf.substr(3);
       suf = "";
     }
@@ -363,6 +378,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     vinMax = 1800.0;
     maxRollback = 2000000;
   }
+  if ( schpLabel == "" ) schpLabel = schp;
   // Find the file.
   if ( searchDirs.size() == 0 ) {
     cout << myname << "ERROR: No search directories found for sample " << ssam << endl;

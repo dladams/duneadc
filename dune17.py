@@ -322,7 +322,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   dnlsams.append(pre + "34_DNL")
   dnlsams.append(pre + "35_DNL")
   dnlsams.append(pre + "36_DNL")
-  dnlsams.append(pre + "37")  # 7/28
+  dnlsams.append(pre + "37")
   dnlsams.append(pre + "38_DNL")
   dnlsams.append(pre + "47_DNL")
   dnlsams.append(pre + "68_DNL")
@@ -330,13 +330,13 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   dnlsams.append(pre + "77_DNL")
   dnlsams.append(pre + "88_DNL")
   dnlsams.append(pre + "89_DNL")
-  dnlsams.append(pre + "91")  # 7/28
+  dnlsams.append(pre + "91")
   sams.append(pre + "109")
   sams.append(pre + "116")
   sams.append(pre + "123")
   sams.append(pre + "126")
   sams.append(pre + "128")
-  sams.append(pre + "130")  # 7/28
+  sams.append(pre + "130")
   sams.append(pre + "131")
   sams.append(pre + "134")
   sams.append(pre + "135")
@@ -346,8 +346,8 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "144")
   sams.append(pre + "153")
   sams.append(pre + "159")
-  sams.append(pre + "160_0717")  # 7/28
-  sams.append(pre + "160_0727")  # 7/28
+  sams.append(pre + "160_0717")
+  sams.append(pre + "160_0727")
   sams.append(pre + "161")
   sams.append(pre + "162")
   sams.append(pre + "163")
@@ -375,8 +375,8 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "183_0717")
   sams.append(pre + "183_0724")
   sams.append(pre + "184")
-  sams.append(pre + "185_0717")  # 7/28
-  sams.append(pre + "185_0727")  # 7/28
+  sams.append(pre + "185_0717")
+  sams.append(pre + "185_0727")
   sams.append(pre + "186_0718")
   sams.append(pre + "186_0724")
   sams.append(pre + "187")
@@ -386,8 +386,8 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "203")
   sams.append(pre + "211")
   sams.append(pre + "215")
-  sams.append(pre + "219")  # 7/28
-  sams.append(pre + "241")  # 7/28
+  sams.append(pre + "219")
+  sams.append(pre + "241")
   sams.append(pre + "243")
   sams.append(pre + "249")
   sams.append(pre + "250")
@@ -427,8 +427,8 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "285")
   sams.append(pre + "286")
   sams.append(pre + "287")
-  sams.append(pre + "288_0720")  # 7/28
-  sams.append(pre + "288_0727")  # 7/28
+  sams.append(pre + "288_0720")
+  #sams.append(pre + "288_0727")  # Actually chip 388 Junbin Zhang 7/28/2017
   sams.append(pre + "289")
   sams.append(pre + "290")
   sams.append(pre + "291")
@@ -469,12 +469,13 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "333")
   sams.append(pre + "335")
   sams.append(pre + "339")
-  sams.append(pre + "348")  # 7/28
-  sams.append(pre + "350")  # 7/28
-  sams.append(pre + "355")  # 7/28
-  sams.append(pre + "375")  # 7/28
-  sams.append(pre + "386")  # 7/28
+  sams.append(pre + "348")
+  sams.append(pre + "350")
+  sams.append(pre + "355")
+  sams.append(pre + "375")
+  sams.append(pre + "386")
   sams.append(pre + "378")
+  sams.append(pre + "388_fchip288_0727")  # Junbin Zhang 7/28/2017
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   elif isDNL: outsams = dnlsams

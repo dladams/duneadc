@@ -307,22 +307,25 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     if ( npos != string::npos ) {
       npos = jpos - ipos;
       suf = ssam.substr(jpos+1);
-      cout << "Suffix: " << suf << endl;
+      cout << myname << "Suffix: " << suf << endl;
       // If suffix starts with fchipCCC then CCC is used as the chip in the file pattern. 
       if ( suf.substr(0,5) == "fchip" ) {
         schp = ssam.substr(ipos, npos);
-        ipos += 5;
+        cout << myname << "Assigned chip: " << schp << endl;
+        ipos = jpos + 6;
         jpos = ssam.find("_", ipos);
         npos = jpos;
         if ( npos != string::npos ) {
           npos = jpos - ipos;
           suf = ssam.substr(jpos+1);
+          cout << myname << "New suffix: " << suf << endl;
         } else {
           suf = "";
         }
       } 
     }
     schpFile = ssam.substr(ipos, npos);
+    cout << myname << "File chip: " << schpFile << endl;
     if ( schp == "" ) schp = schpFile;
     scha = schan(icha);
     vector<string> subdirs = {

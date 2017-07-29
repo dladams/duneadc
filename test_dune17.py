@@ -18,6 +18,7 @@ writeDsfile = True
 def testDataset(dsname, writeDsFile, showChips):
 
   grpsams = []
+  isPDTS = False
   isCETS = False
   if dsname == "DUNE17-cold":
     sams     = dune17cSamples()
@@ -26,9 +27,11 @@ def testDataset(dsname, writeDsFile, showChips):
     grpsams.append(dune17cSamples(group=2))
     remsams  = dune17cSamples(skipSel=True)
     badsams  = dune17cSamples(isBad =True)
+    nwfsams  = dune17cSamples(isNwf =True)
     failsams = dune17cSamples(isFail =True)
     chips = dune17cChips()
     remchips = dune17cChips(skipSel=True)
+    isPDTS = True
   elif dsname == "DUNE17ts-cold":
     sams = dune17tscSamples()
     remsams = dune17tscSamples(skipSel=True)
@@ -44,6 +47,8 @@ def testDataset(dsname, writeDsFile, showChips):
 
   print dsname + ":"
   print "    Bad sample count is " + str(len(badsams))
+  if isPDTS:
+    print "    NWF sample count is " + str(len(nwfsams))
   print "   Fail sample count is " + str(len(failsams))
   print "    Rem sample count is " + str(len(remsams))
   if isCETS:
@@ -71,6 +76,13 @@ def testDataset(dsname, writeDsFile, showChips):
     for ds in badsams:
       if writeDsfile: outf.write(ds + "\n")
     print "Bad sample list written to " + outfName
+    # NWF samples
+    if isPDTS:
+      outfName = dsname + "-nwf.txt"
+      outf = open(outfName, "w")
+      for ds in nwfsams:
+        if writeDsfile: outf.write(ds + "\n")
+      print "NWF sample list written to " + outfName
     # DNL samples
     if isCETS:
       outfName = dsname + "-dnl.txt"

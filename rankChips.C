@@ -475,11 +475,13 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   }
   vector<TGraph*> qgr(nxx, nullptr);
   dyleg = 0.30;
-  xleg1 = 0.40;
-  xleg2 = xleg1 + 0.30;
-  yleg2 = 0.85;
+  xleg1 = 0.20;
+  xleg2 = xleg1 + 0.25;
+  yleg2 = 0.87;
   yleg1 = yleg2 - dyleg;
   TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
+  pleg->SetBorderSize(0);
+  pleg->SetFillStyle(0);
   for ( unsigned int ixx=0; ixx<nxx; ++ixx ) {
     unsigned int npt = qcx[ixx].size();
     if ( qcx[ixx].size() > 0 ) {
@@ -492,7 +494,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   }
   hnam = "haxqcor_" + dslist;
   sshtitl.str("");
-  sshtitl << dslist << " quality correlation for the same chip; Q_{max}; Q";
+  sshtitl << dslist << " quality correlation for the same chip; Q_{1}; Q_{2}";
   htitl = sshtitl.str();
   TH2* phaxq = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
   phaxq->SetStats(0);

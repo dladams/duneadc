@@ -24,6 +24,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     cout << myname << "  " << dst << endl;
   }
   string dslist = a_dslist.size() ? a_dslist : datasets[0];
+  SampleIndexMap sampleChip;
   RankMap rankedChipsPrd;
   SampleMetricMap metricPrd;
   SampleMetricMap metricAvg;
@@ -148,6 +149,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
       continue;
     }
     Index chip = acm.chip();    // Must call this after evaluate.
+    sampleChip[ssam] = chip;
     cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
     if ( estat != 0 ) continue;
     double effavg = acm.chipMetric("EffAvg");
@@ -168,10 +170,13 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
       chaneff[ssam].push_back(acm.channelEfficiency(icha));
     }
     auto iprd = chipMetricPrd.find(chip);
-    if ( iprd == chipMetricPrd.end() ||
-         effprd > iprd->second.first ) {
-      chipMetricPrd[chip] = valprd;
+    bool insert = iprd == chipMetricPrd.end();
+    if ( ! insert ) {
+      string oldsam = iprd->second.second.second;
+      double oldeff = metricPrd[oldsam];
+      insert = effprd > oldeff;
     }
+    if ( insert ) chipMetricPrd[chip] = valprd;
     string prefix = first ? "" : ",";
     prefix += "\n";
     string qsam = "\"" + ssam + "\"";
@@ -319,6 +324,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
     hists[0]->Draw();
+    hists[0]->SetMinimum(0.0);
     TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
     pleg->SetBorderSize(0);
     pleg->SetFillStyle(0);
@@ -396,6 +402,43 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   phax2->Draw();
   pgr2->Draw("p");
   fname = "chipQualityLowCorrelation_" + dslist + ".png";
+  if ( pcan != nullptr ) pcan->Print(fname.c_str());
+  // Plot q correlations: Q vs Qchip_max
+  vector<double> qcx;
+  vector<double> qcy;
+  for ( string ssam : ssams ) {
+    Index chip = sampleChip[ssam];
+    auto iprd = chipMetricPrd.find(chip);
+    if ( iprd != chipMetricPrd.end() ) {
+      Index chip0 = iprd->second.second.first;
+      string sam0 = iprd->second.second.second;
+      double q0 = metricPrd[sam0];
+      if ( sam0 != ssam ) {
+        double q = metricPrd[ssam];
+        qcx.push_back(q0);
+        qcy.push_back(q);
+cout << "qmax  q: " << q0 << "    " << q << "   " << sam0  << ", " << ssam << endl;
+      }
+    } else {
+      cout << "ERROR: Chip " << chip << " is not in chip metric map!" << endl;
+    }
+  }
+  TGraph* pgrq = new TGraph(qcx.size(), &qcx.front(), &qcy.front());
+  hnam = "haxqcor_" + dslist;
+  sshtitl.str("");
+  sshtitl << dslist << " quality correlation for the same chip; Q_{max}; Q";
+  htitl = sshtitl.str();
+  TH2* phaxq = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
+  phaxq->SetStats(0);
+  pcan = new TCanvas;
+  pcan->SetRightMargin(0.03);
+  pgrq->SetMarkerStyle(2);
+  phaxq->Draw();
+  TLine* plq = new TLine(0,0,1,1);
+  plq->SetLineStyle(2);
+  plq->Draw();
+  pgrq->Draw("p");
+  fname = "chipQualityQCorrelation_" + dslist + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Log summary.
   cout << "N80 counts:" << endl;

@@ -32,6 +32,31 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
   // Find DS name.
   string::size_type ipos = ssam.find("_");
   m_dsname = ssam.substr(0, ipos);
+  // Find chip if this is batch 2.
+  bool getChipFromTree;
+  m_chip = 0;
+  if ( ipos != string::npos ) {
+    string srem = ssam.substr(ipos+1);
+    if ( srem.substr(0,5) == "chipD" ) {
+      getChipFromTree = false;
+      string schp = srem.substr(5);
+      ipos = schp.find("_");
+      if ( ipos != string::npos ) schp = schp.substr(0, ipos);
+      ipos = 0;
+      while ( schp.size() ) {
+        if ( schp[0] == '0' ) schp = schp.substr(1);
+        else break;
+      }
+      if ( schp.size() ) {
+        istringstream sschp(schp);
+        sschp >> m_chip;
+        m_chip += 10000;
+      }
+    }
+    if ( m_chip == 0 ) {
+      cout << myname << "ERROR: " << "Unable to deduce chip number from sample name " << ssam << endl;
+    }
+  }
   // Open input file.
   std::ifstream* pin = new std::ifstream;
   TDirectory* pdirIn = gDirectory;
@@ -78,7 +103,9 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
     Float t_funcFreq;
     pmdt->SetBranchAddress("date",       &date);
     pmdt->SetBranchAddress("iChip",      &iChip);
-    pmdt->SetBranchAddress("adcSerial",  &t_adcSerial);
+    if ( getChipFromTree ) {
+      pmdt->SetBranchAddress("adcSerial",  &t_adcSerial);
+    }
     pmdt->SetBranchAddress("feSerial",   &t_feSerial);
     pmdt->SetBranchAddress("sampleRate", &t_sampleRate);
     pmdt->SetBranchAddress("funcAmp",    &t_funcAmp);
@@ -97,9 +124,13 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
       TDatime tda(year, month, day, hour, min, sec);
       m_time = tda.Convert();
     }
-    m_chip = t_adcSerial;
+    if ( getChipFromTree ) {
+      m_chip = t_adcSerial;
+      m_adcSerial = t_adcSerial;
+    } else {
+      m_adcSerial = 0;
+    }
     m_fsamp = t_sampleRate;
-    m_adcSerial = t_adcSerial;
     m_feSerial = t_feSerial;
     m_vinAmp = 1000.0*t_funcAmp;
     m_vinOffset = 1000.0*t_funcOffset;

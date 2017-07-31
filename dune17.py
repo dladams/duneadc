@@ -152,7 +152,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "141_0730T15")
   badsams.append(pre + "141_0730T17")  # Bad waveforms
   sams2.append(pre + "141_0731T00")
-  sams2.append(pre + "141_0731T11")  # 7/31
+  badsams.append(pre + "141_0731T11")  # Bad waveforms channels 2, 3
   badsams.append(pre + "144")  # Distorted waveforms
   sams2.append(pre + "145")
   sams2.append(pre + "146")

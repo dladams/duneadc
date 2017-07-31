@@ -308,6 +308,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "5000001")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "5000003")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "-999999999")
+  sams2.append(pre + "D0004")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -518,14 +519,19 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
 
 # Return the chip number for a sample.
 # Deduces the chip number from the sample name after
-# checking a map that handles misnamed samples.
+# checking a msap that handles misnamed samples.
+# ..._chipDVVVVV -> number 10000 + VVVV
 def dune17cChip(sam):
   sampleToChipMap = { }     # Better not use this b/c chip # will still be wrong in root files.
   if sam in sampleToChipMap:
     return sampleToChipMap[sam]
   ipos = sam.find("_chip")
   asam = sam[ipos+5:]
+  offset = 0
   ipos = asam.find("_")
+  if asam[0] == "D":
+    asam = asam[1:]
+    off = 10000
   if ipos >= 0: schip = asam[:ipos]
   else: schip = asam
   return int(schip)

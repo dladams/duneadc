@@ -135,13 +135,21 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "141_0727")
   sams2.append(pre + "141_0728T09")
   sams2.append(pre + "141_0728T10")
-  sams2.append(pre + "141_0728T12")  # 7/29
-  sams2.append(pre + "141_0728T13")  # 7/29
-  sams2.append(pre + "141_0728T17")  # 7/29
-  sams2.append(pre + "141_0728T19")  # 7/29
-  sams2.append(pre + "141_0728T22")  # 7/29
-  sams2.append(pre + "141_0728T23")  # 7/29
-  sams2.append(pre + "141_0729T00")  # 7/29
+  sams2.append(pre + "141_0728T12")
+  sams2.append(pre + "141_0728T13")
+  sams2.append(pre + "141_0728T17")
+  sams2.append(pre + "141_0728T19")
+  sams2.append(pre + "141_0728T22")
+  sams2.append(pre + "141_0728T23")
+  sams2.append(pre + "141_0729T00")
+  sams2.append(pre + "141_0729T17")
+  sams2.append(pre + "141_0729T18")
+  sams2.append(pre + "141_0729T21")
+  badsams.append(pre + "141_0729T22")  # Bad waveform channel 4
+  sams2.append(pre + "141_0730T12")
+  sams2.append(pre + "141_0730T15")
+  badsams.append(pre + "141_0730T17")  # Bad waveforms
+  sams2.append(pre + "141_0731T00")
   badsams.append(pre + "144")  # Distorted waveforms
   sams2.append(pre + "145")
   sams2.append(pre + "146")
@@ -225,6 +233,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "248")
   badsams.append(pre + "249")
   sams2.append(pre + "294")
+  sams2.append(pre + "297")
   sams2.append(pre + "315")
   badsams.append(pre + "319")  # Not reaching 4095?
   sams2.append(pre + "330")
@@ -292,7 +301,9 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "393")
   badsams.append(pre + "391")
   sams1.append(pre + "394_0715")
-  sams1.append(pre + "394_0717")
+  sams2.append(pre + "394_0717")
+  sams2.append(pre + "5000001")
+  sams2.append(pre + "5000003")
   badsams.append(pre + "-999999999")
   if isBad: outsams = badsams + rollsams
   elif isFail: outsams = failsams

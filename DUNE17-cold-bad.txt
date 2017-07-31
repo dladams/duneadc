@@ -20,7 +20,6 @@ DUNE17-cold_chip85_0630
 DUNE17-cold_chip85_0725
 DUNE17-cold_chip88
 DUNE17-cold_chip89
-DUNE17-cold_chip109
 DUNE17-cold_chip112_0720
 DUNE17-cold_chip114_0711
 DUNE17-cold_chip116
@@ -52,9 +51,10 @@ DUNE17-cold_chip339
 DUNE17-cold_chip344_0723
 DUNE17-cold_chip354_722
 DUNE17-cold_chip363_0712T15
-DUNE17-cold_chip378
 DUNE17-cold_chip389_0718
 DUNE17-cold_chip391
+DUNE17-cold_chip5000001
+DUNE17-cold_chip5000003
 DUNE17-cold_chip-999999999
 DUNE17-cold_chip12_0705T1141
 DUNE17-cold_chip121_0711T18

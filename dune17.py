@@ -96,7 +96,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams1.append(pre + "92_0630T17")
   for chip in range(93,107): sams1.append(pre + str(chip))
   sams1.append(pre + "108")
-  badsams.append(pre + "109")
+  badsams.append(pre + "109")  # Zero or small waveforms
   sams1.append(pre + "110")
   sams1.append(pre + "111")
   sams1.append(pre + "112_0710")
@@ -305,8 +305,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "391")
   sams1.append(pre + "394_0715")
   sams2.append(pre + "394_0717")
-  sams2.append(pre + "5000001")
-  sams2.append(pre + "5000003")
+  badsams.append(pre + "5000001")  # Test only Elizabeth 31jul2017
+  badsams.append(pre + "5000003")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "-999999999")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
@@ -609,12 +609,13 @@ def dune17DatasetName(sam):
 # Selected chips.
 def selectedChips(sel=0):
   chips = []
-  # Selection 16jul2017
+  # Selection 16jul2017 from Matt
   sel1 = [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 18, 20, 22, 25, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 60, 64, 65, 67, 70, 71, 74, 78, 79, 80, 81, 82, 84, 86, 87, 90, 92, 93, 94, 95, 96, 97, 101, 105, 108, 110, 114, 115, 118, 119, 124, 127, 129, 132, 136, 138, 363, 364, 365, 366, 369, 373, 379, 380, 383, 384, 385, 387]
-  # Selection 23jul2017
+  # Selection 23jul2017 from Matt
   sel2 = [316, 161, 214, 190, 225, 295, 304, 275, 201, 221, 273, 292, 176, 320, 228, 264, 357, 276, 278, 331, 189, 212, 266, 162, 147, 293, 263, 240, 277, 298, 351, 238, 257, 329, 269, 285, 261, 267, 150, 231, 325, 187, 289, 327, 163, 184, 256, 151, 282, 191, 258, 170, 317, 299, 394, 302, 148, 158, 324, 140, 204, 146, 173, 376, 274, 255, 197, 247, 287, 253, 288, 165, 301, 330, 182, 245, 217, 265, 248, 168]
-  # Selection 28jul2017 MY GUESS
-  sel3 = [343, 193, 144, 222, 123, 172, 5, 312, 134, 341, 305, 116, 332, 178, 308, 160, 139, 338, 313, 230, 389, 279, 137, 361, 215, 19, 342, 177, 333, 211, 185, 175, 109, 227, 188, 200, 153, 352, 378, 131]
+  # Selection 31jul2017 from Matt
+  sel3 = [343, 193, 144, 222, 123, 172, 5, 312, 134, 341, 305, 116, 332, 178, 308, 160, 139, 338, 313, 230, 389, 279, 137, 361, 215, 19, 342, 177, 333, 211, 185, 175, 227, 188, 200, 153, 352, 131, 179, 336]
+
   chips = []
   if sel == 0:
     chips = sel1 + sel2 + sel3
@@ -632,5 +633,6 @@ def badChips():
   chips += [359, 111, 23, 284]  #  Matt missing chips 24jul2017
   chips += [83]  # Elizabeth reports bent pin 25jul2017
   chips += [75]  # Ivan Furic talk at BNL CE meeting 28jul2017
+  chips += [109, 378]   # Matt missing chips 31jun2017
   chips.sort()
   return chips

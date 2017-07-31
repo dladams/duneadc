@@ -5,13 +5,15 @@
 
 # List of available DUNE17 datasets.
 # group: 0 = all, 1=bad clock(before 7/19), 2=good clock
-def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=True):
+#   isBad true returns bad, nwf and roll
+def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=False, skipBad=True):
   pre = "DUNE17-cold_chip"
-  sams1 = []
-  sams2 = []
-  badsams = []
-  rollsams = []
-  failsams = []
+  sams1 = []       # Early samples with bad ADC clock settings
+  sams2 = []       # Subsequent good samples
+  badsams = []     # Samples otherwise bad
+  nwfsams = []     # Samples without waveforms
+  rollsams = []    # Samples with severe rollback
+  failsams = []    # Samples tha fail processing
   badsams.append(pre + "1")
   badsams.append(pre + "2_0702")          # waveform very small
   sams1.append(pre + "2_0705")
@@ -27,7 +29,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "11")
   badsams.append(pre + "12_0701T16")      # square wave
   badsams.append(pre + "12_0701T17")      # square wave
-  badsams.append(pre + "12_0705T1141")    # waveform is missing
+  nwfsams.append(pre + "12_0705T1141")    # waveform is missing
   sams1.append(pre + "12_0705T1142")
   for chip in range(13,17): sams1.append(pre + str(chip))
   sams1.append(pre + "18")
@@ -110,7 +112,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams1.append(pre + "119")
   sams1.append(pre + "120")
   badsams.append(pre + "121_0711T16")   # waveform is very small
-  badsams.append(pre + "121_0711T18")   # No wave
+  nwfsams.append(pre + "121_0711T18")   # No waveform
   sams1.append(pre + "121_0713")
   sams1.append(pre + "122")
   badsams.append(pre + "123")
@@ -270,7 +272,7 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   badsams.append(pre + "363_0712T15")   # distorted waveforms
   sams1.append(pre + "364")
   sams1.append(pre + "365")
-  badsams.append(pre + "366_0712T1810")   # waveform empty
+  nwfsams.append(pre + "366_0712T1810")   # waveform empty
   sams1.append(pre + "366_0712T1812")
   sams2.append(pre + "367")
   sams1.append(pre + "368")
@@ -305,7 +307,8 @@ def dune17cSamples(group=0, isBad=False, isFail=False, skipSel=False, skipBad=Tr
   sams2.append(pre + "5000001")
   sams2.append(pre + "5000003")
   badsams.append(pre + "-999999999")
-  if isBad: outsams = badsams + rollsams
+  if isNwf: outsams = nwfsams
+  elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
   else:
     if   group == 0: outsams = sams1 + sams2
@@ -568,6 +571,14 @@ def dune17tscChips(skipSel=False, skipBad=True):
         chips.append(chip)
   return chips
 
+# Return the chips in DUNE17-cold and DUNE17ts-cold
+def allChips(skipSel=False, skipBad=True):
+  chips = []
+  chips += dune17cChips(skipSel, skipBad)
+  chips += dune17tscChips(skipSel, skipBad)
+  chips.sort()
+  return chips
+
 # Return chips that appear in bad samples.
 def dune17BadSampleChips(excludePdts=True, excludeCets=True):
   chips = []
@@ -619,5 +630,6 @@ def badChips():
   #chips += [49, 64]     # Matt "Damaged" 23jul2017i. These are FE numbers--not ADC numbers.
   chips += [359, 111, 23, 284]  #  Matt missing chips 24jul2017
   chips += [83]  # Elizabeth reports bent pin 25jul2017
+  chips += [75]  # Ivan Furic talk at BNL CE meeting 28jul2017
   chips.sort()
   return chips

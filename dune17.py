@@ -542,7 +542,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "D0025_0731")
   sams.append(pre + "D0026_0731")
   sams.append(pre + "D0027_0731")
-  badsams.append(pre + "D0028_0731")  # Missing data for chans 10-15
+  sams.append(pre + "D0028_0731")
   sams.append(pre + "D0029_0731")
   sams.append(pre + "D0030_0731")
   if isBad: outsams = badsams

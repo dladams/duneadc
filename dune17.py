@@ -513,35 +513,35 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "386")
   sams.append(pre + "378")
   sams.append(pre + "388_fchip288_0727")  # Junbin Zhang 7/28/2017
-  sams.append(pre + "D0001_0731")  # 8/1
-  sams.append(pre + "D0002_0731")  # 8/1
-  sams.append(pre + "D0003_0731")  # 8/1
-  sams.append(pre + "D0004_0731")  # 8/1
-  sams.append(pre + "D0005_0731")  # 8/1
-  sams.append(pre + "D0006_0731")  # 8/1
-  sams.append(pre + "D0007_0731")  # 8/1
-  sams.append(pre + "D0008_0731")  # 8/1
-  sams.append(pre + "D0009_0731")  # 8/1
-  sams.append(pre + "D0011_0731")  # 8/1
-  sams.append(pre + "D0012_0731")  # 8/1
-  sams.append(pre + "D0013_0731")  # 8/1
-  sams.append(pre + "D0014_0731")  # 8/1
-  sams.append(pre + "D0015_0731")  # 8/1
-  sams.append(pre + "D0016_0731")  # 8/1
-  sams.append(pre + "D0017_0731")  # 8/1
-  sams.append(pre + "D0018_0731")  # 8/1
-  sams.append(pre + "D0019_0731")  # 8/1
-  sams.append(pre + "D0020_0731")  # 8/1
-  sams.append(pre + "D0021_0731")  # 8/1
-  sams.append(pre + "D0022_0731")  # 8/1
-  sams.append(pre + "D0023_0731")  # 8/1
-  sams.append(pre + "D0024_0731")  # 8/1
-  sams.append(pre + "D0025_0731")  # 8/1
-  sams.append(pre + "D0026_0731")  # 8/1
-  sams.append(pre + "D0027_0731")  # 8/1
-  sams.append(pre + "D0028_0731")  # 8/1
-  sams.append(pre + "D0029_0731")  # 8/1
-  sams.append(pre + "D0030_0731")  # 8/1
+  sams.append(pre + "D0001_0731")
+  sams.append(pre + "D0002_0731")
+  sams.append(pre + "D0003_0731")
+  sams.append(pre + "D0004_0731")
+  sams.append(pre + "D0005_0731")
+  sams.append(pre + "D0006_0731")
+  sams.append(pre + "D0007_0731")
+  sams.append(pre + "D0008_0731")
+  sams.append(pre + "D0009_0731")
+  sams.append(pre + "D0011_0731")
+  sams.append(pre + "D0012_0731")
+  sams.append(pre + "D0013_0731")
+  sams.append(pre + "D0014_0731")
+  sams.append(pre + "D0015_0731")
+  sams.append(pre + "D0016_0731")
+  sams.append(pre + "D0017_0731")
+  sams.append(pre + "D0018_0731")
+  sams.append(pre + "D0019_0731")
+  sams.append(pre + "D0020_0731")
+  sams.append(pre + "D0021_0731")
+  sams.append(pre + "D0022_0731")
+  sams.append(pre + "D0023_0731")
+  sams.append(pre + "D0024_0731")
+  sams.append(pre + "D0025_0731")
+  sams.append(pre + "D0026_0731")
+  sams.append(pre + "D0027_0731")
+  badsams.append(pre + "D0028_0731")  # Missing data for chans 10-15
+  sams.append(pre + "D0029_0731")
+  sams.append(pre + "D0030_0731")
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   elif isDNL: outsams = dnlsams

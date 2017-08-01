@@ -308,16 +308,16 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "5000001")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "5000003")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "-999999999")
-  sams2.append(pre + "D0001")  # 8/1
-  sams2.append(pre + "D0002")  # 8/1
-  sams2.append(pre + "D0003")  # 8/1
-  sams2.append(pre + "D0004")
-  sams2.append(pre + "D0005")  # 8/1
-  sams2.append(pre + "D0006")  # 8/1
-  sams2.append(pre + "D0007")  # 8/1
-  sams2.append(pre + "D0008")  # 8/1
-  sams2.append(pre + "D0009")  # 8/1
-  sams2.append(pre + "D0011")  # 8/1
+  sams2.append(pre + "D0001_0731")  # 8/1
+  sams2.append(pre + "D0002_0731")  # 8/1
+  sams2.append(pre + "D0003_0731")  # 8/1
+  sams2.append(pre + "D0004_0731")
+  sams2.append(pre + "D0005_0731")  # 8/1
+  sams2.append(pre + "D0006_0731")  # 8/1
+  sams2.append(pre + "D0007_0731")  # 8/1
+  sams2.append(pre + "D0008_0731")  # 8/1
+  sams2.append(pre + "D0009_0731")  # 8/1
+  sams2.append(pre + "D0011_0731")  # 8/1
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -457,7 +457,9 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "280")
   sams.append(pre + "281")
   sams.append(pre + "282")
-  sams.append(pre + "284")
+  sams.append(pre + "283")
+  sams.append(pre + "284_0720")
+  sams.append(pre + "284_0731")
   sams.append(pre + "285")
   sams.append(pre + "286")
   sams.append(pre + "287")
@@ -484,7 +486,8 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "310")
   sams.append(pre + "311")
   sams.append(pre + "312")
-  sams.append(pre + "313")
+  sams.append(pre + "313_0725")
+  sams.append(pre + "313_0731")
   sams.append(pre + "314")
   sams.append(pre + "316")
   sams.append(pre + "317")
@@ -510,6 +513,35 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "386")
   sams.append(pre + "378")
   sams.append(pre + "388_fchip288_0727")  # Junbin Zhang 7/28/2017
+  sams.append(pre + "D0001_0731")  # 8/1
+  sams.append(pre + "D0002_0731")  # 8/1
+  sams.append(pre + "D0003_0731")  # 8/1
+  sams.append(pre + "D0004_0731")  # 8/1
+  sams.append(pre + "D0005_0731")  # 8/1
+  sams.append(pre + "D0006_0731")  # 8/1
+  sams.append(pre + "D0007_0731")  # 8/1
+  sams.append(pre + "D0008_0731")  # 8/1
+  sams.append(pre + "D0009_0731")  # 8/1
+  sams.append(pre + "D0011_0731")  # 8/1
+  sams.append(pre + "D0012_0731")  # 8/1
+  sams.append(pre + "D0013_0731")  # 8/1
+  sams.append(pre + "D0014_0731")  # 8/1
+  sams.append(pre + "D0015_0731")  # 8/1
+  sams.append(pre + "D0016_0731")  # 8/1
+  sams.append(pre + "D0017_0731")  # 8/1
+  sams.append(pre + "D0018_0731")  # 8/1
+  sams.append(pre + "D0019_0731")  # 8/1
+  sams.append(pre + "D0020_0731")  # 8/1
+  sams.append(pre + "D0021_0731")  # 8/1
+  sams.append(pre + "D0022_0731")  # 8/1
+  sams.append(pre + "D0023_0731")  # 8/1
+  sams.append(pre + "D0024_0731")  # 8/1
+  sams.append(pre + "D0025_0731")  # 8/1
+  sams.append(pre + "D0026_0731")  # 8/1
+  sams.append(pre + "D0027_0731")  # 8/1
+  sams.append(pre + "D0028_0731")  # 8/1
+  sams.append(pre + "D0029_0731")  # 8/1
+  sams.append(pre + "D0030_0731")  # 8/1
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   elif isDNL: outsams = dnlsams
@@ -537,10 +569,10 @@ def dune17cChip(sam):
   ipos = sam.find("_chip")
   asam = sam[ipos+5:]
   offset = 0
-  ipos = asam.find("_")
   if asam[0] == "D":
     asam = asam[1:]
     off = 10000
+  ipos = asam.find("_")
   if ipos >= 0: schip = asam[:ipos]
   else: schip = asam
   return int(schip)
@@ -649,5 +681,7 @@ def badChips():
   chips += [83]  # Elizabeth reports bent pin 25jul2017
   chips += [75]  # Ivan Furic talk at BNL CE meeting 28jul2017
   chips += [109, 378]   # Matt missing chips 31jun2017
+  chips.remove(284)   # This chip was tested on CETS on 7/31
+  #chips += [10003]  # Elizabeth reports this chip is damaged.
   chips.sort()
   return chips

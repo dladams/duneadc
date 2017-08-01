@@ -338,7 +338,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
       "P1_ADC_0725",
       "P1_ADC_0726",
       "P1_ADC_0727",
-      "P1_ADC_0727_DNL_error"
+      "P1_ADC_0727_DNL_error",
+      "P1_ADC_0731"
     };
     string dirpat = "P1_S7_" + schpFile + "_";
     string filpat = dirpat;
@@ -392,6 +393,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string sdir = searchDirs[isrc];
     string spat = searchPats[isrc];
     FileDirectory fd(sdir);
+    fd.select(".bin");
     for ( FileDirectory::FileMap::value_type ent : fd.find(spat) ) {
       foundFiles.push_back(sdir + "/" + ent.first);
     }
@@ -413,10 +415,18 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     for ( string foundFile : foundFiles ) cout << myname << "  " << foundFile << endl;
     return nullptr;
   }
-  istringstream sschp(schp);
+  // Find the chip number.
+  // Note that label DCCCCC -> 10000 + CCCC
   Index ichp = badChip();
+  Index chipoff = 0;
+  if ( schp[0] == 'D' ) {
+    schp = schp.substr(1);
+    while ( schp[0] == '0' ) schp = schp.substr(1);
+    chipoff = 10000;
+  }
+  istringstream sschp(schp);
   sschp >> ichp;
-  istringstream sscha(scha);
+  ichp += chipoff;
   // Find the time.
   string::size_type ipos;
   ipos = fname.find("_chn");

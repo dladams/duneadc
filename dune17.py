@@ -682,6 +682,6 @@ def badChips():
   chips += [75]  # Ivan Furic talk at BNL CE meeting 28jul2017
   chips += [109, 378]   # Matt missing chips 31jun2017
   chips.remove(284)   # This chip was tested on CETS on 7/31
-  #chips += [10003]  # Elizabeth reports this chip is damaged.
+  chips += [10003]  # Elizabeth reports this chip has bent pin and will never be used.
   chips.sort()
   return chips

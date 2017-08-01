@@ -238,7 +238,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   int wval = 8;
   for ( string dataset : datasets ) if ( dataset.size() > wds ) wds = dataset.size();
   wds += 2;
-  outl << setw(4) << "Rank" << setw(5) << "Chip" << setw(wval) << "Q" << setw(4) << "N80";
+  outl << setw(5) << "Rank" << setw(6) << "Chip" << setw(wval) << "Q" << setw(4) << "N80";
   if ( ndst > 1 ) outl << setw(wds) << "Dataset";
   outsum << outl.str() << endl;
   for ( Index icha=0; icha<ncha; ++icha ) {
@@ -271,7 +271,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
          << ", " << fixed << efflow << endl;
     Index idst = datasetIndex[ssam];
     outl.str("");
-    outl << setw(4) << rank << setw(5) << chip
+    outl << setw(5) << rank << setw(6) << chip
          << setw(wval) << fixed << setprecision(3) << effprd
          << setw(4) << n80;
     if ( ndst > 1 ) outl << setw(wds) << datasets[idst];

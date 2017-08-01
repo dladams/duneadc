@@ -67,7 +67,6 @@ DUNE17ts-cold_chip386
 DUNE17ts-cold_chip388_fchip288_0727
 DUNE17ts-cold_chipD0001_0731
 DUNE17ts-cold_chipD0002_0731
-DUNE17ts-cold_chipD0003_0731
 DUNE17ts-cold_chipD0004_0731
 DUNE17ts-cold_chipD0005_0731
 DUNE17ts-cold_chipD0006_0731

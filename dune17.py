@@ -568,14 +568,14 @@ def dune17cChip(sam):
     return sampleToChipMap[sam]
   ipos = sam.find("_chip")
   asam = sam[ipos+5:]
-  offset = 0
+  chipoff = 0
   if asam[0] == "D":
     asam = asam[1:]
-    off = 10000
+    chipoff = 10000
   ipos = asam.find("_")
   if ipos >= 0: schip = asam[:ipos]
   else: schip = asam
-  return int(schip)
+  return int(schip) + chipoff
  
 # Return all samples for a given chip number.
 def dune17cChipSamples(chip):

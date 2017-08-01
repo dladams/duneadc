@@ -308,7 +308,16 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "5000001")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "5000003")  # Test only Elizabeth 31jul2017
   badsams.append(pre + "-999999999")
+  sams2.append(pre + "D0001")  # 8/1
+  sams2.append(pre + "D0002")  # 8/1
+  sams2.append(pre + "D0003")  # 8/1
   sams2.append(pre + "D0004")
+  sams2.append(pre + "D0005")  # 8/1
+  sams2.append(pre + "D0006")  # 8/1
+  sams2.append(pre + "D0007")  # 8/1
+  sams2.append(pre + "D0008")  # 8/1
+  sams2.append(pre + "D0009")  # 8/1
+  sams2.append(pre + "D0011")  # 8/1
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams

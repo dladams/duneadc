@@ -311,7 +311,6 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0001_0731")
   sams2.append(pre + "D0002_0731") 
   badsams.append(pre + "D0003_0731")  # Bad waveforms chan 0-7
-  badsams.append(pre + "D0003_0731")  # Bad waveforms chan 0-7
   sams2.append(pre + "D0004_0731")
   sams2.append(pre + "D0005_0731")
   sams2.append(pre + "D0006_0731")
@@ -325,6 +324,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "D0021_0801")  # Bad waveforms
   sams2.append(pre + "D0023_0801")
   sams2.append(pre + "D0025_0801")
+  sams2.append(pre + "D0028_0801")  # 8/1
+  sams2.append(pre + "D0029_0801")  # 8/1
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -529,6 +530,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "D0007_0731")
   sams.append(pre + "D0008_0731")
   sams.append(pre + "D0009_0731")
+  sams.append(pre + "D0010_0801")
   sams.append(pre + "D0011_0731")
   sams.append(pre + "D0012_0731")
   sams.append(pre + "D0013_0731")
@@ -689,6 +691,7 @@ def badChips():
   chips += [75]  # Ivan Furic talk at BNL CE meeting 28jul2017
   chips += [109, 378]   # Matt missing chips 31jun2017
   chips.remove(284)   # This chip was tested on CETS on 7/31
-  chips += [10003]  # Elizabeth reports this chip has bent pin and will never be used.
+  chips += [10003]  # Elizabeth reports this chip has bent pin and will never be used 8/1/2017
+  chips += [378]    # Elizabeth reports this chip is damaged 8/2/2017
   chips.sort()
   return chips

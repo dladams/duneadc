@@ -322,9 +322,10 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   }
   if ( ybinmax < 0.7*ymax ) {
     ymax = int(1.3*ybinmax+0.5);
-    ph0->SetMinimum(0.0);
-    ph0->SetMaximum(ymax);
   }
+  if ( ymax < 10.0 ) ymax = 10.0;
+  ph0->SetMinimum(0.0);
+  ph0->SetMaximum(ymax);
   string fnameQuality = "chipQuality_" + dslist + ".png";
   // Draw quality overlaying chip lists.
   int colPDTS1 = kMagenta+2;

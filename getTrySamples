@@ -1,0 +1,15 @@
+#!/bin/bash
+
+OFNAME=DUNE17dla-cold.txt
+rm -f $OFNAME
+for FILE in $HOME/data/dune/adc/DUNE17dla/*_cold/adcDavidAdamsOnlyData*; do
+  FNAME=`basename $FILE`
+  DAY=`echo $FNAME | awk -F _ '{print $2}' | sed 's/^20..//g'`
+  CHIP=`echo $FNAME | awk -F _ '{print $3}'`
+  TRY=`echo $FNAME | sed 's/.*_//g' | sed 's/\..*//g'`
+  SNAME="DUNE17dla-cold_${CHIP}_${DAY}_${TRY}"
+  echo $SNAME
+  echo $SNAME >>$OFNAME
+done
+
+echo Sample list is in $OFNAME

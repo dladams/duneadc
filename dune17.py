@@ -525,6 +525,7 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
   sams.append(pre + "D0007_0731")
   sams.append(pre + "D0008_0731")
   sams.append(pre + "D0009_0731")
+  sams.append(pre + "D0010_0801")
   sams.append(pre + "D0011_0731")
   sams.append(pre + "D0012_0731")
   sams.append(pre + "D0013_0731")

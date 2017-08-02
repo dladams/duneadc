@@ -217,7 +217,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     return findBinaryReader(ssam, icha, maxsam);
   }
   // DUNE test data summer 2017
-  if ( ssam.substr(0,7) == "DUNE17-" ) {
+  if ( ssam.substr(0,7) == "DUNE17-" || ssam.substr(0,10) == "DUNE17dla-" ) {
     prdr = findFembReader(ssam, icha, maxsam);
   }
   if ( ! prdr ) {
@@ -491,10 +491,16 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     fname = AdcSampleFinder::defaultTopdir() + "/justin3/" + basename;
     ipos = 14;
     dsname += "-test2";
-  } else if ( dsname == "DUNE17-cold" ) {
-    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_cold/");
-    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_hothdaq4_cold/");
-    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/adcTest_P1single_hothdaq5_cold/");
+  } else if ( dsname == "DUNE17-cold" || dsname=="DUNE17dla-cold" ) {
+    bool isdla = dsname=="DUNE17dla-cold";
+    string subdir = "DUNE17";
+    if ( isdla ) {
+      subdir = "DUNE17dla";
+      sels[0] = "adcDavidAdamsOnlyData";
+    }
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_cold/");
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_hothdaq4_cold/");
+    dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_hothdaq5_cold/");
     if ( asample.substr(ipos, 5) != "_chip" ) {
       cout << myname << "Chip ID not found." << endl;
       return nullptr;
@@ -505,7 +511,19 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     string sfieldChip = asample.substr(ipos, len);
     sels.push_back(sfieldChip + "_");
     isDune17 = true;
-    if ( jpos != string::npos ) sels.push_back(asample.substr(jpos+1));
+    // If sample name has suffix _XXX, then XXX must be in file name.
+    // If sample name has suffix _XXX_YYY, then XXX and YYY must be in file name.
+    if ( jpos != string::npos ) {
+      string xsel = asample.substr(jpos+1);
+      jpos = xsel.find("_");
+      string xsel2;
+      if ( jpos != string::npos ) {
+        xsel2 = xsel.substr(jpos+1);
+        xsel = xsel.substr(0, jpos);
+      }
+      sels.push_back(xsel);
+      if ( xsel2.size() ) sels.push_back(xsel2);
+    }
   } else if ( dsname == "DUNE17-longramp" ) {
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/longramp/");
     if ( asample.substr(ipos, 5) != "_chip" ) {

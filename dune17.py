@@ -373,20 +373,20 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0007_0731_try1")
   sams.append(pre + "D0007_0731_try2")
   sams.append(pre + "D0007_0731_try3")
-  sams.append(pre + "D0008_0731T14_try1")
-  sams.append(pre + "D0008_0731T14_try2")
-  sams.append(pre + "D0008_0731T14_try3")
+  badsams.append(pre + "D0008_0731T14_try1")  # Small signal
+  badsams.append(pre + "D0008_0731T14_try2")  # Small signal
+  badsams.append(pre + "D0008_0731T14_try3")  # Small signal
   sams.append(pre + "D0008_0731T18_try1")
   sams.append(pre + "D0008_0731T18_try2")
   sams.append(pre + "D0009_0731_try1")
-  sams.append(pre + "D0011_0731_try1")
-  sams.append(pre + "D0011_0731_try2")
+  badsams.append(pre + "D0011_0731_try1")  # Bad waveforms
+  badsams.append(pre + "D0011_0731_try2")  # Bad waveforms
   sams.append(pre + "D0011_0802_try1")  # 8/3
   sams.append(pre + "D0012_0801_try1")
   sams.append(pre + "D0014_0801T1311_try1")
   sams.append(pre + "D0014_0801T1350_try1")
   sams.append(pre + "D0015_0801_try1")
-  sams.append(pre + "D0017_0802_try1")  # 8/3
+  sams.append(pre + "D0017_0802_try1")
   #badsams.append(pre + "d0018_0801_try1")   # Bad file name
   sams.append(pre + "D0019_0801_try1")
   sams.append(pre + "D0020_0801_try1")
@@ -397,15 +397,16 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0026_0801_try1")
   sams.append(pre + "D0028_0802_try1")
   sams.append(pre + "D0029_0802_try1")
-  sams.append(pre + "D0030_0802T15_try1")  # 8/3
-  sams.append(pre + "D0030_0802T17_try1")  # 8/3
+  badsams.append(pre + "D0030_0802T15_try1")  # Small signals
+  sams.append(pre + "D0030_0802T17_try1")
   sams.append(pre + "00031_0802_try1")  # 8/3
-  sams.append(pre + "D0032_0802_try1")  # 8/3
-  sams.append(pre + "D0033_0802_try1")  # 8/3
-  sams.append(pre + "D0034_0802_try1")  # 8/3
-  sams.append(pre + "D0035_0802_try1")  # 8/3
-  sams.append(pre + "D0036_0802T19_try1")  # 8/3
-  sams.append(pre + "D0036_0802T20_try1")  # 8/3
+  sams.append(pre + "D0032_0802_try1")  # Ignore -- bad chip label
+  sams.append(pre + "D0033_0802_try1")
+  sams.append(pre + "D0034_0802_try1")
+  sams.append(pre + "D0035_0802_try1")
+  sams.append(pre + "D0036_0802T19_try1")
+  sams.append(pre + "D0036_0802T20_try1")
+  # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
   else: outsams = sams

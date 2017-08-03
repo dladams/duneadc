@@ -12,8 +12,20 @@ using DoubleVectorVector = vector<DoubleVector>;
 
 void writePython(string name, const RankMap& chips);
 
-// Performance is taken from perf_dsperf
-TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-cold-rem", SampleMetricMap* pmets =nullptr) {
+string sentrycount(TH1* ph) {
+  Index nbin = ph->GetNbinsX();
+  Index bin1 = nbin/2 + 1;
+  Index nhalf = ph->Integral(bin1, nbin+1);
+  Index ntot = ph->GetEntries();
+  ostringstream sslab;
+  sslab << nhalf << "/" << ntot;
+  return sslab.str();
+}
+
+// datasetString - colon-separated list of datasets
+//                 Sample names  for dataset DST are read from DST.txt and perf data from perf_DST.root
+// dslist - if not blank and dslist.txt is not empty, only the samples in that file are used
+TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetricMap* pmets =nullptr) {
   string myname = "rankChips: ";
   string::size_type ipos = 0;
   vector<string> datasets;
@@ -23,11 +35,11 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     ipos = jpos;
     if ( ipos != string::npos ) ++ipos;
   }
-  cout << myname << "Datasets assumed in performance evaluation:" << endl;
+  cout << myname << "Datasets used in performance evaluation:" << endl;
   for ( string dst : datasets ) {
     cout << myname << "  " << dst << endl;
   }
-  string dslist = a_dslist.size() ? a_dslist : datasets[0];
+  cout << myname << "Dataset list: " << dslist << endl;
   SampleIndexMap sampleChip;
   RankMap rankedChipsPrd;
   SampleMetricMap metricPrd;
@@ -62,12 +74,17 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   vector<TH1*> hists;
   vector<string> slabs;
   Index ndst = datasets.size();
-  Index nhst = 1;
   vector<string> histDatasetNames;
-  if ( ndst > 1 ) nhst = ndst + 1;
+  if ( ndst == 0 ) {
+    cout << myname << "ERROR: No datasets specified." << endl;
+    return nullptr;
+  }
+  Index nhst = 1;
+  if ( ndst > 1 ) nhst += ndst;
   // Create Qmax histos.
   for ( Index ihst=0; ihst<nhst; ++ihst ) {
-    string dsname = ihst==0 ? dslist : datasets[ihst-1];
+    string dsname = ihst==0 ? "all" : datasets[ihst-1];
+    if ( ihst == 0 && ndst == 1 ) dsname = datasets[0];
     histDatasetNames.push_back(dsname);
     slabs.push_back(dsname);
     string hname = "heffprd_" + dsname;
@@ -83,42 +100,55 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     ph->SetLineWidth(2);
   }
   cout << endl;
-  cout << myname << dslist << endl;
-  string dsfname = dslist + ".txt";
-  ifstream dsfile(dsfname.c_str());
-  if ( ! dsfile ) {
-    cout << myname << "Dataset file not found: " << dsfname << endl;
-    return nullptr;
+  vector<string> ssamsin;
+  if ( dslist.size() ) {
+    string dsfname = dslist + ".txt";
+    ifstream dsfile(dsfname.c_str());
+    if ( ! dsfile ) {
+      cout << myname << "Dataset file not found: " << dsfname << endl;
+      return nullptr;
+    }
+    while ( dsfile ) {
+      string ssam;
+      dsfile >> ssam;
+      if ( dsfile.eof() ) break;
+      ssamsin.push_back(ssam);
+    }
   }
-  vector<string> ssams;
   Index wsam = 0;
-  while ( dsfile ) {
-    string ssam;
-    dsfile >> ssam;
-    if ( dsfile.eof() ) break;
-    ssams.push_back(ssam);
-    Index lsam = ssam.size();
-    if ( lsam > wsam ) wsam = lsam;
-  }
-  wsam += 4;
   // Read the samples for each dataset.
+  vector<string> ssams;
   std::vector<vector<string>> datasetSamples(ndst);
+  bool dbg = false;
   for ( Index idst=0; idst<ndst; ++idst ) {
     string dataset = datasets[idst];
-    string dsfname = dataset +".txt";
+    string dsfname = dataset + ".txt";
     ifstream dsf(dsfname.c_str());
     if ( ! dsf ) {
       cout << myname << "Dataset description file not found: " << dsfname << endl;
       return nullptr;
     }
+    unsigned int readcount = 0;
     while ( dsf ) {
       string ssam;
       dsf >> ssam;
       if ( dsf.eof() ) break;
-      datasetSamples[idst].push_back(ssam);
+      ++readcount;
+      bool keep = true;
+      if ( ssamsin.size() && find(ssamsin.begin(), ssamsin.end(), ssam) == ssamsin.end() ) keep = false;
+      if ( keep ) {
+        datasetSamples[idst].push_back(ssam);
+        sampleDataset[ssam] = dataset;
+        ssams.push_back(ssam);
+        Index lsam = ssam.size();
+        if ( lsam > wsam ) wsam = lsam;
+      } else {
+        if ( dbg ) cout << myname << "Dropping " << ssam << endl;
+      }
     }
-    cout << "Dataset " << dataset << " sample count: " << datasetSamples[idst].size() << endl;
+    cout << myname << "Dataset " << dataset << " keep/read: " << datasetSamples[idst].size() << "/" << readcount << endl;
   }
+  wsam += 4;
   bool first = true;
   // Loop over samples.
   map<string,Index> datasetIndex;    // Dataset index for each sample. ndst if not found.
@@ -129,12 +159,10 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     int estat = 99;
     Index idst = 0;
     string dataset;
-    sampleDataset[ssam] = "DatasetNotFound";
     for ( ; idst<datasets.size(); ++idst ) {
       dataset = datasets[idst];
       const vector<string>& sams = datasetSamples[idst];
       if ( find(sams.begin(), sams.end(), ssam)  != sams.end() ) {
-        sampleDataset[ssam] = dataset;
         pacm.reset(new AdcChipMetric(dataset, ssam));
         estat = pacm->evaluate();
         if ( estat == 0 ) break;
@@ -305,14 +333,15 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   // Draw quality histogram.
   Index nchip = rankedChipsPrd.size();
   ostringstream sshtitl;
-  sshtitl << dslist << " ADC chip quality (" << nchip << " chips)";
+  TH1* ph0 = hists[0];
+  string htitl = dslist + " ADC chip quality (" + sentrycount(ph0) + " chips)";
+  ph0->SetTitle(htitl.c_str());
   dyleg = 0.05*nhst;
   double xleg1 = 0.40;
   double xleg2 = xleg1 + 0.30;
   double yleg2 = 0.85;
   double yleg1 = yleg2 - dyleg;
   htitl = sshtitl.str();
-  TH1* ph0 = hists[0];
   ph0->SetLineWidth(3);
   double ymax = ph0->GetMaximum();
   double ybinmax = 0.0;
@@ -328,10 +357,10 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   ph0->SetMaximum(ymax);
   string fnameQuality = "chipQuality_" + dslist + ".png";
   // Draw quality overlaying chip lists.
-  int colPDTS1 = kMagenta+2;
-  int colPDTS2 = 46;          // Red
-  int colCETS = kGreen + 3;
-  int colCETSPDTS = 28;       // Brown
+  int col0 = kMagenta+2;
+  int col1 = 46;          // Red
+  int col2 = kGreen + 3;
+  int col21 = 28;       // Brown
   if ( nhst > 1 ) {
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
@@ -342,16 +371,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
     pleg->SetFillStyle(0);
     for ( Index ihst=0; ihst<nhst; ++ihst ) {
       TH1* ph = hists[ihst];
-      Index nbin = ph->GetNbinsX();
-      Index bin1 = nbin/2 + 1;
-      Index nhalf = ph->Integral(bin1, nbin+1);
-      Index ntot = ph->GetEntries();
       ostringstream sslab;
-      sslab << slabs[ihst] << " (" << nhalf << "/" << ntot << " chips)";
+      sslab << slabs[ihst] << " (" << sentrycount(ph) << " chips)";
       string slab = sslab.str();
-      if ( ihst == 1 ) ph->SetLineColor(colPDTS1);
-      if ( ihst == 2 ) ph->SetLineColor(colPDTS2);
-      if ( ihst == 3 ) ph->SetLineColor(colCETS);
+      if ( ihst == 1 ) ph->SetLineColor(col0);
+      if ( ihst == 2 ) ph->SetLineColor(col1);
+      if ( ihst == 3 ) ph->SetLineColor(col2);
       if ( ihst == 1 ) ph->SetLineStyle(1);
       if ( ihst == 2 ) ph->SetLineStyle(3);
       if ( ihst == 3 ) ph->SetLineStyle(2);
@@ -370,10 +395,6 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   pcan = new TCanvas;
   pcan->SetRightMargin(0.03);
   TH1* ph = hists[0];
-  ostringstream sstitl;
-  sstitl << ph->GetTitle() << " (" << ph->GetEntries() << " chips)";
-  htitl = sstitl.str();
-  ph->SetTitle(htitl.c_str());
   ph->Draw();
   if ( pcan != nullptr ) pcan->Print(fnameQuality.c_str());
   // Build metric vectors.
@@ -423,9 +444,19 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
   const int i21 = 4;
   const int iC1 = 5;
   const int nxx = 6;
-  StringVector slab{"PDTS1 PDTS1", "PDTS2 PDTS2", "CETS CETS", "PDTS2 CETS", "PDTS2 PDTS1", "CETS PDTS1"};
+  string ssam0 = "PDTS1";
+  if ( datasets[0] == "PDTStry" ) ssam0 = datasets[0];
+  string ssam1 = "PDTS2";
+  string ssam2 = "CETS";
+  string ssam00 = ssam0 + " " + ssam0;
+  string ssam11 = ssam1 + " " + ssam1;
+  string ssam22 = ssam2 + " " + ssam2;
+  string ssam12 = ssam1 + " " + ssam2;
+  string ssam10 = ssam1 + " " + ssam0;
+  string ssam20 = ssam2 + " " + ssam0;
+  StringVector slab{ssam00, ssam11, ssam22, ssam12, ssam10, ssam20};
   vector<int> qmrk = {2, 2, 2,  4, 26, 32};
-  vector<int> qcol = {colPDTS1, colPDTS2, colCETS, colCETSPDTS, colPDTS2, colCETS};
+  vector<int> qcol = {col0, col1, col2, col21, col1, col2};
   DoubleVectorVector qcx(nxx);
   DoubleVectorVector qcy(nxx);
   for ( string ssam : ssams ) {
@@ -447,8 +478,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
         if ( dst1 == dst2 ) {
           flip = q2 > q1;
         } else {
-          flip |= dst2 == "PDTS2";
-          flip |= dst1 == "PDTS1";
+          flip |= dst2 == ssam1;
+          flip |= dst1 == ssam0;
         }
         if ( flip ) {
           q2 = q1;
@@ -462,7 +493,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string a_dslist ="DUNE17all-col
           if ( slab[ixx] == lab ) break;
         }
         if ( ixx == nxx ) {
-          cout << myname << "Unable to find dataset pair index." << endl;
+          cout << myname << "Unable to find dataset pair index for " << lab << endl;
           continue;
         }
         qcx[ixx].push_back(q1);

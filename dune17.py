@@ -56,6 +56,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams1.append(pre + "29_0706")
   badsams.append(pre + "30_0630")    # square wave
   sams1.append(pre + "30_0703")
+  sams2.append(pre + "31")  # 8/3
   for chip in range(39,61): sams1.append(pre + str(chip))
   sams1.append(pre + "61_0626")
   sams1.append(pre + "61_0628")
@@ -311,6 +312,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0001_0731")
   sams2.append(pre + "D0002_0731") 
   badsams.append(pre + "D0003_0731")  # Bad waveforms chan 0-7
+  badsams.append(pre + "D0003_0731")  # Bad waveforms
   sams2.append(pre + "D0004_0731")
   sams2.append(pre + "D0005_0731")
   sams2.append(pre + "D0006_0731")
@@ -324,8 +326,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "D0021_0801")  # Bad waveforms
   sams2.append(pre + "D0023_0801")
   sams2.append(pre + "D0025_0801")
-  sams2.append(pre + "D0028_0802")  # 8/3
-  sams2.append(pre + "D0029_0802")  # 8/3
+  sams2.append(pre + "D0028_0802")
+  sams2.append(pre + "D0029_0802")
+  sams2.append(pre + "D0032_0802")  # 8/2
+  sams2.append(pre + "D0034_0802")  # 8/2
+  sams2.append(pre + "D0036_0802")  # 8/2
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -380,7 +385,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0014_0801T1311_try1")
   sams.append(pre + "D0014_0801T1350_try1")
   sams.append(pre + "D0015_0801_try1")
-  badsams.append(pre + "d0018_0801_try1")   # Bad file name
+  #badsams.append(pre + "d0018_0801_try1")   # Bad file name
   sams.append(pre + "D0019_0801_try1")
   sams.append(pre + "D0020_0801_try1")
   sams.append(pre + "D0021_0801_try1")

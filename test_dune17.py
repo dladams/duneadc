@@ -9,6 +9,8 @@
 
 from dune17 import dune17cSamples
 from dune17 import dune17cChips
+from dune17 import dune17dlacSamples
+from dune17 import dune17dlacChips
 from dune17 import dune17tscSamples
 from dune17 import dune17tscChips
 from dune17 import badChips
@@ -18,6 +20,8 @@ writeDsfile = True
 def testDataset(dsname, writeDsFile, showChips):
 
   grpsams = []
+  haveNWF = False
+  haveDNL = False
   isPDTS = False
   isCETS = False
   if dsname == "DUNE17-cold":
@@ -32,6 +36,7 @@ def testDataset(dsname, writeDsFile, showChips):
     chips = dune17cChips()
     remchips = dune17cChips(skipSel=True)
     isPDTS = True
+    haveNWF = True
   elif dsname == "DUNE17ts-cold":
     sams = dune17tscSamples()
     remsams = dune17tscSamples(skipSel=True)
@@ -41,17 +46,25 @@ def testDataset(dsname, writeDsFile, showChips):
     chips = dune17tscChips()
     remchips = dune17tscChips(skipSel=True)
     isCETS = True
+    haveDNL = True
+  elif dsname == "DUNE17dla-cold":
+    sams = dune17dlacSamples()
+    remsams = dune17dlacSamples(skipSel=True)
+    badsams = dune17dlacSamples(isBad=True)
+    failsams = dune17dlacSamples(isFail=True)
+    chips = dune17dlacChips()
+    remchips = dune17dlacChips(skipSel=True)
   else:
     print "Invalid dsname: " + dsname
     return
 
   print dsname + ":"
   print "    Bad sample count is " + str(len(badsams))
-  if isPDTS:
+  if haveNWF:
     print "    NWF sample count is " + str(len(nwfsams))
   print "   Fail sample count is " + str(len(failsams))
   print "    Rem sample count is " + str(len(remsams))
-  if isCETS:
+  if haveDNL:
     print "    DNL sample count is " + str(len(dnlsams))
   print "   Good sample count is " + str(len(sams))
   print "     Good chip count is " + str(len(chips))
@@ -119,6 +132,8 @@ def testDataset(dsname, writeDsFile, showChips):
 showChips = False
 print
 testDataset("DUNE17-cold", True, showChips)
+print
+testDataset("DUNE17dla-cold", True, showChips)
 print
 testDataset("DUNE17ts-cold", True, showChips)
 print

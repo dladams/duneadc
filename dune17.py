@@ -347,6 +347,43 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
     return keepsams
   return outsams
  
+# List of available DUNE17dla-cold datasets.
+def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
+  pre = "DUNE17dla-cold_chip"
+  sams = []
+  badsams = []
+  failsams = []
+  sams.append(pre + "0_0731_try1")
+  sams.append(pre + "141_0731")
+  sams.append(pre + "D0001_0731_try1")
+  sams.append(pre + "D0001_0731_try2")
+  sams.append(pre + "D0001_0731_try3")
+  sams.append(pre + "D0002_0731_try1")
+  sams.append(pre + "D0004_0731_try1")
+  sams.append(pre + "D0005_0731T12_try1")
+  sams.append(pre + "D0005_0731T12_try1")
+  sams.append(pre + "D0005_0731T17_try1")
+  sams.append(pre + "D0006_0731_try1")
+  sams.append(pre + "D0006_0731_try2")
+  sams.append(pre + "D0007_0731_try1")
+  sams.append(pre + "D0007_0731_try2")
+  sams.append(pre + "D0007_0731_try3")
+  if isBad: outsams = badsams
+  elif isFail: outsams = failsams
+  else: outsams = sams
+  if skipSel or skipBad:
+    skipChips = []
+    if skipSel: skipChips += selectedChips()
+    if skipBad: skipChips += badChips()
+    keepsams = []
+    for sam in outsams:
+      chip = dune17cChip(sam)
+      #print "Chip " + str(chip)
+      if chip not in skipChips:
+        keepsams.append(sam)
+    return keepsams
+  return outsams
+
 # List of available DUNE17ts-cold datasets.
 def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, isDNL=False):
   pre = "DUNE17ts-cold_chip"
@@ -609,6 +646,19 @@ def dune17cChips(skipSel=False, skipBad=True):
   if skipSel: skipChips += selectedChips()
   if skipBad: skipChips += badChips()
   for ds in dune17cSamples():
+    chip = dune17cChip(ds)
+    if chip not in chips:
+      if chip not in skipChips:
+        chips.append(chip)
+  return chips
+
+# Return the chips in DUNE17dla-cold
+def dune17dlacChips(skipSel=False, skipBad=True):
+  chips = []
+  skipChips = []
+  if skipSel: skipChips += selectedChips()
+  if skipBad: skipChips += badChips()
+  for ds in dune17dlacSamples():
     chip = dune17cChip(ds)
     if chip not in chips:
       if chip not in skipChips:

@@ -379,18 +379,22 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   htitl = sshtitl.str();
   ph0->SetLineWidth(3);
   double ymax = ph0->GetMaximum();
+  bool doymax = false;
   double ybinmax = 0.0;
   for ( ibin=4; ibin<=ph0->GetNbinsX(); ++ibin ) {
     double ybin = ph0->GetBinContent(ibin);
-    ybin += 1;
     if ( ybin > ybinmax ) ybinmax = ybin;
   }
   if ( ybinmax < 0.7*ymax ) {
     ymax = int(1.3*ybinmax+0.5);
+    doymax = true;
   }
-  if ( ymax < 10.0 ) ymax = 10.0;
+  if ( ymax < 10.0 ) {
+    ymax = 10.0;
+    doymax = true;
+  }
   ph0->SetMinimum(0.0);
-  ph0->SetMaximum(ymax);
+  if ( doymax ) ph0->SetMaximum(ymax);
   string fnameQuality = "chipQuality_" + dslist + ".png";
   // Draw quality overlaying chip lists.
   int col0 = kMagenta+2;

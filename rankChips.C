@@ -5,6 +5,7 @@ using StringStringMap = map<string,string>;
 using ChipSample = std::pair<Index, string>;
 using ValueChipSample = std::pair<double, ChipSample>;
 using ChipMetricMap = map<Index, ValueChipSample>;
+using DatasetChipMetricMap = map<string, ChipMetricMap>;
 using RankMap = multimap<double, ChipSample>;
 using ChanValMap = map<string, std::vector<double>>;
 using DoubleVector = vector<double>;
@@ -47,7 +48,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   SampleMetricMap metricLow;
   SampleIndexMap metricLo2;
   SampleMetricMap metricN80;
-  ChipMetricMap chipMetricPrd;
+  ChipMetricMap chipMetricPrd;                // Qmax for each chip.
+  DatasetChipMetricMap datasetChipMetricPrd;  // Qmax for each chip in each dataset.
   RankMap goodChips;
   RankMap fairChips;
   RankMap poorChips;
@@ -120,6 +122,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   vector<string> ssams;
   std::vector<vector<string>> datasetSamples(ndst);
   bool dbg = false;
+  unsigned int readcountTot = 0;
+  map<string,Index> datasetIndex;    // Dataset index for each sample. ndst if not found.
   for ( Index idst=0; idst<ndst; ++idst ) {
     string dataset = datasets[idst];
     string dsfname = dataset + ".txt";
@@ -137,6 +141,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       bool keep = true;
       if ( ssamsin.size() && find(ssamsin.begin(), ssamsin.end(), ssam) == ssamsin.end() ) keep = false;
       if ( keep ) {
+        if ( datasetIndex.find(ssam) != datasetIndex.end() ) {
+           cout << myname << "ERROR: Sample " << ssam << " is in two datasets: "
+                << datasetIndex[ssam] << " and " << dataset << endl;
+           return nullptr;
+        }
+        datasetIndex[ssam] = idst;
         datasetSamples[idst].push_back(ssam);
         sampleDataset[ssam] = dataset;
         ssams.push_back(ssam);
@@ -147,80 +157,85 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       }
     }
     cout << myname << "Dataset " << dataset << " keep/read: " << datasetSamples[idst].size() << "/" << readcount << endl;
+    readcountTot += readcount;
   }
+  cout << myname << "TOTAL keep/read: " << ssams.size() << "/" << readcountTot << endl;
   wsam += 4;
   bool first = true;
-  // Loop over samples.
-  map<string,Index> datasetIndex;    // Dataset index for each sample. ndst if not found.
+  // Process the data.
+  // Loop over datasets.
   Index ncha = 0;
-  for ( string ssam : ssams ) {
-    //AdcChipMetric acm(dataset, chip);
-    std::unique_ptr<AdcChipMetric> pacm;
-    int estat = 99;
-    Index idst = 0;
-    string dataset;
-    for ( ; idst<datasets.size(); ++idst ) {
-      dataset = datasets[idst];
-      const vector<string>& sams = datasetSamples[idst];
-      if ( find(sams.begin(), sams.end(), ssam)  != sams.end() ) {
-        pacm.reset(new AdcChipMetric(dataset, ssam));
-        estat = pacm->evaluate();
-        if ( estat == 0 ) break;
+  for ( unsigned int idst=0; idst<ndst; ++idst ) {
+    string dataset = datasets[idst];
+    // Loop over samples in each dataset.
+    for ( string ssam : datasetSamples[idst] ) {
+      std::unique_ptr<AdcChipMetric> pacm(new AdcChipMetric(dataset, ssam));
+      int estat = pacm->evaluate();
+      if ( estat != 0 ) {
+        cout << myname << "Unable to find performance for " << ssam << endl;
+        continue;
       }
+      AdcChipMetric& acm = *pacm;
+      if ( acm.nChannel() == 0 ) {
+        cout << myname << "Channel count is zero for " << ssam << endl;
+        continue;
+      }
+      if ( ncha == 0 ) ncha = acm.nChannel();
+      if ( acm.nChannel() != ncha ) {
+        cout << myname << "Inconsistent channel count for " << ssam << endl;
+        continue;
+      }
+      Index chip = acm.chip();    // Must call this after evaluate.
+      sampleChip[ssam] = chip;
+      cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
+      if ( estat != 0 ) continue;
+      double effavg = acm.chipMetric("EffAvg");
+      double effprd = acm.chipMetric("EffProd");
+      double efflow = acm.chipMetric("EffLow");
+      double efflo2 = acm.chipMetric("EffLow2");
+      int n80 = acm.chipMetric("N80");
+      double rankavg = 1.0 - effavg;
+      double rankprd = 1.0 - effprd;
+      ChipSample chipsam(chip, ssam);
+      ValueChipSample valprd(rankprd, chipsam);
+      metricPrd[ssam] = effprd;
+      metricAvg[ssam] = effavg;
+      metricLow[ssam] = efflow;
+      metricLo2[ssam] = efflo2;
+      metricN80[ssam] = n80;
+      for ( Index icha=0; icha<ncha; ++icha ) {
+        chaneff[ssam].push_back(acm.channelEfficiency(icha));
+      }
+      // Update Qmax for all.
+      auto iprd = chipMetricPrd.find(chip);
+      bool insert = iprd == chipMetricPrd.end();
+      if ( ! insert ) {
+        string oldsam = iprd->second.second.second;
+        double oldeff = metricPrd[oldsam];
+        insert = effprd > oldeff;
+      }
+      if ( insert ) chipMetricPrd[chip] = valprd;
+      // Update Qmax for this dataset.
+      auto& dcMetricPrd = datasetChipMetricPrd[dataset];
+      iprd = dcMetricPrd.find(chip);
+      insert = iprd == dcMetricPrd.end();
+      if ( ! insert ) {
+        string oldsam = iprd->second.second.second;
+        double oldeff = metricPrd[oldsam];
+        insert = effprd > oldeff;
+      }
+      if ( insert ) dcMetricPrd[chip] = valprd;
+      //
+      string prefix = first ? "" : ",";
+      prefix += "\n";
+      string qsam = "\"" + ssam + "\"";
+      sspymavg << prefix << setw(wsam) << qsam << ":" << effavg;
+      sspymprd << prefix << setw(wsam) << qsam << ":" << effprd;
+      sspymlow << prefix << setw(wsam) << qsam << ":" << efflow;
+      sspymlo2 << prefix << setw(wsam) << qsam << ":" << efflo2;
+      sspymn80 << prefix << setw(wsam) << qsam << ":" << n80;
+      first = false;
     }
-    if ( idst == datasets.size() || estat != 0 ) {
-      cout << myname << "Unable to find performance for " << ssam << endl;
-      continue;
-    }
-    datasetIndex[ssam] = idst;
-    AdcChipMetric& acm = *pacm;
-    if ( acm.nChannel() == 0 ) {
-      cout << myname << "Channel count is zero for " << ssam << endl;
-      continue;
-    }
-    if ( ncha == 0 ) ncha = acm.nChannel();
-    if ( acm.nChannel() != ncha ) {
-      cout << myname << "Inconsistent channel count for " << ssam << endl;
-      continue;
-    }
-    Index chip = acm.chip();    // Must call this after evaluate.
-    sampleChip[ssam] = chip;
-    cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
-    if ( estat != 0 ) continue;
-    double effavg = acm.chipMetric("EffAvg");
-    double effprd = acm.chipMetric("EffProd");
-    double efflow = acm.chipMetric("EffLow");
-    double efflo2 = acm.chipMetric("EffLow2");
-    int n80 = acm.chipMetric("N80");
-    double rankavg = 1.0 - effavg;
-    double rankprd = 1.0 - effprd;
-    ChipSample chipsam(chip, ssam);
-    ValueChipSample valprd(rankprd, chipsam);
-    metricPrd[ssam] = effprd;
-    metricAvg[ssam] = effavg;
-    metricLow[ssam] = efflow;
-    metricLo2[ssam] = efflo2;
-    metricN80[ssam] = n80;
-    for ( Index icha=0; icha<ncha; ++icha ) {
-      chaneff[ssam].push_back(acm.channelEfficiency(icha));
-    }
-    auto iprd = chipMetricPrd.find(chip);
-    bool insert = iprd == chipMetricPrd.end();
-    if ( ! insert ) {
-      string oldsam = iprd->second.second.second;
-      double oldeff = metricPrd[oldsam];
-      insert = effprd > oldeff;
-    }
-    if ( insert ) chipMetricPrd[chip] = valprd;
-    string prefix = first ? "" : ",";
-    prefix += "\n";
-    string qsam = "\"" + ssam + "\"";
-    sspymavg << prefix << setw(wsam) << qsam << ":" << effavg;
-    sspymprd << prefix << setw(wsam) << qsam << ":" << effprd;
-    sspymlow << prefix << setw(wsam) << qsam << ":" << efflow;
-    sspymlo2 << prefix << setw(wsam) << qsam << ":" << efflo2;
-    sspymn80 << prefix << setw(wsam) << qsam << ":" << n80;
-    first = false;
   }
   // Loop over chips.
   int count = 0;
@@ -264,10 +279,17 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   ostringstream outl;
   int wds = 7;
   int wval = 8;
+  bool showDatasetMetrics = true;
   for ( string dataset : datasets ) if ( dataset.size() > wds ) wds = dataset.size();
   wds += 2;
   outl << setw(5) << "Rank" << setw(6) << "Chip" << setw(wval) << "Q" << setw(4) << "N80";
   if ( ndst > 1 ) outl << setw(wds) << "Dataset";
+  if ( showDatasetMetrics ) {
+    for ( string dataset : datasets ) {
+      string lab = "Q" + dataset.substr(0,wval-2);
+      outl << setw(wval) << lab;
+    }
+  }
   outsum << outl.str() << endl;
   for ( Index icha=0; icha<ncha; ++icha ) {
     outl << setw(wval-2) << "eff";
@@ -303,7 +325,20 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
          << setw(wval) << fixed << setprecision(3) << effprd
          << setw(4) << n80;
     if ( ndst > 1 ) outl << setw(wds) << datasets[idst];
+    if ( showDatasetMetrics ) {
+      for ( string dataset : datasets ) {
+        auto iprd = datasetChipMetricPrd[dataset].find(chip);
+        if ( iprd == datasetChipMetricPrd[dataset].end() ) {
+          outl << setw(wval) << "";
+        } else {
+          string ssam = iprd->second.second.second;
+          double qdmax = metricPrd[ssam];
+          outl << setw(wval) << qdmax;
+        }
+      }
+    }
     outsum << outl.str() << endl;
+    // Add  dataset metrics.
     for ( Index icha=0; icha<ncha; ++icha ) {
       outl << setw(wval) << fixed << setprecision(3) << chaneff[ssam][icha];
     }
@@ -506,7 +541,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     }
   }
   vector<TGraph*> qgr(nxx, nullptr);
-  dyleg = 0.30;
+  dyleg = 0.20;
   xleg1 = 0.20;
   xleg2 = xleg1 + 0.25;
   yleg2 = 0.87;

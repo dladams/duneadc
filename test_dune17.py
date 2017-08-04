@@ -14,6 +14,7 @@ from dune17 import dune17dlacChips
 from dune17 import dune17tscSamples
 from dune17 import dune17tscChips
 from dune17 import badChips
+from dune17 import badFiles
 
 writeDsfile = True
 
@@ -136,6 +137,15 @@ print
 testDataset("DUNE17dla-cold", True, showChips)
 print
 testDataset("DUNE17ts-cold", True, showChips)
+print
+print "Fetching bad file list."
+bfiles = badFiles()
+if writeDsfile:
+  fname = "badfiles.txt"
+  outf = open(fname, "w")
+  for file in bfiles:
+    outf.write(str(file) + "\n")
+  print "Bad file list written to " + fname
 print
 print "Fetching bad chip list."
 chips = badChips()

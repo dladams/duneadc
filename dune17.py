@@ -327,16 +327,16 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0025_0801")
   sams2.append(pre + "D0028_0802")
   sams2.append(pre + "D0029_0802")
-  sams2.append(pre + "D0031_0802")
+  badsams.append(pre + "00031_0802")  # Ignore -- bad chip label
   sams2.append(pre + "D0032_0802")
   sams2.append(pre + "D0034_0802")
   sams2.append(pre + "D0036_0802")
   sams2.append(pre + "D0037_0803")
   sams2.append(pre + "D0039_0803")
-  sams2.append(pre + "D0041_0803")  # 8/4
-  sams2.append(pre + "D0042_0803")  # 8/4
+  badsams.append(pre + "D0041_0803")  # Bad waveforms
+  sams2.append(pre + "D0042_0803")
   badsams.append(pre + "D0043_0803")  # Bad waveforms?
-  sams2.append(pre + "D0044_0803")  # 8/4
+  sams2.append(pre + "D0044_0803")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -364,8 +364,9 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams = []
   badsams = []
   failsams = []
-  sams.append(pre + "0_0731_try1")
+  badsams.append(pre + "0_0731_try1")  # There is no chip 0
   sams.append(pre + "141_0731_try1")
+  badsams.append(pre + "52_0804_try1")    # This is actually chip D0052
   sams.append(pre + "D0001_0731_try1")
   sams.append(pre + "D0001_0731_try2")
   sams.append(pre + "D0001_0731_try3")
@@ -394,7 +395,6 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0015_0801_try1")
   sams.append(pre + "D0016_0803_try1")
   sams.append(pre + "D0017_0802_try1")
-  #badsams.append(pre + "d0018_0801_try1")   # Bad file name
   sams.append(pre + "D0019_0801_try1")
   sams.append(pre + "D0020_0801_try1")
   sams.append(pre + "D0021_0801_try1")
@@ -407,7 +407,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0029_0802_try1")
   badsams.append(pre + "D0030_0802T15_try1")  # Small signals
   sams.append(pre + "D0030_0802T17_try1")
-  sams.append(pre + "00031_0802_try1")  # Ignore -- bad chip label
+  badsams.append(pre + "00031_0802_try1")  # Ignore -- bad chip label
   sams.append(pre + "D0031_0803_try1")
   sams.append(pre + "D0032_0802_try1")
   sams.append(pre + "D0033_0802_try1")
@@ -425,7 +425,6 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0045_0803_try1")
   sams.append(pre + "D0046_0803_try1")
   sams.append(pre + "D0047_0803_try1")
-  sams.append(pre + "D0052_0803_try1")  # 8/4
   badsams.append(pre + "D0050_0803_try1")  # Bad waveforms
   # DUNE17dla-cold
   if isBad: outsams = badsams
@@ -681,7 +680,9 @@ def dune17cChip(sam):
   ipos = asam.find("_")
   if ipos >= 0: schip = asam[:ipos]
   else: schip = asam
-  return int(schip) + chipoff
+  if schip.isdigit():
+    return int(schip) + chipoff
+  return 0
  
 # Return all samples for a given chip number.
 def dune17cChipSamples(chip):
@@ -790,6 +791,12 @@ def selectedChips(sel=0):
   elif sel == 3: chips = sel3
   chips.sort()
   return chips
+
+# Files declared bad.
+def badFiles():
+  files = []
+  files.append("adcTestData_20170803T191545_chipd0013_adcClock0_adcOffset-1_sampleRate2000000_functype3_freq4.000_offset0.700_amplitude1.000.root")    # mislabeled chip
+  return files
 
 # Chips declared bad.
 def badChips():

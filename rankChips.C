@@ -382,6 +382,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   double ybinmax = 0.0;
   for ( ibin=4; ibin<=ph0->GetNbinsX(); ++ibin ) {
     double ybin = ph0->GetBinContent(ibin);
+    ybin += 1;
     if ( ybin > ybinmax ) ybinmax = ybin;
   }
   if ( ybinmax < 0.7*ymax ) {

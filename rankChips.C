@@ -401,6 +401,15 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   int col1 = 46;          // Red
   int col2 = kGreen + 3;
   int col21 = 28;       // Brown
+  int sty0 = 1;
+  int sty1 = 3;
+  int sty2 = 2;
+  if ( ndst < 3 ) {
+    col0 = col1;
+    sty0 = sty1;
+    col1 = col2;
+    sty1 = sty2;
+  }
   if ( nhst > 1 ) {
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
@@ -417,12 +426,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       if ( ihst == 1 ) ph->SetLineColor(col0);
       if ( ihst == 2 ) ph->SetLineColor(col1);
       if ( ihst == 3 ) ph->SetLineColor(col2);
-      if ( ihst == 1 ) ph->SetLineStyle(1);
-      if ( ihst == 2 ) ph->SetLineStyle(3);
-      if ( ihst == 3 ) ph->SetLineStyle(2);
-      if ( ihst == 1 ) ph->SetLineWidth(1);
-      if ( ihst == 2 ) ph->SetLineWidth(3);
-      if ( ihst == 3 ) ph->SetLineWidth(2);
+      if ( ihst == 1 ) ph->SetLineStyle(sty0);
+      if ( ihst == 2 ) ph->SetLineStyle(sty2);
+      if ( ihst == 3 ) ph->SetLineStyle(sty1);
+      if ( ihst == 1 ) ph->SetLineWidth(sty0);
+      if ( ihst == 2 ) ph->SetLineWidth(sty2);
+      if ( ihst == 3 ) ph->SetLineWidth(sty1);
       ph->Draw("same");
       pleg->AddEntry(ph, slab.c_str(), "l");
     }

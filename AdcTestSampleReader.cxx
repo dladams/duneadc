@@ -266,11 +266,13 @@ int AdcTestSampleReader::read() {
     // 201706_cotswB same for warm data
     // 201706_cotsbwB same for update of warm data
     // 201707_cotsBB  is July data (10 boards: BB = 01, 02, ..., 10)
+    // 201708_cotsBB  is Aug data (4 boards: BB = 01, 02, ..., 04)
     // Chan 0-4 are ad7274
-    // Chan 5-9 are ad77883
+    // Chan 5-9 are ad7883
     // Chan 10-15 are ads7049
     } else if ( ssam.substr(0, 11) == "201706_cots" ||
-                ssam.substr(0, 11) == "201707_cots" ) {
+                ssam.substr(0, 11) == "201707_cots" ||
+                ssam.substr(0, 11) == "201708_cots" ) {
       string::size_type ipos = 11;
       string mydir = "COTS_ADC_TEST_DATA_06222017";
       string sboardPrefix = "Board";
@@ -281,15 +283,22 @@ int AdcTestSampleReader::read() {
         sboardPrefix = "board";
       }
       bool is07 = ssam.substr(0, 11) == "201707_cots";
+      bool is08 = ssam.substr(0, 11) == "201708_cots";
       if ( is07 ) {
         sboardPrefix = "board";
         mydir = "COTS_ADC_DATA_07062017";
         brdlen = 2;
+      } else if ( is08 ) {
+        sboardPrefix = "board";
+        mydir = "COTS_ADC_Test_0805";
+        brdlen = 2;
       }
       string stemp = "LN";
+      string sltemp = "ln";
       if ( ssam[ipos] == 'w' ) {
         ipos += 1;
         stemp = "RT";
+        sltemp = "rt";
       }
       string dir1 = "201707";
       string::size_type jpos = ssam.find("_", ipos+1);
@@ -302,22 +311,33 @@ int AdcTestSampleReader::read() {
         ssbrd >> ibrd;
         m_chip = ibrd;    // Chip number holds the board number
         string smodel;
+        string nsmodel;
         m_vinmin = -100.0;
         if ( chan <= 4 ) {
           smodel = "ad7274";
+          nsmodel = "1_" + smodel;
           vinmax = 1900.0;
         } else if ( chan <= 9 ) {
-          smodel = is07 ? "ads7883" : "ad7883";
+          smodel = (is07||is08) ? "ads7883" : "ad7883";
           vinmax = 2600.0;
+          nsmodel = "2_" + smodel;
         } else {
           smodel = "ads7049";
           vinmax = 2600.0;
+          nsmodel = "3_" + smodel;
         }
         m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
-        dirname = is07 ? m_topdir + "/201707/" + mydir + "/" + sboardPrefix + sbrd + "/"
-                       : m_topdir + "/201706/" + mydir + "/" + sboardPrefix + sbrd + "/";
-        schanPrefix = is07 ? "Brd" + sbrd + "_" + smodel + "_60p_" + stemp + "_2M_chn0x" + alschan[chan]
-                           : smodel + "_60p_brd" + sbrd + "_" + stemp + "_chn0x" + alschan[chan];
+        if ( is07 ) {
+          dirname = m_topdir + "/201707/" + mydir + "/" + sboardPrefix + sbrd + "/";
+          schanPrefix = "Brd" + sbrd + "_" + smodel + "_60p_" + stemp + "_2M_chn0x" + alschan[chan];
+        } else if ( is08 ) { 
+       
+          dirname = m_topdir + "/201708/" + mydir + "/" + sboardPrefix + sbrd + "/";
+          schanPrefix = "brd" + sbrd + "_" + sltemp + "_" + nsmodel + "_dly50_chn0x" + alschan[chan];
+        } else { 
+          dirname = m_topdir + "/201706/" + mydir + "/" + sboardPrefix + sbrd + "/";
+          schanPrefix = smodel + "_60p_brd" + sbrd + "_" + stemp + "_chn0x" + alschan[chan];
+        }
       } else {
         cout << myname << "ERROR: Field specifying board number must have length " << brdlen << endl;
         bad = 2;

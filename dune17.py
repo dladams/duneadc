@@ -338,12 +338,12 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "D0043_0803")  # Bad waveforms?
   sams2.append(pre + "D0044_0803")
   sams2.append(pre + "D0053_0804")
-  sams2.append(pre + "D0060_0807")
+  #sams2.append(pre + "D0060_0807")  # warm test.
   sams2.append(pre + "D0063_0808")
   sams2.append(pre + "D0069_0808")
   sams2.append(pre + "D0072_0808")
   sams2.append(pre + "D0074_0808")
-  sams2.append(pre + "D0075_0809")  # 8/9
+  sams2.append(pre + "D0075_0809")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -438,14 +438,14 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0054_0804_try1")
   badsams.append(pre + "D0050_0803_try1")  # Bad waveforms
   sams.append(pre + "D0057_0808_try1")
-  sams.append(pre + "D0060_0807_try1")
+  badsams.append(pre + "D0060_0807_try1")  # warm test
   sams.append(pre + "D0063_0808_try1")
   sams.append(pre + "D0064_0808_try1")
   sams.append(pre + "D0069_0808_try1")
   sams.append(pre + "D0072_0808_try1")
   sams.append(pre + "D0074_0808_try1")
-  sams.append(pre + "D0075_0809_try1")  # 8/9
-  sams.append(pre + "D0078_0809_try1")  # 8/9
+  sams.append(pre + "D0075_0809_try1")
+  sams.append(pre + "D0078_0809_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams
@@ -816,6 +816,8 @@ def selectedChips(sel=0):
 def badFiles():
   files = []
   files.append("adcTestData_20170803T191545_chipd0013_adcClock0_adcOffset-1_sampleRate2000000_functype3_freq4.000_offset0.700_amplitude1.000.root")    # mislabeled chip
+  files.append("adcTestData_20170807T162003_chipD0060_adcClock0_adcOffset-1_sampleRate2000000_functype3_freq4.000_offset0.700_amplitude1.000.root")  # warm test.
+  files.append("adcDavidAdamsOnlyData_20170807T160827_chipD0060_adcClock0_adcOffset-1_sampleRate2000000_functype3_freq4.000_offset0.700_amplitude1.000_try1.root")   # warm test
   return files
 
 # Chips declared bad.

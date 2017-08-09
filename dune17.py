@@ -339,7 +339,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0044_0803")
   sams2.append(pre + "D0053_0804")
   sams2.append(pre + "D0060_0807")
-  sams2.append(pre + "D0063_0808")  # 8/8
+  sams2.append(pre + "D0063_0808")
+  sams2.append(pre + "D0069_0808")  # 8/9
+  sams2.append(pre + "D0072_0808")  # 8/9
+  sams2.append(pre + "D0074_0808")  # 8/9
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -433,10 +436,13 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0053_0804_try2")
   sams.append(pre + "D0054_0804_try1")
   badsams.append(pre + "D0050_0803_try1")  # Bad waveforms
-  sams.append(pre + "D0057_0808_try1")   # 8/8
+  sams.append(pre + "D0057_0808_try1")
   sams.append(pre + "D0060_0807_try1")
-  sams.append(pre + "D0063_0808_try1")   # 8/8
-  sams.append(pre + "D0064_0808_try1")   # 8/8
+  sams.append(pre + "D0063_0808_try1")
+  sams.append(pre + "D0064_0808_try1")
+  sams.append(pre + "D0069_0808_try1")  # 8/9
+  sams.append(pre + "D0072_0808_try1")  # 8/9
+  sams.append(pre + "D0074_0808_try1")  # 8/9
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

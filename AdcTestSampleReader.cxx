@@ -326,12 +326,12 @@ int AdcTestSampleReader::read() {
           vinmax = 2600.0;
           nsmodel = "3_" + smodel;
         }
+        if ( mydir == "COTS_ADC_Test_0805" && ibrd > 4 ) mydir = "COTS_ADC_Test_0809";
         m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
         if ( is07 ) {
           dirname = m_topdir + "/201707/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = "Brd" + sbrd + "_" + smodel + "_60p_" + stemp + "_2M_chn0x" + alschan[chan];
         } else if ( is08 ) { 
-       
           dirname = m_topdir + "/201708/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = "brd" + sbrd + "_" + sltemp + "_" + nsmodel + "_dly50_chn0x" + alschan[chan];
         } else { 

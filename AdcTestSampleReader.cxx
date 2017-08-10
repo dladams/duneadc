@@ -274,6 +274,7 @@ int AdcTestSampleReader::read() {
                 ssam.substr(0, 11) == "201707_cots" ||
                 ssam.substr(0, 11) == "201708_cots" ) {
       string::size_type ipos = 11;
+      m_dataset = ssam.substr(0, ipos);
       string mydir = "COTS_ADC_TEST_DATA_06222017";
       string sboardPrefix = "Board";
       string::size_type brdlen = 1;   // Length of the field specifying the board number.

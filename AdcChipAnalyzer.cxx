@@ -485,7 +485,15 @@ AdcSampleAnalyzer* AdcChipAnalyzer::sampleAnalyzer(Index icha) {
           int istat = calibdb.insert(asa.localCalib());
           cout << myname << "Insertion returned " << istat << endl;
         } else {
-          cout << myname << "Not adding channel " << asa.channel() << " to calib DB." << endl;
+          cout << myname << "Not adding channel " << asa.channel() << " to calib DB:" << endl;
+          if ( ! asa.calib().isValid() ) {
+            cout << myname << "  Calibration is invalid: chip=" << asa.calib().chip()
+                           << " channel=" << asa.calib().channel() << "." << endl;
+          }
+          if ( asa.dataset().size() == 0 ) {
+            cout << myname << "  Sample analyzer does not have a dataset name." << endl;
+          }
+          cout << endl;
         }
       }
       // Add performance to tree.

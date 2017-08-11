@@ -359,7 +359,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0104_0810")
   sams2.append(pre + "D0106_0810")
   sams2.append(pre + "D0107_0810")
-  badsams.append(pre + "D0108_0810")  # Ch 0 Vin extraction failed (not obvious by eye) (sams2)
+  sams2.append(pre + "D0108_0810")
   samsh.append(pre + "D0111_0811")
   sams2.append(pre + "D0112_0811")
   samsh.append(pre + "D0113_0811")
@@ -489,7 +489,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0105_0810_try1")
   sams.append(pre + "D0106_0810_try1")
   sams.append(pre + "D0107_0810_try1")
-  badsams.append(pre + "D0108_0810_try1")  # Chan 0 Vin fit failed.
+  sams.append(pre + "D0108_0810_try1")
   sams.append(pre + "D0110_0811_try1")
   sams.append(pre + "D0111_0811_try1")
   sams.append(pre + "D0112_0811_try1")

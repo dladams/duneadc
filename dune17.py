@@ -361,10 +361,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0107_0810")
   badsams.append(pre + "D0108_0810")  # Ch 0 Vin extraction failed (not obvious by eye) (sams2)
   samsh.append(pre + "D0111_0811")
-  sams2.append(pre + "D0112_0811")  # 8/11
-  samsh.append(pre + "D0113_0811")  # 8/11
-  sams2.append(pre + "D0116_0811")  # 8/11
-  sams2.append(pre + "D0117_0811")  # 8/11
+  sams2.append(pre + "D0112_0811")
+  samsh.append(pre + "D0113_0811")
+  sams2.append(pre + "D0116_0811")
+  sams2.append(pre + "D0117_0811")
+  sams2.append(pre + "D0119_0811")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -491,10 +492,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D0108_0810_try1")  # Chan 0 Vin fit failed.
   sams.append(pre + "D0110_0811_try1")
   sams.append(pre + "D0111_0811_try1")
-  sams.append(pre + "D0112_0811_try1")  # 8/11
-  sams.append(pre + "D0113_0811_try1")  # 8/11
-  sams.append(pre + "D0116_0811_try1")  # 8/11
-  sams.append(pre + "D0117_0811_try1")  # 8/11
+  sams.append(pre + "D0112_0811_try1")
+  sams.append(pre + "D0113_0811_try1")
+  sams.append(pre + "D0116_0811_try1")
+  sams.append(pre + "D0117_0811_try1")
+  sams.append(pre + "D0119_0811_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

@@ -610,7 +610,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
       cout << myname << "Sampling frequency not found. Assuming " << sampFreq << " Hz." << endl;
     }
     double tickPeriod = sampFreq/vinRate;
-    double ef1BorderWidth = 0.2*tickPeriod;
+    double ef1BorderWidth = 0.15*tickPeriod;
     SampleValue ef1MinThresh =  1000;
     SampleValue ef1MaxThresh =  4000;
     SampleValue ef1MinLimit =   1500;

@@ -354,13 +354,17 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "D0092_0810")  # Bad waveforms
   sams2.append(pre + "D0093_0810")
   badsams.append(pre + "D0095_0810")  # One bad waveform
-  samsh.append(pre + "D0098_0810")  # 8/11
-  sams2.append(pre + "D0100_0810")  # 8/11
-  sams2.append(pre + "D0104_0810")  # 8/11
-  sams2.append(pre + "D0106_0810")  # 8/11
-  sams2.append(pre + "D0107_0810")  # 8/11
-  sams2.append(pre + "D0108_0810")  # 8/11
-  samsh.append(pre + "D0111_0811")  # 8/11
+  badsams.append(pre + "D0098_0810")  # Ch 5-8 wf bad (samsh)
+  sams2.append(pre + "D0100_0810")
+  sams2.append(pre + "D0104_0810")
+  sams2.append(pre + "D0106_0810")
+  sams2.append(pre + "D0107_0810")
+  badsams.append(pre + "D0108_0810")  # Ch 0 Vin extraction failed (not obvious by eye) (sams2)
+  samsh.append(pre + "D0111_0811")
+  sams2.append(pre + "D0112_0811")  # 8/11
+  samsh.append(pre + "D0113_0811")  # 8/11
+  sams2.append(pre + "D0116_0811")  # 8/11
+  sams2.append(pre + "D0117_0811")  # 8/11
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -476,17 +480,21 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D0092_0810_try1")  # Bad waveforms
   sams.append(pre + "D0093_0810_try1")
   sams.append(pre + "D0095_0810_try1")
-  sams.append(pre + "D0097_0810_try1")  # 8/11
-  sams.append(pre + "D0098_0810_try1")  # 8/11
-  sams.append(pre + "D0100_0810_try1")  # 8/11
-  sams.append(pre + "D0103_0810_try1")  # 8/11
-  sams.append(pre + "D0104_0810_try1")  # 8/11
-  sams.append(pre + "D0105_0810_try1")  # 8/11
-  sams.append(pre + "D0106_0810_try1")  # 8/11
-  sams.append(pre + "D0107_0810_try1")  # 8/11
-  sams.append(pre + "D0108_0810_try1")  # 8/11
-  sams.append(pre + "D0110_0811_try1")  # 8/11
-  sams.append(pre + "D0111_0811_try1")  # 8/11
+  sams.append(pre + "D0097_0810_try1")
+  sams.append(pre + "D0098_0810_try1")
+  sams.append(pre + "D0100_0810_try1")
+  sams.append(pre + "D0103_0810_try1")
+  sams.append(pre + "D0104_0810_try1")
+  sams.append(pre + "D0105_0810_try1")
+  sams.append(pre + "D0106_0810_try1")
+  sams.append(pre + "D0107_0810_try1")
+  badsams.append(pre + "D0108_0810_try1")  # Chan 0 Vin fit failed.
+  sams.append(pre + "D0110_0811_try1")
+  sams.append(pre + "D0111_0811_try1")
+  sams.append(pre + "D0112_0811_try1")  # 8/11
+  sams.append(pre + "D0113_0811_try1")  # 8/11
+  sams.append(pre + "D0116_0811_try1")  # 8/11
+  sams.append(pre + "D0117_0811_try1")  # 8/11
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

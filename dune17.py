@@ -366,6 +366,12 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0116_0811")
   sams2.append(pre + "D0117_0811")
   sams2.append(pre + "D0119_0811")
+  sams2.append(pre + "D0120_0811")  # 8/12
+  sams2.append(pre + "D0122_0811")  # 8/12
+  samsh.append(pre + "D0123_0811")  # 8/12
+  sams2.append(pre + "D0124_0811")  # 8/12
+  samsh.append(pre + "D0125_0811")  # 8/12
+  sams2.append(pre + "D0126_0811")  # 8/12
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -497,6 +503,12 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0116_0811_try1")
   sams.append(pre + "D0117_0811_try1")
   sams.append(pre + "D0119_0811_try1")
+  sams.append(pre + "D0120_0811_try1")  # 8/12
+  sams.append(pre + "D0122_0811_try1")  # 8/12
+  sams.append(pre + "D0123_0811_try1")  # 8/12
+  sams.append(pre + "D0124_0811_try1")  # 8/12
+  sams.append(pre + "D0125_0811_try1")  # 8/12
+  sams.append(pre + "D0126_0811_try1")  # 8/12
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

@@ -372,6 +372,27 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0124_0811")
   samsh.append(pre + "D0125_0811")
   sams2.append(pre + "D0126_0811")
+  sams2.append(pre + "D0127_0814")  # 8/15
+  sams2.append(pre + "D0129_0814")  # 8/15
+  sams2.append(pre + "D0130_0814")  # 8/15
+  sams2.append(pre + "D0132_0814")  # 8/15
+  sams2.append(pre + "D0134_0814")  # 8/15
+  sams2.append(pre + "D00135_0814")  # 8/15
+  sams2.append(pre + "D0137_0814")  # 8/15
+  sams2.append(pre + "D0138_0814")  # 8/15
+  sams2.append(pre + "D0141_0814")  # 8/15
+  sams2.append(pre + "D0142_0814")  # 8/15
+  sams2.append(pre + "D0143_0814")  # 8/15
+  sams2.append(pre + "D0144_0814")  # 8/15
+  sams2.append(pre + "D0145_0814")  # 8/15
+  sams2.append(pre + "D0147_0814")  # 8/15
+  sams2.append(pre + "D0148T1253_0814")  # 8/15
+  sams2.append(pre + "D0148T1307_0814")  # 8/15
+  sams2.append(pre + "D0149_0814")  # 8/15
+  sams2.append(pre + "D0150_0814")  # 8/15
+  sams2.append(pre + "D0151_0814")  # 8/15
+  sams2.append(pre + "D0152_0814")  # 8/15
+  sams2.append(pre + "D0153_0814")  # 8/15
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams

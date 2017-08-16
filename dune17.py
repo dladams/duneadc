@@ -372,27 +372,27 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0124_0811")
   samsh.append(pre + "D0125_0811")
   sams2.append(pre + "D0126_0811")
-  sams2.append(pre + "D0127_0814")  # 8/15
-  sams2.append(pre + "D0129_0814")  # 8/15
-  sams2.append(pre + "D0130_0814")  # 8/15
-  sams2.append(pre + "D0132_0814")  # 8/15
-  sams2.append(pre + "D0134_0814")  # 8/15
-  sams2.append(pre + "D00135_0814")  # 8/15
-  sams2.append(pre + "D0137_0814")  # 8/15
-  sams2.append(pre + "D0138_0814")  # 8/15
-  sams2.append(pre + "D0141_0814")  # 8/15
-  sams2.append(pre + "D0142_0814")  # 8/15
-  sams2.append(pre + "D0143_0814")  # 8/15
-  sams2.append(pre + "D0144_0814")  # 8/15
-  sams2.append(pre + "D0145_0814")  # 8/15
-  sams2.append(pre + "D0147_0814")  # 8/15
-  sams2.append(pre + "D0148T1253_0814")  # 8/15
-  sams2.append(pre + "D0148T1307_0814")  # 8/15
-  sams2.append(pre + "D0149_0814")  # 8/15
-  sams2.append(pre + "D0150_0814")  # 8/15
-  sams2.append(pre + "D0151_0814")  # 8/15
-  sams2.append(pre + "D0152_0814")  # 8/15
-  sams2.append(pre + "D0153_0814")  # 8/15
+  sams2.append(pre + "D0127_0814")
+  sams2.append(pre + "D0129_0814")
+  sams2.append(pre + "D0130_0814")
+  sams2.append(pre + "D0132_0814")
+  sams2.append(pre + "D0134_0814")
+  sams2.append(pre + "D00135_0814")
+  sams2.append(pre + "D0137_0814")
+  sams2.append(pre + "D0138_0814")
+  sams2.append(pre + "D0141_0815")  # 8/15
+  sams2.append(pre + "D0142_0815")  # 8/15
+  sams2.append(pre + "D0143_0815")  # 8/15
+  sams2.append(pre + "D0144_0815")  # 8/15
+  sams2.append(pre + "D0145_0815")  # 8/15
+  sams2.append(pre + "D0147_0815")  # 8/15
+  sams2.append(pre + "D0148T1253_0815")  # 8/15
+  sams2.append(pre + "D0148T1307_0815")  # 8/15
+  sams2.append(pre + "D0149_0815")  # 8/15
+  sams2.append(pre + "D0150_0815")  # 8/15
+  sams2.append(pre + "D0151_0815")  # 8/15
+  sams2.append(pre + "D0152_0815")  # 8/15
+  sams2.append(pre + "D0153_0815")  # 8/15
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -530,30 +530,30 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0124_0811_try1")
   sams.append(pre + "D0125_0811_try1")
   sams.append(pre + "D0126_0811_try1")
-  sams.append(pre + "D0127_0814_try1")  #  8/15
-  sams.append(pre + "D0129_0814_try1")  #  8/15
-  sams.append(pre + "D0130_0814_try1")  #  8/15
-  sams.append(pre + "D0131_0814T1229_try1")  #  8/15
-  sams.append(pre + "D0131_0814T1247_try1")  #  8/15
-  sams.append(pre + "D0132_0814_try1")  #  8/15
-  sams.append(pre + "D0133_0814_try1")  #  8/15
-  sams.append(pre + "D0134_0814_try1")  #  8/15
-  sams.append(pre + "D00135_0814_try1")  #  8/15 presumably D0135
-  sams.append(pre + "D0137_0814_try1")  #  8/15
-  sams.append(pre + "D0138_0814_try1")  #  8/15
-  sams.append(pre + "D0139_0814_try1")  #  8/15
-  sams.append(pre + "D0141_0815_try1")  #  8/15
-  sams.append(pre + "D0142_0815_try1")  #  8/15
-  sams.append(pre + "D0143_0815_try1")  #  8/15
-  sams.append(pre + "D0144_0815_try1")  #  8/15
-  sams.append(pre + "D0145_0815_try1")  #  8/15
-  sams.append(pre + "D0146_0815_try1")  #  8/15
-  sams.append(pre + "D0147_0815T1204_try1")  #  8/15
-  sams.append(pre + "D0147_0815T1237_try1")  #  Bad -- actually chip D0048
-  sams.append(pre + "D0149_0815_try1")  #  8/15
-  sams.append(pre + "D0150_0815_try1")  #  8/15
-  sams.append(pre + "D0151_0815_try1")  #  8/15
-  sams.append(pre + "D0153_0815_try1")  #  8/15
+  sams.append(pre + "D0127_0814_try1")
+  sams.append(pre + "D0129_0814_try1")
+  sams.append(pre + "D0130_0814_try1")
+  sams.append(pre + "D0131_0814T1229_try1")
+  sams.append(pre + "D0131_0814T1247_try1")
+  sams.append(pre + "D0132_0814_try1")
+  sams.append(pre + "D0133_0814_try1")
+  sams.append(pre + "D0134_0814_try1")
+  sams.append(pre + "D00135_0814_try1")
+  sams.append(pre + "D0137_0814_try1")
+  sams.append(pre + "D0138_0814_try1")
+  sams.append(pre + "D0139_0814_try1")
+  sams.append(pre + "D0141_0815_try1")
+  sams.append(pre + "D0142_0815_try1")
+  sams.append(pre + "D0143_0815_try1")
+  sams.append(pre + "D0144_0815_try1")
+  sams.append(pre + "D0145_0815_try1")
+  sams.append(pre + "D0146_0815_try1")
+  badsams.append(pre + "D0147_0815T1204_try1")  #  Bad waveforms
+  badsams.append(pre + "D0147_0815T1237_try1")  #  Bad -- actually chip D0048
+  sams.append(pre + "D0149_0815_try1")
+  sams.append(pre + "D0150_0815_try1")
+  sams.append(pre + "D0151_0815_try1")
+  sams.append(pre + "D0153_0815_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

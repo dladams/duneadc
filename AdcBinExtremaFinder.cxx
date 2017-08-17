@@ -20,10 +20,12 @@ AdcBinExtremaFinder(SampleIndex a_minGapBin, SampleIndex a_minGapExt, Index a_nb
 
 int AdcBinExtremaFinder::find(const AdcSampleReader& reader, AdcExtrema& exts) const {
   const string myname = "AdcBinExtremaFinder::find: ";
-  int dbg = 1;
+  int dbg = 2;
   exts.clear();
   AdcBinRecordBuilder brb(minGapBin());
+  if ( dbg > 1 ) cout << myname << "Filling bin records." << endl;
   if ( brb.fill(reader) ) return 1;
+  if ( dbg > 1 ) cout << myname << "# bin records: " << brb.binRecords().size() << endl;
   // Loop over bins. For each bin, use the averages of adjacent peaks to define
   // candidate extrema.
   multiset<SampleIndex> candidateExtremaTicks;

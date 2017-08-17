@@ -421,7 +421,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0190_0817T1001")  # 8/17
   sams2.append(pre + "D0190_0817T1023")  # 8/17
   sams2.append(pre + "D0190_0817T1049")  # 8/17
-  sams2.append(pre + "D0190_0817T1134")  # 8/17
+  sams2.append(pre + "D0190_0817T1113")  # 8/17
   sams2.append(pre + "D0192_0817")  # 8/17
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
@@ -603,7 +603,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0171_0816_try1")  # 8/17
   sams.append(pre + "D0173_0816_try1")  # 8/17
   sams.append(pre + "D0174_0816_try1")  # 8/17
-  sams.append(pre + "D0175_0816_try1")  # 8/17
+  badsams.append(pre + "D0175_0816_try1")  # Processing hangs in chan 13
   sams.append(pre + "D0176_0816_try1")  # 8/17
   sams.append(pre + "D0177_0816T1447_try1")  # 8/17
   sams.append(pre + "D0177_0816T1506_try1")  # 8/17

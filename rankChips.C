@@ -409,33 +409,32 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   if ( doymax ) ph0->SetMaximum(ymax);
   string fnameQuality = "chipQuality_" + fnamedsts + ".png";
   // Draw quality overlaying chip lists.
-  vector<int> cols;
-  vector<int> stys;
-  vector<int> wids;
+  SampleIndexMap cols;
+  SampleIndexMap stys;
+  SampleIndexMap wids;
+  cols["all"] = 602;
+  stys["all"] = 1;
+  wids["all"] = 2;
+  cols["PDTS2"] = 46;
+  stys["PDTS2"] = 3;
+  wids["PDTS2"] = 3;
+  cols["PDTS1"] = 1;
+  stys["PDTS1"] = 1;
+  wids["PDTS1"] = 1;
+  cols["PDTStry"] = kMagenta+2;
+  stys["PDTStry"] = 1;
+  wids["PDTStry"] = 1;
+  cols["CETS"] = kGreen + 3;
+  stys["CETS"] = 2;
+  wids["CETS"] = 2;
   for ( string dst : datasets ) {
-    if ( dst == "PDTS2" ) {
-      cols.push_back(46);
-      stys.push_back(3);
-      wids.push_back(3);
-    } else if ( dst == "PDTS1" ) {
-      cols.push_back(1);
-      stys.push_back(1);
-      wids.push_back(1);
-    } else if ( dst == "PDTStry" ) {
-      cols.push_back(kMagenta+2);
-      stys.push_back(1);
-      wids.push_back(1);
-    } else if ( dst == "CETS" ) {
-      cols.push_back(kGreen + 3);
-      stys.push_back(2);
-      wids.push_back(2);
-    } else {
-      cols.push_back(1);
-      stys.push_back(1);
-      wids.push_back(1);
+    if ( cols.find(dst) == cols.end() ) {
+      cols[dst] = 1;
+      stys[dst] = 1;
+      wids[dst] = 1;
     }
   }
-  if ( nhst > 1 ) {
+  if ( true ) {
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
     hists[0]->Draw();
@@ -444,15 +443,16 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     pleg->SetBorderSize(0);
     pleg->SetFillStyle(0);
     for ( Index ihst=0; ihst<nhst; ++ihst ) {
+      string dst = "all";
+      if ( ndst == 1 ) dst = datasets[0];
+      else if ( ihst > 0 ) dst = datasets[ihst - 1];
       TH1* ph = hists[ihst];
       ostringstream sslab;
       sslab << slabs[ihst] << " (" << sentrycount(ph) << " chips)";
       string slab = sslab.str();
-      if ( ihst > 0 ) {
-        ph->SetLineColor(cols[ihst-1]);
-        ph->SetLineStyle(stys[ihst-1]);
-        ph->SetLineWidth(wids[ihst-1]);
-      }
+      ph->SetLineColor(cols[dst]);
+      ph->SetLineStyle(stys[dst]);
+      ph->SetLineWidth(wids[dst]);
       ph->Draw("same");
       pleg->AddEntry(ph, slab.c_str(), "l");
     }
@@ -527,7 +527,13 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   StringVector slab{ssam00, ssam11, ssam22, ssam12, ssam10, ssam20};
   vector<int> qmrk = {2, 2, 2,  4, 26, 32};
   int col21 = 28; 
-  vector<int> qcol = {cols[0], cols[1], cols[2], col21, cols[1], cols[2]};
+  vector<int> qcol;
+  qcol.push_back(cols[datasets[0]]);
+  qcol.push_back(cols[datasets[1]]);
+  qcol.push_back(cols[datasets[2]]);
+  qcol.push_back(col21);
+  qcol.push_back(cols[datasets[1]]);
+  qcol.push_back(cols[datasets[2]]);
   DoubleVectorVector qcx(nxx);
   DoubleVectorVector qcy(nxx);
   for ( string ssam : ssams ) {

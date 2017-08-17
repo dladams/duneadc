@@ -141,7 +141,6 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
     cout << myname << "     Dataset: " << dataset() << endl;
     cout << myname << "      Sample: " << sample() << endl;
     cout << myname << "   Data size: " << m_pdata->size() << endl;
-    cout << myname << "   Data size: " << m_pdata->size() << endl;
     cout << myname << "Data address: " << m_pdata << endl;
     cout << myname << "        Chip: " << chip() << endl;
     cout << myname << "     Channel: " << channel() << endl;

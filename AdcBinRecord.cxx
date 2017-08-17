@@ -70,11 +70,14 @@ int AdcBinRecord::addSample(SampleIndex isam) {
 //**********************************************************************
 
 int AdcBinRecord::findPeaks(SampleIndex a_minGap) {
+  const string myname = "AdcBinRecord::findPeaks: ";
+  const int dbg = 0;
   m_minGap = a_minGap;
   m_peaks.clear();
   SampleIndexVector peakSams;
   Index ipeak = 0;
   // Loop one past the lsat sample so we can record the last peak.
+  if ( dbg ) cout << myname << "Looping over << " << samples().size() << " samples." << endl;
   for ( SampleIndex ksam=0; ksam<=samples().size(); ++ksam ) {
     bool last = ksam == samples().size();
     SampleIndex isam = last ? 99999 : samples()[ksam];
@@ -130,6 +133,7 @@ int AdcBinRecord::findPeaks(SampleIndex a_minGap) {
     }
     peakSams.push_back(isam);
   }
+  if ( dbg ) cout << myname << "Finished loop over samples." << endl;
   return m_peaks.size();
 }
 

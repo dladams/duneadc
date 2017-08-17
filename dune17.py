@@ -416,13 +416,13 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0183_0816")
   sams2.append(pre + "D0184_0816")
   sams2.append(pre + "D0185_0816")
-  sams2.append(pre + "D0186_0817")  # 8/17
-  sams2.append(pre + "D0189_0817")  # 8/17
-  sams2.append(pre + "D0190_0817T1001")  # 8/17
-  sams2.append(pre + "D0190_0817T1023")  # 8/17
-  sams2.append(pre + "D0190_0817T1049")  # 8/17
-  sams2.append(pre + "D0190_0817T1113")  # 8/17
-  sams2.append(pre + "D0192_0817")  # 8/17
+  sams2.append(pre + "D0186_0817")
+  sams2.append(pre + "D0189_0817")
+  sams2.append(pre + "D0190_0817T1001")
+  sams2.append(pre + "D0190_0817T1023")
+  sams2.append(pre + "D0190_0817T1049")
+  sams2.append(pre + "D0190_0817T1113")
+  sams2.append(pre + "D0192_0817")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -591,29 +591,42 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0159_0815_try1")
   sams.append(pre + "D0160_0815_try1")
   sams.append(pre + "D0161_0815_try1")
-  sams.append(pre + "D0162_0816_try1")  # 8/17
-  sams.append(pre + "D0163_0816_try1")  # 8/17
-  sams.append(pre + "D0164_0816_try1")  # 8/17
-  sams.append(pre + "D0165_0816_try1")  # 8/17
-  sams.append(pre + "D0166_0816_try1")  # 8/17
-  sams.append(pre + "D0167_0816_try1")  # 8/17
-  sams.append(pre + "D0168_0816_try1")  # 8/17
-  sams.append(pre + "D0169_0816_try1")  # 8/17
-  sams.append(pre + "D0170_0816_try1")  # 8/17
-  sams.append(pre + "D0171_0816_try1")  # 8/17
-  sams.append(pre + "D0173_0816_try1")  # 8/17
-  sams.append(pre + "D0174_0816_try1")  # 8/17
-  badsams.append(pre + "D0175_0816_try1")  # Processing hangs in chan 13
-  sams.append(pre + "D0176_0816_try1")  # 8/17
-  sams.append(pre + "D0177_0816T1447_try1")  # 8/17
-  sams.append(pre + "D0177_0816T1506_try1")  # 8/17
-  sams.append(pre + "D0178_0816_try1")  # 8/17
-  sams.append(pre + "D0179_0816_try1")  # 8/17
-  sams.append(pre + "D0180_0816_try1")  # 8/17
-  sams.append(pre + "D0182_0816_try1")  # 8/17
-  sams.append(pre + "D0183_0816_try1")  # 8/17
-  sams.append(pre + "D0184_0816_try1")  # 8/17
-  sams.append(pre + "D0185_0816_try1")  # 8/17
+  sams.append(pre + "D0162_0816_try1")
+  sams.append(pre + "D0163_0816_try1")
+  sams.append(pre + "D0164_0816_try1")
+  sams.append(pre + "D0165_0816_try1")
+  sams.append(pre + "D0166_0816_try1")
+  sams.append(pre + "D0167_0816_try1")
+  sams.append(pre + "D0168_0816_try1")
+  sams.append(pre + "D0169_0816_try1")
+  sams.append(pre + "D0170_0816_try1")
+  sams.append(pre + "D0171_0816_try1")
+  sams.append(pre + "D0173_0816_try1")
+  sams.append(pre + "D0174_0816_try1")
+  badsams.append(pre + "D0175_0816_try1")  # Bad waveforms. AdcSampleFinder hangs (16min?) in chan 13
+  sams.append(pre + "D0176_0816_try1")
+  sams.append(pre + "D0177_0816T1447_try1")
+  sams.append(pre + "D0177_0816T1506_try1")
+  sams.append(pre + "D0178_0816_try1")
+  sams.append(pre + "D0179_0816_try1")
+  sams.append(pre + "D0180_0816_try1")
+  sams.append(pre + "D0182_0816_try1")
+  sams.append(pre + "D0183_0816_try1")
+  sams.append(pre + "D0184_0816_try1")
+  sams.append(pre + "D0185_0816_try1")
+  sams.append(pre + "D0186_0817_try1")  # 8/17
+  sams.append(pre + "D0188_0817_try1")  # 8/17
+  sams.append(pre + "D0189_0817T0919_try1")  # 8/17
+  sams.append(pre + "D0189_0817T1004_try1")  # 8/17
+  sams.append(pre + "D0190_0817T1001_try1")  # 8/17
+  sams.append(pre + "D0190_0817T1023_try1")  # 8/17
+  sams.append(pre + "D0190_0817T1023_try2")  # 8/17
+  sams.append(pre + "D0190_0817T1049_try1")  # 8/17
+  sams.append(pre + "D0190_0817T1113_try1")  # 8/17
+  sams.append(pre + "D0190_0817T1113_try2")  # 8/17
+  sams.append(pre + "D0192_0817_try1")  # 8/17
+  sams.append(pre + "D0195_0817_try1")  # 8/17
+  sams.append(pre + "D0196_0817_try1")  # 8/17
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

@@ -400,22 +400,29 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "D0160_0815T1635")  # Waveforms absent.
   sams2.append(pre + "D0160_0815T1646")
   sams2.append(pre + "D0161_0815")
-  sams2.append(pre + "D0162_0816")  # 8/17
-  sams2.append(pre + "D0163_0816")  # 8/17
-  sams2.append(pre + "D0164_0816")  # 8/17
-  sams2.append(pre + "D0165_0816")  # 8/17
-  sams2.append(pre + "D0167_0816")  # 8/17
-  sams2.append(pre + "D0168_0816")  # 8/17
-  sams2.append(pre + "D0170_0816")  # 8/17
-  sams2.append(pre + "D0171_0816")  # 8/17
-  sams2.append(pre + "D0174_0816")  # 8/17
-  sams2.append(pre + "D0176_0816")  # 8/17
-  sams2.append(pre + "D0179_0816")  # 8/17
-  sams2.append(pre + "D0180_0816")  # 8/17
-  sams2.append(pre + "D0182_0816")  # 8/17
-  sams2.append(pre + "D0183_0816")  # 8/17
-  sams2.append(pre + "D0184_0816")  # 8/17
-  sams2.append(pre + "D0185_0816")  # 8/17
+  sams2.append(pre + "D0162_0816")
+  sams2.append(pre + "D0163_0816")
+  sams2.append(pre + "D0164_0816")
+  sams2.append(pre + "D0165_0816")
+  sams2.append(pre + "D0167_0816")
+  sams2.append(pre + "D0168_0816")
+  sams2.append(pre + "D0170_0816")
+  sams2.append(pre + "D0171_0816")
+  sams2.append(pre + "D0174_0816")
+  sams2.append(pre + "D0176_0816")
+  sams2.append(pre + "D0179_0816")
+  sams2.append(pre + "D0180_0816")
+  sams2.append(pre + "D0182_0816")
+  sams2.append(pre + "D0183_0816")
+  sams2.append(pre + "D0184_0816")
+  sams2.append(pre + "D0185_0816")
+  sams2.append(pre + "D0186_0817")  # 8/17
+  sams2.append(pre + "D0189_0817")  # 8/17
+  sams2.append(pre + "D0190_0817T1001")  # 8/17
+  sams2.append(pre + "D0190_0817T1023")  # 8/17
+  sams2.append(pre + "D0190_0817T1049")  # 8/17
+  sams2.append(pre + "D0190_0817T1134")  # 8/17
+  sams2.append(pre + "D0192_0817")  # 8/17
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams

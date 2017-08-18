@@ -473,22 +473,24 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     return nullptr;
   }
   string ssam = asample;
+  string::size_type kpos = ssam.find(":");
+  string fsample = ssam.substr(0,kpos);
   AdcFembTreeSampleReader* prdrFemb = nullptr;
   string fname;
   vector<string> dirs;
-  string::size_type ipos = asample.find("_");
-  string dsname = asample.substr(0, ipos);
+  string::size_type ipos = fsample.find("_");
+  string dsname = fsample.substr(0, ipos);
   vector<string> sels;
   sels.push_back("adcTestData");
   sels.push_back("functype3");
   sels.push_back("sampleRate2000000");
   bool isDune17 = false;
-  if ( asample.substr(0,14) == "DUNE17-test2" ) {
+  if ( fsample.substr(0,14) == "DUNE17-test2" ) {
     string basename = "adcTestData_20170613T172751_chip26_adcClock1_adcOffset-1_sampleRate2000000_functype3_freq734.000_offset0.700_amplitude1.000_calib.root";
     fname = AdcSampleFinder::defaultTopdir() + "/justin2/" + basename;
     ipos = 14;
     dsname += "-test2";
-  } else if ( asample.substr(0,14) == "DUNE17-test3" ) {
+  } else if ( fsample.substr(0,14) == "DUNE17-test3" ) {
     string basename = "adcTestData_20170622T183049_chip0_functype3_freq4.000_offset0.700_amplitude1.000.root";
     fname = AdcSampleFinder::defaultTopdir() + "/justin3/" + basename;
     ipos = 14;
@@ -503,20 +505,20 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_cold/");
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_hothdaq4_cold/");
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_hothdaq5_cold/");
-    if ( asample.substr(ipos, 5) != "_chip" ) {
+    if ( fsample.substr(ipos, 5) != "_chip" ) {
       cout << myname << "Chip ID not found." << endl;
       return nullptr;
     }
-    string::size_type jpos = asample.find("_", ipos+5);
+    string::size_type jpos = fsample.find("_", ipos+5);
     ++ipos;
     string::size_type len = jpos == string::npos ? string::npos : jpos-ipos;
-    string sfieldChip = asample.substr(ipos, len);
+    string sfieldChip = fsample.substr(ipos, len);
     sels.push_back(sfieldChip + "_");
     isDune17 = true;
     // If sample name has suffix _XXX, then XXX must be in file name.
     // If sample name has suffix _XXX_YYY, then XXX and YYY must be in file name.
     if ( jpos != string::npos ) {
-      string xsel = asample.substr(jpos+1);
+      string xsel = fsample.substr(jpos+1);
       jpos = xsel.find("_");
       string xsel2;
       if ( jpos != string::npos ) {
@@ -528,7 +530,7 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     }
   } else if ( dsname == "DUNE17-longramp" ) {
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17/longramp/");
-    if ( asample.substr(ipos, 5) != "_chip" ) {
+    if ( fsample.substr(ipos, 5) != "_chip" ) {
       cout << myname << "Chip ID not found." << endl;
       return nullptr;
     }

@@ -32,10 +32,31 @@ AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
   // Find DS name.
   string::size_type ipos = ssam.find("_");
   m_dsname = ssam.substr(0, ipos);
-  // Find chip if this is batch 2.
-  bool getChipFromTree;
-  m_chip = 0;
-  if ( ipos != string::npos ) {
+  // Find chip ID.
+  string ssamrem = ssam;
+  Index mappedChip = 0;
+  bool getChipFromTree = true;
+  string::size_type jpos = ssam.find(":");
+  bool chipIsMapped = jpos != string::npos;  // Chip mapped to ID diffeerent from that in file name.
+  if ( chipIsMapped ) {
+    ssamrem = ssam.substr(0,jpos);
+    string schprem = ssam.substr(jpos+1);
+    if ( schprem.substr(0,4) != "chip" ) {
+      cout << myname << "ERROR: " << "Invalid chip map syntax for sample " << ssam << endl;
+      return;
+    }
+    string schp = schprem.substr(4);
+    bool isD = schp[0] = 'D';
+    if ( isD ) schp = schp.substr(1);
+    while ( schp[0] == '0' ) schp = schp.substr(1);
+    m_chip = 0;
+    if ( schp.size() ) {
+      istringstream sschp(schp);
+      sschp >> m_chip;
+    }
+    if ( isD ) m_chip += 10000;
+    getChipFromTree = false;
+  } else if ( ipos != string::npos ) {
     string srem = ssam.substr(ipos+1);
     if ( srem.substr(0,5) == "chipD" ) {
       getChipFromTree = false;

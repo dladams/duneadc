@@ -419,17 +419,17 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0186_0817")
   sams2.append(pre + "D0189_0817")
   sams2.append(pre + "D0190_0817T1001")
-  sams2.append(pre + "D0190_0817T1023")
-  sams2.append(pre + "D0190_0817T1049")
-  sams2.append(pre + "D0190_0817T1113")
+  sams2.append(pre + "D0190_0817T1023:chipD0191")
+  sams2.append(pre + "D0190_0817T1049:chipD0193")
+  sams2.append(pre + "D0190_0817T1113:chipD0194")
   sams2.append(pre + "D0192_0817")
-  sams2.append(pre + "D0196_0817")  # 8/17
-  sams2.append(pre + "D0197_0817")  # 8/17
-  sams2.append(pre + "D0198_0817")  # 8/17
-  sams2.append(pre + "D0199_0817")  # 8/17
-  sams2.append(pre + "D0200_0817")  # 8/17
-  sams2.append(pre + "D0201_0817")  # 8/17
-  sams2.append(pre + "D0202_0817")  # 8/17
+  sams2.append(pre + "D0196_0817")
+  sams2.append(pre + "D0197_0817")
+  sams2.append(pre + "D0198_0817")
+  sams2.append(pre + "D0199_0817")
+  sams2.append(pre + "D0200_0817")
+  sams2.append(pre + "D0201_0817")
+  sams2.append(pre + "D0202_0817")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -626,11 +626,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0189_0817T0919_try1")  # 8/17
   sams.append(pre + "D0189_0817T1004_try1")  # 8/17
   sams.append(pre + "D0190_0817T1001_try1")  # 8/17
-  sams.append(pre + "D0190_0817T1023_try1")  # 8/17
-  sams.append(pre + "D0190_0817T1023_try2")  # 8/17
-  sams.append(pre + "D0190_0817T1049_try1")  # 8/17
-  sams.append(pre + "D0190_0817T1113_try1")  # 8/17
-  sams.append(pre + "D0190_0817T1113_try2")  # 8/17
+  sams.append(pre + "D0190_0817T1023_try1:chipD0191")  # 8/17
+  sams.append(pre + "D0190_0817T1023_try2:chipD0191")  # 8/17
+  sams.append(pre + "D0190_0817T1049_try1:chipD0193")  # 8/17
+  sams.append(pre + "D0190_0817T1113_try1:chipD0194")  # 8/17
+  sams.append(pre + "D0190_0817T1113_try2:chipD0194")  # 8/17
   sams.append(pre + "D0192_0817_try1")  # 8/17
   sams.append(pre + "D0195_0817_try1")  # 8/17
   sams.append(pre + "D0196_0817_try1")  # 8/17

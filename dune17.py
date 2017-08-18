@@ -430,6 +430,27 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0200_0817")
   sams2.append(pre + "D0201_0817")
   sams2.append(pre + "D0202_0817")
+  sams2.append(pre + "D0203_0817")  # 8/18
+  sams2.append(pre + "D0204_0817")  # 8/18
+  sams2.append(pre + "D0205_0817")  # 8/18
+  sams2.append(pre + "D0206_0817")  # 8/18
+  sams2.append(pre + "D0208_0817")  # 8/18
+  sams2.append(pre + "D0209_0817T1525")  # 8/18
+  sams2.append(pre + "D0209_0817T1542")  # 8/18
+  sams2.append(pre + "D0210_0817")  # 8/18
+  sams2.append(pre + "D0211_0817")  # 8/18
+  sams2.append(pre + "D0212_0817")  # 8/18
+  sams2.append(pre + "D0213_0817")  # 8/18
+  sams2.append(pre + "D0214_0817")  # 8/18
+  sams2.append(pre + "D0215_0817")  # 8/18
+  sams2.append(pre + "D0216_0817T0924")  # 8/18
+  sams2.append(pre + "D0216_0817T0945")  # 8/18
+  sams2.append(pre + "D0217_0817")  # 8/18
+  sams2.append(pre + "D0218_0817")  # 8/18
+  sams2.append(pre + "D0220_0817")  # 8/18
+  sams2.append(pre + "D0221_0817")  # 8/18
+  sams2.append(pre + "D0222_0817")  # 8/18
+  sams2.append(pre + "D0225_0817")  # 8/18
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams

@@ -8,7 +8,7 @@
   gROOT->ProcessLine(".L histNSigma.cxx+");
   gROOT->ProcessLine(".L drawNSigma.cxx+");
   gROOT->ProcessLine(".L ErrorCount.cxx+");
-  gROOT->ProcessLine(".L FileDirectory.cxx+");
+  gROOT->ProcessLine(".L dunesupport/FileDirectory.cxx+");
   gROOT->ProcessLine(".L AdcChannelId.cxx+");
   gROOT->ProcessLine(".L AdcSampleReader.cxx+");
   gROOT->ProcessLine(".L AdcBorderFinder.cxx+");

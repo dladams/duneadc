@@ -8,7 +8,7 @@
 #include "AdcBinExtremaFinder.h"
 #include "RollbackFinder.h"
 #include "Sawtooth.h"
-#include "FileDirectory.h"
+#include "dunesupport/FileDirectory.h"
 #include "TSystem.h"
 #include "TDatime.h"
 #include <iostream>

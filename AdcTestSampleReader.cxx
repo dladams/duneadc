@@ -8,7 +8,7 @@
 #include <sstream>
 #include "TSystem.h"
 #include "TH1F.h"
-#include "FileDirectory.h"
+#include "dunesupport/FileDirectory.h"
 
 using std::string;
 using std::cout;

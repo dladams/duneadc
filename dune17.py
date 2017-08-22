@@ -4,7 +4,11 @@
 # July 2017
 
 # List of available DUNE17 datasets.
-# group: 0 = all, 1=bad clock(before 7/19), 2=good clock
+# group: 0 = all
+#        1 = bad ADC clock(before 7/19)
+#        2 = good ADC clock
+#        3 = good ADC clock horizontal test
+#        4 = good ADC clock vertical test
 #   isBad true returns bad, nwf and roll
 def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=False, skipBad=True):
   pre = "DUNE17-cold_chip"
@@ -451,12 +455,22 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0221_0818")
   sams2.append(pre + "D0222_0818")
   sams2.append(pre + "D0225_0818")
-  sams2.append(pre + "D0232_0818")  # 8/19
-  sams2.append(pre + "D0234_0818")  # 8/19
-  sams2.append(pre + "D0235_0818")  # 8/19
-  samsh.append(pre + "D0236_0818")  # 8/19
-  sams2.append(pre + "D0239_0818")  # 8/19
-  sams2.append(pre + "D0241_0818")  # 8/19
+  sams2.append(pre + "D0232_0818")
+  sams2.append(pre + "D0234_0818")
+  sams2.append(pre + "D0235_0818")
+  samsh.append(pre + "D0236_0818")
+  sams2.append(pre + "D0239_0818")
+  sams2.append(pre + "D0241_0818")
+  sams2.append(pre + "D0243_0821")  # 8/22
+  sams2.append(pre + "D0244_0821")  # 8/22
+  sams2.append(pre + "D0245_0821")  # 8/22
+  sams2.append(pre + "D0246_0821T1703")  # 8/22
+  sams2.append(pre + "D0246_0821T1850")  # 8/22
+  sams2.append(pre + "D0247_0821")  # 8/22
+  sams2.append(pre + "D0248_0821")  # 8/22
+  sams2.append(pre + "D0252_0822")  # 8/22
+  sams2.append(pre + "D0157_0821:chipD0257")  # 8/22
+  sams2.append(pre + "D0257_0821")  # 8/22
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams
@@ -465,6 +479,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
     elif group == 1: outsams = sams1
     elif group == 2: outsams = sams2 + samsh
     elif group == 3: outsams = samsh
+    elif group == 4: outsams = sams2
     else:            outsams = []
   if skipSel or skipBad:
     skipChips = []
@@ -654,24 +669,24 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0189_0817T1004_try1")
   sams.append(pre + "D0190_0817T1001_try1")
   badsams.append(pre + "D0190_0817T1023_try1:chipD0191")
-  sams.append(pre + "D0190_0817T1023_try2:chipD0191")  # 8/17
-  sams.append(pre + "D0190_0817T1049_try1:chipD0193")  # 8/17
-  sams.append(pre + "D0190_0817T1113_try1:chipD0194")  # 8/17
-  sams.append(pre + "D0190_0817T1113_try2:chipD0194")  # 8/17
+  sams.append(pre + "D0190_0817T1023_try2:chipD0191")
+  sams.append(pre + "D0190_0817T1049_try1:chipD0193")
+  sams.append(pre + "D0190_0817T1113_try1:chipD0194")
+  sams.append(pre + "D0190_0817T1113_try2:chipD0194")
   sams.append(pre + "D0192_0817_try1")
   sams.append(pre + "D0195_0817_try1")
   sams.append(pre + "D0196_0817_try1")
-  sams.append(pre + "D0197_0817_try1")  # 8/19
-  sams.append(pre + "D0198_0817_try1")  # 8/19
-  sams.append(pre + "D0199_0817_try1")  # 8/19
-  sams.append(pre + "D0200_0817_try1")  # 8/19
-  sams.append(pre + "D0201_0817_try1")  # 8/19
-  sams.append(pre + "D0202_0817_try1")  # 8/19
-  sams.append(pre + "D0203_0817_try1")  # 8/19
-  sams.append(pre + "D0204_0817_try1")  # 8/19
-  sams.append(pre + "D0205_0817_try1")  # 8/19
-  sams.append(pre + "D0206_0817_try1")  # 8/19
-  sams.append(pre + "D0207_0817_try1")  # 8/19
+  sams.append(pre + "D0197_0817_try1")
+  sams.append(pre + "D0198_0817_try1")
+  sams.append(pre + "D0199_0817_try1")
+  sams.append(pre + "D0200_0817_try1")
+  sams.append(pre + "D0201_0817_try1")
+  sams.append(pre + "D0202_0817_try1")
+  sams.append(pre + "D0203_0817_try1")
+  sams.append(pre + "D0204_0817_try1")
+  sams.append(pre + "D0205_0817_try1")
+  sams.append(pre + "D0206_0817_try1")
+  sams.append(pre + "D0207_0817_try1")
   sams.append(pre + "D0208_0817_try1")  # 8/19
   sams.append(pre + "D0209_0817T1525_try1")  # 8/19
   sams.append(pre + "D0209_0817T1542_try1")  # 8/19

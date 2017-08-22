@@ -31,6 +31,7 @@ def testDataset(dsname, writeDsFile, showChips):
     grpsams.append(dune17cSamples(group=1))
     grpsams.append(dune17cSamples(group=2))
     grpsams.append(dune17cSamples(group=3))
+    grpsams.append(dune17cSamples(group=4))
     remsams  = dune17cSamples(skipSel=True)
     badsams  = dune17cSamples(isBad =True)
     nwfsams  = dune17cSamples(isNwf =True)
@@ -123,18 +124,25 @@ def testDataset(dsname, writeDsFile, showChips):
       outf = open(outfName, "w")
       for ds in grpsams[1]:
         if writeDsfile: outf.write(ds + "\n")
-      print "Good sample list written to " + outfName
+      print "Old sample list written to " + outfName
       # New samples
       outfName = dsname + "-new.txt"
       outf = open(outfName, "w")
       for ds in grpsams[2]:
         if writeDsfile: outf.write(ds + "\n")
-      # Horizontal samples
+      print "New sample list written to " + outfName
+      # Horizontal (new) samples
       outfName = dsname + "-horizontal.txt"
       outf = open(outfName, "w")
       for ds in grpsams[3]:
         if writeDsfile: outf.write(ds + "\n")
-      print "Good sample list written to " + outfName
+      print "Horizontal sample list written to " + outfName
+      # New vertical samples.
+      outfName = dsname + "-vertical.txt"
+      outf = open(outfName, "w")
+      for ds in grpsams[4]:
+        if writeDsfile: outf.write(ds + "\n")
+      print "Vertical sample list written to " + outfName
 
 showChips = False
 print

@@ -28,6 +28,17 @@ string sentrycount(TH1* ph) {
   return sslab.str();
 }
 
+void drawQBounds(TH1* ph) {
+  static vector<double> qbounds = {0.70, 0.85, 0.95};
+  double y1 = ph->GetMinimum();
+  double y2 = ph->GetMaximum();
+  for ( double q : qbounds ) {
+    TLine* pl1 = new TLine(q, y1, q, y2);
+    pl1->SetLineStyle(2);
+    pl1->Draw();
+  }
+}
+
 // datasetString - colon-separated list of datasets
 //                 Sample names  for dataset DST are read from DST.txt and perf data from perf_DST.root
 // dslist - if not blank and dslist.txt is not empty, only the samples in that file are used
@@ -153,7 +164,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       if ( keep ) {
         if ( datasetIndex.find(ssam) != datasetIndex.end() ) {
            cout << myname << "ERROR: Sample " << ssam << " is in two datasets: "
-                << datasetIndex[ssam] << " and " << dataset << endl;
+                << datasets[datasetIndex[ssam]] << " and " << dataset << endl;
            return nullptr;
         }
         datasetIndex[ssam] = idst;
@@ -166,7 +177,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
         if ( dbg ) cout << myname << "Dropping " << ssam << endl;
       }
     }
-    cout << myname << "Dataset " << dataset << " keep/read: " << datasetSamples[idst].size() << "/" << readcount << endl;
+    cout << myname << "Dataset " << dataset << " keep/read: "
+         << datasetSamples[idst].size() << "/" << readcount << endl;
     readcountTot += readcount;
   }
   cout << myname << "TOTAL keep/read: " << ssams.size() << "/" << readcountTot << endl;
@@ -389,7 +401,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   string htitl = dslist + " ADC chip quality (" + sentrycount(ph0) + " chips)";
   ph0->SetTitle(htitl.c_str());
   dyleg = 0.02 + 0.04*nhst;
-  double xleg1 = 0.40;
+  double xleg1 = 0.33;
   double xleg2 = xleg1 + 0.35;
   double yleg2 = 0.88;
   double yleg1 = yleg2 - dyleg;
@@ -413,7 +425,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   ph0->SetMinimum(0.0);
   if ( doymax ) ph0->SetMaximum(ymax);
   string fnameQuality = "chipQuality_" + fnamedsts + ".png";
-  // Draw quality overlaying chip lists.
+  // Assign line colors, styles and widths.
   SampleIndexMap cols;
   SampleIndexMap stys;
   SampleIndexMap wids;
@@ -429,6 +441,12 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   cols["PDTStry"] = kMagenta+2;
   stys["PDTStry"] = 1;
   wids["PDTStry"] = 1;
+  cols["PDTSV"] = kGreen + 3;
+  stys["PDTSV"] = 3;
+  wids["PDTSV"] = 3;
+  cols["PDTSH"] = kOrange + 9;
+  stys["PDTSH"] = 2;
+  wids["PDTSH"] = 2;
   cols["CETS"] = kGreen + 3;
   stys["CETS"] = 2;
   wids["CETS"] = 2;
@@ -442,11 +460,13 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       wids[dst] = 1;
     }
   }
+  // Draw quality overlaying chip lists.
   if ( true ) {
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
-    hists[0]->Draw();
     hists[0]->SetMinimum(0.0);
+    hists[0]->Draw();
+    drawQBounds(hists[0]);
     TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
     pleg->SetBorderSize(0);
     pleg->SetFillStyle(0);
@@ -469,7 +489,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     // Change name for combined plot if we also have multi-list plot.
     fnameQuality = "chipQualityCombined_" + fnamedsts + ".png";
   }
-  // Draw combined quality overlaying chip lists.
+  // Draw combined quality without overlaying chip lists.
   pcan = new TCanvas;
   pcan->SetRightMargin(0.03);
   TH1* ph = hists[0];

@@ -211,7 +211,8 @@ DUNE17dla-cold_chipD0253_0822_try1
 DUNE17dla-cold_chipD0254_0822_try1
 DUNE17dla-cold_chipD0254_0822_try1
 DUNE17dla-cold_chipD0255_0822_try1
-DUNE17dla-cold_chipD0156_0821_try1:chipD0257
+DUNE17dla-cold_chipD0256_0822_try1
+DUNE17dla-cold_chipD0157_0821_try1:chipD0257
 DUNE17dla-cold_chipD0257_0821_try1
 DUNE17dla-cold_chipD0258_0822_try1
 DUNE17dla-cold_chipD0259_0822_try1

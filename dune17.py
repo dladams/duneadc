@@ -736,20 +736,30 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D0240_0818_try1")  # Bad waveforms
   sams.append(pre + "D0241_0818_try1")
   sams.append(pre + "D0242_0818_try1")
-  sams.append(pre + "D0243_0821_try1")  # 8/22
-  sams.append(pre + "D0244_0821_try1")  # 8/22
-  sams.append(pre + "D0243_0821_try1")  # 8/22
-  sams.append(pre + "D0244_0821_try1")  # 8/22
-  sams.append(pre + "D0245_0821_try1")  # 8/22
-  sams.append(pre + "D0246_0821T1703_try1")  # 8/22
-  sams.append(pre + "D0246_0821T1850_try1")  # 8/22
-  sams.append(pre + "D0147_0821_try1:chipD0247")  # 8/22
-  sams.append(pre + "D0247_0821_try1")  # 8/22
-  sams.append(pre + "D0248_0821_try1")  # 8/22
-  sams.append(pre + "D0250_0821_try1")  # 8/22
-  sams.append(pre + "D0251_0822_try1")  # 8/22
-  sams.append(pre + "D0252_0822_try1")  # 8/22
-  sams.append(pre + "D0257_0821_try1")  # 8/22
+  sams.append(pre + "D0243_0821_try1")
+  sams.append(pre + "D0244_0821_try1")
+  sams.append(pre + "D0245_0821_try1")
+  sams.append(pre + "D0246_0821T1703_try1")
+  sams.append(pre + "D0246_0821T1850_try1")
+  sams.append(pre + "D0247_0821_try1")
+  sams.append(pre + "D0248_0821_try1")
+  sams.append(pre + "D0249_0822_try1")  # 8/23
+  sams.append(pre + "D0250_0822_try1")  # 8/23
+  sams.append(pre + "D0251_0822_try1")
+  sams.append(pre + "D0252_0822_try1")
+  sams.append(pre + "D0253_0822_try1")  # 8/23
+  sams.append(pre + "D0254_0822_try1")  # 8/23
+  sams.append(pre + "D0254_0822_try1")  # 8/23
+  sams.append(pre + "D0255_0822_try1")  # 8/23
+  sams.append(pre + "D0156_0821_try1:chipD0257")  # 8/23
+  sams.append(pre + "D0257_0821_try1")
+  sams.append(pre + "D0258_0822_try1")  # 8/23
+  sams.append(pre + "D0259_0822_try1")  # 8/23
+  sams.append(pre + "D0260_0822T1325_try1")  # 8/23
+  sams.append(pre + "D0260_0822T1422_try1")  # 8/23
+  sams.append(pre + "D0262_0822_try1")  # 8/23
+  sams.append(pre + "D0267_0822_try1")  # 8/23
+  sams.append(pre + "D0268_0822_try1")  # 8/23
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

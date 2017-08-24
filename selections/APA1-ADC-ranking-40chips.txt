@@ -1,0 +1,61 @@
+ADCs:
+
+Rank Chip       Q N80  Dataset
+   1  343   0.987  16    PDTS2   Good - 1 board
+   2  193   0.973  16    PDTS2
+   3  144   0.972  16     CETS
+   4  222   0.969  16    PDTS2
+   5  123   0.955  16     CETS
+   6  172   0.953  16     CETS
+   7    5   0.945  16     CETS
+   8  312   0.941  16     CETS
+
+   9  134   0.939  16     CETS   Fair - 4 boards
+  10  341   0.936  16    PDTS2
+  11  305   0.923  16     CETS
+  12  116   0.917  16     CETS
+  13  332   0.907  16    PDTS2
+  14  178   0.894  16     CETS
+  15  308   0.890  16     CETS
+  16  160   0.872  16     CETS
+  17  139   0.868  16    PDTS2
+  18  338   0.866  16    PDTS2
+  19  313   0.863  16     CETS
+  20  230   0.861  16    PDTS2
+  21  389   0.855  16    PDTS2
+  22  279   0.843  16     CETS
+  23  137   0.820  16    PDTS2
+  24  361   0.818  16    PDTS2
+  25  215   0.814  16     CETS
+  26   19   0.813  16    PDTS2
+  27  342   0.806  16    PDTS2
+  28  177   0.801  16     CETS
+  29  333   0.801  16     CETS
+  30  211   0.799  16     CETS
+  31  185   0.781  16     CETS
+  32  175   0.718  15     CETS
+  34  227   0.694  16    PDTS2
+  35  188   0.692  15     CETS
+  36  200   0.691  15    PDTS2
+  37  153   0.652  16     CETS
+  38  352   0.645  15    PDTS2
+  40  131   0.588  16     CETS
+  41  179   0.558  16     CETS
+  42  336   0.549  15    PDTS2
+
+backups:
+  43  306   0.521  16     CETS
+  44  311   0.516  14     CETS
+
+
+Not found - remove from ranking:
+  33  109   0.695  15     CETS   missing
+  39  378   0.636  15     CETS   missing
+
+FEs:
+
+Select from the "warm passed" and "cold tested" trays. Do not use:
+
+BAD: 133, 167, 256
+
+Damaged: 49, 64

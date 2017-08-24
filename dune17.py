@@ -762,19 +762,18 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0246_0821T1850_try1")
   sams.append(pre + "D0247_0821_try1")
   sams.append(pre + "D0248_0821_try1")
-  sams.append(pre + "D0249_0822_try1")  # 8/23
-  sams.append(pre + "D0250_0822_try1")  # 8/23
+  sams.append(pre + "D0249_0822_try1")
+  sams.append(pre + "D0250_0822_try1")
   sams.append(pre + "D0251_0822_try1")
   sams.append(pre + "D0252_0822_try1")
-  sams.append(pre + "D0253_0822_try1")  # 8/23
-  sams.append(pre + "D0254_0822_try1")  # 8/23
-  sams.append(pre + "D0254_0822_try1")  # 8/23
-  sams.append(pre + "D0255_0822_try1")  # 8/23
-  sams.append(pre + "D0256_0822_try1")  # 8/23
-  sams.append(pre + "D0157_0821_try1:chipD0257")  # 8/23
+  sams.append(pre + "D0253_0822_try1")
+  sams.append(pre + "D0254_0822_try1")
+  sams.append(pre + "D0255_0822_try1")
+  sams.append(pre + "D0256_0822_try1")
+  sams.append(pre + "D0157_0821_try1:chipD0257")
   sams.append(pre + "D0257_0821_try1")
-  sams.append(pre + "D0258_0822_try1")  # 8/23
-  sams.append(pre + "D0259_0822_try1")  # 8/23
+  sams.append(pre + "D0258_0822_try1")
+  sams.append(pre + "D0259_0822_try1")
   sams.append(pre + "D0260_0822T1325_try1")  # 8/23
   sams.append(pre + "D0260_0822T1422_try1")  # 8/23
   sams.append(pre + "D0262_0822_try1")  # 8/23
@@ -1165,13 +1164,20 @@ def selectedChips(sel=0):
   sel2 = [316, 161, 214, 190, 225, 295, 304, 275, 201, 221, 273, 292, 176, 320, 228, 264, 357, 276, 278, 331, 189, 212, 266, 162, 147, 293, 263, 240, 277, 298, 351, 238, 257, 329, 269, 285, 261, 267, 150, 231, 325, 187, 289, 327, 163, 184, 256, 151, 282, 191, 258, 170, 317, 299, 394, 302, 148, 158, 324, 140, 204, 146, 173, 376, 274, 255, 197, 247, 287, 253, 288, 165, 301, 330, 182, 245, 217, 265, 248, 168]
   # Selection 31jul2017 from Matt
   sel3 = [343, 193, 144, 222, 123, 172, 5, 312, 134, 341, 305, 116, 332, 178, 308, 160, 139, 338, 313, 230, 389, 279, 137, 361, 215, 19, 342, 177, 333, 211, 185, 175, 227, 188, 200, 153, 352, 131, 179, 336]
-
+  # Selection replacements 23aug2017 from Matt
+  # 204->D0007
+  # 376->D0018
+  # 312->D0029
+  # 361->D0009
+  # 153->D0019
+  sel4 = [10007, 10018, 10029, 10009, 10019]
   chips = []
   if sel == 0:
-    chips = sel1 + sel2 + sel3
+    chips = sel1 + sel2 + sel3 + sel4
   elif sel == 1: chips = sel1
   elif sel == 2: chips = sel2
   elif sel == 3: chips = sel3
+  elif sel == 4: chips = sel4
   chips.sort()
   return chips
 
@@ -1195,5 +1201,6 @@ def badChips():
   chips.remove(284)   # This chip was tested on CETS on 7/31
   chips += [10003]  # Elizabeth reports this chip has bent pin and will never be used 8/1/2017
   chips += [378]    # Elizabeth reports this chip is damaged 8/2/2017
+  chips += [10088, 10057, 10214, 10117, 10044, 10183]    # Matt reports these are damaged 8/24/2017
   chips.sort()
   return chips

@@ -1,0 +1,111 @@
+ADCs
+
+Rank Chip       Q N80  Dataset
+   1  316   0.974  16     CETS   Good - 1 board
+   2  161   0.973  16     CETS
+   3  214   0.962  16    PDTS1
+   4  190   0.955  16    PDTS1
+   5  225   0.953  16    PDTS1
+   6  295   0.953  16     CETS
+   8  304   0.950  16     CETS
+   9  275   0.949  16     CETS
+
+  10  201   0.946  16    PDTS1   Fair - 8 boards
+  11  221   0.946  16    PDTS2
+  12  273   0.943  16     CETS
+  13  292   0.941  16     CETS
+  14  176   0.939  16     CETS
+  15  320   0.939  16     CETS
+  16  228   0.936  16    PDTS2
+  17  264   0.935  16     CETS
+  18  357   0.932  16    PDTS2
+  19  276   0.930  16     CETS
+  20  278   0.929  16     CETS
+  21  331   0.924  16    PDTS2
+  22  189   0.923  16     CETS
+  23  212   0.922  16    PDTS1
+  24  266   0.914  16     CETS
+  25  162   0.914  16     CETS
+  26  147   0.914  16    PDTS2
+  27  293   0.914  16     CETS
+  28  263   0.908  16     CETS
+  29  240   0.899  16    PDTS2
+  30  277   0.898  16     CETS
+  32  298   0.894  16     CETS
+  33  351   0.888  16    PDTS2
+  34  238   0.877  16    PDTS2
+  36  257   0.872  16     CETS
+  37  329   0.865  16     CETS
+  38  269   0.863  16     CETS
+  39  285   0.855  16     CETS
+  40  261   0.834  16     CETS
+  41  267   0.826  16     CETS
+  43  150   0.814  16    PDTS2
+  44  231   0.807  16    PDTS2
+  45  325   0.800  16     CETS
+  46  187   0.793  16     CETS
+  47  289   0.793  16     CETS
+  48  327   0.785  16     CETS
+  51  163   0.777  16     CETS
+  52  184   0.777  15     CETS
+  53  256   0.776  16     CETS
+  54  151   0.762  16    PDTS2
+  55  282   0.756  16     CETS
+  56  191   0.752  15    PDTS1
+  57  258   0.746  16     CETS
+  59  170   0.726  16     CETS
+  60  317   0.723  16     CETS
+  61  299   0.714  15     CETS
+  63  394   0.691  16    PDTS1
+  64  302   0.683  15     CETS
+  65  148   0.670  16    PDTS2
+  66  158   0.663  16    PDTS2
+  67  324   0.641  15     CETS
+  68  140   0.638  15    PDTS2
+  69  204   0.630  15    PDTS1
+  70  146   0.628  15    PDTS2
+  71  173   0.627  16     CETS
+  72  376   0.624  15    PDTS1
+  73  274   0.609  15     CETS
+  74  255   0.588  16     CETS
+  75  197   0.583  15    PDTS1
+  76  247   0.583  15    PDTS2
+  77  287   0.569  15     CETS
+  79  253   0.551  15     CETS
+  80  288   0.529  16     CETS
+  81  165   0.528  14     CETS
+
+  82  301   0.526  15     CETS   Poor - 1 board
+  83  330   0.521  15    PDTS2
+  85  182   0.469  15     CETS
+  86  245   0.440  15    PDTS2
+  88  217   0.374  14    PDTS1
+  89  265   0.370  15     CETS
+  91  248   0.365  15    PDTS2
+  92  168   0.329  16     CETS
+
+backups in case we can't find some:
+  93  360   0.327  15    PDTS2
+
+removed from this ranking:
+   7  172   0.953  16     CETS
+  31  178   0.894  16     CETS
+  35  160   0.872  16     CETS
+  42  177   0.818  16     CETS
+  49  185   0.781  16     CETS
+  50  175   0.780  16     CETS
+  58  359   0.733  16    PDTS2 missing
+  62  111   0.712  15    PDTS1 missing
+  78  179   0.558  16     CETS
+  84   23   0.500  14    PDTS1 missing
+  87   11   0.380  15    PDTS1
+  90  284   0.368  15     CETS missing
+
+
+FEs
+
+Select from the "warm passed" and "cold tested" trays. Do not use:
+
+BAD: 133, 167, 256
+
+Damaged: 49, 64

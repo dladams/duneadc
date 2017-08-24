@@ -46,13 +46,11 @@ DUNE17dla-cold_chipD0039_0803_try1
 DUNE17dla-cold_chipD0041_0803_try1
 DUNE17dla-cold_chipD0042_0803_try1
 DUNE17dla-cold_chipD0043_0803_try1
-DUNE17dla-cold_chipD0044_0803_try1
 DUNE17dla-cold_chipD0045_0803_try1
 DUNE17dla-cold_chipD0046_0803_try1
 DUNE17dla-cold_chipD0047_0803_try1
 DUNE17dla-cold_chipD0053_0804_try2
 DUNE17dla-cold_chipD0054_0804_try1
-DUNE17dla-cold_chipD0057_0808_try1
 DUNE17dla-cold_chipD0063_0808_try1
 DUNE17dla-cold_chipD0064_0808_try1
 DUNE17dla-cold_chipD0069_0808_try1
@@ -65,7 +63,6 @@ DUNE17dla-cold_chipD0081_0809_try1
 DUNE17dla-cold_chipD0083_0809_try1
 DUNE17dla-cold_chipD0085_0809_try1
 DUNE17dla-cold_chipD0087_0809_try1
-DUNE17dla-cold_chipD0088_0809_try1
 DUNE17dla-cold_chipD0089_0809_try1
 DUNE17dla-cold_chipD0090_0809_try1
 DUNE17dla-cold_chipD0091_0809_try1
@@ -85,7 +82,6 @@ DUNE17dla-cold_chipD0111_0811_try1
 DUNE17dla-cold_chipD0112_0811_try1
 DUNE17dla-cold_chipD0113_0811_try1
 DUNE17dla-cold_chipD0116_0811_try1
-DUNE17dla-cold_chipD0117_0811_try1
 DUNE17dla-cold_chipD0119_0811_try1
 DUNE17dla-cold_chipD0120_0811_try1
 DUNE17dla-cold_chipD0122_0811_try1
@@ -140,7 +136,6 @@ DUNE17dla-cold_chipD0178_0816_try1
 DUNE17dla-cold_chipD0179_0816_try1
 DUNE17dla-cold_chipD0180_0816_try1
 DUNE17dla-cold_chipD0182_0816_try1
-DUNE17dla-cold_chipD0183_0816_try1
 DUNE17dla-cold_chipD0184_0816_try1
 DUNE17dla-cold_chipD0185_0816_try1
 DUNE17dla-cold_chipD0186_0817_try1
@@ -172,7 +167,6 @@ DUNE17dla-cold_chipD0211_0817T1606_try1
 DUNE17dla-cold_chipD0211_0817T1614_try1
 DUNE17dla-cold_chipD0212_0817_try1
 DUNE17dla-cold_chipD0213_0817_try1
-DUNE17dla-cold_chipD0214_0817_try1
 DUNE17dla-cold_chipD0215_0818_try1
 DUNE17dla-cold_chipD0216_0818_try1
 DUNE17dla-cold_chipD0217_0818_try1
@@ -208,7 +202,6 @@ DUNE17dla-cold_chipD0250_0822_try1
 DUNE17dla-cold_chipD0251_0822_try1
 DUNE17dla-cold_chipD0252_0822_try1
 DUNE17dla-cold_chipD0253_0822_try1
-DUNE17dla-cold_chipD0254_0822_try1
 DUNE17dla-cold_chipD0254_0822_try1
 DUNE17dla-cold_chipD0255_0822_try1
 DUNE17dla-cold_chipD0256_0822_try1

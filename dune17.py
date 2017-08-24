@@ -1105,14 +1105,13 @@ def dune17tscSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, is
 
 # Return the chip number for a sample.
 # Deduces the chip number from the sample name after
-# checking a msap that handles misnamed samples.
+# If sample name is AAA:BBB, then the chip number is deduced from BBB.
 # ..._chipDVVVVV -> number 10000 + VVVV
 def dune17cChip(sam):
-  sampleToChipMap = { }     # Better not use this b/c chip # will still be wrong in root files.
-  if sam in sampleToChipMap:
-    return sampleToChipMap[sam]
-  ipos = sam.find("_chip")
-  asam = sam[ipos+5:]
+  ipos = sam.find(":")
+  csam = sam[ipos+1:]
+  ipos = csam.find("_chip")
+  asam = csam[ipos+5:]
   chipoff = 0
   if asam[0] == "D":
     asam = asam[1:]
@@ -1121,7 +1120,10 @@ def dune17cChip(sam):
   if ipos >= 0: schip = asam[:ipos]
   else: schip = asam
   if schip.isdigit():
-    return int(schip) + chipoff
+    ichip = int(schip)
+    if ichip < 0: return 0
+    if ichip > 10000: return 0
+    return ichip + chipoff
   return 0
  
 # Return all samples for a given chip number.
@@ -1217,26 +1219,26 @@ def dune17DatasetName(sam):
 def selectedChips(sel=0):
   chips = []
   selChipLists = []
-  # Selection 16jul2017 from Matt
+  # 0. Selection 16jul2017 from Matt
   selChipLists.append([1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 18, 20, 22, 25, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 60, 64, 65, 67, 70, 71, 74, 78, 79, 80, 81, 82, 84, 86, 87, 90, 92, 93, 94, 95, 96, 97, 101, 105, 108, 110, 114, 115, 118, 119, 124, 127, 129, 132, 136, 138, 363, 364, 365, 366, 369, 373, 379, 380, 383, 384, 385, 387])
-  # Selection 23jul2017 from Matt
+  # 1. Selection 23jul2017 from Matt
   selChipLists.append([316, 161, 214, 190, 225, 295, 304, 275, 201, 221, 273, 292, 176, 320, 228, 264, 357, 276, 278, 331, 189, 212, 266, 162, 147, 293, 263, 240, 277, 298, 351, 238, 257, 329, 269, 285, 261, 267, 150, 231, 325, 187, 289, 327, 163, 184, 256, 151, 282, 191, 258, 170, 317, 299, 394, 302, 148, 158, 324, 140, 204, 146, 173, 376, 274, 255, 197, 247, 287, 253, 288, 165, 301, 330, 182, 245, 217, 265, 248, 168])
-  # Selection 31jul2017 from Matt
+  # 2. Selection 31jul2017 from Matt
   selChipLists.append([343, 193, 144, 222, 123, 172, 5, 312, 134, 341, 305, 116, 332, 178, 308, 160, 139, 338, 313, 230, 389, 279, 137, 361, 215, 19, 342, 177, 333, 211, 185, 175, 227, 188, 200, 153, 352, 131, 179, 336])
-  # Selection replacements 23aug2017 from Matt
+  # 3. Selection replacements 23aug2017 from Matt
   # 204->D0007
   # 376->D0018
   # 312->D0029
   # 361->D0009
   # 153->D0019
   selChipLists.append([10007, 10018, 10029, 10009, 10019])
-  # Selection 23aug2017 from Matt
+  # 4. Selection 23aug2017 from Matt
   selChipLists.append([10004, 10192, 10161, 10034, 10180, 10137, 10199, 10221, 10163, 10002, 10186, 10206, 10176, 10120, 10213, 10162, 10037, 10222, 10225, 10174, 10032, 10204, 10215, 10042, 10014, 10130, 10022, 10041, 10205, 10017, 10202, 10210, 10195, 10184, 10236, 10069, 10047, 10123, 10207, 10159, 10039, 10211, 10104, 10033, 10185, 10239, 10148, 10197, 10235, 10113, 10111, 10156, 10152, 10179, 10138, 10234, 10212, 10135, 10160, 10103, 10200, 10171, 10124, 10021, 10028, 10151, 10125, 10196, 10105, 10025, 10182, 10081, 10209, 10020, 10016, 10023, 10166, 10074, 10241, 10057])
   chips = []
   if sel == 0:
     chips = []
     for selchips in selChipLists: chips += selchips
-  elif sel <= selChipLists.size():  chips = selChipLists[sel]
+  elif sel <= len(selChipLists):  chips = selChipLists[sel]
   elif sel == 2: chips = sel2
   elif sel == 3: chips = sel3
   elif sel == 4: chips = sel4

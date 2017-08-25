@@ -53,6 +53,7 @@ for NAME in `cat $DSLIST.txt`; do
     echo "Skipping $NAME."
   else
     echo "Processing $NAME on "`date`
+    echo $NAME >goIsRunning
     root.exe -b -q 'processDataset.C("'$NAME'",'$RMSMAX')' >$LOG 2>&1
     if test -r stop; then
       echo Found stop file. Exiting.

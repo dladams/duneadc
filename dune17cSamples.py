@@ -505,33 +505,44 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D0284_0823")
   samsh.append(pre + "D0285_0823")
   sams2.append(pre + "D0286_0823")
-  sams2.append(pre + "D0288_0823")  # 8/24
+  sams2.append(pre + "D0288_0823")
   sams2.append(pre + "D0289_0823")
-  sams2.append(pre + "D0290_0823")  # 8/24
-  sams2.append(pre + "D0291_0823")  # 8/24
-  samsh.append(pre + "D0292_0823")  # 8/24
-  sams2.append(pre + "D0293_0824")  # 8/24
-  samsh.append(pre + "D0294_0823")  # 8/24
-  sams2.append(pre + "D0295_0823")  # 8/24
-  samsh.append(pre + "D0296_0823")  # 8/24
-  sams2.append(pre + "D0297_0823")  # 8/24
-  samsh.append(pre + "D0298_0823")  # 8/24
-  sams2.append(pre + "D0299_0823")  # 8/24
-  sams2.append(pre + "D0301_0823")  # 8/24
-  sams2.append(pre + "D0302_0823")  # 8/24
-  samsh.append(pre + "D0303_0823")  # 8/24
-  sams2.append(pre + "D0304_0823")  # 8/24
-  samsh.append(pre + "D0305_0824")  # 8/24
-  sams2.append(pre + "D0306_0824")  # 8/24
-  samsh.append(pre + "D0307_0824")  # 8/24
-  samsh.append(pre + "D0308_0824")  # 8/24
-  samsh.append(pre + "D0309_0824")  # 8/24
-  samsh.append(pre + "D0310_0824")  # 8/24
-  samsh.append(pre + "D0311_0824")  # 8/24
-  samsh.append(pre + "D0312_0824")  # 8/24
-  samsh.append(pre + "D0313_0824")  # 8/24
-  samsh.append(pre + "D0314_0824")  # 8/24
-  sams2.append(pre + "D0316_0824")  # 8/24
+  badsams.append(pre + "D0290_0823")  # Bad waveforms
+  sams2.append(pre + "D0291_0823")
+  samsh.append(pre + "D0292_0823")
+  badsams.append(pre + "D0293_0824")  # Bad waveforms
+  samsh.append(pre + "D0294_0823")
+  sams2.append(pre + "D0295_0823")
+  samsh.append(pre + "D0296_0823")
+  sams2.append(pre + "D0297_0823")
+  samsh.append(pre + "D0298_0823")
+  sams2.append(pre + "D0299_0823")
+  sams2.append(pre + "D0301_0823")
+  sams2.append(pre + "D0302_0823")
+  samsh.append(pre + "D0303_0823")
+  sams2.append(pre + "D0304_0823")
+  samsh.append(pre + "D0305_0824")
+  sams2.append(pre + "D0306_0824")
+  samsh.append(pre + "D0307_0824")
+  samsh.append(pre + "D0308_0824")
+  samsh.append(pre + "D0309_0824")
+  samsh.append(pre + "D0310_0824")
+  samsh.append(pre + "D0311_0824")
+  samsh.append(pre + "D0312_0824")
+  samsh.append(pre + "D0313_0824")
+  samsh.append(pre + "D0314_0824")
+  sams2.append(pre + "D0315_0824")  # 8/25
+  badsams.append(pre + "D0316_0824")  # Bad waveforms
+  samsh.append(pre + "D0317_0824")  # 8/25
+  samsh.append(pre + "D0319_0824")  # 8/25
+  sams2.append(pre + "D0321_0824")  # 8/25
+  samsh.append(pre + "D0325_0824")  # 8/25
+  sams2.append(pre + "D0326_0824")  # 8/25
+  sams2.append(pre + "D0328_0824")  # 8/25
+  sams2.append(pre + "D0329_0824")  # 8/25
+  sams2.append(pre + "D0331_0824")  # 8/25
+  sams2.append(pre + "D0333_0824")  # 8/25
+  sams2.append(pre + "D0336_0824")  # 8/25
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams

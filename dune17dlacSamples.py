@@ -316,28 +316,28 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0312_0824_try1")
   sams.append(pre + "D0313_0824_try1")
   sams.append(pre + "D0314_0824_try1")
-  sams.append(pre + "D0315_0824_try1")  # 8/25
+  sams.append(pre + "D0315_0824_try1")
   badsams.append(pre + "D0316_0824_try1")  # Bad waveforms
-  sams.append(pre + "D0317_0824_try1")  # 8/25
-  sams.append(pre + "D0318_0824_try1")  # 8/25
-  sams.append(pre + "D0319_0824T1551_try1")  # 8/25
+  sams.append(pre + "D0317_0824_try1")
+  sams.append(pre + "D0318_0824_try1")
+  sams.append(pre + "D0319_0824T1551_try1")
   sams.append(pre + "D0319_0824T1556_try1")  # 8/25
-  sams.append(pre + "D0319_0824T1556_try2")  # 8/25
-  sams.append(pre + "D0320_0824_try1")  # 8/25
-  sams.append(pre + "D0321_0824_try1")  # 8/25
+  sams.append(pre + "D0319_0824T1556_try2")
+  sams.append(pre + "D0320_0824_try1")
+  sams.append(pre + "D0321_0824_try1")
   sams.append(pre + "D0323_0824_try1")
   sams.append(pre + "D0324_0824_try1")
-  sams.append(pre + "D0325_0824_try1")  # 8/25
-  sams.append(pre + "D0326_0824T1744_try1")  # 8/25
-  sams.append(pre + "D0326_0824T1853_try1")  # 8/25
-  sams.append(pre + "D0327_0824_try1")  # 8/25
-  sams.append(pre + "D0328_0824_try1")  # 8/25
-  sams.append(pre + "D0329_0824_try1")  # 8/25
-  sams.append(pre + "D0330_0824_try1")  # 8/25
-  sams.append(pre + "D0331_0824_try1")  # 8/25
-  sams.append(pre + "D0332_0824_try1")  # 8/25
-  sams.append(pre + "D0333_0824_try1")  # 8/25
-  sams.append(pre + "D0336_0824_try1")  # 8/25
+  sams.append(pre + "D0325_0824_try1")
+  sams.append(pre + "D0326_0824T1744_try1")
+  sams.append(pre + "D0326_0824T1853_try1")
+  badsams.append(pre + "D0327_0824_try1")  # Bad waveforms
+  sams.append(pre + "D0328_0824_try1")
+  sams.append(pre + "D0329_0824_try1")
+  sams.append(pre + "D0330_0824_try1")
+  sams.append(pre + "D0331_0824_try1")
+  badsams.append(pre + "D0332_0824_try1")  # Bad waveforms
+  sams.append(pre + "D0333_0824_try1")
+  sams.append(pre + "D0336_0824_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

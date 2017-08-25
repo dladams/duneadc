@@ -1,0 +1,252 @@
+#!/bin/sh
+
+# checkfiles
+#
+# David Adams
+# July 2017
+#
+#
+# Check that all DUNE17-cold samples have file and that all files
+# are assigned to datasets.
+
+# Fetch day (YYYYMMDD) from the file timestamp.
+fdate() { basename $1 | awk -F_ '{print $2}' | awk -F T '{print $1}'; }
+
+DSNAME=DUNE17-cold
+if [ -n "$1" ]; then
+  DSNAME=$1
+fi
+CHECKOLDNEW="$2"
+GSAMS=`cat $DSNAME.txt`
+BSAMS=`cat $DSNAME-bad.txt`
+OSAMS=`cat $DSNAME-old.txt`" "
+NSAMS=`cat $DSNAME-new.txt`" "
+BADCHIPS=`cat DUNE17-badchips.txt`
+BADFILES=`cat badfiles.txt`
+SAMS=`cat $DSNAME.txt $DSNAME-bad.txt $DSNAME-fail.txt`     # List of good and bad samples
+if [ $DSNAME = DUNE17-cold ]; then
+  FILES=`ls -1 ~/data/dune/adc/DUNE17/adcTest_P1*cold/ | grep ^adc`
+elif [ $DSNAME = test ]; then
+  FILES=`cat testfiles.txt`
+elif [ $DSNAME = DUNE17dla-cold ]; then
+  FILES=`ls -1 ~/data/dune/adc/DUNE17dla/adcTest_P1*cold/ | grep ^adc | grep chip[0-9,D]`
+else
+  echo Invalid Dataset name: $DSNAME
+  exit 1
+fi
+
+if [ -z "$FILES" ]; then
+  echo No files found for dataset $DSNAME
+  exit 2
+fi
+
+FCOUNT=0
+for FILE in $FILES; do
+  echo $FILE
+  FCOUNT=$(( $FCOUNT + 1 ))
+done
+echo File count = $FCOUNT
+
+if false; then
+  for FILE in $FILES; do
+    MYDATE=`fdate $FILE`
+    if [ $MYDATE -ge 20170719 ]; then
+      echo " Keeping $MYDATE $FILE"
+    else
+      echo Dropping $MYDATE $FILE
+    fi
+  done
+  exit 0
+fi
+
+GCOUNT=0
+echo
+echo Good samples
+for SAM in $GSAMS; do
+  echo $SAM
+  GCOUNT=$(( $GCOUNT + 1 ))
+done
+echo Good sample count = $GCOUNT
+
+echo
+echo Bad samples:
+BCOUNT=0
+for SAM in $BSAMS; do
+  echo $SAM
+  BCOUNT=$(( $BCOUNT + 1 ))
+done
+echo Bad sample count = $BCOUNT
+
+echo
+SCOUNT=0
+echo All datasets:
+for SAM in $SAMS; do
+  echo $SAM
+  SCOUNT=$(( $SCOUNT + 1 ))
+done
+
+echo
+echo "  File count: $FCOUNT"
+echo "Sample count: $SCOUNT"
+
+echo
+echo Find files and files for bad chips
+REMFILES=    # Files to check for samples
+BCFILES=     # Files for bad chips
+GCFCOUNT=0
+BCFCOUNT=0
+BFCOUNT=0
+for FILE in $FILES; do
+  SKIP=
+  for BFILE in $BADFILES; do
+    if [ $FILE = $BFILE ]; then
+      SKIP=true
+    fi
+  done
+  if [ -z "$SKIP" ]; then
+    REMFILES="$REMFILES $FILE"
+    ISBADCHIP=
+    for CHIP in $BADCHIPS; do
+      SCHIP=${CHIP}
+      # 1CCCC --> DCCCC
+      if [ ${#CHIP} -eq 5 ]; then
+        SCHIP=${CHIP/#1/D}
+      fi
+      if echo $FILE | grep chip${SCHIP}_ 2>&1; then
+        ISBADCHIP=T
+      fi
+    done
+    if [ -z "$ISBADCHIP" ]; then
+      GCFCOUNT=$(( $GCFCOUNT + 1 ))
+    else
+      BCFILES="$BCFILES $FILE"
+      BCFCOUNT=$(( $BCFCOUNT + 1 ))
+    fi
+  else
+    BFCOUNT=$(( $BFCOUNT + 1 ))
+  fi
+done
+echo "Good chip file count: $GCFCOUNT"
+echo " Bad chip file count: $BCFCOUNT"
+
+echo
+echo Check if samples have files
+ECOUNT=0
+MATCHFILES=
+MAKEOLDSAMS=
+MAKENEWSAMS=
+BADSAMS=
+for SAM in $SAMS; do
+  SAMF=`echo $SAM | sed 's/:.*//g'`    # Strip of chip renaming
+  SUF=`echo $SAMF | sed 's/^'$DSNAME'_//g'`
+  CHIP=`echo $SUF | sed 's/_.*//g'`
+  PATT=`echo $SUF | sed 's/.*_//g'`
+  PATT2=
+  if [ -n "$PATT" ]; then
+    SUF=`echo $SUF | sed 's/_'$PATT'$//g'`
+    PATT2=`echo $SUF | sed 's/.*_//g'`
+  fi
+  MATCH=
+  for FILE in $FILES; do
+    if `echo $FILE | grep ${CHIP}_ 1>/dev/null`; then
+      if `echo $FILE | grep $PATT 1>/dev/null`; then
+        if `echo $FILE | grep $PATT2 1>/dev/null`; then
+          # First match.
+          if [ -z "$MATCH" ]; then
+            MATCH=$FILE
+            MATCHFILES="$MATCHFILES $MATCH"
+            echo $SAM $MATCH
+            REMFILES=`echo $REMFILES | sed 's/'$FILE'//g'`
+            FDAY=`fdate $FILE`
+            if [ -n "$CHECKOLDNEW" ]; then
+              ISOLD=`echo "$OSAMS" | grep "$SAM " 2>&1`
+              ISNEW=`echo "$NSAMS" | grep "$SAM " 2>&1`
+              if [ -n "$ISNEW" -a $FDAY -lt 20170719 ]; then
+                MAKEOLDSAMS="$MAKEOLDSAMS $SAM"
+                echo Should be old
+              elif [ -n "$ISOLD" -a $FDAY -ge 20170719 ]; then
+                MAKENEWSAMS="$MAKENEWSAMS $SAM"
+                echo Should be new
+              fi
+            fi
+          else
+            echo Duplicate file:
+            echo $MATCH
+            echo $FILE
+            echo Patterns: $PATT $PATT2
+            ECOUNT=$(( $ECOUNT + 1 ))
+          fi
+        fi
+      fi
+    fi
+  done
+  if [ -z "$MATCH" ]; then
+    echo No file found for $SAM
+    BADSAMS="$BADSAMS $SAM"
+    ECOUNT=$(( $ECOUNT + 1 ))
+  fi
+done
+echo
+echo "# Duplicates and samples without files: $ECOUNT"
+
+if [ -n" $BADSAMS" ]; then
+  echo
+  echo Samples without files:
+  for SAM in $BADSAMS; do
+    echo "  $SAM"
+  done
+fi
+
+# Remove files for bad chips.
+# These may or may not have samples.
+RAWREMFILES="$REMFILES"
+REMFILES=
+for FILE in $RAWREMFILES; do
+  if ! echo $BCFILES | grep $FILE 2>&1 1>/dev/null; then
+    REMFILES="$REMFILES $FILE"
+  fi
+done
+
+echo
+if [ -z "$REMFILES" ]; then
+  echo There are no files without samples.
+  MCOUNT=0
+else
+  echo Files without samples:
+  rm -f checkfiles.dat.tmp
+  touch checkfiles.dat.tmp
+  for FILE in $REMFILES; do
+    echo $FILE >>checkfiles.dat.tmp
+    echo "  $FILE"
+    MCOUNT=$(( $MCOUNT + 1 ))
+  done
+
+  if [ -n "$CHECKOLDNEW" ]; then
+
+    echo
+    echo Samples that should be old:
+    for SAM in $MAKEOLDSAMS; do
+      echo "  $SAM"
+    done
+
+    echo
+    echo Samples that should be new:
+    for SAM in $MAKENEWSAMS; do
+      echo "  $SAM"
+    done
+  fi
+
+  cat checkfiles.dat.tmp | sort -t _ -k 3 >checkfiles.dat
+  echo
+  echo Files without samples sorted:
+  for FILE in  `cat checkfiles.dat`; do
+    echo "  $FILE"
+  done
+fi
+
+echo
+echo "           Sample count: $SCOUNT"
+echo "             File count: $FCOUNT"
+echo "            # Bad files: $BFCOUNT"
+echo "# Files without samples: $MCOUNT"
+echo "# Samples without files: $ECOUNT"

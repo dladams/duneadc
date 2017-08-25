@@ -14,6 +14,9 @@ from dune17Chip import dune17cChip
 #        3 = good ADC clock horizontal test
 #        4 = good ADC clock vertical test
 #   isBad true returns bad, nwf and roll
+#   isFail true returns fail
+# skipSel skips any samples whose chips are selected
+# skipBad skips any samples whose chips are bad
 def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=False, skipBad=True):
   pre = "DUNE17-cold_chip"
   sams1 = []       # Early samples with bad ADC clock settings

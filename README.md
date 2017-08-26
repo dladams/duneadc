@@ -41,7 +41,7 @@ root> cout << "Sample " << prdr->sample() << " tick count: " << prdr->nsample() 
 The (smart) pointer prdr is to type `AdcSampleReader`.
 
 In addition to reading and opening the input file, the sample reader ensures that the table
-summary and input voltage calibration are available. It determinse the data format from the sample
+summary and input voltage calibration are available. It determines the data format from the sample
 name and then creates a reader of the appropriate type.
 
 Some of the available sample names are
@@ -66,7 +66,8 @@ Some of the available sample names are
 | 201706_cotsbw | As above but at RT (room temperature)
 | 201707_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Jul 2017. BB=01,...10. |
 | 201708_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Aug 2017.  BB=01,...04.|
-| DUNE17-cold_chipCC | BNL sandard (4 MHz signal gen) testing of protoDUNE chips. |
+| DUNE17-cold_chipCC | BNL standard (4 MHz signal gen) testing of protoDUNE chips. |
+| DUNE17dla-cold_chipCC | BNL standard data taken before the main run (aka try or David Adams data) |
 | DUNE17ts-cold_chipCC | BNL test stand (1 MHz signal gen) testing of protoDUNE chips. |
 | DUNE17-test_chipCC | Subset of protoDUNE chips tested is same way as samples 201703a. |
 
@@ -146,7 +147,10 @@ in a root tree and later retrieving it from that tree. The tree variable names a
 
 The class [AdcChipAnalyzer](AdcChipAnalyzer.h) may be used to carry out calibration and performance analysis,
 fill the corresponding trees and generate plots with behavior controlled by parameters passed
-to the ctor. See the header for more information.
+to the ctor. Production processing of DUNE data is carried out by constructing one object of this
+type for each sample. It then fills the calibration and performance trees and can then be called
+to produce any of the standard plots. For an exaple of use, see [processDataset.C], then script called
+in production processing.
 
 ## Validation
 

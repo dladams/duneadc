@@ -149,7 +149,7 @@ The class [AdcChipAnalyzer](AdcChipAnalyzer.h) may be used to carry out calibrat
 fill the corresponding trees and generate plots with behavior controlled by parameters passed
 to the ctor. Production processing of DUNE data is carried out by constructing one object of this
 type for each sample. It then fills the calibration and performance trees and can then be called
-to produce any of the standard plots. For an exaple of use, see [processDataset.C], then script called
+to produce any of the standard plots. For an exaple of use, see [processDataset.C](processDataset.C), then script called
 in production processing.
 
 ## Validation

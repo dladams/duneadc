@@ -357,6 +357,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0349_0825_try1")
   sams.append(pre + "D0351_0825_try1")
   sams.append(pre + "D0352_0825_try1")
+  sams.append(pre + "D0371_0828T1109_try1:chipD0354")
   sams.append(pre + "D0355_0825T1843_try1")
   sams.append(pre + "D0355_0825T1848_try1")
   sams.append(pre + "D0356_0825_try1")
@@ -371,21 +372,20 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0364_0825_try1")
   sams.append(pre + "D0365_0825_try1")
   sams.append(pre + "D0366_0825_try1")
-  sams.append(pre + "D0367_0828_try1")  # 8/28
-  sams.append(pre + "D0368_0828_try1")  # 8/28
-  sams.append(pre + "D0369_0828_try1")  # 8/28
-  sams.append(pre + "D0370_0828_try1")  # 8/28
-  sams.append(pre + "D0371_0828T1109_try1:chipD0354")  # 8/28
-  sams.append(pre + "D0371_0828T1134_try1")  # 8/28
-  sams.append(pre + "D0371_0828T1134_try2")  # 8/28
-  sams.append(pre + "D0372_0828_try1")  # 8/28
-  sams.append(pre + "D0373_0828_try1")  # 8/28
-  sams.append(pre + "D0374_0828_try1")  # 8/28
-  sams.append(pre + "D0374_0828_try2")  # 8/28
-  sams.append(pre + "D0375_0828T1250_try1")  # 8/28
-  sams.append(pre + "D0375_0828T1313_try1")  # 8/28
-  sams.append(pre + "D0376_0828T1328_try1")  # 8/28
-  sams.append(pre + "D0376_0828T1427_try1")  # 8/28
+  sams.append(pre + "D0367_0828_try1")
+  sams.append(pre + "D0368_0828_try1")
+  sams.append(pre + "D0369_0828_try1")
+  sams.append(pre + "D0370_0828_try1")
+  sams.append(pre + "D0371_0828T1134_try1")
+  sams.append(pre + "D0371_0828T1134_try2")
+  sams.append(pre + "D0372_0828_try1")
+  sams.append(pre + "D0373_0828_try1")
+  sams.append(pre + "D0374_0828_try1")
+  sams.append(pre + "D0374_0828_try2")
+  sams.append(pre + "D0375_0828T1250_try1")
+  sams.append(pre + "D0375_0828T1313_try1")
+  sams.append(pre + "D0376_0828T1328_try1")
+  sams.append(pre + "D0376_0828T1427_try1")
   sams.append(pre + "D0377_0828_try1")
   sams.append(pre + "D0378_0828_try1")
   sams.append(pre + "D0379_0828_try1")  # 8/28

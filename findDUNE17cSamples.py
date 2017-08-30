@@ -89,7 +89,7 @@ for itim in range(0, ntim):
     tdict[stime] = abTime
 
 if docpp:
-  oftxt = open("DUNE17qcSamples.txt", "w")
+  oftxt = open("DUNE17q-cold.txt", "w")
 
 if docpp:
   ofcpp = open("DUNE17qcSamples.cpp", "w")

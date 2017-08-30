@@ -221,6 +221,10 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
   if ( ssam.substr(0,7) == "DUNE17-" || ssam.substr(0,10) == "DUNE17dla-" ) {
     prdr = findFembReader(ssam, icha, maxsam);
   }
+  // DUNE quad test data summer 2017
+  if ( ssam.substr(0,8) == "DUNE17q-" ) {
+    prdr = findQuadReader(ssam, icha, maxsam);
+  }
   if ( ! prdr ) {
     cout << myname << "ERROR: Unable to find reader for sample " << ssam << endl;
   }
@@ -596,6 +600,103 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
       return prdr;
     }
   }
+  // Mitigate rollback.
+  prdr->addMitigator(new RollbackFinder(*prdr, 100000));
+  // Find extrema.
+  bool calculateVin = true;
+  if ( calculateVin ) {
+    double vinRate = prdrFemb->vinFreq();
+    if ( vinRate <= 0.0 ) {
+      vinRate = 4;
+      cout << myname << "Generator frequency not found. Assuming " << vinRate << " Hz." << endl;
+    }
+    double sampFreq = prdrFemb->samplingFrequency();
+    if ( sampFreq <= 0.0 ) {
+      sampFreq = 2000000;
+      cout << myname << "Sampling frequency not found. Assuming " << sampFreq << " Hz." << endl;
+    }
+    double tickPeriod = sampFreq/vinRate;
+    double ef1BorderWidth = 0.15*tickPeriod;
+    SampleValue ef1MinThresh =  1000;
+    SampleValue ef1MaxThresh =  4000;
+    SampleValue ef1MinLimit =   1500;
+    SampleValue ef1MaxLimit =      0;
+    double vinMin = -300.0;
+    double vinMax = 1700.0;
+    if ( 1 ) {
+      // Find extrema.
+      AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      Index ef2NbinThresh = 500;
+      Index ef2MinGapBin = 50000;
+      SampleIndex maxdext = 10000;
+      AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);
+      AdcExtrema exts;
+      if ( findExtrema(&*prdr, exts, ef1, ef2, maxdext) ) {
+        cout << myname << "Unable to find extrema." << endl;
+      } else {
+        SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
+        prdrFemb->setSampleFunction(pfun);
+      }
+    } else {
+      //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500, 3800);
+      //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
+      // Setting maxLimit = 0 helps with large fluctuations after overflow.
+      // Large minThresh fixes t0 offset due to fluctuations near that value.
+      AdcBorderExtremaFinder ef(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      AdcExtrema exts;
+      int rstat = ef.find(*prdr, exts);
+      if ( rstat ) {
+        cout << myname << "Extrema finding failed with error " << rstat << "." << endl;
+      } else if ( exts.size() == 0 ) {
+        cout << myname << "No extrema found." << endl;
+      } else {
+        cout << myname << "Extrema:" << endl;
+        for ( Index iext=0; iext<exts.size(); ++iext ) {
+          AdcExtremum ext = exts[iext];
+          cout << myname << setw(12) << ext.tick() << " " << ext.isMax();
+          if ( iext ) cout << setw(12) << ext.tick() - exts[iext-1].tick();
+          cout << endl;
+        }
+        SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
+        prdrFemb->setSampleFunction(pfun);
+      }
+    }
+  }
+  // Build ADC-voltage table.
+  cout << myname << "Building ADC-Vin table." << endl;
+  prdr->buildTableFromWaveform(20000, 0.1, -300.0, true, true);
+  cout << myname << "Done building ADC-Vin table." << endl;
+  return prdr;
+}
+
+//**********************************************************************
+
+AdcSampleReaderPtr AdcSampleFinder::
+findQuadReader(Name asample, Index icha, SampleIndex maxsam) const {
+  const string myname = "AdcSampleFinder::findQuadReader: ";
+#include "DUNE17qcSamples.cpp"
+  // Check channel.
+  if ( icha > 15 ) {
+    cout << myname << "Invalid channel: " << icha << endl;
+    return nullptr;
+  }
+  string ssam = asample;
+  string::size_type kpos = ssam.find(":");
+  string fsample = ssam.substr(0,kpos);
+  AdcFembTreeSampleReader* prdrFemb = nullptr;
+  auto ient = DUNE17qcSampleMap.find(asample);
+  if ( ient == DUNE17qcSampleMap.end() ) {
+    cout << myname << "Sample not found: " << ssam << endl;
+    return nullptr;
+  }
+  string fname = AdcSampleFinder::defaultTopdir() + "/DUNE17q/" + ient->second;
+  cout << myname << fname << endl;
+  cout << myname << "Sample file name: " << fname << endl;
+  // Find the sample range.
+  SampleIndex isam0 = 0;
+  SampleIndex nsam = 0;
+  prdrFemb = new AdcFembTreeSampleReader(fname, icha, 0, ssam, isam0, nsam);
+  AdcSampleReaderPtr prdr(prdrFemb);
   // Mitigate rollback.
   prdr->addMitigator(new RollbackFinder(*prdr, 100000));
   // Find extrema.

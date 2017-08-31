@@ -6,6 +6,11 @@ if [ -r goIsRunning ]; then
 fi
 touch goIsRunning
 
+if ! root.exe -q; then
+  echo Root must be setup to process data
+  exit 1
+fi
+
 DSNAME=DUNE17-cold
 if [ -r dsname.dat ]; then
   DSNAME=`cat dsname.dat`

@@ -450,7 +450,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0434_0829_try1")
   sams.append(pre + "D0435_0829_try1")
   badsams.append(pre + "D0436_0829_try1")  # Waveform absent
-  sams.append(pre + "D0436_0830_try1")  # 8/31
+  sams.append(pre + "D0436_0829_try2")  # 8/31+
   sams.append(pre + "D0438_0830_try1")
   badsams.append(pre + "D0439_0830_try1")  # Bad waveform
   sams.append(pre + "D0440_0830_try1")

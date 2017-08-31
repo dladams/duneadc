@@ -5,6 +5,7 @@
 
 from dune17cSamples import dune17cSamples
 from dune17dlacSamples import dune17dlacSamples
+from dune17qcSamples import dune17qcSamples
 from dune17tscSamples import dune17tscSamples
 from dune17Chip import dune17cChip
 from dune17bad import badChips
@@ -34,6 +35,19 @@ def dune17cChips(skipSel=False, skipBad=True):
   if skipSel: skipChips += selectedChips()
   if skipBad: skipChips += badChips()
   for ds in dune17cSamples():
+    chip = dune17cChip(ds)
+    if chip not in chips:
+      if chip not in skipChips:
+        chips.append(chip)
+  return chips
+
+# Return the chips in DUNE17q-cold
+def dune17qcChips(skipSel=False, skipBad=True):
+  chips = []
+  skipChips = []
+  if skipSel: skipChips += selectedChips()
+  if skipBad: skipChips += badChips()
+  for ds in dune17qcSamples():
     chip = dune17cChip(ds)
     if chip not in chips:
       if chip not in skipChips:

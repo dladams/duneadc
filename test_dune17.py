@@ -11,10 +11,15 @@ from dune17 import dune17cSamples
 from dune17 import dune17cChips
 from dune17 import dune17dlacSamples
 from dune17 import dune17dlacChips
+from dune17 import dune17qcSamples
+from dune17 import dune17qcChips
 from dune17 import dune17tscSamples
 from dune17 import dune17tscChips
 from dune17 import badChips
 from dune17 import badFiles
+
+# This builds the list of quad samples.
+import findDUNE17cSamples
 
 writeDsfile = True
 
@@ -51,12 +56,19 @@ def testDataset(dsname, writeDsFile, showChips):
     isCETS = True
     haveDNL = True
   elif dsname == "DUNE17dla-cold":
-    sams = dune17dlacSamples()
-    remsams = dune17dlacSamples(skipSel=True)
-    badsams = dune17dlacSamples(isBad=True)
+    sams     = dune17dlacSamples()
+    remsams  = dune17dlacSamples(skipSel=True)
+    badsams  = dune17dlacSamples(isBad=True)
     failsams = dune17dlacSamples(isFail=True)
-    chips = dune17dlacChips()
+    chips    = dune17dlacChips()
     remchips = dune17dlacChips(skipSel=True)
+  elif dsname == "DUNE17q-cold":
+    sams     = dune17qcSamples()
+    remsams  = dune17qcSamples(skipSel=True)
+    badsams  = dune17qcSamples(isBad=True)
+    failsams = dune17qcSamples(isFail=True)
+    chips    = dune17qcChips()
+    remchips = dune17qcChips(skipSel=True)
   else:
     print "Invalid dsname: " + dsname
     return
@@ -149,6 +161,8 @@ print
 testDataset("DUNE17-cold", True, showChips)
 print
 testDataset("DUNE17dla-cold", True, showChips)
+print
+testDataset("DUNE17q-cold", True, showChips)
 print
 testDataset("DUNE17ts-cold", True, showChips)
 print

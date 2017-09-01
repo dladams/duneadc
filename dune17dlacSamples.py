@@ -500,14 +500,16 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0491_0831_try1")
   badsams.append(pre + "D0492_0831_try1")  # Bad waveforms
   sams.append(pre + "D0493_0831_try1")
-  sams.append(pre + "D0494_0831_try1")  # 8/31
-  sams.append(pre + "D0496_0831_try1")  # 8/31
-  sams.append(pre + "D0497_0831_try1")  # 8/31
-  sams.append(pre + "D0498_0831_try1")  # 8/31
-  sams.append(pre + "D0499_0831_try1")  # 8/31
-  sams.append(pre + "D0500_0831_try1")  # 8/31
-  sams.append(pre + "D0501_0831_try1")  # 8/31
-  sams.append(pre + "D0503_0831_try1")  # 8/31
+  sams.append(pre + "D0494_0831_try1")
+  sams.append(pre + "D0496_0831_try1")
+  sams.append(pre + "D0497_0831_try1")
+  badsams.append(pre + "D0498_0831_try1")  # Waveform bad for high Vin chan 5,6
+  sams.append(pre + "D0499_0831_try1")
+  sams.append(pre + "D0500_0831_try1")
+  sams.append(pre + "D0501_0831_try1")
+  sams.append(pre + "D0502_0831_try1")
+  sams.append(pre + "D0504_0831_try1")
+  sams.append(pre + "D0505_0831_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

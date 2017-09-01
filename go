@@ -10,6 +10,7 @@ echo
 echo Checking Root:
 if ! root.exe -q; then
   echo Root must be setup to process data
+  rm goIsRunning
   exit 1
 fi
 echo Root is OK

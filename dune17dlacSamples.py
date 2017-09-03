@@ -79,7 +79,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0054_0804_try1")
   badsams.append(pre + "D0050_0803_try1")  # Bad waveforms
   sams.append(pre + "D0057_0808_try1")
-  badsams.append(pre + "D0060_0807_try1")  # warm test
+  badsams.append(pre + "D0060_0807_try1")  # taken warm but labeled cold.
   sams.append(pre + "D0063_0808_try1")
   sams.append(pre + "D0064_0808_try1")
   sams.append(pre + "D0069_0808_try1")

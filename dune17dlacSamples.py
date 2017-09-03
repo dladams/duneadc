@@ -516,18 +516,30 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0515_0901_try1")
   sams.append(pre + "D0516_0901_try1")
   badsams.append(pre + "D0517_0901_try1")  # Bad waveform
-  sams.append(pre + "D0519_0901_try1")  # 9/1
-  sams.append(pre + "D0519_0901_try2")  # 9/1
-  sams.append(pre + "D0520_0901_try1")  # 9/1
-  sams.append(pre + "D0521_0901_try1")  # 9/1
-  sams.append(pre + "D0522_0901_try1")  # 9/1
-  sams.append(pre + "D0524_0901_try1")  # 9/1
-  sams.append(pre + "D0525_0901_try1")  # 9/1
-  sams.append(pre + "D0527_0901_try1")  # 9/1
-  sams.append(pre + "D0528_0901_try1")  # 9/1
-  sams.append(pre + "D0529_0901_try1")  # 9/1
-  sams.append(pre + "D0530_0901_try1")  # 9/1
-  sams.append(pre + "D0531_0901_try1")  # 9/1
+  badsams.append(pre + "D0519_0901_try1")  # Bad waveforms
+  badsams.append(pre + "D0519_0901_try2")  # Bad waveforms
+  sams.append(pre + "D0520_0901_try1")  # 9/1+
+  sams.append(pre + "D0521_0901_try1")  # 9/1+
+  sams.append(pre + "D0522_0901_try1")  # 9/1+
+  sams.append(pre + "D0523_0901_try1")  # 9/3
+  sams.append(pre + "D0524_0901_try1")  # 9/1+
+  sams.append(pre + "D0525_0901_try1")  # 9/1+
+  sams.append(pre + "D0527_0901_try1")  # 9/1+
+  sams.append(pre + "D0528_0901_try1")  # 9/1+
+  sams.append(pre + "D0529_0901_try1")  # 9/1+
+  sams.append(pre + "D0530_0901_try1")  # 9/1+
+  sams.append(pre + "D0531_0901_try1")  # 9/1+
+  sams.append(pre + "D0532_0901_try1")  # 9/3
+  sams.append(pre + "D0534_0901_try1")  # 9/3
+  sams.append(pre + "D0535_0901_try1")  # 9/3
+  sams.append(pre + "D0536_0901_try1")  # 9/3
+  sams.append(pre + "D0537_0901_try1")  # 9/3
+  sams.append(pre + "D0538_0901_try1")  # 9/3
+  sams.append(pre + "D0539_0901_try1")  # 9/3
+  sams.append(pre + "D0540_0901_try1")  # 9/3
+  sams.append(pre + "D0541_0901_try1")  # 9/3
+  sams.append(pre + "D0542_0901_try1")  # 9/3
+  sams.append(pre + "D0543_0901_try1")  # 9/3
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

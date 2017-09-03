@@ -511,11 +511,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0503_0831_try1")  # 9/1
   sams.append(pre + "D0504_0831_try1")
   sams.append(pre + "D0505_0831_try1")
-  sams.append(pre + "D0509_0901_try1")  # 9/1
-  sams.append(pre + "D0510_0901_try1")  # 9/1
-  sams.append(pre + "D0515_0901_try1")  # 9/1
-  sams.append(pre + "D0516_0901_try1")  # 9/1
-  sams.append(pre + "D0517_0901_try1")  # 9/1
+  sams.append(pre + "D0509_0901_try1")
+  sams.append(pre + "D0510_0901_try1")
+  sams.append(pre + "D0515_0901_try1")
+  sams.append(pre + "D0516_0901_try1")
+  badsams.append(pre + "D0517_0901_try1")  # Bad waveform
   sams.append(pre + "D0519_0901_try1")  # 9/1
   sams.append(pre + "D0519_0901_try2")  # 9/1
   sams.append(pre + "D0520_0901_try1")  # 9/1

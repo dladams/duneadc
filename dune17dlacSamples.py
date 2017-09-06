@@ -542,15 +542,32 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0543_0901_try1")
   sams.append(pre + "D0544_0905_try1")  # 9/5
   sams.append(pre + "D0545_0905_try1")  # 9/5
-  sams.append(pre + "D0547_0905_try1")  # 9/5
-  sams.append(pre + "D0547_0905_try2")  # 9/5
-  sams.append(pre + "D0547_0905_try3")  # 9/5
-  sams.append(pre + "D0550_0905_try1")  # 9/5
-  sams.append(pre + "D0554_0905_try1")  # 9/5
-  sams.append(pre + "D0555_0905_try1")  # 9/5
-  sams.append(pre + "D0557_0905_try1")  # 9/5
-  sams.append(pre + "D0558_0905_try1")  # 9/5
-  sams.append(pre + "D0559_0905_try1")  # 9/5
+  badsams.append(pre + "D0547_0905_try1")  # Bad waveforms
+  badsams.append(pre + "D0547_0905_try2")  # Bad waveforms
+  sams.append(pre + "D0547_0905_try3")
+  sams.append(pre + "D0550_0905_try1")
+  sams.append(pre + "D0554_0905_try1")
+  badsams.append(pre + "D0555_0905_try1")  # Bad waveforms
+  badsams.append(pre + "D0557_0905_try1")  # Bad waveforms
+  sams.append(pre + "D0558_0905_try1")
+  sams.append(pre + "D0559_0905_try1")
+  sams.append(pre + "D0560_0905_try1")  # 9/6
+  sams.append(pre + "D0562_0905_try1")  # 9/6
+  sams.append(pre + "D0562_0905_try2")  # 9/6
+  sams.append(pre + "D0563_0905T1514_try1")  # 9/6
+  sams.append(pre + "D0563_0905T1545_try1")  # 9/6
+  sams.append(pre + "D0564_0905_try1")  # 9/6
+  sams.append(pre + "D0564_0905_try2")  # 9/6
+  sams.append(pre + "D0564_0905_try3")  # 9/6
+  sams.append(pre + "D0566_0905_try1")  # 9/6
+  sams.append(pre + "D0570_0905_try1")  # 9/6
+  sams.append(pre + "D0571_0905_try1")  # 9/6
+  sams.append(pre + "D0573_0905_try1")  # 9/6
+  sams.append(pre + "D0574_0905_try1")  # 9/6
+  sams.append(pre + "D0576_0905_try1")  # 9/6
+  sams.append(pre + "D0577_0905_try1")  # 9/6
+  sams.append(pre + "D0578_0905T2008_try1")  # 9/6
+  sams.append(pre + "D0578_0905T2015_try1:chipD0579")  # 9/6
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

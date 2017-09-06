@@ -715,6 +715,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D0559_0905")
   sams2.append(pre + "D0560_0905")  # 9/6
   sams2.append(pre + "D0562_0905")  # 9/6
+  sams2.append(pre + "D0566_0905")  # 9/6+
   sams2.append(pre + "D0570_0905")  # 9/6
   samsh.append(pre + "D0571_0905")  # 9/6
   sams2.append(pre + "D0573_0905")  # 9/6

@@ -738,21 +738,21 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0592_0906")
   badsams.append(pre + "D0594_0906")  # Bad waveforms?
   sams2.append(pre + "D0596_0906")
-  sams2.append(pre + "D0598_0906")  # 9/7
+  sams2.append(pre + "D0598_0906")
   samsh.append(pre + "D0600_0906")
   sams2.append(pre + "D0601_0906")
   samsh.append(pre + "D0602_0906")
-  samsh.append(pre + "D0603_0906")  # 9/7
-  samsh.append(pre + "D0605_0906")  # 9/7
-  sams2.append(pre + "D0604_0906")  # 9/7
-  sams2.append(pre + "D0607_0906")  # 9/7
-  samsh.append(pre + "D0608_0906")  # 9/7
-  sams2.append(pre + "D0609_0906")  # 9/7
-  samsh.append(pre + "D0610_0906")  # 9/7
-  samsh.append(pre + "D0612_0906")  # 9/7
-  sams2.append(pre + "D0613_0906")  # 9/7
-  samsh.append(pre + "D0615_0907")  # 9/7
-  samsh.append(pre + "D0616_0906")  # 9/7
+  badsams.append(pre + "D0603_0906")  # Bad waveforms
+  sams2.append(pre + "D0604_0906")
+  samsh.append(pre + "D0605_0906")
+  badsams.append(pre + "D0607_0906")  # Bad waveforms
+  samsh.append(pre + "D0608_0906")
+  sams2.append(pre + "D0609_0906")
+  samsh.append(pre + "D0610_0906")
+  samsh.append(pre + "D0612_0906")
+  sams2.append(pre + "D0613_0906")
+  samsh.append(pre + "D0615_0907")
+  samsh.append(pre + "D0616_0906")
   sams2.append(pre + "D0617_0907")  # 9/7
   samsh.append(pre + "d0618_0907:chipD0618")  # 9/7
   if isNwf: outsams = nwfsams

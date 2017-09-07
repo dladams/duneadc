@@ -609,6 +609,12 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0616_0906_try1")
   sams.append(pre + "D0617_0907_try1")
   sams.append(pre + "D0621_0907_try1")
+  sams.append(pre + "D0622_0907_try1")  # 9/7
+  sams.append(pre + "D0623_0907_try1")  # 9/7
+  sams.append(pre + "D0624_0907_try1")  # 9/7
+  sams.append(pre + "D0625_0907_try1")  # 9/7
+  sams.append(pre + "D0627_0907_try1")  # 9/7
+  sams.append(pre + "D0628_0907_try1")  # 9/7
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

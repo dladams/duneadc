@@ -638,16 +638,16 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0658_0908_try1")
   sams.append(pre + "D0660_0908_try1")
   sams.append(pre + "D0661_0911_try1")
-  sams.append(pre + "D0662_0911_try1")  # 9/12
-  sams.append(pre + "D0663_0911_try1")  # 9/12
-  sams.append(pre + "D0664_0911_try1")  # 9/12
+  sams.append(pre + "D0662_0911_try1")
+  sams.append(pre + "D0663_0911_try1")
+  sams.append(pre + "D0664_0911_try1")
   sams.append(pre + "D0666_0908_try1")
-  sams.append(pre + "D0667_0911_try1")  # 9/12
-  sams.append(pre + "D0668_0911_try1")  # 9/12
-  sams.append(pre + "D0669_0911_try1")  # 9/12
-  sams.append(pre + "D0671_0911_try1")  # 9/12
-  sams.append(pre + "D0671_0911_try2")  # 9/12
-  sams.append(pre + "D0672_0911_try1")  # 9/12
+  failsams.append(pre + "D0667_0911_try1")  # Crahed with too many minima. Wf not zero?
+  sams.append(pre + "D0668_0911_try1")
+  sams.append(pre + "D0669_0911_try1")
+  sams.append(pre + "D0671_0911_try1")
+  sams.append(pre + "D0671_0911_try2")
+  sams.append(pre + "D0672_0911_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

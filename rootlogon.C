@@ -5,7 +5,7 @@
   string name;
   while ( getline(fin, name) && !fin.eof() ) {
     if ( name.size() == 0 || name[0] == '#' ) continue;
-    cout << "  Loading " << name << endl;
+    //cout << "  Loading " << name << endl;
     string line = ".L " + name + ".cxx+";
     gROOT->ProcessLine(line.c_str());
   }

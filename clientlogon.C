@@ -15,7 +15,7 @@
       if ( name.size() == 0 || name[0] == '#' ) continue;
       cout << "  Loading " << name << endl;
       string libpath = topdir + "/.aclic" + topdir + "/" + name + "_cxx";
-      cout << libpath << endl;
+      //cout << libpath << endl;
       gSystem->Load(libpath.c_str());
     }
   }

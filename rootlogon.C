@@ -1,11 +1,13 @@
 {
+  cout << "Execution build logon for duneadc." << endl;
+  cout << endl;
   gSystem->SetBuildDir(".aclic");
   // Load and compile (if needed) the cxx files.
   ifstream fin("cxxfiles.dat");
   string name;
   while ( getline(fin, name) && !fin.eof() ) {
     if ( name.size() == 0 || name[0] == '#' ) continue;
-    cout << "  Loading " << name << endl;
+    //cout << "  Loading " << name << endl;
     string line = ".L " + name + ".cxx+";
     gROOT->ProcessLine(line.c_str());
   }

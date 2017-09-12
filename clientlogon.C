@@ -1,5 +1,6 @@
 {
-cout << 100 << endl;
+  cout << "Execution build logon for duneadc." << endl;
+  cout << endl;
   const char* ctopdir = gSystem->Getenv("DUNEADCDIR");
   if ( ctopdir == nullptr ) {
     cout << "DUNEADCDIR is not defined" << endl;

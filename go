@@ -1,16 +1,19 @@
 #!/bin/sh
 
-if [ -r go2IsRunning ]; then
-  echo Found go2IsRunning.
+ISRUNNING=goIsRunning
+STOPFILE=stop
+
+if [ -r $ISRUNNING ]; then
+  echo Found $ISRUNNING.
   exit 1
 fi
-touch go2IsRunning
+touch $ISRUNNING
 
 echo
 echo Checking Root:
 if ! root.exe -q; then
   echo Root must be setup to process data
-  rm go2IsRunning
+  rm $ISRUNNING
   exit 1
 fi
 echo Root is OK
@@ -65,7 +68,7 @@ for NAME in `cat $DSLIST.txt`; do
     echo "Skipping $NAME."
   else
     echo "Processing $NAME on "`date`
-    echo $NAME >go2IsRunning
+    echo $NAME >$ISRUNNING
     SAVEDIR=`pwd`
     export DUNEADCDIR=$SAVEDIR
     CHKDIR=$SAVEDIR/jobs/check
@@ -96,13 +99,13 @@ for NAME in `cat $DSLIST.txt`; do
       echo "  Job failed with error $FAILED"
       mv $RUNDIR "jobs/failed"
     fi
-    if test -r stop2; then
-      echo Found stop2 file. Exiting.
-      rm go2IsRunning
-      rm stop2
+    if test -r $STOPFILE; then
+      echo Found $STOPFILE file. Exiting.
+      rm $ISRUNNING
+      rm $STOPFILE
       exit 0
     fi
   fi
 done
 echo Done on `date`
-rm go2IsRunning
+rm $ISRUNNING

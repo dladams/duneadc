@@ -1,16 +1,19 @@
 #!/bin/sh
 
-if [ -r goIsRunning ]; then
-  echo Found goIsRunning.
+ISRUNNING=go1IsRunning
+STOPFILE=stop1
+
+if [ -r $ISRUNNING ]; then
+  echo Found $ISRUNNING.
   exit 1
 fi
-touch goIsRunning
+touch $ISRUNNING
 
 echo
 echo Checking Root:
 if ! root.exe -q; then
   echo Root must be setup to process data
-  rm goIsRunning
+  rm $ISRUNNING
   exit 1
 fi
 echo Root is OK
@@ -63,15 +66,15 @@ for NAME in `cat $DSLIST.txt`; do
     echo "Skipping $NAME."
   else
     echo "Processing $NAME on "`date`
-    echo $NAME >goIsRunning
+    echo $NAME >$ISRUNNING
     root.exe -b -q 'processDataset.C("'$NAME'",'$RMSMAX')' >$LOG 2>&1
-    if test -r stop; then
-      echo Found stop file. Exiting.
-      rm goIsRunning
-      rm stop
+    if test -r $STOPFILE; then
+      echo Found $STOPFILE file. Exiting.
+      rm $ISRUNNING
+      rm $STOPFILE
       exit 0
     fi
   fi
 done
 echo Done on `date`
-rm goIsRunning
+rm $ISRUNNING

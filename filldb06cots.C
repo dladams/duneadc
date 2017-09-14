@@ -22,6 +22,7 @@ using std::vector;
 //   201706_cotsw  - Original COTS warm
 //   201706_cotsb  - First (partial) update cold
 //   201706_cotsbw - First (partial) update warm
+//   201708_cotsBB - Aug data
 void filldb06cots(string dataset, Index chip1, Index nchip, Index chan1=0, Index nchan =16,
                   SampleIndex isam0 =0, SampleIndex nsam =0, bool fill =true) {
   const string myname = "filldb06cots: ";
@@ -34,12 +35,14 @@ void filldb06cots(string dataset, Index chip1, Index nchip, Index chan1=0, Index
   unsigned int nv = 135;
   double vmin = -200.0;
   double vmax = 2500.0;
-  double vresmax = 1.0;
+  double vresmax = 2.0;   // Changed from 1.0 06aug2017
   bool dropTails = false;
   bool fillPerfTree = fill;
   for ( Index chip=chip1; chip<chip1+nchip; ++chip ) {
     ostringstream sssam;
-    sssam << dataset << chip;
+    string prefix;
+    if ( dataset == "201708_cots" ) prefix = "0";
+    sssam << dataset << prefix << chip;
     if ( isam0 > 0 || nsam > 0 ) sssam << "_" << isam0 << "_" << nsam;
     string ssam = sssam.str();
     cout << endl;

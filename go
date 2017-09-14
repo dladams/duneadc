@@ -65,9 +65,9 @@ for NAME in `cat $DSLIST.txt`; do
   mkdir -p "jobs/failed"
   RUNDIR="jobs/running/$NAME"
   if [ -r $RUNDIR -o -r "jobs/done/$NAME" -o -r "jobs/failed/$NAME" ]; then
-    echo "Skipping $NAME."
+    echo "Skipping sample $NAME."
   else
-    echo "Processing $NAME on "`date`
+    echo "Processing sample $NAME on "`date`
     echo $NAME >$ISRUNNING
     SAVEDIR=`pwd`
     export DUNEADCDIR=`readlink -f $SAVEDIR`    # Must remove links for aclic path
@@ -92,17 +92,23 @@ for NAME in `cat $DSLIST.txt`; do
       echo "Unable to change dir to $RUNDIR"
       break
     fi
+    DONEDIR="jobs/done"
     if [ $FAILED -eq 0 ]; then
-      echo "  Job successful."
-      mv $RUNDIR "jobs/done"
-      RSYNCDIR=`cat rsyncdir 2>/dev/null`
+      LINE="  Job successful."
+      mv $RUNDIR $DONEDIR
+      RSYNCDIR=`cat rsync.dat 2>/dev/null`
       if [ -n "$RSYNCDIR" ]; then
-        rsync -avz "jobs/done" $RSYNCDIR
+        date >rsync.log
+        rsync -avz $DONEDIR/* $RSYNCDIR >>rsync.log 2>&1
+        LINE="Sync log is rsync.log."
+      else
+        LINE="$LINE No sync."
       fi
     else
-      echo "  Job failed with error $FAILED"
+      LINE="  Job failed with error $FAILED"
       mv $RUNDIR "jobs/failed"
     fi
+    echo $LINE
     if test -r $STOPFILE; then
       echo Found $STOPFILE file. Exiting.
       rm $ISRUNNING

@@ -100,7 +100,7 @@ for NAME in `cat $DSLIST.txt`; do
       if [ -n "$RSYNCDIR" ]; then
         date >rsync.log
         rsync -avz $DONEDIR/* $RSYNCDIR >>rsync.log 2>&1
-        LINE="Sync log is rsync.log."
+        LINE="$LINE Sync log is rsync.log."
       else
         LINE="$LINE No sync."
       fi

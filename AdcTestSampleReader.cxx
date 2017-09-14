@@ -8,7 +8,7 @@
 #include <sstream>
 #include "TSystem.h"
 #include "TH1F.h"
-#include "FileDirectory.h"
+#include "dunesupport/FileDirectory.h"
 
 using std::string;
 using std::cout;
@@ -274,6 +274,7 @@ int AdcTestSampleReader::read() {
                 ssam.substr(0, 11) == "201707_cots" ||
                 ssam.substr(0, 11) == "201708_cots" ) {
       string::size_type ipos = 11;
+      m_dataset = ssam.substr(0, ipos);
       string mydir = "COTS_ADC_TEST_DATA_06222017";
       string sboardPrefix = "Board";
       string::size_type brdlen = 1;   // Length of the field specifying the board number.
@@ -326,12 +327,12 @@ int AdcTestSampleReader::read() {
           vinmax = 2600.0;
           nsmodel = "3_" + smodel;
         }
+        if ( mydir == "COTS_ADC_Test_0805" && ibrd > 4 ) mydir = "COTS_ADC_Test_0809";
         m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
         if ( is07 ) {
           dirname = m_topdir + "/201707/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = "Brd" + sbrd + "_" + smodel + "_60p_" + stemp + "_2M_chn0x" + alschan[chan];
         } else if ( is08 ) { 
-       
           dirname = m_topdir + "/201708/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = "brd" + sbrd + "_" + sltemp + "_" + nsmodel + "_dly50_chn0x" + alschan[chan];
         } else { 

@@ -50,6 +50,9 @@ private:
   // Return a FEMB reader.
   AdcSampleReaderPtr findFembReader(Name asample, Index icha, SampleIndex maxsam =0) const;
 
+  // Return a quad reader.
+  AdcSampleReaderPtr findQuadReader(Name asample, Index icha, SampleIndex maxsam =0) const;
+
   // Convert channel snumber to string.
   Name schan(Index icha) const;
 

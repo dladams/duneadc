@@ -26,6 +26,18 @@ public:  // non-static members
   AdcFembTreeSampleReader(Name fname, Index chan, Name ssam,
                           SampleIndex isam0 =0, SampleIndex nsam =0);
 
+  // Same as previous but adding an event/subrun number. Trees that include the branch
+  // "subrun" (e.g. quad ADC) can hold multiple waveforms for each channel distinguished
+  // by the value of that field.
+  AdcFembTreeSampleReader(Name fname, Index chan, int event, Name ssam,
+                          SampleIndex isam0 =0, SampleIndex nsam =0);
+
+  // Same as previous but adding a channel offset. The tree is expected to include the
+  // branch "chan" and the data for this channel is taken fron the branch with
+  //   chanInTree = chanoff + chan
+  AdcFembTreeSampleReader(Name fname, Index chan, int event, int chanoff, Name ssam,
+                          SampleIndex isam0 =0, SampleIndex nsam =0);
+
   // Dtor.
   ~AdcFembTreeSampleReader();
 
@@ -117,8 +129,12 @@ private:
   TTree* m_pinTree;
   TTree* m_pmdTree;
   std::vector<int>* m_pdata;
+  UShort_t m_eventInTree;
+  UShort_t m_chanInTree;
   std::vector<float>* m_pvin;
   TTree* m_poutTree;
+  int m_event;
+  int m_chanoff;
   AdcCode m_underflowCode = 0;
   AdcCode m_overflowCode = 4095;
   const SampleFunction* m_samfun = nullptr;

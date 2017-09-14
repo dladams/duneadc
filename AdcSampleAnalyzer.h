@@ -12,7 +12,7 @@
 #include "AdcTreeChannelCalibration.h"
 #include "AdcVoltageResponse.h"
 #include "AdcVoltagePerformance.h"
-#include "FileDirectory.h"
+#include "dunesupport/FileDirectory.h"
 #include <string>
 #include <memory>
 #include "TH2.h"

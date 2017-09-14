@@ -1,41 +1,16 @@
 {
+  cout << "Execution build logon for duneadc." << endl;
+  cout << endl;
   gSystem->SetBuildDir(".aclic");
-  gROOT->ProcessLine(".L palette.cxx+");
-  gROOT->ProcessLine(".L EffNBit.cxx+");
-  gROOT->ProcessLine(".L SampleFunction.cxx+");
-  gROOT->ProcessLine(".L Sawtooth.cxx+");
-  gROOT->ProcessLine(".L TH1Props.cxx+");
-  gROOT->ProcessLine(".L histNSigma.cxx+");
-  gROOT->ProcessLine(".L drawNSigma.cxx+");
-  gROOT->ProcessLine(".L ErrorCount.cxx+");
-  gROOT->ProcessLine(".L FileDirectory.cxx+");
-  gROOT->ProcessLine(".L AdcChannelId.cxx+");
-  gROOT->ProcessLine(".L AdcSampleReader.cxx+");
-  gROOT->ProcessLine(".L AdcBorderFinder.cxx+");
-  gROOT->ProcessLine(".L AdcBorderExtremaFinder.cxx+");
-  gROOT->ProcessLine(".L AdcTestSampleReader.cxx+");
-  gROOT->ProcessLine(".L AdcBinarySampleReader.cxx+");
-  gROOT->ProcessLine(".L AdcFembTreeSampleReader.cxx+");
-  gROOT->ProcessLine(".L AdcSampleFinder.cxx+");
-  gROOT->ProcessLine(".L AdcTreeChannelCalibration.cxx+");
-  gROOT->ProcessLine(".L AdcCalibrationTree.cxx+");
-  gROOT->ProcessLine(".L AdcBinRecord.cxx+");
-  gROOT->ProcessLine(".L AdcVoltageResponse.cxx+");
-  gROOT->ProcessLine(".L AdcVoltagePerformance.cxx+");
-  gROOT->ProcessLine(".L RollbackFinder.cxx+");
-  gROOT->ProcessLine(".L AdcBinRecordBuilder.cxx+");
-  gROOT->ProcessLine(".L AdcBinExtremaFinder.cxx+");
-  gROOT->ProcessLine(".L AdcPerformanceTree.cxx+");
-  gROOT->ProcessLine(".L AdcSampleAnalyzer.cxx+");
-  gROOT->ProcessLine(".L AdcChipAnalyzer.cxx+");
-  gROOT->ProcessLine(".L AdcChipStatus.cxx+");
-  gROOT->ProcessLine(".L AdcDatasetAnalyzer.cxx+");
-  gROOT->ProcessLine(".L AdcChipMetric.cxx+");
-  gROOT->ProcessLine(".L AdcTimeAnalyzer.cxx+");
-  gROOT->ProcessLine(".L AdcLinearChannelCalibration.cxx+");
-  gROOT->ProcessLine(".L AdcPedestalChannelCalibration.cxx+");
-  //dev1 gROOT->ProcessLine(".L AdcPerfHists.cxx+");
-  //gROOT->ProcessLine(".L processChip.cxx+");
+  // Load and compile (if needed) the cxx files.
+  ifstream fin("cxxfiles.dat");
+  string name;
+  while ( getline(fin, name) && !fin.eof() ) {
+    if ( name.size() == 0 || name[0] == '#' ) continue;
+    //cout << "  Loading " << name << endl;
+    string line = ".L " + name + ".cxx+";
+    gROOT->ProcessLine(line.c_str());
+  }
   gROOT->ProcessLine(".L AdcHist.cxx+");   // obsolete
   gROOT->ProcessLine(".L makeplot.cxx+");   // obsolete
   gROOT->ProcessLine(".L drawChipBounds.C");

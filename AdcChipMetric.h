@@ -7,6 +7,7 @@
 #ifndef AdcChipMetric_H
 #define AdcChipMetric_H
 
+#include "AdcTypes.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -48,6 +49,7 @@ public:
   Index chip() const { return m_chip; }
   Index firstChannel() const { return m_firstChannel; }
   Index nChannel() const { return m_nChannel; }
+  AdcTime time() const { return m_time; }    // Unix time in sec
 
   // Return the mean efficiency for each channel.
   double channelEfficiency(Index chan) const;
@@ -75,6 +77,7 @@ private:
   Index m_chip;
   Index m_firstChannel;
   Index m_nChannel;
+  AdcTime m_time;
   DoubleVector m_chanEff;
   MetricMap m_chipMetric;
 

@@ -33,6 +33,7 @@ AdcChipMetric(Name a_dataset, Name a_sampleName, Index a_firstChannel, Index a_n
   m_chip(badChip()),
   m_firstChannel(a_firstChannel),
   m_nChannel(a_nChannel),
+  m_time(0),
   m_chanEff(m_nChannel, -1.0) { }
   
 //**********************************************************************
@@ -111,6 +112,7 @@ int AdcChipMetric::evaluate() {
     }
     const AdcVoltagePerformance* pavp = apt.find(ient);
     const AdcVoltagePerformance& avp = *pavp;
+    if ( m_time == 0 ) m_time = avp.time;
     double vin = avp.vmin;
     double vmin = 200.0;
     double vmax = 1200.0;

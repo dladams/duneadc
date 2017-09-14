@@ -11,7 +11,7 @@
 #define AdcHist_H
 
 #include "AdcTreeChannelCalibration.h"
-#include "FileDirectory.h"
+#include "dunesupport/FileDirectory.h"
 #include <string>
 #include "TH2.h"
 #include "TF1.h"

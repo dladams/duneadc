@@ -15,12 +15,28 @@ void writePython(string name, const RankMap& chips);
 
 string sentrycount(TH1* ph) {
   Index nbin = ph->GetNbinsX();
-  Index bin1 = nbin/2 + 1;
-  Index nhalf = ph->Integral(bin1, nbin+1);
+  Index binhalf = nbin/2 + 1;
+  Index binpoor = nbin*7/10 + 1;
+  Index binfair = nbin*85/100 + 1;
+  Index nhalf = ph->Integral(binhalf, nbin+1);
+  Index npoor = ph->Integral(binpoor, nbin+1);
+  Index nfair = ph->Integral(binfair, nbin+1);
   Index ntot = ph->GetEntries();
   ostringstream sslab;
-  sslab << nhalf << "/" << ntot;
+  //sslab << nhalf << "/" << ntot;
+  sslab << nfair << "/" << npoor << "/" << ntot;
   return sslab.str();
+}
+
+void drawQBounds(TH1* ph) {
+  static vector<double> qbounds = {0.70, 0.85, 0.95};
+  double y1 = ph->GetMinimum();
+  double y2 = ph->GetMaximum();
+  for ( double q : qbounds ) {
+    TLine* pl1 = new TLine(q, y1, q, y2);
+    pl1->SetLineStyle(2);
+    pl1->Draw();
+  }
 }
 
 // datasetString - colon-separated list of datasets
@@ -37,11 +53,16 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     if ( ipos != string::npos ) ++ipos;
   }
   cout << myname << "Datasets used in performance evaluation:" << endl;
+  string sdsts;
   for ( string dst : datasets ) {
     cout << myname << "  " << dst << endl;
+    if ( sdsts.size() ) sdsts += "-";
+    sdsts += dst;
   }
+  fnamedsts = dslist + "_" + sdsts; // Suffix for filenames.
   cout << myname << "Dataset list: " << dslist << endl;
   SampleIndexMap sampleChip;
+  SampleIndexMap sampleDay;
   RankMap rankedChipsPrd;
   SampleMetricMap metricPrd;
   SampleMetricMap metricAvg;
@@ -143,7 +164,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       if ( keep ) {
         if ( datasetIndex.find(ssam) != datasetIndex.end() ) {
            cout << myname << "ERROR: Sample " << ssam << " is in two datasets: "
-                << datasetIndex[ssam] << " and " << dataset << endl;
+                << datasets[datasetIndex[ssam]] << " and " << dataset << endl;
            return nullptr;
         }
         datasetIndex[ssam] = idst;
@@ -156,7 +177,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
         if ( dbg ) cout << myname << "Dropping " << ssam << endl;
       }
     }
-    cout << myname << "Dataset " << dataset << " keep/read: " << datasetSamples[idst].size() << "/" << readcount << endl;
+    cout << myname << "Dataset " << dataset << " keep/read: "
+         << datasetSamples[idst].size() << "/" << readcount << endl;
     readcountTot += readcount;
   }
   cout << myname << "TOTAL keep/read: " << ssams.size() << "/" << readcountTot << endl;
@@ -187,7 +209,11 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
       }
       Index chip = acm.chip();    // Must call this after evaluate.
       sampleChip[ssam] = chip;
-      cout << myname << "Sample " << ssam << " (chip " << chip << ")" << endl;
+      Index time = acm.time();
+      TDatime rtime(time);
+      Index ifday = 10000*rtime.GetYear() + 100*rtime.GetMonth() + rtime.GetDay();
+      sampleDay[ssam] = ifday;
+      cout << myname << "Sample " << ssam << " (chip " << chip << ", day " << ifday << ")" << endl;
       if ( estat != 0 ) continue;
       double effavg = acm.chipMetric("EffAvg");
       double effprd = acm.chipMetric("EffProd");
@@ -272,18 +298,20 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   sspyrankSample << "rankedSampleByChip = {";
   sspyrankChip   << "rankChip = [";
   //for ( auto& rc : rankedChipsPrd ) {
-  string outsumName = "rank_" + dslist + ".txt";
-  string outsum2Name = "rank_" + dslist + "_long.txt";
+  string outsumName = "rank_" + fnamedsts + ".txt";
+  string outsum2Name = "rank_" + fnamedsts + "_long.txt";
   ofstream outsum(outsumName.c_str());
   ofstream outsum2(outsum2Name.c_str());
   ostringstream outl;
   int wds = 7;
+  int wday = 9;
   int wval = 8;
   bool showDatasetMetrics = true;
   for ( string dataset : datasets ) if ( dataset.size() > wds ) wds = dataset.size();
   wds += 2;
   outl << setw(5) << "Rank" << setw(6) << "Chip" << setw(wval) << "Q" << setw(4) << "N80";
   if ( ndst > 1 ) outl << setw(wds) << "Dataset";
+  outl << setw(wday) << "Day";
   if ( showDatasetMetrics ) {
     for ( string dataset : datasets ) {
       string lab = "Q" + dataset.substr(0,wval-2);
@@ -325,6 +353,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
          << setw(wval) << fixed << setprecision(3) << effprd
          << setw(4) << n80;
     if ( ndst > 1 ) outl << setw(wds) << datasets[idst];
+    outl << setw(wday) << sampleDay[ssam];
     if ( showDatasetMetrics ) {
       for ( string dataset : datasets ) {
         auto iprd = datasetChipMetricPrd[dataset].find(chip);
@@ -352,7 +381,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   writePython("fair", fairChips);
   writePython("poor", poorChips);
   writePython("bad",  badChips);
-  string ofname = "rank_" + dslist + ".py";
+  string ofname = "rank_" + fnamedsts + ".py";
   for ( char& ch : ofname ) if ( ch == '-' ) ch = '_';
   ofstream outp(ofname.c_str());
   outp << sspymdst.str() << endl;
@@ -371,10 +400,10 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   TH1* ph0 = hists[0];
   string htitl = dslist + " ADC chip quality (" + sentrycount(ph0) + " chips)";
   ph0->SetTitle(htitl.c_str());
-  dyleg = 0.05*nhst;
-  double xleg1 = 0.40;
-  double xleg2 = xleg1 + 0.30;
-  double yleg2 = 0.85;
+  dyleg = 0.02 + 0.04*nhst;
+  double xleg1 = 0.33;
+  double xleg2 = xleg1 + 0.35;
+  double yleg2 = 0.88;
   double yleg1 = yleg2 - dyleg;
   htitl = sshtitl.str();
   ph0->SetLineWidth(3);
@@ -389,58 +418,78 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     ymax = int(1.3*ybinmax+0.5);
     doymax = true;
   }
-  if ( ymax < 10.0 ) {
-    ymax = 10.0;
+  if ( ymax < 20.0 ) {
+    ymax = 20.0;
     doymax = true;
   }
   ph0->SetMinimum(0.0);
   if ( doymax ) ph0->SetMaximum(ymax);
-  string fnameQuality = "chipQuality_" + dslist + ".png";
-  // Draw quality overlaying chip lists.
-  int col0 = kMagenta+2;
-  int col1 = 46;          // Red
-  int col2 = kGreen + 3;
-  int col21 = 28;       // Brown
-  int sty0 = 1;
-  int sty1 = 3;
-  int sty2 = 2;
-  if ( ndst < 3 ) {
-    col0 = col1;
-    sty0 = sty1;
-    col1 = col2;
-    sty1 = sty2;
+  string fnameQuality = "chipQuality_" + fnamedsts + ".png";
+  // Assign line colors, styles and widths.
+  SampleIndexMap cols;
+  SampleIndexMap stys;
+  SampleIndexMap wids;
+  cols["all"] = 602;
+  stys["all"] = 1;
+  wids["all"] = 2;
+  cols["PDTS2"] = 46;
+  stys["PDTS2"] = 3;
+  wids["PDTS2"] = 3;
+  cols["PDTS1"] = 1;
+  stys["PDTS1"] = 1;
+  wids["PDTS1"] = 1;
+  cols["PDTStry"] = kMagenta+2;
+  stys["PDTStry"] = 1;
+  wids["PDTStry"] = 1;
+  cols["PDTSV"] = kGreen + 3;
+  stys["PDTSV"] = 3;
+  wids["PDTSV"] = 3;
+  cols["PDTSH"] = kOrange + 9;
+  stys["PDTSH"] = 2;
+  wids["PDTSH"] = 2;
+  cols["CETS"] = kGreen + 3;
+  stys["CETS"] = 2;
+  wids["CETS"] = 2;
+  cols["201703a"] = 602;
+  stys["201703a"] = 1;
+  wids["201703a"] = 2;
+  for ( string dst : datasets ) {
+    if ( cols.find(dst) == cols.end() ) {
+      cols[dst] = 1;
+      stys[dst] = 1;
+      wids[dst] = 1;
+    }
   }
-  if ( nhst > 1 ) {
+  // Draw quality overlaying chip lists.
+  if ( true ) {
     pcan = new TCanvas;
     pcan->SetRightMargin(0.03);
-    hists[0]->Draw();
     hists[0]->SetMinimum(0.0);
+    hists[0]->Draw();
+    drawQBounds(hists[0]);
     TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
     pleg->SetBorderSize(0);
     pleg->SetFillStyle(0);
     for ( Index ihst=0; ihst<nhst; ++ihst ) {
+      string dst = "all";
+      if ( ndst == 1 ) dst = datasets[0];
+      else if ( ihst > 0 ) dst = datasets[ihst - 1];
       TH1* ph = hists[ihst];
       ostringstream sslab;
       sslab << slabs[ihst] << " (" << sentrycount(ph) << " chips)";
       string slab = sslab.str();
-      if ( ihst == 1 ) ph->SetLineColor(col0);
-      if ( ihst == 2 ) ph->SetLineColor(col1);
-      if ( ihst == 3 ) ph->SetLineColor(col2);
-      if ( ihst == 1 ) ph->SetLineStyle(sty0);
-      if ( ihst == 2 ) ph->SetLineStyle(sty2);
-      if ( ihst == 3 ) ph->SetLineStyle(sty1);
-      if ( ihst == 1 ) ph->SetLineWidth(sty0);
-      if ( ihst == 2 ) ph->SetLineWidth(sty2);
-      if ( ihst == 3 ) ph->SetLineWidth(sty1);
+      ph->SetLineColor(cols[dst]);
+      ph->SetLineStyle(stys[dst]);
+      ph->SetLineWidth(wids[dst]);
       ph->Draw("same");
       pleg->AddEntry(ph, slab.c_str(), "l");
     }
     pleg->Draw();
     if ( pcan != nullptr ) pcan->Print(fnameQuality.c_str());
     // Change name for combined plot if we also have multi-list plot.
-    fnameQuality = "chipQualityCombined_" + dslist + ".png";
+    fnameQuality = "chipQualityCombined_" + fnamedsts + ".png";
   }
-  // Draw combined quality overlaying chip lists.
+  // Draw combined quality without overlaying chip lists.
   pcan = new TCanvas;
   pcan->SetRightMargin(0.03);
   TH1* ph = hists[0];
@@ -467,7 +516,7 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   pgr->SetMarkerStyle(2);
   phax->Draw();
   pgr->Draw("p");
-  fname = "chipQualityAvgCorrelation_" + dslist + ".png";
+  fname = "chipQualityAvgCorrelation_" + fnamedsts + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Plot Emin vs Q.
   TGraph* pgr2 = new TGraph(valPrd.size(), &valPrd.front(), &valLow.front());
@@ -483,115 +532,124 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   pgr2->SetMarkerStyle(2);
   phax2->Draw();
   pgr2->Draw("p");
-  fname = "chipQualityLowCorrelation_" + dslist + ".png";
+  fname = "chipQualityLowCorrelation_" + fnamedsts + ".png";
   if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Plot q correlations: Q vs Qchip_max
-  const int i11 = 0;
-  const int i22 = 1;
-  const int iCC = 2;
-  const int i2C = 3;
-  const int i21 = 4;
-  const int iC1 = 5;
-  const int nxx = 6;
-  string ssam0 = "PDTS1";
-  if ( datasets[0] == "PDTStry" ) ssam0 = datasets[0];
-  string ssam1 = "PDTS2";
-  string ssam2 = "CETS";
-  string ssam00 = ssam0 + " " + ssam0;
-  string ssam11 = ssam1 + " " + ssam1;
-  string ssam22 = ssam2 + " " + ssam2;
-  string ssam12 = ssam1 + " " + ssam2;
-  string ssam10 = ssam1 + " " + ssam0;
-  string ssam20 = ssam2 + " " + ssam0;
-  StringVector slab{ssam00, ssam11, ssam22, ssam12, ssam10, ssam20};
-  vector<int> qmrk = {2, 2, 2,  4, 26, 32};
-  vector<int> qcol = {col0, col1, col2, col21, col1, col2};
-  DoubleVectorVector qcx(nxx);
-  DoubleVectorVector qcy(nxx);
-  for ( string ssam : ssams ) {
-    Index chip = sampleChip[ssam];
-    auto iprd = chipMetricPrd.find(chip);
-    string dst = sampleDataset[ssam];
-    double q = metricPrd[ssam];
-    if ( iprd != chipMetricPrd.end() ) {
-      Index chip0 = iprd->second.second.first;
-      string sam0 = iprd->second.second.second;
-      string dst0 = sampleDataset[sam0];
-      double q0 = metricPrd[sam0];
-      if ( sam0 != ssam ) {
-        double q1 = metricPrd[sam0];
-        double q2 = q;
-        string dst1 = dst0;
-        string dst2 = dst;
-        bool flip = false;
-        if ( dst1 == dst2 ) {
-          flip = q2 > q1;
-        } else {
-          flip |= dst2 == ssam1;
-          flip |= dst1 == ssam0;
+  if ( ndst == 3 ) {
+    const int i11 = 0;
+    const int i22 = 1;
+    const int iCC = 2;
+    const int i2C = 3;
+    const int i21 = 4;
+    const int iC1 = 5;
+    const int nxx = 6;
+    string ssam0 = "PDTS1";
+    if ( datasets[0] == "PDTStry" ) ssam0 = datasets[0];
+    string ssam1 = "PDTS2";
+    string ssam2 = "CETS";
+    string ssam00 = ssam0 + " " + ssam0;
+    string ssam11 = ssam1 + " " + ssam1;
+    string ssam22 = ssam2 + " " + ssam2;
+    string ssam12 = ssam1 + " " + ssam2;
+    string ssam10 = ssam1 + " " + ssam0;
+    string ssam20 = ssam2 + " " + ssam0;
+    StringVector slab{ssam00, ssam11, ssam22, ssam12, ssam10, ssam20};
+    vector<int> qmrk = {2, 2, 2,  4, 26, 32};
+    int col21 = 28; 
+    vector<int> qcol;
+    qcol.push_back(cols[datasets[0]]);
+    qcol.push_back(cols[datasets[1]]);
+    qcol.push_back(cols[datasets[2]]);
+    qcol.push_back(col21);
+    qcol.push_back(cols[datasets[1]]);
+    qcol.push_back(cols[datasets[2]]);
+    DoubleVectorVector qcx(nxx);
+    DoubleVectorVector qcy(nxx);
+    for ( string ssam : ssams ) {
+      Index chip = sampleChip[ssam];
+      auto iprd = chipMetricPrd.find(chip);
+      string dst = sampleDataset[ssam];
+      double q = metricPrd[ssam];
+      if ( iprd != chipMetricPrd.end() ) {
+        Index chip0 = iprd->second.second.first;
+        string sam0 = iprd->second.second.second;
+        string dst0 = sampleDataset[sam0];
+        double q0 = metricPrd[sam0];
+        if ( sam0 != ssam ) {
+          double q1 = metricPrd[sam0];
+          double q2 = q;
+          string dst1 = dst0;
+          string dst2 = dst;
+          bool flip = false;
+          if ( dst1 == dst2 ) {
+            flip = q2 > q1;
+          } else {
+            flip |= dst2 == ssam1;
+            flip |= dst1 == ssam0;
+          }
+          if ( flip ) {
+            q2 = q1;
+            q1 = q;
+            dst1 = dst;
+            dst2 = dst0;
+          }
+          unsigned int ixx = nxx;
+          string lab = dst1 + " " + dst2;
+          for ( ixx=0; ixx<nxx; ++ixx ) {
+            if ( slab[ixx] == lab ) break;
+          }
+          if ( ixx == nxx ) {
+            cout << myname << "Unable to find dataset pair index for " << lab << endl;
+            continue;
+          }
+          qcx[ixx].push_back(q1);
+          qcy[ixx].push_back(q2);
+          if ( 1 ) cout << setw(12) << slab[ixx] << "  qmax  q: " << q1 << "    "
+                        << q2 << "   " << sam0  << ", " << ssam << endl;
         }
-        if ( flip ) {
-          q2 = q1;
-          q1 = q;
-          dst1 = dst;
-          dst2 = dst0;
-        }
-        unsigned int ixx = nxx;
-        string lab = dst1 + " " + dst2;
-        for ( ixx=0; ixx<nxx; ++ixx ) {
-          if ( slab[ixx] == lab ) break;
-        }
-        if ( ixx == nxx ) {
-          cout << myname << "Unable to find dataset pair index for " << lab << endl;
-          continue;
-        }
-        qcx[ixx].push_back(q1);
-        qcy[ixx].push_back(q2);
-        if ( 1 ) cout << setw(12) << slab[ixx] << "  qmax  q: " << q1 << "    "
-                      << q2 << "   " << sam0  << ", " << ssam << endl;
+      } else {
+        cout << myname << "ERROR: Sample " << ssam << " chip " << chip << " is not in chip metric map!" << endl;
       }
-    } else {
-      cout << myname << "ERROR: Sample " << ssam << " chip " << chip << " is not in chip metric map!" << endl;
     }
-  }
-  vector<TGraph*> qgr(nxx, nullptr);
-  dyleg = 0.20;
-  xleg1 = 0.20;
-  xleg2 = xleg1 + 0.25;
-  yleg2 = 0.87;
-  yleg1 = yleg2 - dyleg;
-  TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
-  pleg->SetBorderSize(0);
-  pleg->SetFillStyle(0);
-  for ( unsigned int ixx=0; ixx<nxx; ++ixx ) {
-    unsigned int npt = qcx[ixx].size();
-    if ( qcx[ixx].size() > 0 ) {
-      qgr[ixx] = new TGraph(npt, &qcx[ixx].front(), &qcy[ixx].front());
-      qgr[ixx]->SetMarkerStyle(qmrk[ixx]);
-      qgr[ixx]->SetMarkerColor(qcol[ixx]);
-      cout << myname << setw(14) << slab[ixx] << " point count is " << npt << endl;
-      pleg->AddEntry(qgr[ixx], slab[ixx].c_str(), "p");
+    vector<TGraph*> qgr(nxx, nullptr);
+    dyleg = 0.20;
+    xleg1 = 0.20;
+    xleg2 = xleg1 + 0.25;
+    yleg2 = 0.87;
+    yleg1 = yleg2 - dyleg;
+    TLegend* pleg = new TLegend(xleg1, yleg1, xleg2, yleg2);
+    pleg->SetBorderSize(0);
+    pleg->SetFillStyle(0);
+    for ( unsigned int ixx=0; ixx<nxx; ++ixx ) {
+      unsigned int npt = qcx[ixx].size();
+      if ( qcx[ixx].size() > 0 ) {
+        qgr[ixx] = new TGraph(npt, &qcx[ixx].front(), &qcy[ixx].front());
+        qgr[ixx]->SetMarkerStyle(qmrk[ixx]);
+        qgr[ixx]->SetMarkerColor(qcol[ixx]);
+        cout << myname << setw(14) << slab[ixx] << " point count is " << npt << endl;
+        pleg->AddEntry(qgr[ixx], slab[ixx].c_str(), "p");
+      }
     }
+    hnam = "haxqcor_" + dslist;
+    sshtitl.str("");
+    sshtitl << dslist << " quality correlation for the same chip; Q_{1}; Q_{2}";
+    htitl = sshtitl.str();
+    TH2* phaxq = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
+    phaxq->SetStats(0);
+    pcan = new TCanvas;
+    pcan->SetRightMargin(0.03);
+    phaxq->Draw();
+    TLine* plq = new TLine(0,0,1,1);
+    plq->SetLineStyle(2);
+    plq->Draw();
+    pleg->Draw();
+    for ( unsigned int ixx=0; ixx<nxx; ++ixx ) {
+      TGraph* pgr = qgr[ixx];
+      if ( pgr ) pgr->Draw("p");
+    }
+    fname = "chipQualityQCorrelation_" + fnamedsts + ".png";
+    if ( pcan != nullptr ) pcan->Print(fname.c_str());
   }
-  hnam = "haxqcor_" + dslist;
-  sshtitl.str("");
-  sshtitl << dslist << " quality correlation for the same chip; Q_{1}; Q_{2}";
-  htitl = sshtitl.str();
-  TH2* phaxq = new TH2F(hnam.c_str(), htitl.c_str(), 10, 0, 1, 10, 0, 1);
-  phaxq->SetStats(0);
-  pcan = new TCanvas;
-  pcan->SetRightMargin(0.03);
-  phaxq->Draw();
-  TLine* plq = new TLine(0,0,1,1);
-  plq->SetLineStyle(2);
-  plq->Draw();
-  pleg->Draw();
-  for ( unsigned int ixx=0; ixx<nxx; ++ixx ) {
-    TGraph* pgr = qgr[ixx];
-    if ( pgr ) pgr->Draw("p");
-  }
-  fname = "chipQualityQCorrelation_" + dslist + ".png";
-  if ( pcan != nullptr ) pcan->Print(fname.c_str());
   // Log summary.
   cout << "N80 counts:" << endl;
   Index csum = 0;

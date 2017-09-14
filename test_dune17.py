@@ -11,10 +11,15 @@ from dune17 import dune17cSamples
 from dune17 import dune17cChips
 from dune17 import dune17dlacSamples
 from dune17 import dune17dlacChips
+from dune17 import dune17qcSamples
+from dune17 import dune17qcChips
 from dune17 import dune17tscSamples
 from dune17 import dune17tscChips
 from dune17 import badChips
 from dune17 import badFiles
+
+# This builds the list of quad samples.
+import findDUNE17cSamples
 
 writeDsfile = True
 
@@ -30,6 +35,8 @@ def testDataset(dsname, writeDsFile, showChips):
     grpsams.append(sams)
     grpsams.append(dune17cSamples(group=1))
     grpsams.append(dune17cSamples(group=2))
+    grpsams.append(dune17cSamples(group=3))
+    grpsams.append(dune17cSamples(group=4))
     remsams  = dune17cSamples(skipSel=True)
     badsams  = dune17cSamples(isBad =True)
     nwfsams  = dune17cSamples(isNwf =True)
@@ -49,12 +56,19 @@ def testDataset(dsname, writeDsFile, showChips):
     isCETS = True
     haveDNL = True
   elif dsname == "DUNE17dla-cold":
-    sams = dune17dlacSamples()
-    remsams = dune17dlacSamples(skipSel=True)
-    badsams = dune17dlacSamples(isBad=True)
+    sams     = dune17dlacSamples()
+    remsams  = dune17dlacSamples(skipSel=True)
+    badsams  = dune17dlacSamples(isBad=True)
     failsams = dune17dlacSamples(isFail=True)
-    chips = dune17dlacChips()
+    chips    = dune17dlacChips()
     remchips = dune17dlacChips(skipSel=True)
+  elif dsname == "DUNE17q-cold":
+    sams     = dune17qcSamples()
+    remsams  = dune17qcSamples(skipSel=True)
+    badsams  = dune17qcSamples(isBad=True)
+    failsams = dune17qcSamples(isFail=True)
+    chips    = dune17qcChips()
+    remchips = dune17qcChips(skipSel=True)
   else:
     print "Invalid dsname: " + dsname
     return
@@ -122,19 +136,33 @@ def testDataset(dsname, writeDsFile, showChips):
       outf = open(outfName, "w")
       for ds in grpsams[1]:
         if writeDsfile: outf.write(ds + "\n")
-      print "Good sample list written to " + outfName
+      print "Old sample list written to " + outfName
       # New samples
       outfName = dsname + "-new.txt"
       outf = open(outfName, "w")
       for ds in grpsams[2]:
         if writeDsfile: outf.write(ds + "\n")
-      print "Good sample list written to " + outfName
+      print "New sample list written to " + outfName
+      # Horizontal (new) samples
+      outfName = dsname + "-horizontal.txt"
+      outf = open(outfName, "w")
+      for ds in grpsams[3]:
+        if writeDsfile: outf.write(ds + "\n")
+      print "Horizontal sample list written to " + outfName
+      # New vertical samples.
+      outfName = dsname + "-vertical.txt"
+      outf = open(outfName, "w")
+      for ds in grpsams[4]:
+        if writeDsfile: outf.write(ds + "\n")
+      print "Vertical sample list written to " + outfName
 
 showChips = False
 print
 testDataset("DUNE17-cold", True, showChips)
 print
 testDataset("DUNE17dla-cold", True, showChips)
+print
+testDataset("DUNE17q-cold", True, showChips)
 print
 testDataset("DUNE17ts-cold", True, showChips)
 print

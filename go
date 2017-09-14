@@ -70,7 +70,7 @@ for NAME in `cat $DSLIST.txt`; do
     echo "Processing $NAME on "`date`
     echo $NAME >$ISRUNNING
     SAVEDIR=`pwd`
-    export DUNEADCDIR=$SAVEDIR
+    export DUNEADCDIR=`readlink -f $SAVEDIR`    # Must remove links for aclic path
     CHKDIR=$SAVEDIR/jobs/check
     mkdir -p $CHKDIR
     mkdir $RUNDIR
@@ -95,6 +95,10 @@ for NAME in `cat $DSLIST.txt`; do
     if [ $FAILED -eq 0 ]; then
       echo "  Job successful."
       mv $RUNDIR "jobs/done"
+      RSYNCDIR=`cat rsyncdir 2>/dev/null`
+      if [ -n "$RSYNCDIR" ]; then
+        rsync -avz "jobs/done" $RSYNCDIR
+      fi
     else
       echo "  Job failed with error $FAILED"
       mv $RUNDIR "jobs/failed"

@@ -19,4 +19,6 @@
       gSystem->Load(libpath.c_str());
     }
   }
+  palette(0);
+  gStyle->SetTitleW(1.0);  // So title can extend full width of pad.
 }

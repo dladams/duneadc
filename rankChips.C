@@ -191,7 +191,11 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     string dataset = datasets[idst];
     // Loop over samples in each dataset.
     for ( string ssam : datasetSamples[idst] ) {
-      std::unique_ptr<AdcChipMetric> pacm(new AdcChipMetric(dataset, ssam));
+      string perfFileName = "";
+      if ( true ) {
+        perfFileName= "results/" + dataset + "/" + ssam + "/perf_" + ssam + ".root";
+      }
+      std::unique_ptr<AdcChipMetric> pacm(new AdcChipMetric(dataset, ssam, perfFileName));
       int estat = pacm->evaluate();
       if ( estat != 0 ) {
         cout << myname << "Unable to find performance for " << ssam << endl;

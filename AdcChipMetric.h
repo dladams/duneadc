@@ -28,8 +28,17 @@ public:
   //   a_nChannel = number of channels
   AdcChipMetric(Name a_dataset, Index a_chip, Index a_firstChannel =0, Index a_nChannel =16);
 
+  // Ctor from dataset name, sample name, performance file name and channel range.
+  //   dataset = dataset name
+  //   chip = chip number
+  //   a_firstChannel = first channel number
+  //   a_nChannel = number of channels
+  AdcChipMetric(Name a_dataset, Name a_sampleName, Name a_perfFileName,
+                Index a_firstChannel =0, Index a_nChannel =16);
+
   // Ctor from dataset name, sample name and channel range.
-  //   dataset = dataset name (performance file is perf_dataset.root)
+  // Performance file is perf_dataset.root
+  //   dataset = dataset name
   //   chip = chip number
   //   a_firstChannel = first channel number
   //   a_nChannel = number of channels
@@ -74,6 +83,7 @@ private:
 
   Name m_dataset;
   Name m_sampleName;
+  Name m_perfFileName;
   Index m_chip;
   Index m_firstChannel;
   Index m_nChannel;

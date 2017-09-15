@@ -805,6 +805,40 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0696_0912")  # 9/13+
   sams2.append(pre + "D0697_0912")  # 9/13+
   samsh.append(pre + "699_0912:chipD0699")  # 9/13+
+  sams2.append(pre + "D0700_0912")  # 9/13+
+  sams2.append(pre + "D0704_0913")  # 9/14+
+  samsh.append(pre + "D0708_0913")  # 9/14+
+  samsh.append(pre + "D0711_0913")  # 9/14+
+  sams2.append(pre + "D0712_0913")  # 9/14+
+  sams2.append(pre + "D0715_0913")  # 9/14+
+  samsh.append(pre + "D0716_0913")  # 9/14+
+  samsh.append(pre + "D0717_0913")  # 9/14+
+  sams2.append(pre + "D0718_0913")  # 9/14+
+  sams2.append(pre + "D0719_0913")  # 9/14+
+  sams2.append(pre + "D0721_0913")  # 9/14+
+  sams2.append(pre + "D0722_0913")  # 9/14+
+  samsh.append(pre + "D0723_0913")  # 9/14+
+  sams2.append(pre + "D0725_0913")  # 9/14+
+  samsh.append(pre + "D726_0913:chipD0726")  # 9/14+
+  samsh.append(pre + "D0727_0913")  # 9/14+
+  sams2.append(pre + "D0731_0913")  # 9/14+
+  sams2.append(pre + "D0732_0913")  # 9/14+
+  samsh.append(pre + "D0733_0913")  # 9/14+
+  samsh.append(pre + "D0734_0913")  # 9/14+
+  samsh.append(pre + "D0735_0913")  # 9/14+
+  samsh.append(pre + "D0736_0913")  # 9/14+
+  sams2.append(pre + "D0737_0914")  # 9/15+
+  samsh.append(pre + "D0738_0914")  # 9/15+
+  samsh.append(pre + "D0740_0914")  # 9/15+
+  sams2.append(pre + "D0741_0914")  # 9/15+
+  samsh.append(pre + "D0743_0914")  # 9/15+
+  samsh.append(pre + "D0745_0914")  # 9/15+
+  samsh.append(pre + "D0751_0914")  # 9/15+
+  samsh.append(pre + "D0752_0914")  # 9/15+
+  samsh.append(pre + "D0754_0914")  # 9/15+
+  samsh.append(pre + "D0755_0914")  # 9/15+
+  samsh.append(pre + "D0756_0914")  # 9/15+
+  samsh.append(pre + "D0757_0914")  # 9/15+
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + nwfsams + rollsams
   elif isFail: outsams = failsams

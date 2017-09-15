@@ -27,20 +27,29 @@ AdcChipMetric(Name a_dataset, Index a_chip, Index a_firstChannel, Index a_nChann
 //**********************************************************************
 
 AdcChipMetric::
-AdcChipMetric(Name a_dataset, Name a_sampleName, Index a_firstChannel, Index a_nChannel)
+AdcChipMetric(Name a_dataset, Name a_sampleName, Name a_perfFileName,
+              Index a_firstChannel, Index a_nChannel)
 : m_dataset(a_dataset),
   m_sampleName(a_sampleName),
+  m_perfFileName(a_perfFileName),
   m_chip(badChip()),
   m_firstChannel(a_firstChannel),
   m_nChannel(a_nChannel),
   m_time(0),
   m_chanEff(m_nChannel, -1.0) { }
-  
+
+//**********************************************************************
+
+AdcChipMetric::
+AdcChipMetric(Name a_dataset, Name a_sampleName, Index a_firstChannel, Index a_nChannel)
+: AdcChipMetric(a_dataset, a_sampleName, "", a_firstChannel, a_nChannel) { }
+
 //**********************************************************************
 
 int AdcChipMetric::evaluate() {
   const Name myname = "AdcChipMetric::evaluate: ";
-  Name fname = "perf_" + dataset() + ".root";
+  Name fname = m_perfFileName;
+  if ( fname.size() == 0 ) fname = "perf_" + dataset() + ".root";
   AdcPerformanceTree apt(fname);
   if ( apt.status() != 0 ) {
     cout << myname << "Unable to find performance file " << fname << endl;

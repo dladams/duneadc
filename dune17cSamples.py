@@ -23,6 +23,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2 = []       # Subsequent good samples
   samsh = []       # Good samples with horizontal boards
   badsams = []     # Samples otherwise bad
+  badsams2 = []    # Samples otherwise bad with vertical boards and good clock settings
+  badsamsh = []    # Samples otherwise bad with horizontal boards
   nwfsams = []     # Samples without waveforms
   rollsams = []    # Samples with severe rollback
   failsams = []    # Samples tha fail processing
@@ -788,7 +790,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0671_0911")
   samsh.append(pre + "D0672_0911")
   sams2.append(pre + "D0674_0912")
-  sams2.append(pre + "D0676_0912")  # Bad waveforms.
+  badsams.append(pre + "D0676_0912")  # Bad waveforms.
   samsh.append(pre + "D0677_0912")
   samsh.append(pre + "D0678_0912")
   sams2.append(pre + "D0679_0912")
@@ -804,43 +806,48 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0692_0912")
   sams2.append(pre + "D0696_0912")
   sams2.append(pre + "D0697_0912")
-  samsh.append(pre + "699_0912:chipD0699")  # 9/13+
-  sams2.append(pre + "D0700_0912")  # 9/13+
-  sams2.append(pre + "D0704_0913")  # 9/14+
-  samsh.append(pre + "D0708_0913")  # 9/14+
-  samsh.append(pre + "D0711_0913")  # 9/14+
-  sams2.append(pre + "D0712_0913")  # 9/14+
-  sams2.append(pre + "D0715_0913")  # 9/14+
-  samsh.append(pre + "D0716_0913")  # 9/14+
-  samsh.append(pre + "D0717_0913")  # 9/14+
-  sams2.append(pre + "D0718_0913")  # 9/14+
-  sams2.append(pre + "D0719_0913")  # 9/14+
-  sams2.append(pre + "D0721_0913")  # 9/14+
-  sams2.append(pre + "D0722_0913")  # 9/14+
-  samsh.append(pre + "D0723_0913")  # 9/14+
-  sams2.append(pre + "D0725_0913")  # 9/14+
-  samsh.append(pre + "D726_0913:chipD0726")  # 9/14+
-  samsh.append(pre + "D0727_0913")  # 9/14+
-  sams2.append(pre + "D0731_0913")  # 9/14+
-  sams2.append(pre + "D0732_0913")  # 9/14+
-  samsh.append(pre + "D0733_0913")  # 9/14+
-  samsh.append(pre + "D0734_0913")  # 9/14+
-  samsh.append(pre + "D0735_0913")  # 9/14+
-  samsh.append(pre + "D0736_0913")  # 9/14+
-  sams2.append(pre + "D0737_0914")  # 9/15+
-  samsh.append(pre + "D0738_0914")  # 9/15+
-  samsh.append(pre + "D0740_0914")  # 9/15+
-  sams2.append(pre + "D0741_0914")  # 9/15+
-  samsh.append(pre + "D0743_0914")  # 9/15+
-  samsh.append(pre + "D0745_0914")  # 9/15+
-  samsh.append(pre + "D0751_0914")  # 9/15+
-  samsh.append(pre + "D0752_0914")  # 9/15+
-  samsh.append(pre + "D0754_0914")  # 9/15+
-  samsh.append(pre + "D0755_0914")  # 9/15+
-  samsh.append(pre + "D0756_0914")  # 9/15+
-  samsh.append(pre + "D0757_0914")  # 9/15+
+  samsh.append(pre + "699_0912:chipD0699")
+  sams2.append(pre + "D0700_0912")
+  sams2.append(pre + "D0704_0913")
+  samsh.append(pre + "D0708_0913")
+  badsamsh.append(pre + "D0711_0913")  # Bad waveforms.
+  sams2.append(pre + "D0712_0913")
+  sams2.append(pre + "D0715_0913")
+  samsh.append(pre + "D0716_0913")
+  badsamsh.append(pre + "D0717_0913")  # Bad waveforms
+  sams2.append(pre + "D0718_0913")
+  sams2.append(pre + "D0719_0913")
+  sams2.append(pre + "D0721_0913")
+  sams2.append(pre + "D0722_0913")
+  samsh.append(pre + "D0723_0913")
+  sams2.append(pre + "D0725_0913")
+  samsh.append(pre + "D726_0913:chipD0726")
+  samsh.append(pre + "D0727_0913")
+  sams2.append(pre + "D0731_0913")
+  badsams.append(pre + "D0732_0913")  # Bad waveforms
+  samsh.append(pre + "D0733_0913")
+  samsh.append(pre + "D0734_0913")
+  samsh.append(pre + "D0735_0913")
+  samsh.append(pre + "D0736_0913")
+  sams2.append(pre + "D0737_0914")
+  samsh.append(pre + "D0738_0914")
+  samsh.append(pre + "D0740_0914")
+  badsams.append(pre + "D0741_0914")  # Bad waveforms
+  samsh.append(pre + "D0743_0914")
+  samsh.append(pre + "D0745_0914")
+  sams2.append(pre + "D0749T1647_0918")  # 9/19
+  sams2.append(pre + "D0749T1713_0918")  # 9/19
+  samsh.append(pre + "D0751_0914")
+  samsh.append(pre + "D0752_0914")
+  samsh.append(pre + "D0754_0914")
+  samsh.append(pre + "D0755_0914")
+  samsh.append(pre + "D0756_0914")
+  samsh.append(pre + "D0757_0914")
+  samsh.append(pre + "D0758_0915")  # 9/18+
+  sams2.append(pre + "D0764_0918")  # 9/19
+  sams2.append(pre + "D0766_0918")  # 9/19
   if isNwf: outsams = nwfsams
-  elif isBad: outsams = badsams + nwfsams + rollsams
+  elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams
   else:
     if   group == 0: outsams = sams1 + sams2 + samsh

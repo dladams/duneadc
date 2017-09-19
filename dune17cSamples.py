@@ -835,8 +835,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams.append(pre + "D0741_0914")  # Bad waveforms
   samsh.append(pre + "D0743_0914")
   samsh.append(pre + "D0745_0914")
-  sams2.append(pre + "D0749T1647_0918")  # 9/19
-  sams2.append(pre + "D0749T1713_0918")  # 9/19
+  sams2.append(pre + "D0749_0918T1647")  # 9/19
+  sams2.append(pre + "D0749_0918T1713")  # 9/19
   samsh.append(pre + "D0751_0914")
   samsh.append(pre + "D0752_0914")
   samsh.append(pre + "D0754_0914")

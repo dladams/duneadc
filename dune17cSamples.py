@@ -860,6 +860,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams2.append(pre + "D0781_0919")  # Bad waveforms
   sams2.append(pre + "D0782_0919")
   sams2.append(pre + "D0787_0920")  # 7/20
+  badsams2.append(pre + "D0791_0921T1029")  # Warm test
+  sams2.append(pre + "D0792_0920T1420")  # 7/21+
+  sams2.append(pre + "D0792_0920T1438")  # 7/21+
+  sams2.append(pre + "D0794_0921")  # 7/21+
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams

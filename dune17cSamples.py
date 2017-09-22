@@ -862,13 +862,13 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams2.append(pre + "D0781_0919")  # Bad waveforms
   sams2.append(pre + "D0782_0919")
   badsams2.append(pre + "D0787_0920")  # Bad waveforms.
-  samsh.append(pre + "D0789_0922")  # 7/22+
+  samsh.append(pre + "D0789_0922")
   badsams2.append(pre + "D0791_0921T1029")  # Warm test
   badsams2.append(pre + "D0791_0921T1509")  # Bad waveforms
-  sams2.append(pre + "D0791_0921T1525")  # 7/22+
-  sams2.append(pre + "D0791_0922")  # 7/22+
-  sams2.append(pre + "D0792_0922")  # 7/22+
-  sams2.append(pre + "D0795_0922")  # 7/22+
+  badsams2.append(pre + "D0791_0921T1525")  # Bad waveforms
+  badsams2.append(pre + "D0791_0922")  # Bad waveforms
+  sams2.append(pre + "D0792_0922")
+  sams2.append(pre + "D0795_0922")
   badsams2.append(pre + "D0792_0920T1420")  # Bad waveforms
   failsams2.append(pre + "D0792_0920T1438")  # Proc hangs on chan 15, bad waveforms
   if isNwf: outsams = nwfsams

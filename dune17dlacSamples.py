@@ -752,13 +752,23 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0780_0919_try1")
   badsams.append(pre + "D0781_0919_try1")  # Bad waveforms
   sams.append(pre + "D0782_0919_try1")
-  sams.append(pre + "D0787_0920_try1")  # 9/21
+  badsams.append(pre + "D0787_0920_try1")  # Bad waveforms
+  sams.append(pre + "D0789_0922_try1")  # 9/22
+  sams.append(pre + "D0789_0922_try2")  # 9/22
   sams.append(pre + "D0788_0920_try1")
   sams.append(pre + "D0791_0920_try1")  # 9/21
   badsams.append(pre + "D0791_0921T1029_try1")  # Warm test
-  badsams.append(pre + "D0792_0920T1420_try1")  # Bad waveforms
+  sams.append(pre + "D0791_0922_try1")  # 9/22
+  badsams.append(pre + "D0792_0920T1420_try1")  # Bad waveforms, hangs on chan 4?
   sams.append(pre + "D0792_0920T1438_try1")  # 9/21
-  sams.append(pre + "D0794_0921_try1")  # 9/21
+  sams.append(pre + "D0792_0922_try1")  # 9/22
+  sams.append(pre + "D0793_0922_try1")  # 9/22
+  sams.append(pre + "D0794_0921_try1")  # 9/22
+  sams.append(pre + "D0795_0922_try1")  # 9/22
+  sams.append(pre + "D0796_0922_try1")  # 9/22
+  sams.append(pre + "D0798_0922_try1")  # 9/22
+  sams.append(pre + "D0798_0922_try2")  # 9/22
+  sams.append(pre + "D0798_0922_try3")  # 9/22
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

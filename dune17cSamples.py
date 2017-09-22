@@ -28,6 +28,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   nwfsams = []     # Samples without waveforms
   rollsams = []    # Samples with severe rollback
   failsams = []    # Samples tha fail processing
+  failsams2 = []    # Samples tha fail processing
+  failsamsh = []    # Samples tha fail processing
   badsams.append(pre + "1")
   badsams.append(pre + "2_0702")          # waveform very small
   sams1.append(pre + "2_0705")
@@ -859,14 +861,15 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0780_0919")
   badsams2.append(pre + "D0781_0919")  # Bad waveforms
   sams2.append(pre + "D0782_0919")
-  sams2.append(pre + "D0787_0920")  # Bad waveforms.
+  badsams2.append(pre + "D0787_0920")  # Bad waveforms.
   badsams2.append(pre + "D0791_0921T1029")  # Warm test
-  sams2.append(pre + "D0792_0920T1420")  # 7/21+
-  sams2.append(pre + "D0792_0920T1438")  # 7/21+
-  sams2.append(pre + "D0794_0921")  # 7/21+
+  sams2.append(pre + "D0791_0921T1509")  # 7/22+
+  sams2.append(pre + "D0791_0921T1525")  # 7/22+
+  badsams2.append(pre + "D0792_0920T1420")  # Bad waveforms
+  failsams2.append(pre + "D0792_0920T1438")  # Proc hangs on chan 15, bad waveforms
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
-  elif isFail: outsams = failsams
+  elif isFail: outsams = failsams + failsams2 + failsamsh
   else:
     if   group == 0: outsams = sams1 + sams2 + samsh
     elif group == 1: outsams = sams1

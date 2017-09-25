@@ -868,17 +868,18 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams2.append(pre + "D0791_0921T1525")  # Bad waveforms
   badsams2.append(pre + "D0791_0922")  # Bad waveforms
   sams2.append(pre + "D0792_0922")
+  sams2.append(pre + "D0794_0921")  # 9/25
   sams2.append(pre + "D0795_0922")
   badsams2.append(pre + "D0792_0920T1420")  # Bad waveforms
   failsams2.append(pre + "D0792_0920T1438")  # Proc hangs on chan 15, bad waveforms
   sams2.append(pre + "D0797_0922")
-  samsh.append(pre + "D0801_0922")  # 9/25
+  samsh.append(pre + "D0801_0922")
   sams2.append(pre + "D0802_0922")
-  sams2.append(pre + "D0803_0922")  # 9/25
-  samsh.append(pre + "D0804_0922")  # 9/25
-  sams2.append(pre + "D0805_0922")  # 9/25
-  samsh.append(pre + "D0806_0922")  # 9/25
-  sams2.append(pre + "D0807_0922")  # 9/25
+  sams2.append(pre + "D0803_0922")
+  samsh.append(pre + "D0804_0922")
+  sams2.append(pre + "D0805_0922")
+  samsh.append(pre + "D0806_0922")
+  sams2.append(pre + "D0807_0922")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

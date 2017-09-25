@@ -766,9 +766,18 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   failsams.append(pre + "D0794_0921_try1")  # Hangs on chan 8, bad waveforms?
   sams.append(pre + "D0795_0922_try1")
   sams.append(pre + "D0796_0922_try1")
+  sams.append(pre + "D0797_0922_try1")  # 9/25
   sams.append(pre + "D0798_0922_try1")
   sams.append(pre + "D0798_0922_try2")
   sams.append(pre + "D0798_0922_try3")
+  sams.append(pre + "D0801_0922_try1")  # 9/25
+  sams.append(pre + "D0801_0922_try2")  # 9/25
+  sams.append(pre + "D0802_0922_try1")  # 9/25
+  sams.append(pre + "D0803_0922_try1")  # 9/25
+  sams.append(pre + "D0804_0922_try1")  # 9/25
+  sams.append(pre + "D0805_0922_try1")  # 9/25
+  sams.append(pre + "D0806_0922_try1")  # 9/25
+  sams.append(pre + "D0807_0922_try1")  # 9/25
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

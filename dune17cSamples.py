@@ -884,7 +884,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0810_0925")
   sams2.append(pre + "D0811_0925")
   sams2.append(pre + "D0812_0925")
-  sams2.append(pre + "D0813_0925")  # 9/26
+  sams2.append(pre + "D0813_0925")
   sams2.append(pre + "D0814_0925")  # 9/26
   sams2.append(pre + "D0815_0925")  # 9/26
   sams2.append(pre + "D0816_0925")  # 9/26

@@ -902,24 +902,25 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0829_0925")
   badsams2.append(pre + "D0830_0925")  # Waveform near zero
   samsh.append(pre + "D0831_0925")
-  sams2.append(pre + "D0832_0925")  # 9/26
+  sams2.append(pre + "D0832_0925")
   samsh.append(pre + "D0833_0925")
   sams2.append(pre + "D0834_0925")
   sams2.append(pre + "D0835_0925")
-  sams2.append(pre + "D0837_0926")  # 9/26
+  sams2.append(pre + "D0837_0926")
   sams2.append(pre + "D0838_0926")
-  sams2.append(pre + "D0839_0926")  # 9/26
-  samsh.append(pre + "D0840_0926")  # 9/26
-  samsh.append(pre + "D0841_0926")  # 9/26
-  sams2.append(pre + "D0842_0926")  # 9/26
-  samsh.append(pre + "D0843_0926")  # 9/26
-  sams2.append(pre + "D0844_0926")  # 9/26
-  sams2.append(pre + "D0845_0926")  # 9/26
-  samsh.append(pre + "D0846_0926")  # 9/26
-  sams2.append(pre + "D0847_0926")  # 9/26
-  sams2.append(pre + "D0850_0926")  # 9/26
-  sams2.append(pre + "D0853_0926")  # 9/26
-  sams2.append(pre + "D0855_0926")  # 9/26
+  sams2.append(pre + "D0839_0926")
+  samsh.append(pre + "D0840_0926")
+  samsh.append(pre + "D0841_0926")
+  sams2.append(pre + "D0842_0926")
+  samsh.append(pre + "D0843_0926")
+  sams2.append(pre + "D0844_0926")
+  sams2.append(pre + "D0845_0926")
+  samsh.append(pre + "D0846_0926")
+  sams2.append(pre + "D0847_0926")
+  sams2.append(pre + "D0850_0926")
+  sams2.append(pre + "D0849_0926")  # 9/27
+  sams2.append(pre + "D0853_0926")
+  badsams2.append(pre + "D0855_0926")  # Corrupt data file
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

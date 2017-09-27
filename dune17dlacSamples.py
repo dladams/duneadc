@@ -809,14 +809,14 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0835_0925_try1")
   sams.append(pre + "D0836_0925T1958_try1")
   sams.append(pre + "D0836_0925T2015_try1")
-  sams.append(pre + "D0837_0926_try1")  # 9/27
+  sams.append(pre + "D0837_0926_try1")
   sams.append(pre + "D0838_0926_try1")
   sams.append(pre + "D0839_0926_try1")
   sams.append(pre + "D0840_0926_try1")
   sams.append(pre + "D0841_0926_try1")
   sams.append(pre + "D0842_0926_try1")
   sams.append(pre + "D0843_0926_try1")
-  sams.append(pre + "D0844_0926_try1")  # 9/26
+  sams.append(pre + "D0844_0926_try1")
   sams.append(pre + "D0845_0926_try1")
   sams.append(pre + "D0846_0926_try1")
   sams.append(pre + "D0846_0926_try2")
@@ -828,20 +828,29 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0852_0926_try1")
   sams.append(pre + "D0852_0926_try2")
   sams.append(pre + "D0853_0926_try1")
-  sams.append(pre + "D0854_0926T1354_try1")  # 9/27
-  sams.append(pre + "D0854_0926T1422_try1")  # 9/27
+  sams.append(pre + "D0854_0926T1354_try1")
+  sams.append(pre + "D0854_0926T1422_try1")
   sams.append(pre + "D0855_0926_try1")
-  sams.append(pre + "D0856_0926_try1")  # 9/27
-  sams.append(pre + "D0857_0926_try1")  # 9/27
-  sams.append(pre + "D0858_0926_try1")  # 9/27
-  sams.append(pre + "D0859_0926_try1")  # 9/27
-  sams.append(pre + "D0860_0926_try1")  # 9/27
-  sams.append(pre + "D0861_0926_try1")  # 9/27
-  sams.append(pre + "D0862_0926_try1")  # 9/27
-  sams.append(pre + "D0863_0926_try1")  # 9/27
-  sams.append(pre + "D0864_0926_try1")  # 9/27
-  sams.append(pre + "D0865_0926_try1")  # 9/27
-  sams.append(pre + "D0866_0926_try1")  # 9/27
+  sams.append(pre + "D0856_0926_try1")
+  sams.append(pre + "D0857_0926_try1")
+  sams.append(pre + "D0858_0926_try1")
+  sams.append(pre + "D0859_0926_try1")
+  sams.append(pre + "D0860_0926_try1")
+  sams.append(pre + "D0861_0926_try1")
+  sams.append(pre + "D0862_0926_try1")
+  badsams.append(pre + "D0863_0926_try1")  # Bad waveforms
+  sams.append(pre + "D0864_0926_try1")
+  sams.append(pre + "D0865_0926_try1")
+  sams.append(pre + "D0866_0926_try1")
+  sams.append(pre + "D0867_0927_try1")  # 9/27
+  sams.append(pre + "D0868_0927_try1")  # 9/27
+  sams.append(pre + "D0869_0927_try1")  # 9/27
+  sams.append(pre + "D0870_0927_try1")  # 9/27
+  sams.append(pre + "D0871_0927_try1")  # 9/27
+  sams.append(pre + "D0872_0927_try1")  # 9/27
+  sams.append(pre + "D0872_0927_try2")  # 9/27
+  sams.append(pre + "D0873_0927T1228_try1")  # 9/27
+  sams.append(pre + "D0873_0927T1246_try1")  # 9/27
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

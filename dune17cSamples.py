@@ -949,10 +949,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D0886_0927")
   samsh.append(pre + "D0887_0927")
   sams2.append(pre + "D0888_0927")
-  sams2.append(pre + "D0890_0928")  # 9/28
-  sams2.append(pre + "D0892_0928")  # 9/28
-  sams2.append(pre + "D0894_0928")  # 9/28
-  samsh.append(pre + "D0895_0928")  # 9/28
+  sams2.append(pre + "D0890_0928")
+  badsams2.append(pre + "D0892_0928")  # Waveform very small
+  sams2.append(pre + "D0894_0928")
+  samsh.append(pre + "D0895_0928")
+  sams2.append(pre + "D0896_0928")  # 9/28
+  samsh.append(pre + "D0897_0928")  # 9/28
+  sams2.append(pre + "D0899_0928")  # 9/28
+  sams2.append(pre + "D0901_0928")  # 9/28
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

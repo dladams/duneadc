@@ -197,7 +197,8 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
        ssam.substr(0,7) == "201703a" ||
        ssam.substr(0,11) == "201706_cots" ||
        ssam.substr(0,11) == "201707_cots" ||
-       ssam.substr(0,11) == "201708_cots" ) {
+       ssam.substr(0,11) == "201708_cots" ||
+       ssam.substr(0,11) == "201709_cots" ) {
     return AdcSampleReaderPtr(new AdcTestSampleReader(ssam, icha, maxsam));
   }
   // Binary samples from Hucheng et al.

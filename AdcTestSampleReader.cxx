@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <locale>
 #include "TSystem.h"
 #include "TH1F.h"
 #include "dunesupport/FileDirectory.h"
@@ -267,12 +268,20 @@ int AdcTestSampleReader::read() {
     // 201706_cotsbwB same for update of warm data
     // 201707_cotsBB  is July data (10 boards: BB = 01, 02, ..., 10)
     // 201708_cotsBB  is Aug data (4 boards: BB = 01, 02, ..., 04)
+    // 201709_cotsBB_MMM_VAXpY_VDXpY_XMsps  is Sep data:
+    //         board BB = 01, 04, 05
+    //         ADC model  MMM=AD7274, ADS7049
+    //         Analog voltage VAXpY:  X.Y V = 2.5, 3.3, 3.6
+    //         Digital voltage VDXpy: X.Y V = 1.8, 2.5, ...
+    //         Digital voltage VDXpy: X.Y V = 1.8, 2.5, ...
+    //         Sampling rate XMsps: X MHz
     // Chan 0-4 are ad7274
     // Chan 5-9 are ad7883
     // Chan 10-15 are ads7049
     } else if ( ssam.substr(0, 11) == "201706_cots" ||
                 ssam.substr(0, 11) == "201707_cots" ||
-                ssam.substr(0, 11) == "201708_cots" ) {
+                ssam.substr(0, 11) == "201708_cots" ||
+                ssam.substr(0, 11) == "201709_cots" ) {
       string::size_type ipos = 11;
       m_dataset = ssam.substr(0, ipos);
       string mydir = "COTS_ADC_TEST_DATA_06222017";
@@ -285,6 +294,7 @@ int AdcTestSampleReader::read() {
       }
       bool is07 = ssam.substr(0, 11) == "201707_cots";
       bool is08 = ssam.substr(0, 11) == "201708_cots";
+      bool is09 = ssam.substr(0, 11) == "201709_cots";
       if ( is07 ) {
         sboardPrefix = "board";
         mydir = "COTS_ADC_DATA_07062017";
@@ -292,6 +302,10 @@ int AdcTestSampleReader::read() {
       } else if ( is08 ) {
         sboardPrefix = "board";
         mydir = "COTS_ADC_Test_0805";
+        brdlen = 2;
+      } else if ( is09 ) {
+        sboardPrefix = "board";
+        mydir = "COTS_ADC_rawdata_09282017";
         brdlen = 2;
       }
       string stemp = "LN";
@@ -327,6 +341,31 @@ int AdcTestSampleReader::read() {
           vinmax = 2600.0;
           nsmodel = "3_" + smodel;
         }
+        string nsmodelCaps = nsmodel;
+        for ( char& c : nsmodelCaps ) c = std::toupper(c);
+        string filepat;
+        if ( is09 ) {
+          ipos = ssam.find("_VA");
+          jpos = ssam.find("_", ipos+1);
+          string svd = ssam.substr(ipos + 3, jpos - ipos - 3);
+          for ( char& ch : svd ) if ( ch == 'p' ) ch = '.';
+          istringstream ssvd(svd);
+          double vd;
+          ssvd >> vd;
+          vinmax = 1000*vd + 100;
+          jpos = ssam.find("_", jpos+1);  // before sampling rate
+          string srate = ssam.substr(jpos+1,1);
+          double fmhz;
+          istringstream ssrate(srate);
+          ssrate >> fmhz;
+          if ( ssam.substr(jpos+2, 4) != "Msps" ) {
+            cout << myname << "Sampling rate has invalid format: " <<  ssam.substr(jpos+1, 5) << endl;
+            return 11;
+          }
+          m_samplingFrequency = fmhz*1.e6;
+          jpos = ssam.find("_", jpos+1);  // after sampling rate
+          filepat = ssam.substr(ipos);  // "_VA1p5_VD2p5_1Msps_"  // E.g. "_VA1p5_VD2p5_1Msps_"
+        }
         if ( mydir == "COTS_ADC_Test_0805" && ibrd > 4 ) mydir = "COTS_ADC_Test_0809";
         m_dvdt = (vinmax - m_vinmin)/5.0;      // Half ramp is 5s for this data
         if ( is07 ) {
@@ -335,6 +374,9 @@ int AdcTestSampleReader::read() {
         } else if ( is08 ) { 
           dirname = m_topdir + "/201708/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = "brd" + sbrd + "_" + sltemp + "_" + nsmodel + "_dly50_chn0x" + alschan[chan];
+        } else if ( is09 ) { 
+          dirname = m_topdir + "/201709/" + mydir + "/" + sboardPrefix + sbrd + "/";
+          schanPrefix = "brd" + sbrd + "_" + stemp + "_" + nsmodelCaps + filepat + "_chn" + alschan[chan];
         } else { 
           dirname = m_topdir + "/201706/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = smodel + "_60p_brd" + sbrd + "_" + stemp + "_chn0x" + alschan[chan];

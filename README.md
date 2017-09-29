@@ -66,6 +66,8 @@ Some of the available sample names are
 | 201706_cotsbw | As above but at RT (room temperature)
 | 201707_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Jul 2017. BB=01,...10. |
 | 201708_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Aug 2017.  BB=01,...04.|
+| 201709_cotsBB_MMM_VAXpY_VDXpY_XMsps | Ref for BNL lifetime study of LN COTS (commercial off-the-shelf) chips in Sep 2017.  BB=01,04,05.|
+| 201709_cotswBB_MMM_VAXpY_VDXpY_XMsps | Same as previous but at RT instead of LN2.|
 | DUNE17-cold_chipCC | BNL standard (4 MHz signal gen) testing of protoDUNE chips. |
 | DUNE17dla-cold_chipCC | BNL standard data taken before the main run (aka try or David Adams data) |
 | DUNE17ts-cold_chipCC | BNL test stand (1 MHz signal gen) testing of protoDUNE chips. |

@@ -957,28 +957,42 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D0897_0928")
   sams2.append(pre + "D0899_0928")
   sams2.append(pre + "D0901_0928")
-  samsh.append(pre + "D0902_0928")  # 9/29
-  sams2.append(pre + "D0903_0928")  # 9/29
-  sams2.append(pre + "D0904_0928")  # 9/29
-  sams2.append(pre + "D0905_0928")  # 9/29
-  samsh.append(pre + "D0906_0928")  # 9/29
-  sams2.append(pre + "D0907_0928")  # 9/29
-  sams2.append(pre + "D0908_0928")  # 9/29
-  samsh.append(pre + "D0909_0928")  # 9/29
-  sams2.append(pre + "D0910_0928")  # 9/29
-  sams2.append(pre + "D0911_0928")  # 9/29
-  samsh.append(pre + "D0912_0928")  # 9/29
-  sams2.append(pre + "D0913_0928")  # 9/29
-  samsh.append(pre + "D0914_0928")  # 9/29
-  sams2.append(pre + "D0915_0928")  # 9/29
-  samsh.append(pre + "D0917_0928")  # 9/29
-  sams2.append(pre + "D0918_0928")  # 9/29
-  samsh.append(pre + "D0921_0928")  # 9/29
-  samsh.append(pre + "D0922_0928")  # 9/29
-  sams2.append(pre + "D0924_0928")  # 9/29
-  samsh.append(pre + "D0925_0928")  # 9/29
-  samsh.append(pre + "D0926_0928")  # 9/29
-  sams2.append(pre + "D0927_0928")  # 9/29
+  samsh.append(pre + "D0902_0928")
+  sams2.append(pre + "D0903_0928")
+  sams2.append(pre + "D0904_0928")
+  sams2.append(pre + "D0905_0928")
+  samsh.append(pre + "D0906_0928")
+  sams2.append(pre + "D0907_0928")
+  sams2.append(pre + "D0908_0928")
+  samsh.append(pre + "D0909_0928")
+  sams2.append(pre + "D0910_0928")
+  sams2.append(pre + "D0911_0928")
+  samsh.append(pre + "D0912_0928")
+  sams2.append(pre + "D0913_0928")
+  samsh.append(pre + "D0914_0928")
+  sams2.append(pre + "D0915_0928")
+  samsh.append(pre + "D0917_0928")
+  sams2.append(pre + "D0918_0928")
+  samsh.append(pre + "D0921_0928")
+  samsh.append(pre + "D0922_0928")
+  sams2.append(pre + "D0924_0928")
+  samsh.append(pre + "D0925_0928")
+  samsh.append(pre + "D0926_0928")
+  sams2.append(pre + "D0927_0928")
+  sams2.append(pre + "D0928_0929")  # 9/29
+  sams2.append(pre + "D0929_0929")  # 9/29
+  samsh.append(pre + "D0930_0929")  # 9/29
+  sams2.append(pre + "D0931_0929")  # 9/29
+  samsh.append(pre + "D0932_0929")  # 9/29
+  sams2.append(pre + "D0933_0929")  # 9/29
+  sams2.append(pre + "D0934_0929")  # 9/29
+  samsh.append(pre + "D0935_0929")  # 9/29
+  sams2.append(pre + "D0936_0929")  # 9/29
+  samsh.append(pre + "D0937_0929")  # 9/29
+  sams2.append(pre + "D0938_0929")  # 9/29
+  sams2.append(pre + "D0939_0929")  # 9/29
+  samsh.append(pre + "D0940_0929")  # 9/29
+  sams2.append(pre + "D0941_0929")  # 9/29
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

@@ -25,7 +25,7 @@ public:  // static members
 public:  // non-static members
 
   // Ctor from input file name.
-  AdcBinarySampleReader(Name fname);
+  AdcBinarySampleReader(Name fname, bool swapbyte =false);
 
   // Ctor from input file name plus metadata.
   //      fname - file name (full path)
@@ -36,10 +36,11 @@ public:  // non-static members
   //      fsamp - sampling frequency [Hz]
   //       time - time sample was taken in unix sec
   //     maxsam - max # samples to read
+  //       swap - swap bytes (by pair)
   AdcBinarySampleReader(Name fname, Name a_sample,
                         Index chip, Name chipLabel,
                         Index icha, double fsamp, AdcTime a_time,
-                        SampleIndex a_maxSample =0);
+                        SampleIndex a_maxSample =0, bool swapbyte =false);
 
   // Dtor.
   ~AdcBinarySampleReader();
@@ -136,6 +137,7 @@ private:
   AdcCode m_underflowCode;
   AdcCode m_overflowCode;
   AdcCode m_chanMask;
+  bool m_swapbyte;
   Index m_chanShift;
   bool m_ownStream;
   std::istream* m_pin;

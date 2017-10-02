@@ -288,7 +288,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string::size_type ipos = 16;
     string::size_type jpos = ssam.find("_", ipos);
     schp = ssam.substr(ipos, jpos-ipos);
-    scha = schan(icha, true);
+    scha = schan(icha, false);
     if ( scha.size() == 0 ) {
       cout << myname << "ERROR: Invalid channel: " << icha << endl;
       return nullptr;

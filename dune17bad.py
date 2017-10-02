@@ -24,5 +24,7 @@ def badChips():
   chips += [10003]  # Elizabeth reports this chip has bent pin and will never be used 8/1/2017
   chips += [378]    # Elizabeth reports this chip is damaged 8/2/2017
   chips += [10088, 10157, 10214, 10117, 10044, 10183]    # Matt reports these are damaged 8/24/2017
+  chips += [10578, 10267, 10428, 10636]    # Matt reports these are damaged 9/30/2017
+  chips += [10363, 10326]    # Matt reports these are missing 9/30/2017
   chips.sort()
   return chips

@@ -207,7 +207,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
     return findBinaryReader(ssam, icha, maxsam);
   }
-  if ( ssam.substr(0,16) == "201709_quad_chip" ) {
+  if ( ssam.substr(0,16) == "201709-quad_chip" ) {
     SampleIndex maxsamhere = 39600000;  // Must cut off the data to avoid problem at end.
     if ( maxsam == 0 || maxsam > maxsamhere ) maxsam = maxsamhere;
     return findBinaryReader(ssam, icha, maxsam);
@@ -282,8 +282,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string subdir = "P1_S7_" + schp + "_" + sday;
     searchDirs.push_back(m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir);
     searchPats.push_back(subdir + "_LN_2MHz_chn" + scha);
-  // 201709_quad_chipCCC_DDDD
-  } else if ( ssam.substr(0, 16) == "201709_quad_chip" ) {
+  // 201709-quad_chipCCC_DDDD
+  } else if ( ssam.substr(0, 16) == "201709-quad_chip" ) {
     dsname = ssam.substr(0, 11);
     string::size_type ipos = 16;
     string::size_type jpos = ssam.find("_", ipos);

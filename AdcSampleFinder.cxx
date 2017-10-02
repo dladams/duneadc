@@ -485,6 +485,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     AdcExtrema exts;
     if ( ef1.find(*prdr, exts) || exts.size() == 0 ) {
       cout << myname << "Unable to find first extremum." << endl;
+      cout << myname << "Guessing at first extremum." << endl;
+      exts.push_back(AdcExtremum(1500000, true));
     }
     double sampFreq = prdr->samplingFrequency();
     SampleIndex dtick = sampFreq*(vinMax-vinMin)/dvdt;

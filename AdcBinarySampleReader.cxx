@@ -19,10 +19,11 @@ using Name = AdcBinarySampleReader::Name;
 
 //**********************************************************************
 
-AdcBinarySampleReader::AdcBinarySampleReader(Name fname)
+AdcBinarySampleReader::AdcBinarySampleReader(Name fname, bool swapbyte)
 : m_underflowCode(0),
   m_overflowCode(4095),
   m_chanMask(0xfff),
+  m_swapbyte(swapbyte),
   m_chanShift(12),
   m_ownStream(true),
   m_pin(nullptr),
@@ -42,8 +43,8 @@ AdcBinarySampleReader::AdcBinarySampleReader(Name fname)
 AdcBinarySampleReader::
 AdcBinarySampleReader(Name fname, Name a_sample, Index a_chip, Name a_chipLabel,
                       Index icha, double fsamp, AdcTime a_time,
-                      SampleIndex a_maxSample)
-: AdcBinarySampleReader(fname) {
+                      SampleIndex a_maxSample, bool swapbyte)
+: AdcBinarySampleReader(fname, swapbyte) {
   const string myname = "AdcBinarySampleReader::ctor: ";
   m_sample = a_sample;
   string::size_type ipos = m_sample.find("_");
@@ -146,6 +147,7 @@ int AdcBinarySampleReader::read() const {
     for ( SampleIndex isam=0; isam<nsamRead; ++isam ) {
       if ( count >= maxCount ) break;
       AdcCode chancode = buff[isam];
+      if ( m_swapbyte ) chancode = ((chancode & 0x00ff) << 8) | ((chancode & 0xff00) >> 8);
       code = chancode&chanMask();
       Index chan = chancode>>chanShift();
       if ( m_channel == badChannel() ) m_channel = chan;

@@ -207,6 +207,11 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
     return findBinaryReader(ssam, icha, maxsam);
   }
+  if ( ssam.substr(0,16) == "201709_quad_chip" ) {
+    SampleIndex maxsamhere = 39600000;  // Must cut off the data to avoid problem at end.
+    if ( maxsam == 0 || maxsam > maxsamhere ) maxsam = maxsamhere;
+    return findBinaryReader(ssam, icha, maxsam);
+  }
   if ( ssam.substr(0,9) == "DUNE17ts-" ) {
     SampleIndex maxsamHere = 19800000;  // Must cut off the data to avoid problem at end.
     if ( maxsam == 0 || maxsam > maxsamHere ) maxsam = maxsamHere;
@@ -256,6 +261,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   double vinMin = -300.0;
   double vinMax = 1700.0;
   Index maxRollback = 0; // If nonzero, rollback is removed for up to this many samples.
+  bool swap = false;  // Flag to swap bytes (change Endian).
+  double dvdt = 0.0;  // If nonzero, it is used in evaluating Vin
   if ( ssam.substr(0, 7) == "201703b" ) {
     if ( ssam.size() != 14 ||
          ssam.substr(7,2) != "_D" ||
@@ -275,6 +282,26 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string subdir = "P1_S7_" + schp + "_" + sday;
     searchDirs.push_back(m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir);
     searchPats.push_back(subdir + "_LN_2MHz_chn" + scha);
+  // 201709_quad_chipCCC_DDDD
+  } else if ( ssam.substr(0, 16) == "201709_quad_chip" ) {
+    dsname = ssam.substr(0, 11);
+    string::size_type ipos = 16;
+    string::size_type jpos = ssam.find("_", ipos);
+    schp = ssam.substr(ipos, jpos-ipos);
+    scha = schan(icha, true);
+    if ( scha.size() == 0 ) {
+      cout << myname << "ERROR: Invalid channel: " << icha << endl;
+      return nullptr;
+    }
+    string subdir = ssam.substr(jpos+1) + "/" + schp;
+    searchDirs.push_back(m_topdir + "/201709/quad/" + subdir);
+    searchPats.push_back("LN_2MHz_ch0x" + scha);
+    swap = true;
+    vinMin = -200.0;
+    vinMax = 1600.0;
+    dvdt = (vinMax - vinMin)/5.0;
+    ef1MinThresh = 80;
+    ef1BorderWidth = 100000;
   } else if ( ssam.substr(0,11) == "DUNE17-test" ) {
     string::size_type ipos = 11;
     dsname = ssam.substr(0, ipos);
@@ -446,24 +473,42 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   TDatime datime(2017, month, day, hour, minute, 0);
   AdcTime itime = datime.Convert();
   // Read the data.
-  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam);
+  AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam, swap);
   AdcSampleReaderPtr prdr(prdrFull);
   // Mitigate rollback.
   if ( maxRollback ) {
     prdr->addMitigator(new RollbackFinder(*prdr, maxRollback));
   }
   // Find extrema.
-  AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
-  AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);
-  AdcExtrema exts;
-  if ( findExtrema(&*prdr, exts, ef1, ef2, maxdext) ) {
-    cout << myname << "Unable to find extrema." << endl;
-  } else {
+  if ( dvdt > 0.0 ) {
+    AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+    AdcExtrema exts;
+    if ( ef1.find(*prdr, exts) || exts.size() == 0 ) {
+      cout << myname << "Unable to find first extremum." << endl;
+    }
+    double sampFreq = prdr->samplingFrequency();
+    SampleIndex dtick = sampFreq*(vinMax-vinMin)/dvdt;
+    SampleIndex tick2 = exts[0].tick() + dtick;
+    exts.resize(2);
+    exts[1] = AdcExtremum(tick2, exts[0].isMax());
     SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
     prdrFull->setSampleFunction(pfun);
+    // Build ADC-voltage table.
+    prdr->buildTableFromWaveform(20000, 0.1, -300.0);
+  } else {
+    AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+    AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);
+    AdcExtrema exts;
+    if ( findExtrema(&*prdr, exts, ef1, ef2, maxdext) ) {
+      cout << myname << "Unable to find extrema." << endl;
+      cout << myname << "Unable to find extrema." << endl;
+    } else {
+      SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
+      prdrFull->setSampleFunction(pfun);
+    }
+    // Build ADC-voltage table.
+    prdr->buildTableFromWaveform(20000, 0.1, -300.0);
   }
-  // Build ADC-voltage table.
-  prdr->buildTableFromWaveform(20000, 0.1, -300.0);
   return prdr;
 }
 
@@ -769,11 +814,13 @@ findQuadReader(Name asample, Index icha, SampleIndex maxsam) const {
 
 //**********************************************************************
 
-Name AdcSampleFinder::schan(Index icha) const {
-  static NameVector schans = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                              "A", "B", "C", "D", "E", "F"};
-  if ( icha > schans.size() ) return "";
-  return schans[icha];
+Name AdcSampleFinder::schan(Index icha, bool useup) const {
+  static NameVector schansUp = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                                "A", "B", "C", "D", "E", "F"};
+  static NameVector schansLo = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                                "a", "b", "c", "d", "e", "f"};
+  if ( icha >= schansUp.size() ) return "";
+  return useup ? schansUp[icha] : schansLo[icha];
 }
 
 //**********************************************************************

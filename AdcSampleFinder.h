@@ -54,7 +54,8 @@ private:
   AdcSampleReaderPtr findQuadReader(Name asample, Index icha, SampleIndex maxsam =0) const;
 
   // Convert channel snumber to string.
-  Name schan(Index icha) const;
+  // Returns {0, 1, ... F} if useup is true, else {0, 1, ..., f}
+  Name schan(Index icha, bool useup =true) const;
 
 private:
 

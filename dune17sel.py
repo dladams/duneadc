@@ -37,4 +37,9 @@ def selectedChips(sel=0):
     for selchips in selChipLists: chips += selchips
   elif sel <= len(selChipLists):  chips = selChipLists[sel-1]
   chips.sort()
-  return chips
+  nodups = []
+  lastchip = None
+  for chip in chips:
+    if chip != lastchip: nodups.append(chip)
+    lastchip = chip
+  return nodups

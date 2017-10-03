@@ -26,5 +26,11 @@ def badChips():
   chips += [10088, 10157, 10214, 10117, 10044, 10183]    # Matt reports these are damaged 8/24/2017
   chips += [10578, 10267, 10428, 10636]    # Matt reports these are damaged 9/30/2017
   chips += [10363, 10326]    # Matt reports these are missing 9/30/2017
+  chips += [10012, 10030, 10044, 10055, 10067, 10076, 10088, 10099, 10106, 10117, 10157, 10183, 10214, 10261, 10267, 10287, 10300, 10305, 10322, 10353, 10365, 10393, 10428, 10432, 10456, 10481, 10506, 10517, 10546, 10578, 10606, 10636, 10688, 10706, 10707, 10711, 10720, 10733, 10748, 10753, 10809, 10822, 10893, 10921, 10923, 10956, 10962]  # Matt reports these are bad 03oct2017
   chips.sort()
-  return chips
+  lastchip = None
+  nodups = []
+  for chip in chips:
+    if chip != lastchip: nodups.append(chip)
+    lastchip = chip
+  return nodups

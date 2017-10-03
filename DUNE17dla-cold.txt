@@ -814,3 +814,10 @@ DUNE17dla-cold_chipD0997_1002_try1
 DUNE17dla-cold_chipD0998_1002_try1
 DUNE17dla-cold_chipD0999_1002_try1
 DUNE17dla-cold_chipD1000_1002_try1
+DUNE17dla-cold_chipD1001_1003_try1
+DUNE17dla-cold_chipD1002_1003_try1
+DUNE17dla-cold_chipD1003_1003_try1
+DUNE17dla-cold_chipD1004_1003_try1
+DUNE17dla-cold_chipD1005_1003_try1
+DUNE17dla-cold_chipD1006_1003_try1
+DUNE17dla-cold_chipD1007_1003_try1

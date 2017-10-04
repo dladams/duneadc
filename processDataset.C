@@ -2,6 +2,10 @@
 
 // David Adams
 // July 2017
+//
+// This is the standard script for processing a sample. It creates a chip analyzer
+// with no input calibration. I fill is true, then the calibration and performance trees
+// are written out. Te plots rawv, diff and perf are created.
 
 void processDataset(string ssam, double vresmax=1.0, Index chan1=0, Index nchan =16, bool fill =true) {
   string myname = "processDataset: ";

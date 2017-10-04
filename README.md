@@ -46,33 +46,33 @@ name and then creates a reader of the appropriate type.
 
 Some of the available sample names are
 
-| Sample name | Description |
-|-------------|-------------|
-|             |             |
-| 2016XXX     | October-December 2016 BNL data. Some is in table format. |
-|             |             |
-| 201701a_CC  | January 2017 BNL scan of 25 chips. The chip number is CC = 00, 02, ... 35. Bad Vin. |
-| 201701b_CC  | Same as 201701a_CC with some ticks removed to fix the Vin calibration. Use this. |
-| 201701c_CC  | Same as 201701b_CC repeated for chips CC = 02 and 04. |
-| 201701d_CC  | Same as 201701a_CC but at 1 MHz sampling. |
-| 201702TT_CC | Same as 201701c_CC for dates Feb TT = 16, 17, ..., 23. |
-| 201703TT_CC | More like 201702TT_CC for dates March TT = 06 and 07? |
-|             |             |
-| 201703a_DCC | March 2017 BNL scan of 77 P1 chips. The chip number is CC = 01, 03, ..., 79. |
-| 201703b_D02_TT | BNL  long-term study of chip D02. The time sample is TT = 1a, 2a, ..., 9c. |
-| 201706_cots | BNL study of LN COTS (commercial off-the-shelf) chips in Jun 2017. |
-| 201706_cotsw | As above but at RT (room temperature)
-| 201706_cotsb | Repeat of parts of 201706_cots. |
-| 201706_cotsbw | As above but at RT (room temperature)
-| 201707_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Jul 2017. BB=01,...10. |
-| 201708_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Aug 2017.  BB=01,...04.|
-| 201709_cotsBB_MMM_VAXpY_VDXpY_XMsps | Ref for BNL lifetime study of LN COTS (commercial off-the-shelf) chips in Sep 2017.  BB=01,04,05.|
-| 201709_cotswBB_MMM_VAXpY_VDXpY_XMsps | Same as previous but at RT instead of LN2.|
-| 201709-quad_chipCCC_DDDD | Quad-ADC test board data from Eric |
-| DUNE17-cold_chipCC | BNL standard (4 MHz signal gen) testing of protoDUNE chips. |
-| DUNE17dla-cold_chipCC | BNL standard data taken before the main run (aka try or David Adams data) |
-| DUNE17ts-cold_chipCC | BNL test stand (1 MHz signal gen) testing of protoDUNE chips. |
-| DUNE17-test_chipCC | Subset of protoDUNE chips tested is same way as samples 201703a. |
+| Dataset        | Sample name | Description |
+|                |-------------|-------------|
+|                |             |             |
+|                | 2016XXX     | October-December 2016 BNL data. Some is in table format. |
+|                |             |             |
+|                | 201701a_CC  | January 2017 BNL scan of 25 chips. The chip number is CC = 00, 02, ... 35. Bad Vin. |
+|                | 201701b_CC  | Same as 201701a_CC with some ticks removed to fix the Vin calibration. Use this. |
+|                | 201701c_CC  | Same as 201701b_CC repeated for chips CC = 02 and 04. |
+|                | 201701d_CC  | Same as 201701a_CC but at 1 MHz sampling. |
+|                | 201702TT_CC | Same as 201701c_CC for dates Feb TT = 16, 17, ..., 23. |
+|                | 201703TT_CC | More like 201702TT_CC for dates March TT = 06 and 07? |
+|                |             |             |
+|                | 201703a_DCC | March 2017 BNL scan of 77 P1 chips. The chip number is CC = 01, 03, ..., 79. |
+|                | 201703b_D02_TT | BNL  long-term study of chip D02. The time sample is TT = 1a, 2a, ..., 9c. |
+|                | 201706_cots | BNL study of LN COTS (commercial off-the-shelf) chips in Jun 2017. |
+|                | 201706_cotsw | As above but at RT (room temperature)
+|                | 201706_cotsb | Repeat of parts of 201706_cots. |
+|                | 201706_cotsbw | As above but at RT (room temperature)
+|                | 201707_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Jul 2017. BB=01,...10. |
+|                | 201708_cotsBB | BNL study of LN COTS (commercial off-the-shelf) chips in Aug 2017.  BB=01,...04.|
+| 201709-cots    | 201709_cotsBB_MMM_VAXpY_VDXpY_XMsps | Ref for BNL lifetime study of LN COTS (commercial off-the-shelf) chips in Sep 2017.  BB=01,04,05.|
+| 201709-cotsw   | 201709_cotswBB_MMM_VAXpY_VDXpY_XMsps | Same as previous but at RT instead of LN2.|
+| 201709-quad    | 201709-quad_chipCCC_DDDD | Quad-ADC test board data from Eric |
+| DUNE17-cold    | DUNE17-cold_chipCC | BNL standard (4 MHz signal gen) testing of protoDUNE chips. |
+| DUNE17dla-cold | DUNE17dla-cold_chipCC | BNL standard data taken before the main run (aka try or David Adams data) |
+|                | DUNE17ts-cold_chipCC | BNL test stand (1 MHz signal gen) testing of protoDUNE chips. |
+|                | DUNE17-test_chipCC | Subset of protoDUNE chips tested is same way as samples 201703a. |
 
 All are P1, cold (LN2), 2 MHz waveforms unless otherwise indicated.
 

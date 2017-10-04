@@ -982,13 +982,13 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D0998_1002_try1")
   sams.append(pre + "D0999_1002_try1")
   sams.append(pre + "D1000_1002_try1")
-  sams.append(pre + "D1001_1003_try1")  # 10/3
-  sams.append(pre + "D1002_1003_try1")  # 10/3
-  sams.append(pre + "D1003_1003_try1")  # 10/3
-  sams.append(pre + "D1004_1003_try1")  # 10/3
-  sams.append(pre + "D1005_1003_try1")  # 10/3
-  sams.append(pre + "D1006_1003_try1")  # 10/3
-  sams.append(pre + "D1007_1003_try1")  # 10/3
+  sams.append(pre + "D1001_1003_try1")
+  sams.append(pre + "D1002_1003_try1")
+  sams.append(pre + "D1003_1003_try1")
+  sams.append(pre + "D1004_1003_try1")
+  sams.append(pre + "D1005_1003_try1")
+  sams.append(pre + "D1006_1003_try1")
+  sams.append(pre + "D1007_1003_try1")
   sams.append(pre + "D1009_1003_try1")  # 10/4
   sams.append(pre + "D1010_1003_try1")  # 10/4
   sams.append(pre + "D1011_1003_try1")  # 10/4

@@ -74,6 +74,7 @@ for NAME in `cat $DSLIST.txt`; do
     CHKDIR=$SAVEDIR/jobs/check
     mkdir -p $CHKDIR
     mkdir $RUNDIR
+    chmod 755 $RUNDIR   # Let other read these so same perms will appear after rsync
     if cd $RUNDIR; then
       cp $DUNEADCDIR/clientlogon.C rootlogon.C
       cp $DUNEADCDIR/processDataset.C .

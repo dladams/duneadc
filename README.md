@@ -47,7 +47,7 @@ name and then creates a reader of the appropriate type.
 Some of the available sample names are
 
 | Dataset        | Sample name | Description |
-|                |-------------|-------------|
+|----------------|-------------|-------------|
 |                |             |             |
 |                | 2016XXX     | October-December 2016 BNL data. Some is in table format. |
 |                |             |             |

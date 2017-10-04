@@ -268,7 +268,7 @@ int AdcTestSampleReader::read() {
     // 201706_cotsbwB same for update of warm data
     // 201707_cotsBB  is July data (10 boards: BB = 01, 02, ..., 10)
     // 201708_cotsBB  is Aug data (4 boards: BB = 01, 02, ..., 04)
-    // 201709_cotsBB_MMM_VAXpY_VDXpY_XMsps  is Sep data:
+    // 201709-cotsBB_MMM_VAXpY_VDXpY_XMsps  is Sep data:
     //         board BB = 01, 04, 05
     //         ADC model  MMM=AD7274, ADS7049
     //         Analog voltage VAXpY:  X.Y V = 2.5, 3.3, 3.6
@@ -281,7 +281,7 @@ int AdcTestSampleReader::read() {
     } else if ( ssam.substr(0, 11) == "201706_cots" ||
                 ssam.substr(0, 11) == "201707_cots" ||
                 ssam.substr(0, 11) == "201708_cots" ||
-                ssam.substr(0, 11) == "201709_cots" ) {
+                ssam.substr(0, 11) == "201709-cots" ) {
       string::size_type ipos = 11;
       m_dataset = ssam.substr(0, ipos);
       string mydir = "COTS_ADC_TEST_DATA_06222017";
@@ -294,7 +294,7 @@ int AdcTestSampleReader::read() {
       }
       bool is07 = ssam.substr(0, 11) == "201707_cots";
       bool is08 = ssam.substr(0, 11) == "201708_cots";
-      bool is09 = ssam.substr(0, 11) == "201709_cots";
+      bool is09 = ssam.substr(0, 11) == "201709-cots";
       if ( is07 ) {
         sboardPrefix = "board";
         mydir = "COTS_ADC_DATA_07062017";

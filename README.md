@@ -69,6 +69,7 @@ Some of the available sample names are
 | 201709-AD7274  | 201709_cots01_VAXpY_VDXpY_XMsps | Ref for BNL LN lifetime study of AD7274 chips in Sep 2017.|
 | 201709-ADS7049 | 201709_cotsBB_VAXpY_VDXpY_XMsps | Ref for BNL LN lifetime study of ADS7049 chips in Sep 2017. BB=04,05.|
 | 201709-quad    | 201709-quad_chipCCC_DDDD | Quad-ADC test board data from Eric |
+| 201710-quad    | 201710-quad_chipCCC_DDDD | Quad-ADC test board data from Eric |
 | DUNE17-cold    | DUNE17-cold_chipCC | BNL standard (4 MHz signal gen) testing of protoDUNE chips. |
 | DUNE17dla-cold | DUNE17dla-cold_chipCC | BNL standard data taken before the main run (aka try or David Adams data) |
 |                | DUNE17ts-cold_chipCC | BNL test stand (1 MHz signal gen) testing of protoDUNE chips. |

@@ -1075,54 +1075,54 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1023_1003")
   sams2.append(pre + "D1025_1003")
   sams2.append(pre + "D1026_1004")
-  sams2.append(pre + "D1027_1004")  # 10/6
+  sams2.append(pre + "D1027_1004")
   samsh.append(pre + "D1028_1004")
   samsh.append(pre + "D1029_1004")  # 10/6
-  sams2.append(pre + "D1030_1004")  # 10/6
+  sams2.append(pre + "D1030_1004")
   samsh.append(pre + "D1031_1004")  # 10/6
-  sams2.append(pre + "D1032_1004")  # 10/6
-  sams2.append(pre + "D1033_1004")  # 10/6
+  sams2.append(pre + "D1032_1004")
+  sams2.append(pre + "D1033_1004")
   samsh.append(pre + "D1034_1004")  # 10/6
-  sams2.append(pre + "D1035_1004")  # 10/6
+  sams2.append(pre + "D1035_1004")
   samsh.append(pre + "D1036_1004")  # 10/6
-  sams2.append(pre + "D1037_1004")  # 10/6
-  sams2.append(pre + "D1038_1004")  # 10/6
-  sams2.append(pre + "D1040_1004")  # 10/6
-  sams2.append(pre + "D1041_1004")  # 10/6
-  sams2.append(pre + "D1044_1004")  # 10/6
-  sams2.append(pre + "D1046_1004")  # 10/6
+  sams2.append(pre + "D1037_1004")
+  sams2.append(pre + "D1038_1004")
+  sams2.append(pre + "D1040_1004")
+  sams2.append(pre + "D1041_1004")
+  sams2.append(pre + "D1044_1004")
+  sams2.append(pre + "D1046_1004")
   samsh.append(pre + "D1047_1004")  # 10/6
-  sams2.append(pre + "D1048_1004")  # 10/6
-  sams2.append(pre + "D1050_1004")  # 10/6
+  sams2.append(pre + "D1048_1004")
+  sams2.append(pre + "D1050_1004")
   samsh.append(pre + "D1051_1004")  # 10/6
-  sams2.append(pre + "D1052_1004")  # 10/6
-  sams2.append(pre + "D1053_1004")  # 10/6
+  sams2.append(pre + "D1052_1004")
+  sams2.append(pre + "D1053_1004")
   samsh.append(pre + "D1054_1004")  # 10/6
-  sams2.append(pre + "D1055_1004")  # 10/6
+  sams2.append(pre + "D1055_1004")
   samsh.append(pre + "D1056_1004")  # 10/6
-  sams2.append(pre + "D1057_1004")  # 10/6
-  sams2.append(pre + "D1058_1005")  # 10/6
+  sams2.append(pre + "D1057_1004")
+  sams2.append(pre + "D1058_1005")
   samsh.append(pre + "D1059_1005")  # 10/6
-  sams2.append(pre + "D1060_1005")  # 10/6
+  sams2.append(pre + "D1060_1005")
   samsh.append(pre + "D1061_1005")  # 10/6
-  sams2.append(pre + "D1062_1005")  # 10/6
-  sams2.append(pre + "D1063_1005")  # 10/6
+  sams2.append(pre + "D1062_1005")
+  sams2.append(pre + "D1063_1005")
   samsh.append(pre + "D1064_1005")  # 10/6
-  sams2.append(pre + "D1065_1005")  # 10/6
+  sams2.append(pre + "D1065_1005")
   samsh.append(pre + "D1066_1005")  # 10/6
-  sams2.append(pre + "D1067_1005")  # 10/6
+  sams2.append(pre + "D1067_1005")
   samsh.append(pre + "D1068_1005")  # 10/6
-  sams2.append(pre + "D1069_1005")  # 10/6
-  sams2.append(pre + "D1070_1005")  # 10/6
-  sams2.append(pre + "D1071_1005")  # 10/6
-  sams2.append(pre + "D1072_1005")  # 10/6
-  sams2.append(pre + "D1073_1005")  # 10/6
+  sams2.append(pre + "D1069_1005")
+  sams2.append(pre + "D1070_1005")
+  sams2.append(pre + "D1071_1005")
+  sams2.append(pre + "D1072_1005")
+  sams2.append(pre + "D1073_1005")
   samsh.append(pre + "D1074_1005")  # 10/6
-  sams2.append(pre + "D1075_1005")  # 10/6
-  sams2.append(pre + "D1076_1005")  # 10/6
+  sams2.append(pre + "D1075_1005")
+  sams2.append(pre + "D1076_1005")
   samsh.append(pre + "D1078_1005")  # 10/6
-  sams2.append(pre + "D1079_1005")  # 10/6
-  sams2.append(pre + "D1081_1005")  # 10/6
+  sams2.append(pre + "D1079_1005")
+  sams2.append(pre + "D1081_1005")
   sams2.append(pre + "D1082_1005")  # 10/6
   samsh.append(pre + "D1083_1005")  # 10/6
   sams2.append(pre + "D1084_1005")  # 10/6
@@ -1130,6 +1130,16 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1087_1005")  # 10/6
   sams2.append(pre + "D1088_1005")  # 10/6
   sams2.append(pre + "D1090_1005")  # 10/6
+  samsh.append(pre + "D1091_1006")  # 10/6
+  sams2.append(pre + "D1093_1006")  # 10/6
+  sams2.append(pre + "D1094_1006")  # 10/6
+  sams2.append(pre + "D1096_1006")  # 10/6
+  sams2.append(pre + "D1098_1006")  # 10/6
+  samsh.append(pre + "D1099_1006")  # 10/6
+  sams2.append(pre + "D1101_1006")  # 10/6
+  samsh.append(pre + "D1103_1006")  # 10/6
+  sams2.append(pre + "D1104_1006")  # 10/6
+  sams2.append(pre + "D1105_1006")  # 10/6
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

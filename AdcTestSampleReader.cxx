@@ -376,7 +376,7 @@ int AdcTestSampleReader::read() {
           schanPrefix = "brd" + sbrd + "_" + sltemp + "_" + nsmodel + "_dly50_chn0x" + alschan[chan];
         } else if ( is09 ) { 
           dirname = m_topdir + "/201709/" + mydir + "/" + sboardPrefix + sbrd + "/";
-          schanPrefix = "brd" + sbrd + "_" + stemp + "_" + nsmodelCaps + filepat + "_chn" + alschan[chan];
+          schanPrefix = "brd" + sbrd + "_" + stemp + "_" + nsmodelCaps + filepat + "_chn0x" + alschan[chan];
         } else { 
           dirname = m_topdir + "/201706/" + mydir + "/" + sboardPrefix + sbrd + "/";
           schanPrefix = smodel + "_60p_brd" + sbrd + "_" + stemp + "_chn0x" + alschan[chan];

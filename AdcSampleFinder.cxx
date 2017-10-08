@@ -227,7 +227,8 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     return findBinaryReader(ssam, icha, maxsam);
   }
   // DUNE test data summer 2017
-  if ( ssam.substr(0,7) == "DUNE17-" || ssam.substr(0,10) == "DUNE17dla-" ) {
+  if ( ssam.substr(0,7) == "DUNE17-" || ssam.substr(0,10) == "DUNE17dla-" ||
+       ssam.substr(0,11) == "DUNE17test_" ) {
     prdr = findFembReader(ssam, icha, maxsam);
   }
   // DUNE quad test data summer 2017
@@ -571,9 +572,10 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
     fname = AdcSampleFinder::defaultTopdir() + "/justin3/" + basename;
     ipos = 14;
     dsname += "-test2";
-  } else if ( dsname == "DUNE17-cold" || dsname=="DUNE17dla-cold" ) {
+  } else if ( dsname == "DUNE17-cold" || dsname=="DUNE17dla-cold" || dsname=="DUNE17test" ) {
     bool isdla = dsname=="DUNE17dla-cold";
     string subdir = "DUNE17";
+    if ( dsname=="DUNE17test" ) subdir = "DUNE17test";
     if ( isdla ) {
       subdir = "DUNE17dla";
       sels[0] = "adcDavidAdamsOnlyData";

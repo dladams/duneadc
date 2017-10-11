@@ -1143,12 +1143,38 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams2.append(pre + "D1107_1006")  # Bad waveforms
   sams2.append(pre + "D1108_1006")
   samsh.append(pre + "D1109_1006")
-  sams2.append(pre + "D1110_1010")  # 10/10
-  sams2.append(pre + "D1112_1010")  # 10/10
-  sams2.append(pre + "D1113_1010")  # 10/10
-  sams2.append(pre + "D1115_1010")  # 10/10
-  samsh.append(pre + "D1116_1010")  # 10/10
-  sams2.append(pre + "D1117_1010")  # 10/10
+  sams2.append(pre + "D1110_1010")
+  sams2.append(pre + "D1112_1010")
+  sams2.append(pre + "D1113_1010")
+  sams2.append(pre + "D1115_1010")
+  samsh.append(pre + "D1116_1010")
+  sams2.append(pre + "D1117_1010")
+  sams2.append(pre + "D1118_1010")  # 10/11
+  samsh.append(pre + "D1119_1010")  # 10/11
+  sams2.append(pre + "D1120_1010")  # 10/11
+  samsh.append(pre + "D1121_1010")  # 10/11
+  sams2.append(pre + "D1122_1010")  # 10/11
+  samsh.append(pre + "D1123_1010")  # 10/11
+  samsh.append(pre + "D1124_1010")  # 10/11
+  sams2.append(pre + "D1125_1010")  # 10/11
+  sams2.append(pre + "D1126_1010")  # 10/11
+  samsh.append(pre + "D1127_1010")  # 10/11
+  sams2.append(pre + "D1128_1010")  # 10/11
+  samsh.append(pre + "D1129_1010")  # 10/11
+  sams2.append(pre + "D1130_1010")  # 10/11
+  samsh.append(pre + "D1131_1010")  # 10/11
+  sams2.append(pre + "D1132_1010")  # 10/11
+  samsh.append(pre + "D1133_1010")  # 10/11
+  sams2.append(pre + "D1134_1010")  # 10/11
+  samsh.append(pre + "D1136_1010")  # 10/11
+  samsh.append(pre + "D1138_1010")  # 10/11
+  sams2.append(pre + "D1139_1010")  # 10/11
+  sams2.append(pre + "6v7_1010:chipD1141")  # 10/11  # Chip # from log
+  samsh.append(pre + "D1142_1010")  # 10/11
+  sams2.append(pre + "D1144_1010")  # 10/11
+  samsh.append(pre + "D1145_1010")  # 10/11
+  sams2.append(pre + "D1146_1010")  # 10/11
+  sams2.append(pre + "D1148_1010")  # 10/11
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

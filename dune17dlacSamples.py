@@ -1101,6 +1101,34 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1117_1010_try1")
   sams.append(pre + "D1118_1010_try1")
   sams.append(pre + "D1119_1010_try1")
+  sams.append(pre + "D1120_1010_try1")  # 10/11
+  sams.append(pre + "D1121_1010_try1")  # 10/11
+  sams.append(pre + "D1122_1010_try1")  # 10/11
+  sams.append(pre + "D1123_1010_try1")  # 10/11
+  sams.append(pre + "D1124_1010_try1")  # 10/11
+  sams.append(pre + "D1125_1010_try1")  # 10/11
+  sams.append(pre + "D1126_1010_try1")  # 10/11
+  sams.append(pre + "D1127_1010_try1")  # 10/11
+  sams.append(pre + "D1128_1010_try1")  # 10/11
+  sams.append(pre + "D1129_1010_try1")  # 10/11
+  sams.append(pre + "D1130_1010_try1")  # 10/11
+  sams.append(pre + "D1131_1010_try1")  # 10/11
+  sams.append(pre + "D1132_1010_try1")  # 10/11
+  sams.append(pre + "D1133_1010_try1")  # 10/11
+  sams.append(pre + "D1134_1010_try1")  # 10/11
+  sams.append(pre + "D1136_1010_try1")  # 10/11
+  sams.append(pre + "D1138_1010_try1")  # 10/11
+  sams.append(pre + "D1139_1010_try1")  # 10/11
+  sams.append(pre + "D1140_1010_try1")  # 10/11
+  sams.append(pre + "6v7_1010_try1:chipD1141")  # 10/11  # Chip # from log
+  sams.append(pre + "D1142_1010_try1")  # 10/11
+  sams.append(pre + "D1144_1010_try1")  # 10/11
+  sams.append(pre + "D1145_1010_try1")  # 10/11
+  sams.append(pre + "D1146_1010_try1")  # 10/11
+  sams.append(pre + "D1147_1010_try1")  # 10/11
+  sams.append(pre + "D1148_1010_try1")  # 10/11
+  sams.append(pre + "D1149_1010_try1")  # 10/11
+  sams.append(pre + "D1149_1010_try2")  # 10/11
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

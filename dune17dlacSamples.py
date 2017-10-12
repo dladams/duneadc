@@ -1129,14 +1129,26 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1148_1010_try1")
   badsams.append(pre + "D1149_1010_try1")  # Two waveforms pegged at overflow.
   sams.append(pre + "D1149_1010_try2")
-  sams.append(pre + "D1150_1011T0932_try1")  # 10/11
-  sams.append(pre + "D1150_1011T1147_try1")  # 10/11
-  sams.append(pre + "D1151_1011_try1")  # 10/11
-  sams.append(pre + "D1152_1011T1016_try1")  # 10/11
-  sams.append(pre + "D1152_1011T1046_try1")  # 10/11
-  sams.append(pre + "D1154_1011T1307_try1")  # 10/11
-  sams.append(pre + "D1154_1011T1310_try1")  # 10/11
-  sams.append(pre + "D1155_1011_try1")  # 10/11
+  sams.append(pre + "D1150_1011T0932_try1")
+  sams.append(pre + "D1150_1011T1147_try1")
+  sams.append(pre + "D1151_1011_try1")
+  sams.append(pre + "D1152_1011T1016_try1")
+  sams.append(pre + "D1152_1011T1046_try1")
+  sams.append(pre + "d1154_1011T1307_try1:chipD1154")  # 10/12
+  sams.append(pre + "D1154_1011T1310_try1")
+  sams.append(pre + "D1155_1011_try1")
+  sams.append(pre + "D1158_1011_try1")  # 10/12
+  sams.append(pre + "D1160_1011_try1")  # 10/12
+  sams.append(pre + "D1161_1011_try1")  # 10/12
+  sams.append(pre + "D1161_1011_try2")  # 10/12
+  sams.append(pre + "D1162_1011_try1")  # 10/12
+  sams.append(pre + "D1163_1011_try1")  # 10/12
+  sams.append(pre + "D1164_1011_try1")  # 10/12
+  sams.append(pre + "D1165_1011_try1")  # 10/12
+  sams.append(pre + "D1166_1011_try1")  # 10/12
+  sams.append(pre + "D1167_1011_try1")  # 10/12
+  sams.append(pre + "D1169_1011_try1")  # 10/12
+  sams.append(pre + "D1172_1011_try1")  # 10/12
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

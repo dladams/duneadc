@@ -1189,12 +1189,31 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1167_1011")
   sams2.append(pre + "D1169_1011")
   sams2.append(pre + "D1172_1011")
-  sams2.append(pre + "D1173_1012")  # 10/12
-  samsh.append(pre + "D1174_1012")  # 10/12
-  sams2.append(pre + "D1175_1012")  # 10/12
-  samsh.append(pre + "D1176_1012")  # 10/12
-  sams2.append(pre + "D1177_1012")  # 10/12
-  samsh.append(pre + "D1178_1012")  # 10/12
+  sams2.append(pre + "D1173_1012")
+  samsh.append(pre + "D1174_1012")
+  badsams2.append(pre + "D1175_1012")  # Bad waveforms
+  samsh.append(pre + "D1176_1012")
+  sams2.append(pre + "D1177_1012")
+  samsh.append(pre + "D1178_1012")
+  sams2.append(pre + "D1179_1012")  # 10/13
+  samsh.append(pre + "D1180_1012")  # 10/13
+  samsh.append(pre + "D1181_1012")  # 10/13
+  samsh.append(pre + "D1184_1012")  # 10/13
+  sams2.append(pre + "D1185_1012")  # 10/13
+  samsh.append(pre + "D1186_1012")  # 10/13
+  sams2.append(pre + "D1187_1012")  # 10/13
+  samsh.append(pre + "1189_1012:chipD1189")  # 10/13
+  sams2.append(pre + "D1190_1012")  # 10/13
+  samsh.append(pre + "D1191_1012")  # 10/13
+  sams2.append(pre + "D1195_1013")  # 10/13
+  samsh.append(pre + "D1196_1013")  # 10/13
+  sams2.append(pre + "D1197_1013")  # 10/13
+  sams2.append(pre + "D1199_1013")  # 10/13
+  sams2.append(pre + "D1200_1013")  # 10/13
+  sams2.append(pre + "D1202_1013")  # 10/13
+  sams2.append(pre + "D1203_1013")  # 10/13
+  sams2.append(pre + "D1204_1013")  # 10/13
+  sams2.append(pre + "D1205_1013")  # 10/13
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

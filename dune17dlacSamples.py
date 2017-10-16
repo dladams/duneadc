@@ -1196,11 +1196,16 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1217_1013_try1")
   sams.append(pre + "D1218_1013_try1")
   sams.append(pre + "D1219_1013_try1")
-  sams.append(pre + "D1220_1016_try1")  # 10/16
-  sams.append(pre + "D1221_1016_try1")  # 10/16
-  sams.append(pre + "D1222_1016T1026_try1")  # 10/16
-  sams.append(pre + "D1222_1016T1105_try1")  # 10/16
-  sams.append(pre + "D1223_1016_try1")  # 10/16
+  sams.append(pre + "D1220_1016_try1")
+  sams.append(pre + "D1221_1016_try1")
+  sams.append(pre + "D1222_1016T1026_try1")
+  badsams.append(pre + "D1222_1016T1105_try1")  # Corrupt waveform file
+  badsams.append(pre + "D1223_1016_try1")  # Bad waveforms
+  sams.append(pre + "D1224_1016_try1")  #10/16
+  sams.append(pre + "D1226_1016_try1")  #10/16
+  sams.append(pre + "D1227_1016_try1")  #10/16
+  sams.append(pre + "D1228_1016_try1")  #10/16
+  sams.append(pre + "D1229_1016_try1")  #10/16
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

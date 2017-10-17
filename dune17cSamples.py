@@ -1236,6 +1236,22 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1227_1016")
   badsams2.append(pre + "D1228_1016")  # Crash in extrema finding
   samsh.append(pre + "D1229_1016")
+  sams2.append(pre + "D1230_1016")  # 10/17
+  samsh.append(pre + "D1231_1016")  # 10/17
+  samsh.append(pre + "D1232_1016")  # 10/17
+  samsh.append(pre + "D1233_1016")  # 10/17
+  samsh.append(pre + "D1234_1016")  # 10/17
+  sams2.append(pre + "D1235_1016")  # 10/17
+  samsh.append(pre + "D1236_1016")  # 10/17
+  sams2.append(pre + "D1237_1016")  # 10/17
+  samsh.append(pre + "D1238_1016")  # 10/17
+  sams2.append(pre + "D1239_1016")  # 10/17
+  samsh.append(pre + "D1240_1016")  # 10/17
+  samsh.append(pre + "D1242_1016")  # 10/17
+  sams2.append(pre + "D1243_1016")  # 10/17
+  samsh.append(pre + "D1244_1016")  # 10/17
+  sams2.append(pre + "D1246_1016")  # 10/17
+  samsh.append(pre + "D1247_1016")  # 10/17
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

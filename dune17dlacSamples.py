@@ -1134,7 +1134,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1151_1011_try1")
   sams.append(pre + "D1152_1011T1016_try1")
   sams.append(pre + "D1152_1011T1046_try1")
-  sams.append(pre + "d1154_1011T1307_try1:chipD1154")  # 10/12
+  badsams.append(pre + "d1154_1011T1307_try1:chipD1154")  # No waveforms
   sams.append(pre + "D1154_1011T1310_try1")
   sams.append(pre + "D1155_1011_try1")
   sams.append(pre + "D1158_1011_try1")
@@ -1201,11 +1201,29 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1222_1016T1026_try1")
   badsams.append(pre + "D1222_1016T1105_try1")  # Corrupt waveform file
   badsams.append(pre + "D1223_1016_try1")  # Bad waveforms
-  sams.append(pre + "D1224_1016_try1")  #10/16
-  sams.append(pre + "D1226_1016_try1")  #10/16
-  sams.append(pre + "D1227_1016_try1")  #10/16
-  sams.append(pre + "D1228_1016_try1")  #10/16
-  sams.append(pre + "D1229_1016_try1")  #10/16
+  sams.append(pre + "D1224_1016_try1")
+  sams.append(pre + "D1226_1016_try1")
+  sams.append(pre + "D1227_1016_try1")
+  sams.append(pre + "D1228_1016_try1")
+  sams.append(pre + "D1229_1016_try1")
+  sams.append(pre + "D1230_1016_try1")  # 10/17
+  sams.append(pre + "D1231_1016_try1")  # 10/17
+  sams.append(pre + "D1232_1016_try1")  # 10/17
+  sams.append(pre + "D1233_1016_try1")  # 10/17
+  sams.append(pre + "D1234_1016_try1")  # 10/17
+  sams.append(pre + "D1235_1016_try1")  # 10/17
+  sams.append(pre + "D1236_1016_try1")  # 10/17
+  sams.append(pre + "D1237_1016_try1")  # 10/17
+  sams.append(pre + "D1238_1016_try1")  # 10/17
+  sams.append(pre + "D1239_1016_try1")  # 10/17
+  sams.append(pre + "D1240_1016_try1")  # 10/17
+  sams.append(pre + "D1241_1016_try1")  # 10/17
+  sams.append(pre + "D1242_1016_try1")  # 10/17
+  sams.append(pre + "D1243_1016_try1")  # 10/17
+  sams.append(pre + "D1244_1016_try1")  # 10/17
+  sams.append(pre + "D1245_1016_try1")  # 10/17
+  sams.append(pre + "D1246_1016_try1")  # 10/17
+  sams.append(pre + "D1247_1016_try1")  # 10/17
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

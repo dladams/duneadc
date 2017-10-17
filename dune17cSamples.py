@@ -1231,11 +1231,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1221_1016")
   badsams2.append(pre + "D1222_1016")  # Corrupt waveform file.
   samsh.append(pre + "D1223_1016")
-  samsh.append(pre + "D1224_1016")  # 10/16
-  sams2.append(pre + "D1226_1016")  # 10/16
-  samsh.append(pre + "D1227_1016")  # 10/16
-  sams2.append(pre + "D1228_1016")  # 10/16
-  samsh.append(pre + "D1229_1016")  # 10/16
+  badsamsh.append(pre + "D1224_1016")  # Bad waveform
+  sams2.append(pre + "D1226_1016")
+  samsh.append(pre + "D1227_1016")
+  badsams2.append(pre + "D1228_1016")  # Crash in extrema finding
+  samsh.append(pre + "D1229_1016")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

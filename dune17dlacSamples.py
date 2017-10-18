@@ -1149,6 +1149,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1167_1011_try1")
   sams.append(pre + "D1169_1011_try1")
   sams.append(pre + "D1172_1011_try1")
+  badsams.append(pre + "D1172_1017_try1")  # Log indicates this is mislabled but has the same chip ID.
   sams.append(pre + "D1173_1012_try1")
   sams.append(pre + "D1174_1012_try1")
   badsams.append(pre + "D1175_1012_try1")  # Bad waveforms.
@@ -1264,6 +1265,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1282_1017_try1")  # 10/18
   sams.append(pre + "D1282_1017_try2")  # 10/18
   sams.append(pre + "D1282_1017_try3")  # 10/18
+  sams.append(pre + "D1283_1018_try1")  # 10/18
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

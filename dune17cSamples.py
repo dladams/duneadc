@@ -1252,15 +1252,15 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1244_1016")
   sams2.append(pre + "D1246_1016")
   samsh.append(pre + "D1247_1016")
-  samsh.append(pre + "D1248_1017")  # 10/17
-  sams2.append(pre + "D1249_1017")  # 10/17
-  samsh.append(pre + "D1251_1017")  # 10/17
-  sams2.append(pre + "D1252_1017")  # 10/17
-  samsh.append(pre + "D1253_1017")  # 10/17
-  samsh.append(pre + "D1254_1017")  # 10/17
-  sams2.append(pre + "D1256_1017")  # 10/17
-  samsh.append(pre + "D1257_1017")  # 10/17
-  sams2.append(pre + "D1258_1017")  # 10/17
+  samsh.append(pre + "D1248_1017")
+  sams2.append(pre + "D1249_1017")
+  samsh.append(pre + "D1251_1017")
+  sams2.append(pre + "D1252_1017")
+  samsh.append(pre + "D1253_1017")
+  samsh.append(pre + "D1254_1017")
+  sams2.append(pre + "D1256_1017")
+  samsh.append(pre + "D1257_1017")
+  sams2.append(pre + "D1258_1017")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

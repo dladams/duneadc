@@ -42,7 +42,7 @@ void drawQBounds(TH1* ph) {
 // datasetString - colon-separated list of datasets
 //                 Sample names  for dataset DST are read from DST.txt and perf data from perf_DST.root
 // dslist - if not blank and dslist.txt is not empty, only the samples in that file are used
-TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetricMap* pmets =nullptr) {
+TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", double ymax0 =0.0, SampleMetricMap* pmets =nullptr) {
   string myname = "rankChips: ";
   string::size_type ipos = 0;
   vector<string> datasets;
@@ -405,8 +405,8 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
   string htitl = dslist + " ADC chip quality (" + sentrycount(ph0) + " chips)";
   ph0->SetTitle(htitl.c_str());
   dyleg = 0.02 + 0.04*nhst;
-  double xleg1 = 0.33;
-  double xleg2 = xleg1 + 0.35;
+  double xleg1 = 0.29;
+  double xleg2 = xleg1 + 0.37;
   double yleg2 = 0.88;
   double yleg1 = yleg2 - dyleg;
   htitl = sshtitl.str();
@@ -426,8 +426,17 @@ TH1* rankChips(string datasetString="PDTS:CETS", string dslist ="", SampleMetric
     ymax = 20.0;
     doymax = true;
   }
+  if ( ymax0 > 0.0 ) {
+    ymax = ymax0;
+    doymax = true;
+  }
   ph0->SetMinimum(0.0);
-  if ( doymax ) ph0->SetMaximum(ymax);
+  if ( doymax ) {
+    cout << myname << "Setting ymax to " << ymax << endl;
+    ph0->SetMaximum(ymax);
+  } else {
+    cout << myname << "Not setting ymax." << endl;
+  }
   string fnameQuality = "chipQuality_" + fnamedsts + ".png";
   // Assign line colors, styles and widths.
   SampleIndexMap cols;

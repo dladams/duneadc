@@ -1073,6 +1073,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D1021_1003")  # Bad waveforms
   sams2.append(pre + "D1022_1003")
   sams2.append(pre + "D1023_1003")
+  samsh.append(pre + "D1024_1023")  # 10/23
   sams2.append(pre + "D1025_1003")
   sams2.append(pre + "D1026_1004")
   sams2.append(pre + "D1027_1004")
@@ -1144,6 +1145,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1108_1006")
   samsh.append(pre + "D1109_1006")
   sams2.append(pre + "D1110_1010")
+  sams2.append(pre + "D1111_1023T1144")  # 10/23
+  samsh.append(pre + "D1111_1023T1259")  # 10/23
   sams2.append(pre + "D1112_1010")
   sams2.append(pre + "D1113_1010")
   sams2.append(pre + "D1115_1010")
@@ -1291,9 +1294,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1287_1018")
   sams2.append(pre + "D1288_1018")
   sams2.append(pre + "D1289_1018")
+  sams2.append(pre + "D1290_1023")  # 10/23
   badsams2.append(pre + "D1291_1018T1410")  # No waveform tree
   sams2.append(pre + "D1291_1018T1428")
   sams2.append(pre + "D1292_1018")
+  samsh.append(pre + "D1293_1023")  # 10/23
   sams2.append(pre + "D1294_1018")
   sams2.append(pre + "D1295_1018")
   sams2.append(pre + "D1297_1018")
@@ -1368,6 +1373,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1376_1020")
   sams2.append(pre + "D1377_1020")
   samsh.append(pre + "D1378_1020")
+  samsh.append(pre + "D1381_1023")  # 10/23
+  sams2.append(pre + "D1379_1023")  # 10/23
+  sams2.append(pre + "D1381_1023")  # 10/23
+  samsh.append(pre + "D1383_1023")  # 10/23
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

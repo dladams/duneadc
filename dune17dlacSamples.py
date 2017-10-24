@@ -1382,26 +1382,37 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1380_1023_try1")
   sams.append(pre + "D1381_1023_try1")
   sams.append(pre + "D1383_1023_try1")
-  sams.append(pre + "D1385_1023_try1")  # 10/24
-  sams.append(pre + "D1386_1023_try1")  # 10/24
-  sams.append(pre + "D1387_1023_try1")  # 10/24
-  sams.append(pre + "7v8_1023_try1:chipD1388")  # 10/24  # Chip ID taken from elog
-  sams.append(pre + "D1389_1023_try1")  # 10/24
-  sams.append(pre + "D1390_1023_try1")  # 10/24
-  sams.append(pre + "D1391_1023_try1")  # 10/24
-  sams.append(pre + "D1392_1023_try1")  # 10/24
-  sams.append(pre + "D1393_1023_try1")  # 10/24
-  sams.append(pre + "D1394_1023_try1")  # 10/24
-  sams.append(pre + "D1395_1023_try1")  # 10/24
-  sams.append(pre + "D1396_1023_try1")  # 10/24
-  sams.append(pre + "D1397_1023_try1")  # 10/24
-  sams.append(pre + "D1398_1023_try1")  # 10/24
-  sams.append(pre + "D1399_1023_try1")  # 10/24
-  sams.append(pre + "D1401_1023_try1")  # 10/24
-  sams.append(pre + "D1402_1023_try1")  # 10/24
-  sams.append(pre + "D1403_1023_try1")  # 10/24
-  sams.append(pre + "D1404_1023_try1")  # 10/24
-  sams.append(pre + "D1405_1023_try1")  # 10/24
+  sams.append(pre + "D1385_1023_try1")
+  sams.append(pre + "D1386_1023_try1")
+  sams.append(pre + "D1387_1023_try1")
+  sams.append(pre + "7v8_1023_try1:chipD1388")  # Chip ID taken from elog
+  sams.append(pre + "D1389_1023_try1")
+  sams.append(pre + "D1390_1023_try1")
+  sams.append(pre + "D1391_1023_try1")
+  sams.append(pre + "D1392_1023_try1")
+  sams.append(pre + "D1393_1023_try1")
+  sams.append(pre + "D1394_1023_try1")
+  sams.append(pre + "D1395_1023_try1")
+  sams.append(pre + "D1396_1023_try1")
+  sams.append(pre + "D1397_1023_try1")
+  sams.append(pre + "D1398_1023_try1")
+  sams.append(pre + "D1399_1023_try1")
+  sams.append(pre + "D1401_1023_try1")
+  sams.append(pre + "D1402_1023_try1")
+  sams.append(pre + "D1403_1023_try1")
+  sams.append(pre + "D1404_1023_try1")
+  sams.append(pre + "D1405_1023_try1")
+  sams.append(pre + "D1406_1024_try1")  # 10/24
+  sams.append(pre + "D1407_1024_try1")  # 10/24
+  sams.append(pre + "D1409_1024_try1")  # 10/24
+  sams.append(pre + "D1410_1024_try1")  # 10/24
+  sams.append(pre + "D1411_1024_try1")  # 10/24
+  sams.append(pre + "D1412_1024_try1")  # 10/24
+  sams.append(pre + "D1413_1024_try1")  # 10/24
+  sams.append(pre + "D1414_1024_try1")  # 10/24
+  sams.append(pre + "D1415_1024_try1")  # 10/24
+  sams.append(pre + "D1416_1024_try1")  # 10/24
+  sams.append(pre + "D1417_1024_try1")  # 10/24
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

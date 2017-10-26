@@ -185,7 +185,7 @@ AdcSampleFinder::AdcSampleFinder(Name a_topdir) {
 
 //**********************************************************************
 
-AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxsam) const {
+AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxsam, bool calculateVin) const {
   const string myname = "AdcSampleFinder::find: ";
   // CSV samples from Hucheng et al.
   AdcSampleReaderPtr prdr;
@@ -229,7 +229,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
   // DUNE test data summer 2017
   if ( ssam.substr(0,7) == "DUNE17-" || ssam.substr(0,10) == "DUNE17dla-" ||
        ssam.substr(0,11) == "DUNE17test_" ) {
-    prdr = findFembReader(ssam, icha, maxsam);
+    prdr = findFembReader(ssam, icha, maxsam, calculateVin);
   }
   // DUNE quad test data summer 2017
   if ( ssam.substr(0,8) == "DUNE17q-" ) {
@@ -542,7 +542,7 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
 //**********************************************************************
 
 AdcSampleReaderPtr AdcSampleFinder::
-findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
+findFembReader(Name asample, Index icha, SampleIndex maxsam, bool calculateVin) const {
   const string myname = "AdcSampleFinder::findFembReader: ";
   // Check channel.
   if ( icha > 15 ) {
@@ -677,7 +677,6 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
   // Mitigate rollback.
   prdr->addMitigator(new RollbackFinder(*prdr, 100000));
   // Find extrema.
-  bool calculateVin = true;
   if ( calculateVin ) {
     double vinRate = prdrFemb->vinFreq();
     if ( vinRate <= 0.0 ) {
@@ -735,11 +734,11 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam) const {
         prdrFemb->setSampleFunction(pfun);
       }
     }
+    // Build ADC-voltage table.
+    cout << myname << "Building ADC-Vin table." << endl;
+    prdr->buildTableFromWaveform(20000, 0.1, -300.0, true, true);
+    cout << myname << "Done building ADC-Vin table." << endl;
   }
-  // Build ADC-voltage table.
-  cout << myname << "Building ADC-Vin table." << endl;
-  prdr->buildTableFromWaveform(20000, 0.1, -300.0, true, true);
-  cout << myname << "Done building ADC-Vin table." << endl;
   return prdr;
 }
 

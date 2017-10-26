@@ -40,7 +40,7 @@ public:
   // Return the reader for a sample.
   // Returns null if the sample is not found or does not have the requested channel.
   // Channel is not checked if it is set to badChannel().
-  AdcSampleReaderPtr find(Name asample, Index icha = badChannel(), SampleIndex maxsam =0) const;
+  AdcSampleReaderPtr find(Name asample, Index icha = badChannel(), SampleIndex maxsam =0, bool calculateVin =true) const;
 
 private:
 
@@ -48,7 +48,7 @@ private:
   AdcSampleReaderPtr findBinaryReader(Name asample, Index icha = badChannel(), SampleIndex maxsam =0) const;
 
   // Return a FEMB reader.
-  AdcSampleReaderPtr findFembReader(Name asample, Index icha, SampleIndex maxsam =0) const;
+  AdcSampleReaderPtr findFembReader(Name asample, Index icha, SampleIndex maxsam =0, bool calculateVin =true) const;
 
   // Return a quad reader.
   AdcSampleReaderPtr findQuadReader(Name asample, Index icha, SampleIndex maxsam =0) const;

@@ -53,6 +53,18 @@ public:
                   bool dropTails = false,
                   bool savePerf =false,
                   int clean = 2);
+  AdcChipAnalyzer(std:: string sopt, std::string sampleName,
+                  Index icha1 =0,
+                  Index ncha =1,
+                  std::string datasetCalib ="",
+                  bool saveCalib =false,
+                  float vmin = 0.0,
+                  float vmax = 0.0,
+                  unsigned int nv = 0,
+                  double vRmsMax = 1.0,
+                  bool dropTails = false,
+                  bool savePerf =false,
+                  int clean = 2);
 
   ~AdcChipAnalyzer();
 
@@ -102,6 +114,7 @@ public:
 
 private:
 
+  Name   m_sopt;
   Name   m_sampleName;
   Index  m_icha1;
   Index  m_ncha;
@@ -127,6 +140,7 @@ private:
   TH1* m_phGain;
   TH1* m_phOffset;
   std::map<string, TH1*> m_hsums;  // Summed histograms.
+  bool m_calculateVin;
 
 };
 

@@ -295,9 +295,7 @@ int AdcChipAnalyzer::draw(string splotin, bool savePlot) {
   }
   Index ndraw = 0;
   // Now add the plot for each 
-cout << 100 << endl;
   for ( Index kcha=0; kcha<nChannel(); ++kcha ) {
-cout << 101 << endl;
     Index icha = channel(kcha);
     Index ipad = kcha + 1;
     if      ( m_layout ==  10 ) ipad = 0;
@@ -321,22 +319,15 @@ cout << 101 << endl;
     bool doLine = false;  // Draw a line for the x-axis.
     TLine* pline = nullptr;
     // Find the histogram(s) for the plot name.
-cout << 110 << endl;
     if ( splot == "rawv" || splot == "ramv" ) {
-cout << 111 << endl;
       gridx = true;
       gridy = true;
-cout << 112 << endl;
       ph = splot == "rawv" ? m_rawHists[icha] : m_ramHists[icha];
-cout << 113 << endl;
       ph2 = m_vinHists[icha];
-cout << 114 << endl;
-cout << "ph=" << ph << endl;
       sarg = "e0 x0";
       ph->GetYaxis()->SetTitleOffset(1.3);
       doLine = true;
       rightMargin = 0.05;
-cout << 115 << endl;
     } else {
       AdcSampleAnalyzer* pasa = sampleAnalyzer(icha);
       if ( pasa == nullptr ) {
@@ -407,7 +398,6 @@ cout << 115 << endl;
         doDraw = false;
       }
     }
-cout << 120 << endl;
     // If this is a sum, sum instead of drawing.
     if ( doChannelSum ) {
       if ( m_hsums.find(splot) != m_hsums.end() ) {
@@ -440,9 +430,7 @@ cout << 120 << endl;
       double xmax = ph->GetXaxis()->GetXmax();
       pline = new TLine(xmin, 0.0, xmax, 0.0);
     }
-cout << 201 << endl;
     if ( doDraw ) {
-cout << 202 << endl;
       ppad->SetRightMargin(rightMargin);
       ppad->SetLeftMargin(leftMargin);
       if ( logy ) ppad->SetLogy();
@@ -461,7 +449,6 @@ cout << 202 << endl;
       if ( ph2 != nullptr ) ph2->DrawCopy(sarg2.c_str());
     }
   }
-cout << 300 << endl;
   if ( savePlot ) {
     if ( ndraw ) {
       string fchan;

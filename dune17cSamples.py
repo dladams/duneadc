@@ -1424,10 +1424,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D1436_1025")  # Bad waveforms
   badsamsh.append(pre + "D1437_1026")  # Killed slow-running job.
   sams2.append(pre + "D1438_1026")
-  sams2.append(pre + "D1439_1026")  # 10/26
+  sams2.append(pre + "D1439_1026")
   samsh.append(pre + "D1440_1026")  # 10/26
   sams2.append(pre + "D1441_1026")  # 10/26
   samsh.append(pre + "D1442_1026")  # 10/26
+  samsh.append(pre + "D1443_1026")  # 10/26
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

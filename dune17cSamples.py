@@ -1419,7 +1419,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1429_1024")
   samsh.append(pre + "D1430_1025")
   samsh.append(pre + "D1431_1026")
-  sams2.append(pre + "D1432_1026")  # 10/26
+  sams2.append(pre + "D1432_1026")
   badsamsh.append(pre + "D1433_1025")  # Bad waveforms
   badsamsh.append(pre + "D1434_1025")  # Bad waveforms
   badsamsh.append(pre + "D1435_1025")  # Bad waveforms (try is bad, job ran 75 min w/o completing)

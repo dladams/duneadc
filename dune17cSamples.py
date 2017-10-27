@@ -1421,25 +1421,25 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1431_1026")
   sams2.append(pre + "D1432_1026")
   badsamsh.append(pre + "D1433_1025")  # Bad waveforms
-  sams2.append(pre + "D1433_1026")  # 10/27
+  badsams2.append(pre + "D1433_1026")  # Bad waveforms
   badsamsh.append(pre + "D1434_1025")  # Bad waveforms
-  samsh.append(pre + "D1434_1026")  # 10/27
+  samsh.append(pre + "D1434_1026")
   badsamsh.append(pre + "D1435_1025")  # Bad waveforms (try is bad, job ran 75 min w/o completing)
-  sams2.append(pre + "D1435_1026")  # 10/27
+  sams2.append(pre + "D1435_1026")
   badsamsh.append(pre + "D1436_1025")  # Bad waveforms
-  samsh.append(pre + "D1436_1026")  # 10/27
-  badsamsh.append(pre + "D1437_1026")  # Killed slow-running job.
-  samsh.append(pre + "D1437_1026")  # 10/27
+  samsh.append(pre + "D1436_1026")
+  badsamsh.append(pre + "D1437_1026T1000")  # Killed slow-running job.
+  samsh.append(pre + "D1437_1026T1739")  # 10/27
   sams2.append(pre + "D1438_1026")
   sams2.append(pre + "D1439_1026")
-  badsamsh.append(pre + "D1440_1026")  # Bad waveforms
-  samsh.append(pre + "D1440_1026")  # 10/27
+  badsamsh.append(pre + "D1440_1026T1114")  # Bad waveforms
+  samsh.append(pre + "D1440_1026T1806")  # 10/27
   sams2.append(pre + "D1441_1026")
-  badsamsh.append(pre + "D1442_1026")  # Bad waveforms
-  samsh.append(pre + "D1442_1026")  # 10/27
+  badsamsh.append(pre + "D1442_1026T1810")  # Bad waveforms
+  samsh.append(pre + "D1442_1026T1839")  # 10/27
   sams2.append(pre + "D1443_1026")
-  samsh.append(pre + "D1444_1026")  # 10/27
-  samsh.append(pre + "D1445_1026")  # 10/27
+  samsh.append(pre + "D1444_1026")
+  samsh.append(pre + "D1445_1026")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

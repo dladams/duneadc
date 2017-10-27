@@ -1453,7 +1453,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1444_1026_try1")
   sams.append(pre + "D1445_1026_try1")
   sams.append(pre + "D1446_1026_try1")
-  sams.append(pre + "D1447_1027_try1")  # 10/27
+  sams.append(pre + "D1447_1027_try1")
   sams.append(pre + "D1448_1027_try1")  # 10/27
   # DUNE17dla-cold
   if isBad: outsams = badsams

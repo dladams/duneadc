@@ -306,6 +306,8 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     //dvdt = (vinMax - vinMin)/5.0;
     ef1BorderWidth = 1500000;
     //ef1MinThresh = 80;
+    //oct ef1MinLimit = 1000.0;
+    maxRollback = 3000000;
     maxdext = 100000;
   // 201709-quad_chipCCC_DDDD
   } else if ( ssam.substr(0, 16) == "201709-quad_chip" ) {
@@ -501,12 +503,14 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
   AdcBinarySampleReader* prdrFull = new AdcBinarySampleReader(fname, ssam, ichp, schpLabel, icha, fsamp, itime, maxsam, swap);
   AdcSampleReaderPtr prdr(prdrFull);
   // Mitigate rollback.
-  if ( maxRollback ) {
+  bool useMitigated = maxRollback > 0;
+  if ( useMitigated ) {
     prdr->addMitigator(new RollbackFinder(*prdr, maxRollback));
   }
   // Find extrema.
   if ( dvdt > 0.0 ) {
-    AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+    AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh,
+                               ef1MinLimit, ef1MaxLimit, useMitigated);
     AdcExtrema exts;
     if ( ef1.find(*prdr, exts) || exts.size() == 0 ) {
       cout << myname << "Unable to find first extremum." << endl;
@@ -523,12 +527,21 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     // Build ADC-voltage table.
     prdr->buildTableFromWaveform(20000, 0.1, -300.0);
   } else {
-    AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+    AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh,
+                               ef1MinLimit, ef1MaxLimit, useMitigated);
     AdcBinExtremaFinder ef2(ef2MinGapBin, 500, ef2NbinThresh);
     AdcExtrema exts;
     if ( findExtrema(&*prdr, exts, ef1, ef2, maxdext) ) {
       cout << myname << "Unable to find extrema." << endl;
-      cout << myname << "Unable to find extrema." << endl;
+      cout << myname << "First finder is AdcBorderExtremaFinder:" << endl;
+      cout << myname << "  ef1BorderWidth: " << ef1BorderWidth << endl;
+      cout << myname << "    ef1MinThresh: " << ef1MinThresh << endl;
+      cout << myname << "    ef1MaxThresh: " << ef1MaxThresh << endl;
+      cout << myname << "     ef1MinLimit: " << ef1MinLimit << endl;
+      cout << myname << "     ef1MaxLimit: " << ef1MaxLimit << endl;
+      cout << myname << "Second finder is AdcBinExtremaFinder:" << endl;
+      cout << myname << "   ef2MinGapBin:" << ef2MinGapBin << endl;
+      cout << myname << "Mitigation maxRollback: " << maxRollback << endl;
     } else {
       SampleFunction* pfun = new Sawtooth(vinMin, vinMax, exts);
       prdrFull->setSampleFunction(pfun);
@@ -698,7 +711,8 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam, bool calculateVin) 
     double vinMax = 1700.0;
     if ( 1 ) {
       // Find extrema.
-      AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh,
+                                 ef1MinLimit, ef1MaxLimit, true);
       Index ef2NbinThresh = 500;
       Index ef2MinGapBin = 50000;
       SampleIndex maxdext = 10000;
@@ -715,7 +729,8 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam, bool calculateVin) 
       //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
       // Setting maxLimit = 0 helps with large fluctuations after overflow.
       // Large minThresh fixes t0 offset due to fluctuations near that value.
-      AdcBorderExtremaFinder ef(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      AdcBorderExtremaFinder ef(ef1BorderWidth, ef1MinThresh, ef1MaxThresh,
+                                ef1MinLimit, ef1MaxLimit, true);
       AdcExtrema exts;
       int rstat = ef.find(*prdr, exts);
       if ( rstat ) {
@@ -795,7 +810,8 @@ findQuadReader(Name asample, Index icha, SampleIndex maxsam) const {
     double vinMax = 1700.0;
     if ( 1 ) {
       // Find extrema.
-      AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      AdcBorderExtremaFinder ef1(ef1BorderWidth, ef1MinThresh, ef1MaxThresh,
+                                 ef1MinLimit, ef1MaxLimit, true);
       Index ef2NbinThresh = 500;
       Index ef2MinGapBin = 50000;
       SampleIndex maxdext = 10000;
@@ -812,7 +828,8 @@ findQuadReader(Name asample, Index icha, SampleIndex maxsam) const {
       //AdcBorderExtremaFinder ef(borderWidth, 500, 4000, 1500,    0);
       // Setting maxLimit = 0 helps with large fluctuations after overflow.
       // Large minThresh fixes t0 offset due to fluctuations near that value.
-      AdcBorderExtremaFinder ef(ef1BorderWidth, ef1MinThresh, ef1MaxThresh, ef1MinLimit, ef1MaxLimit);
+      AdcBorderExtremaFinder ef(ef1BorderWidth, ef1MinThresh, ef1MaxThresh,
+                                ef1MinLimit, ef1MaxLimit, true);
       AdcExtrema exts;
       int rstat = ef.find(*prdr, exts);
       if ( rstat ) {

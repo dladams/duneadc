@@ -31,12 +31,14 @@ Name AdcBorderFinder::stateName(State state) {
 AdcBorderFinder::
 AdcBorderFinder(SampleIndex fenceWidth,
                 SampleValue minThresh, SampleValue maxThresh,
-                SampleValue minLimit, SampleValue maxLimit)
+                SampleValue minLimit, SampleValue maxLimit,
+                bool useMitigated)
 : m_fenceWidth(fenceWidth),
   m_minThresh(minThresh),
   m_maxThresh(maxThresh),
   m_minLimit(minLimit),
-  m_maxLimit(maxLimit) { }
+  m_maxLimit(maxLimit),
+  m_useMitigated(useMitigated) { }
 
 //**********************************************************************
 
@@ -59,7 +61,8 @@ int AdcBorderFinder::find(const AdcSampleReader& reader, SampleRangeVector& bord
   Index maxerr = 200;
   Index nerr = 0;
   for ( SampleIndex isam=0; isam<reader.nsample(); ++isam ) {
-    SampleValue code = reader.code(isam);
+    //oct SampleValue code = reader.code(isam);
+    SampleValue code = reader.mitigatedCode(isam);
     bool sampleIsUnderThresh = code <= minThresh();
     bool sampleIsOverThresh = code >= maxThresh();
     bool sampleIsFence = !sampleIsUnderThresh && !sampleIsOverThresh;

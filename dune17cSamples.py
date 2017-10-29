@@ -1442,9 +1442,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1445_1026")
   samsh.append(pre + "D1447_1027")
   sams2.append(pre + "D1448_1027")
-  samsh.append(pre + "D1449_1027")  # 10/27
-  sams2.append(pre + "D1450_1027T1345")  # 10/27
-  sams2.append(pre + "D1450_1027T1510")  # 10/27
+  samsh.append(pre + "D1449_1027")
+  badsams2.append(pre + "D1450_1027T1345")  # Waveform is missing.
+  sams2.append(pre + "D1450_1027T1510")  # 10/29
+  sams2.append(pre + "D1453_1027")  # 10/29
+  samsh.append(pre + "D1452_1027")  # 10/29
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

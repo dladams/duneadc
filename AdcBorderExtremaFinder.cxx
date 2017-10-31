@@ -7,8 +7,9 @@
 AdcBorderExtremaFinder::
 AdcBorderExtremaFinder(SampleIndex fenceWidth,
                        SampleValue minThresh, SampleValue maxThresh,
-                       SampleValue minLimit, SampleValue maxLimit)
-: m_borderFinder(fenceWidth, minThresh, maxThresh, minLimit, maxLimit) { }
+                       SampleValue minLimit, SampleValue maxLimit,
+                       bool useMitigated)
+: m_borderFinder(fenceWidth, minThresh, maxThresh, minLimit, maxLimit, useMitigated) { }
 
 //**********************************************************************
 

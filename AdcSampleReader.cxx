@@ -64,7 +64,7 @@ histdata(SampleIndex idat0, SampleIndex ndatin,
       double adcMin = mitigated ? mitigatedCode(idat) : code(idat);
       double adcMax = adcMin;
       for ( SampleIndex jdat=idat+1; jdat<idat+show; ++jdat ) {
-        double adcj = mitigated ? mitigatedCode(idat) : code(jdat);
+        double adcj = mitigated ? mitigatedCode(jdat) : code(jdat);
         if ( adcj < adcMin ) adcMin = adcj;
         if ( adcj > adcMax ) adcMax = adcj;
       }

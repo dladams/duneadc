@@ -53,7 +53,7 @@ int AdcBinExtremaFinder::find(const AdcSampleReader& reader, AdcExtrema& exts) c
     const AdcBinRecord::Peak& peak = candidateExtrema.peak(ipea);
     if ( peak.size >= nbinThresh() ) {
       SampleIndex isam = peak.truncMean;
-      AdcCode code = reader.code(isam);
+      AdcCode code = reader.mitigatedCode(isam);
       //bool isMin = code < reader.nadc()/2;
       bool isMin = code < 0.3*reader.nadc()/2;
       exts.emplace_back(isam, isMin);

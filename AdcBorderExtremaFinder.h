@@ -25,7 +25,8 @@ public:
   // See AdcBorderFinder.h
   AdcBorderExtremaFinder(SampleIndex fenceWidth,
                          SampleValue minThresh, SampleValue maxThresh,
-                         SampleValue minLimit, SampleValue maxLimit);
+                         SampleValue minLimit, SampleValue maxLimit,
+                         bool useMitigated);
 
   // Dtor.
    ~AdcBorderExtremaFinder() =default;

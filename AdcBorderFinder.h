@@ -14,6 +14,10 @@
 //
 // Set minLimit > minThresh and maxLimit < maxThresh if there are
 // significant sample-to-sample fluctutations.
+//
+// If useMitigted is true, then the search is performed using the
+// mitigated (AdcSampleReader::mitigatedCode) waveform rather than
+// the raw waveform (AdcSampleReader::code).
 
 #ifndef AdcBorderFinder_H
 #define AdcBorderFinder_H
@@ -82,7 +86,8 @@ public:  // non-static members
   // Ctor from configuration parameters.
   AdcBorderFinder(SampleIndex fenceWidth,
                   SampleValue minThresh, SampleValue maxThresh,
-                  SampleValue minLimit, SampleValue maxLimit);
+                  SampleValue minLimit, SampleValue maxLimit,
+                  bool useMitigated);
 
   // Dtor.
   ~AdcBorderFinder() =default;
@@ -93,6 +98,7 @@ public:  // non-static members
   SampleValue maxThresh() const { return m_maxThresh; }
   SampleValue minLimit() const { return m_minLimit; }
   SampleValue maxLimit() const { return m_maxLimit; }
+  bool useMitigated() const { return m_useMitigated; }
 
   // Find the borders in a waveform.
   // Return 0 for success.
@@ -105,6 +111,7 @@ private:  // Configuration data.
   SampleValue m_maxThresh;
   SampleValue m_minLimit;
   SampleValue m_maxLimit;
+  bool m_useMitigated;
 
 };
 

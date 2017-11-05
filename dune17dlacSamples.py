@@ -1511,19 +1511,22 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1501_1102_try1")
   sams.append(pre + "D1502_1102_try1")
   sams.append(pre + "D1503_1102_try1")
-  sams.append(pre + "D1504_1103_try1")  # 11/3
-  sams.append(pre + "D1506_1103_try1")  # 11/3
-  sams.append(pre + "D1508_1103T1014_try1")  # 11/3
-  sams.append(pre + "D1508_1103T1233_try1")  # 11/3
-  sams.append(pre + "D1509_1103_try1")  # 11/3
-  sams.append(pre + "D1509_1103_try2")  # 11/3
-  sams.append(pre + "D1509_1103_try3")  # 11/3
-  sams.append(pre + "D1510_1103_try1")  # 11/3
-  sams.append(pre + "D1511_1103_try1")  # 11/3
-  sams.append(pre + "D1512_1103_try1")  # 11/3
-  sams.append(pre + "D1514_1103T1157_try1")  # 11/3
-  sams.append(pre + "D1514_1103T1201_try1")  # 11/3
-  sams.append(pre + "D1515_1103_try1")  # 11/3
+  sams.append(pre + "D1504_1103_try1")
+  sams.append(pre + "D1506_1103_try1")
+  badsams.append(pre + "D1508_1103T1014_try1")  # Bad waveforms
+  sams.append(pre + "D1508_1103T1233_try1")
+  badsams.append(pre + "D1509_1103_try1")  # Bad waveforms
+  badsams.append(pre + "D1509_1103_try2")  # Bad waveforms
+  badsams.append(pre + "D1509_1103_try3")  # Bad waveforms
+  sams.append(pre + "D1510_1103_try1")
+  sams.append(pre + "D1510_1103_try1")  # 11/5
+  sams.append(pre + "D1511_1103_try1")
+  sams.append(pre + "D1512_1103_try1")
+  sams.append(pre + "D1513_1103_try1")  # 11/5
+  sams.append(pre + "D1514_1103T1157_try1")
+  sams.append(pre + "D1514_1103T1202_try1")  # 11/5
+  sams.append(pre + "D1515_1103_try1")
+  sams.append(pre + "D1516_1103_try1")  # 11/5
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

@@ -1494,14 +1494,24 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1504_1103")
   sams2.append(pre + "D1506_1103")
   sams2.append(pre + "D1508_1103")
-  samsh.append(pre + "D1510_1103")  # 11/5
+  samsh.append(pre + "D1510_1103")
   samsh.append(pre + "D1511_1103")
   sams2.append(pre + "D1512_1103")
-  sams2.append(pre + "D1513_1103")  # 11/5
+  sams2.append(pre + "D1513_1103")
   badsams2.append(pre + "D1514_1103T1157")  # Waveform is missing.
   sams2.append(pre + "D1514_1103T1202")
   sams2.append(pre + "D1515_1103")
-  sams2.append(pre + "D1516_1103")  # 11/5
+  sams2.append(pre + "D1516_1103")
+  sams2.append(pre + "D1517_1106")  # 11/6
+  sams2.append(pre + "D1519_1106")  # 11/6
+  samsh.append(pre + "D1520_1106")  # 11/6
+  sams2.append(pre + "D1522_1106")  # 11/6
+  sams2.append(pre + "D1523_1106")  # 11/6
+  samsh.append(pre + "D1524_1106")  # 11/6
+  sams2.append(pre + "D1525_1106")  # 11/6
+  sams2.append(pre + "D1526_1106")  # 11/6
+  samsh.append(pre + "D1527_1106")  # 11/6
+  sams2.append(pre + "D1528_1106")  # 11/6
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

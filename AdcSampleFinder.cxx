@@ -207,7 +207,7 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
     return findBinaryReader(ssam, icha, maxsam);
   }
-  if ( ssam.substr(0,16) == "201711-quad_chip" ) {
+  if ( ssam.substr(0,11) == "201711-quad" ) {
     return findBinaryReader(ssam, icha, maxsam);
   }
   if ( ssam.substr(0,16) == "201710-quad_chip" ) {
@@ -289,16 +289,23 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string subdir = "P1_S7_" + schp + "_" + sday;
     searchDirs.push_back(m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir);
     searchPats.push_back(subdir + "_LN_2MHz_chn" + scha);
-  // 201710-quad_chipCCC_DDDD
-  } else if ( ssam.substr(0, 16) == "201711-quad_chip" ) {
+  // 201711-quad_chipCCC_DDDD
+  // 201711-quad_socketS_chipCCC_DDDD
+  } else if ( int sopt = ssam.substr(0, 16) == "201711-quad_chip" ? 1
+                       : ssam.substr(0, 18) == "201711-quad_socket" ? 2 : 0 ) {
     dsname = ssam.substr(0, 11);
-    string::size_type ipos = 16;
+    string::size_type ipos = sopt==1 ? 16 : 24;
     string::size_type jpos = ssam.find("_", ipos);
     schp = ssam.substr(ipos, jpos-ipos);
     string schpdir = schp;
     if ( schpdir[0] == 'D' ) schpdir = schpdir.substr(1);
     while ( schpdir[0] == '0' ) schpdir = schpdir.substr(1);
-    schpdir += "_reg";
+    if ( sopt == 1 ) {
+      schpdir += "_reg";
+    } else if ( sopt == 2 ) {
+      string ssock = ssam.substr(12,7);
+      schpdir = ssock + "_" + schpdir;
+    }
     scha = schan(icha, false);
     if ( scha.size() == 0 ) {
       cout << myname << "ERROR: Invalid channel: " << icha << endl;

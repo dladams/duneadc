@@ -2,4 +2,6 @@
 201711-quad_chipD0308_1103
 201711-quad_chipD0590_1103
 201711-quad_chipD0592_1103
-
+201711-quad_socket0_chipD0306_1106
+201711-quad_socket0_chipD0666_1106
+201711-quad_socket0_chipD0668_1106

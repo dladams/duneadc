@@ -1536,13 +1536,20 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1553_1107")
   sams2.append(pre + "D1554_1108")
   samsh.append(pre + "D1555_1108")
-  sams2.append(pre + "D1556_1108")  # 11/8
-  samsh.append(pre + "D1558_1108")  # 11/8
-  sams2.append(pre + "D1559_1108")  # 11/8
-  sams2.append(pre + "D1560_1108")  # 11/8
-  samsh.append(pre + "D1561_1108")  # 11/8
-  sams2.append(pre + "D1562_1108")  # 11/8
-  samsh.append(pre + "D1563_1108")  # 11/8
+  sams2.append(pre + "D1556_1108")
+  samsh.append(pre + "D1558_1108")
+  sams2.append(pre + "D1559_1108")
+  sams2.append(pre + "D1560_1108")
+  samsh.append(pre + "D1561_1108")
+  sams2.append(pre + "D1562_1108")
+  samsh.append(pre + "D1563_1108")
+  samsh.append(pre + "D1563_1108")  # 11/9
+  sams2.append(pre + "D1564_1108")  # 11/9
+  sams2.append(pre + "D1566_1108")  # 11/9
+  sams2.append(pre + "D1567_1108")  # 11/9
+  samsh.append(pre + "D1568_1108")  # 11/9
+  sams2.append(pre + "D1571_1108")  # 11/9
+  samsh.append(pre + "D1572_1108")  # 11/9
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

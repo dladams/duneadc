@@ -1584,12 +1584,13 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D1573_1109_try1")  # Corrupt data file
   sams.append(pre + "D1574_1109_try1")
   sams.append(pre + "D1575_1109_try1")
-  sams.append(pre + "D1576_1109_try1")  # 11/10
-  sams.append(pre + "D1577_1109_try1")  # 11/10
-  sams.append(pre + "D1578_1109_try1")  # 11/10
-  sams.append(pre + "D1579_1109_try1")  # 11/10
-  sams.append(pre + "D1580_1109_try1")  # 11/10
-  sams.append(pre + "D1581_1109_try1")  # 11/10
+  sams.append(pre + "D1576_1109_try1")
+  sams.append(pre + "D1577_1109_try1")
+  sams.append(pre + "D1578_1109_try1")
+  sams.append(pre + "D1579_1109_try1")
+  sams.append(pre + "D1580_1109_try1")
+  sams.append(pre + "D1581_1109_try1")
+  sams.append(pre + "D1582_1113_try1")  # 11/13
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

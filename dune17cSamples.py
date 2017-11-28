@@ -1625,16 +1625,33 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsams2.append(pre + "D1636_1122T1145")  # Bad waveforms
   samsh.append(pre + "D1636_1122T1138")  # 11/26
   sams2.append(pre + "D1637_1122")
-  sams2.append(pre + "D1638_1122")  # 11/26
-  sams2.append(pre + "D1639_1122")  # 11/26
-  sams2.append(pre + "D1640_1122")  # 11/26
-  samsh.append(pre + "D1641_1122")  # 11/26
-  samsh.append(pre + "D1642_1122")  # 11/26
-  sams2.append(pre + "D1643_1122")  # 11/26
-  samsh.append(pre + "D1644_1122")  # 11/26
-  sams2.append(pre + "D1645_1122")  # 11/26
-  samsh.append(pre + "D1647_1122")  # 11/26
-  sams2.append(pre + "D1648_1122")  # 11/26
+  badsams2.append(pre + "D1638_1122")  # Bad waveforms
+  samsh.append(pre + "D1638_1127")  # 11/28
+  sams2.append(pre + "D1639_1122")
+  badsams2.append(pre + "D1640_1122")  # Bad waveforms
+  samsh.append(pre + "D1641_1122")
+  samsh.append(pre + "D1642_1122")
+  sams2.append(pre + "D1643_1122")
+  samsh.append(pre + "D1644_1122")
+  sams2.append(pre + "D1645_1122")
+  badsamsh.append(pre + "D1647_1122")  # Bad waveform
+  sams2.append(pre + "D1648_1122")
+  samsh.append(pre + "D1649_1127")  # 11/28
+  sams2.append(pre + "D1650_1127")  # 11/28
+  sams2.append(pre + "D1651_1127")  # 11/28
+  samsh.append(pre + "D1652_1127")  # 11/28
+  sams2.append(pre + "D1653_1127")  # 11/28
+  sams2.append(pre + "D1654_1127")  # 11/28
+  samsh.append(pre + "D1655_1127")  # 11/28
+  sams2.append(pre + "D1656_1127")  # 11/28
+  samsh.append(pre + "D1657_1127")  # 11/28
+  samsh.append(pre + "D1658_1127")  # 11/28
+  samsh.append(pre + "D1659_1127")  # 11/28
+  sams2.append(pre + "D1660_1127")  # 11/28
+  samsh.append(pre + "D1661_1127")  # 11/28
+  sams2.append(pre + "D1662_1127")  # 11/28
+  samsh.append(pre + "D1663_1127")  # 11/28
+  sams2.append(pre + "D1664_1127")  # 11/28
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

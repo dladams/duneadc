@@ -15,7 +15,7 @@ def badFiles():
 def badChips():
   chips = []
   #chips += [133, 167, 256]     # Matt "BAD" 23jul2017 These are FE numbers--not ADC numbers.
-  #chips += [49, 64]     # Matt "Damaged" 23jul2017i. These are FE numbers--not ADC numbers.
+  #chips += [49, 64]     # Matt "Damaged" 23jul2017. These are FE numbers--not ADC numbers.
   chips += [359, 111, 23, 284]  #  Matt missing chips 24jul2017
   chips += [83]  # Elizabeth reports bent pin 25jul2017
   chips += [75]  # Ivan Furic talk at BNL CE meeting 28jul2017
@@ -29,6 +29,8 @@ def badChips():
   chips += [10012, 10030, 10044, 10055, 10067, 10076, 10088, 10099, 10106, 10117, 10157, 10183, 10214, 10261, 10267, 10287, 10300, 10305, 10322, 10353, 10365, 10393, 10428, 10432, 10456, 10481, 10506, 10517, 10546, 10578, 10606, 10636, 10688, 10706, 10707, 10711, 10720, 10733, 10748, 10753, 10809, 10822, 10893, 10921, 10923, 10956, 10962]  # Matt reports these are bad 03oct2017
   chips += [10961, 11237, 11277, 10938, 10871, 11039, 11172]  # Matt reports these are bad 22oct2017
   chips += [11460, 11418, 11597, 11383, 11491, 11540, 11592]  # Matt reports these are bad 19nov2017
+  chips += [11603, 11567, 11163, 10991, 10789, 10566, 10426, 10252, 10090]  # Matt: Chips with good pins sent to IA state 11/30/17
+  chips += [11592, 11383, 11172, 10921, 10636, 10517, 10305, 10257, 10117]  # Matt: Chips with good pins sent to IA state 11/30/17
   chips.sort()
   lastchip = None
   nodups = []

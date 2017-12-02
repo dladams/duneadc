@@ -1349,14 +1349,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1339_1019")
   sams2.append(pre + "D1340_1019")
   samsh.append(pre + "D1341_1129")
-  samsh.append(pre + "D1342_1201")  # 12/1
+  samsh.append(pre + "D1342_1201")
   samsh.append(pre + "D1343_1019")
   samsh.append(pre + "D1344_1019")
   samsh.append(pre + "D1345_1019")
   samsh.append(pre + "D1346_1019")
   badsamsh.append(pre + "D1348_1019")  # Bad waveform
   badsams2.append(pre + "D1349_1020")  # Bad waveforms
-  sams2.append(pre + "D1350_1201")  # 12/1
+  sams2.append(pre + "D1350_1201")
   sams2.append(pre + "D1351_1020")
   samsh.append(pre + "D1352_1020")
   badsamsh.append(pre + "D1354_1020")  # Bad waveforms
@@ -1688,18 +1688,33 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1688_1130")
   sams2.append(pre + "D1689_1130")
   samsh.append(pre + "D1690_1130")
-  samsh.append(pre + "D1691_1201")  # 12/1
+  samsh.append(pre + "D1691_1201")
   samsh.append(pre + "D1692_1130")
   samsh.append(pre + "D1693_1130")
   sams2.append(pre + "D1694_1130")
   samsh.append(pre + "D1695_1130")
-  samsh.append(pre + "D1697_1201")  # 12/1
+  samsh.append(pre + "D1697_1201")
   sams2.append(pre + "D1698_1130")
-  sams2.append(pre + "D1698_1201")  # 12/1
-  samsh.append(pre + "D1700_1201")  # 12/1
-  samsh.append(pre + "D1701_1201")  # 12/1
-  sams2.append(pre + "D1702_1201")  # 12/1
-  samsh.append(pre + "D1703_1201")  # 12/1
+  sams2.append(pre + "D1698_1201")
+  sams2.append(pre + "D1699_1201")  # 12/2
+  samsh.append(pre + "D1700_1201")
+  samsh.append(pre + "D1701_1201")
+  sams2.append(pre + "D1702_1201")
+  samsh.append(pre + "D1703_1201T1326")  # 12/2
+  sams2.append(pre + "D1703_1201T1356")  # 12/2
+  sams2.append(pre + "D1705_1201")  # 12/2
+  samsh.append(pre + "D1706_1201")  # 12/2
+  samsh.append(pre + "D1706_1201")  # 12/2
+  samsh.append(pre + "D1708_1201")  # 12/2
+  samsh.append(pre + "D1710_1201")  # 12/2
+  samsh.append(pre + "D1711_1201")  # 12/2
+  samsh.append(pre + "D1712_1201")  # 12/2
+  sams2.append(pre + "D1714_1201")  # 12/2
+  sams2.append(pre + "D1715_1201")  # 12/2
+  samsh.append(pre + "D1716_1201")  # 12/2
+  samsh.append(pre + "D1717_1201")  # 12/2
+  sams2.append(pre + "D1718_1201")  # 12/2
+  samsh.append(pre + "D1719_1201")  # 12/2
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

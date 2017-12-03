@@ -1676,7 +1676,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1674_1129")
   sams2.append(pre + "D1675_1129")
   samsh.append(pre + "D1676_1129")
-  samsh.append(pre + "D1678_1202")  # 12/3
+  samsh.append(pre + "D1678_1202")
   badsamsh.append(pre + "D1679_1129")  # Bad waveforms
   sams2.append(pre + "D1680_1129")
   samsh.append(pre + "D1681_1130")
@@ -1706,9 +1706,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1704_1201")
   sams2.append(pre + "D1705_1201")
   badsamsh.append(pre + "D1706_1201")  # Missing waveform
-  samsh.append(pre + "D1707_1202")  # 12/3
+  samsh.append(pre + "D1707_1202")
   samsh.append(pre + "D1708_1201")
-  samsh.append(pre + "D1709_1202")  # 12/3
+  samsh.append(pre + "D1709_1202")
   samsh.append(pre + "D1710_1201")
   samsh.append(pre + "D1711_1201")
   samsh.append(pre + "D1712_1201")
@@ -1718,17 +1718,17 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1717_1201")
   sams2.append(pre + "D1718_1201")
   samsh.append(pre + "D1719_1201")  # Suspect waveforms
-  sams2.append(pre + "D1720_1202")  # 12/3
-  sams2.append(pre + "D1721_1202")  # 12/3
-  sams2.append(pre + "D1723_1202")  # 12/3
-  samsh.append(pre + "D1725_1202")  # 12/3
-  sams2.append(pre + "D1726_1202")  # 12/3
-  samsh.append(pre + "D1727_1202")  # 12/3
-  sams2.append(pre + "D1728_1202")  # 12/3
-  samsh.append(pre + "D1729_1202")  # 12/3
-  sams2.append(pre + "D1730_1202")  # 12/3
-  samsh.append(pre + "D1731_1202")  # 12/3
-  samsh.append(pre + "D1734_1202")  # 12/3
+  sams2.append(pre + "D1720_1202")
+  sams2.append(pre + "D1721_1202")
+  sams2.append(pre + "D1723_1202")
+  samsh.append(pre + "D1725_1202")
+  sams2.append(pre + "D1726_1202")
+  samsh.append(pre + "D1727_1202")
+  sams2.append(pre + "D1728_1203")  # 12/3
+  samsh.append(pre + "D1729_1203")  # 12/3
+  sams2.append(pre + "D1730_1203")  # 12/3
+  samsh.append(pre + "D1731_1203")  # 12/3
+  samsh.append(pre + "D1734_1203")  # 12/3
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

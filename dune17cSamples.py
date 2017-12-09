@@ -1733,14 +1733,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1735_1203")
   samsh.append(pre + "D1736_1203")
   samsh.append(pre + "D1737_1203")
-  samsh.append(pre + "D1738_1204")  # 12/8
-  samsh.append(pre + "D1739_1204")  # 12/8
-  samsh.append(pre + "D1740_1204")  # 12/8
-  samsh.append(pre + "D1742_1204")  # 12/8
-  samsh.append(pre + "D1743_1204")  # 12/8
-  samsh.append(pre + "D1744_1204")  # 12/8
-  samsh.append(pre + "D1746_1204")  # 12/8
-  samsh.append(pre + "D1747_1204")  # 12/8
+  badsamsh.append(pre + "D1738_1204")  # One bad waveform
+  badsamsh.append(pre + "D1739_1204")  # Bad waveform
+  samsh.append(pre + "D1740_1204")
+  samsh.append(pre + "D1742_1204")
+  samsh.append(pre + "D1743_1204")
+  samsh.append(pre + "D1744_1204")
+  samsh.append(pre + "D1746_1204")
+  samsh.append(pre + "D1747_1204")
   samsh.append(pre + "D1748_1205")
   sams2.append(pre + "D1750_1205")
   samsh.append(pre + "D1751_1205")
@@ -1783,17 +1783,17 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1795_1206")
   sams2.append(pre + "D1796_1206")
   samsh.append(pre + "D1797_1206")
-  samsh.append(pre + "D1798_1207")  # 12/8
+  samsh.append(pre + "D1798_1207")
   sams2.append(pre + "D1799_1207")
-  samsh.append(pre + "D1800_1207")  # 12/8
+  samsh.append(pre + "D1800_1207")
   sams2.append(pre + "D1801_1207")
-  samsh.append(pre + "D1802_1207")  # 12/8
-  samsh.append(pre + "D1803_1207")  # 12/8
-  samsh.append(pre + "D1804_1207")  # 12/8
-  samsh.append(pre + "D1805_1207")  # 12/8
-  samsh.append(pre + "D1806_1207")  # 12/8
+  samsh.append(pre + "D1802_1207")
+  samsh.append(pre + "D1803_1207")
+  samsh.append(pre + "D1804_1207")
+  samsh.append(pre + "D1805_1207")
+  samsh.append(pre + "D1806_1207")
   sams2.append(pre + "D1807_1207")
-  samsh.append(pre + "D1808_1207")  # 12/8
+  samsh.append(pre + "D1808_1207")
   sams2.append(pre + "D1809_1207")
   samsh.append(pre + "D1810_1207")  # 12/8
   sams2.append(pre + "D1811_1207")
@@ -1803,9 +1803,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1815_1207")
   samsh.append(pre + "D1816_1207")  # 12/8
   samsh.append(pre + "D1817_1208")  # 12/8
-  sams2.append(pre + "D1819_1208")  # 12/8
-  samsh.append(pre + "D182x_1208")  # 12/8
-  sams2.append(pre + "D1821_1208")  # 12/8
+  sams2.append(pre + "D1819_1208")
+  samsh.append(pre + "D1820_1208")  # 12/8
+  sams2.append(pre + "D1821_1208")
   samsh.append(pre + "D1822_1208")  # 12/8
   sams2.append(pre + "D1823_1208")  # 12/8
   samsh.append(pre + "D1824_1208")  # 12/8

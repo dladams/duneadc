@@ -1827,7 +1827,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1774_1206_try1")  # Poor waveforms
   sams.append(pre + "D1775_1206_try1")
   sams.append(pre + "D1776_1206_try1")
-  sams.append(pre + "D1777_1206_try1")  # 12/8
+  sams.append(pre + "D1777_1206_try1")
   sams.append(pre + "D1778_1206T1104_try1")
   sams.append(pre + "D1778_1206T1426_try1")
   sams.append(pre + "D1779_1206_try1")
@@ -1853,8 +1853,8 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1801_1207_try1")
   sams.append(pre + "D1802_1207_try1")
   sams.append(pre + "D1803_1207_try1")
-  sams.append(pre + "D1804_1207T1138_try1")  # 12/8
-  sams.append(pre + "D1804_1207T1533_try1")  # 12/8
+  sams.append(pre + "D1804_1207T1138_try1")
+  sams.append(pre + "D1804_1207T1533_try1")
   sams.append(pre + "D1805_1207_try1")
   sams.append(pre + "D1806_1207_try1")
   sams.append(pre + "D1807_1207_try1")
@@ -1868,18 +1868,18 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1815_1207_try1")
   sams.append(pre + "D1816_1207_try1")
   sams.append(pre + "D1817_1207_try1")
-  sams.append(pre + "D1817_1208_try1")  # 12/8
-  sams.append(pre + "D1818_1208T0856_try1")  # 12/8
-  sams.append(pre + "D1818_1208T1050_try1")  # 12/8
-  sams.append(pre + "D1819_1208_try1")  # 12/8
-  sams.append(pre + "D1820_1208_try1")  # 12/8
-  sams.append(pre + "D1821_1208_try1")  # 12/8
-  sams.append(pre + "D1822_1208T1225_try1")  # 12/8
-  sams.append(pre + "D1822_1208T1231_try1")  # 12/8
-  sams.append(pre + "D1823_1208_try1")  # 12/8
-  sams.append(pre + "D1824_1208T1301_try1")  # 12/8
-  sams.append(pre + "D1824_1208T1307_try1")  # 12/8
-  sams.append(pre + "D1825_1208_try1")  # 12/8
+  sams.append(pre + "D1817_1208_try1")
+  sams.append(pre + "D1818_1208T0856_try1")
+  sams.append(pre + "D1818_1208T1050_try1")
+  sams.append(pre + "D1819_1208_try1")
+  sams.append(pre + "D1820_1208_try1")
+  sams.append(pre + "D1821_1208_try1")
+  sams.append(pre + "D1822_1208T1225_try1")  # No waveform.
+  sams.append(pre + "D1822_1208T1231_try1")
+  sams.append(pre + "D1823_1208_try1")
+  sams.append(pre + "D1824_1208T1301_try1")  # No waveform.
+  sams.append(pre + "D1824_1208T1307_try1")
+  sams.append(pre + "D1825_1208_try1")
   sams.append(pre + "D1826_1208_try1")  # 12/8
   sams.append(pre + "D1827_1208_try1")  # 12/8
   sams.append(pre + "D1828_1208_try1")  # 12/8

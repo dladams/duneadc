@@ -1776,6 +1776,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1786_1206")
   sams2.append(pre + "D1787_1206")
   sams2.append(pre + "D1789_1206")
+  samsh.append(pre + "D1790_1206")  # 12/13
   sams2.append(pre + "D1791_1206")
   badsams2.append(pre + "D1792_1206")  # Bad waveforms
   samsh.append(pre + "D1793_1206")  # One poor waveform
@@ -1824,39 +1825,40 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1840_1209")
   sams2.append(pre + "D1841_1209")
   sams2.append(pre + "D1842_1209")
-  samsh.append(pre + "D1843_1209")  # 12/12
-  sams2.append(pre + "D1844_1209")  # 12/12
-  samsh.append(pre + "D1845_1209")  # 12/12
-  sams2.append(pre + "D1846_1209")  # 12/12
-  samsh.append(pre + "D1847_1209")  # 12/12
-  sams2.append(pre + "D1848_1209")  # 12/12
-  samsh.append(pre + "D1849_1209")  # 12/12
-  sams2.append(pre + "D1850_1209")  # 12/12
-  samsh.append(pre + "D1851_1209")  # 12/12
-  sams2.append(pre + "D1852_1209")  # 12/12
-  samsh.append(pre + "D1853_1209")  # 12/12
-  sams2.append(pre + "D1854_1209")  # 12/12
-  sams2.append(pre + "D1855_1211")  # 12/12
-  samsh.append(pre + "D1856_1211")  # 12/12
-  sams2.append(pre + "D1857_1211")  # 12/12
-  samsh.append(pre + "D1858_1211")  # 12/12
-  sams2.append(pre + "D1859_1211")  # 12/12
-  samsh.append(pre + "D1860_1211")  # 12/12
-  sams2.append(pre + "D1861_1211")  # 12/12
-  sams2.append(pre + "D1862_1211")  # 12/12
-  samsh.append(pre + "D1863_1211")  # 12/12
-  sams2.append(pre + "D1864_1211")  # 12/12
-  samsh.append(pre + "D1865_1211")  # 12/12
-  sams2.append(pre + "D1866_1211")  # 12/12
-  sams2.append(pre + "D1868_1211")  # 12/12
-  samsh.append(pre + "D1869_1211")  # 12/12
-  samsh.append(pre + "D1870_1211")  # 12/12
-  sams2.append(pre + "D1871_1211")  # 12/12
-  sams2.append(pre + "D1872_1211")  # 12/12
-  samsh.append(pre + "D1873_1211")  # 12/12
-  samsh.append(pre + "D1875_1211")  # 12/12
-  samsh.append(pre + "D1877_1211")  # 12/12
-  samsh.append(pre + "D1879_1211")  # 12/12
+  samsh.append(pre + "D1843_1209")
+  sams2.append(pre + "D1844_1209")
+  samsh.append(pre + "D1845_1209")
+  sams2.append(pre + "D1846_1209")
+  samsh.append(pre + "D1847_1209")
+  sams2.append(pre + "D1848_1209")
+  samsh.append(pre + "D1849_1209")
+  sams2.append(pre + "D1850_1209")
+  samsh.append(pre + "D1851_1209")
+  sams2.append(pre + "D1852_1209")
+  samsh.append(pre + "D1853_1209")
+  sams2.append(pre + "D1854_1209")
+  sams2.append(pre + "D1855_1211")
+  samsh.append(pre + "D1856_1211")
+  sams2.append(pre + "D1857_1211")
+  samsh.append(pre + "D1858_1211")
+  sams2.append(pre + "D1859_1211")
+  samsh.append(pre + "D1860_1211")
+  sams2.append(pre + "D1861_1211")
+  sams2.append(pre + "D1862_1211")
+  badsamsh.append(pre + "D1863_1211")  # Bad waveforms
+  sams2.append(pre + "D1864_1211")
+  samsh.append(pre + "D1865_1211")
+  sams2.append(pre + "D1866_1211")
+  sams2.append(pre + "D1868_1211")
+  samsh.append(pre + "D1869_1211")
+  samsh.append(pre + "D1870_1211")
+  sams2.append(pre + "D1871_1211")
+  sams2.append(pre + "D1872_1211")
+  samsh.append(pre + "D1873_1211")
+  samsh.append(pre + "D1875_1211")
+  samsh.append(pre + "D1877_1211")
+  samsh.append(pre + "4v7_1213:chipD1881")  # 12/13
+  samsh.append(pre + "D1883_1213")  # 12/13
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

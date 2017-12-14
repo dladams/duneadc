@@ -1859,6 +1859,27 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1877_1211")
   samsh.append(pre + "4v7_1213:chipD1881")
   samsh.append(pre + "D1883_1213")
+  sams2.append(pre + "D1884_1213")  # 12/14
+  sams2.append(pre + "D1886_1213")  # 12/14
+  samsh.append(pre + "D1887_1213")  # 12/14
+  samsh.append(pre + "D1889_1213")  # 12/14
+  sams2.append(pre + "D1890_1213")  # 12/14
+  sams2.append(pre + "D1891_1213")  # 12/14
+  samsh.append(pre + "D1892_1213")  # 12/14
+  samsh.append(pre + "D1894_1213")  # 12/14
+  samsh.append(pre + "D1896_1213")  # 12/14
+  sams2.append(pre + "D1897_1213")  # 12/14
+  samsh.append(pre + "D1898_1213")  # 12/14
+  sams2.append(pre + "D1899_1213")  # 12/14
+  samsh.append(pre + "D1900_1213")  # 12/14
+  samsh.append(pre + "D1902_1213")  # 12/14
+  samsh.append(pre + "D1903_1213")  # 12/14
+  samsh.append(pre + "D1904_1213")  # 12/14
+  samsh.append(pre + "D1905_1213")  # 12/14
+  samsh.append(pre + "D1906_1213")  # 12/14
+  samsh.append(pre + "D1907_1213")  # 12/14
+  samsh.append(pre + "D1908_1213")  # 12/14
+  samsh.append(pre + "D1909_1213")  # 12/14
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

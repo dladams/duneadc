@@ -1944,30 +1944,51 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1882_1213_try1")
   sams.append(pre + "D1883_1213_try1")
   sams.append(pre + "D1883_1213_try2")
-  sams.append(pre + "D1884_1213_try1")  # 12/14
-  sams.append(pre + "D1886_1213_try1")  # 12/14
-  sams.append(pre + "D1887_1213_try1")  # 12/14
-  sams.append(pre + "D1889_1213_try1")  # 12/14
-  sams.append(pre + "D1890_1213_try1")  # 12/14
-  sams.append(pre + "D1891_1213_try1")  # 12/14
-  sams.append(pre + "D1892_1213_try1")  # 12/14
-  sams.append(pre + "D1893_1213_try1")  # 12/14
-  sams.append(pre + "D1894_1213_try1")  # 12/14
-  sams.append(pre + "D1896_1213_try1")  # 12/14
-  sams.append(pre + "D1897_1213_try1")  # 12/14
-  sams.append(pre + "D1898_1213_try1")  # 12/14
-  sams.append(pre + "D1899_1213_try1")  # 12/14
-  sams.append(pre + "D1900_1213_try1")  # 12/14
-  sams.append(pre + "D1901_1213_try1")  # 12/14
-  sams.append(pre + "D1901_1213_try2")  # 12/14
-  sams.append(pre + "D1902_1213_try1")  # 12/14
-  sams.append(pre + "D1903_1213_try1")  # 12/14
-  sams.append(pre + "D1904_1213_try1")  # 12/14
-  sams.append(pre + "D1905_1213_try1")  # 12/14
-  sams.append(pre + "D1906_1213_try1")  # 12/14
-  sams.append(pre + "D1907_1213_try1")  # 12/14
-  sams.append(pre + "D1908_1213_try1")  # 12/14
-  sams.append(pre + "D1909_1213_try1")  # 12/14
+  sams.append(pre + "D1884_1213_try1")
+  sams.append(pre + "D1886_1213_try1")
+  sams.append(pre + "D1887_1213_try1")
+  sams.append(pre + "D1889_1213_try1")
+  sams.append(pre + "D1890_1213_try1")
+  sams.append(pre + "D1891_1213_try1")
+  sams.append(pre + "D1892_1213_try1")
+  sams.append(pre + "D1893_1213_try1")
+  sams.append(pre + "D1894_1213_try1")
+  sams.append(pre + "D1896_1213_try1")
+  sams.append(pre + "D1897_1213_try1")
+  sams.append(pre + "D1898_1213_try1")
+  sams.append(pre + "D1899_1213_try1")
+  sams.append(pre + "D1900_1213_try1")
+  badsams.append(pre + "D1901_1213_try1")  # Bad waveforms
+  badsams.append(pre + "D1901_1213_try2")  # Bad waveforms
+  sams.append(pre + "D1902_1213_try1")
+  sams.append(pre + "D1903_1213_try1")
+  sams.append(pre + "D1904_1213_try1")
+  sams.append(pre + "D1905_1213_try1")
+  sams.append(pre + "D1906_1213_try1")
+  sams.append(pre + "D1907_1213_try1")
+  sams.append(pre + "D1908_1213_try1")
+  sams.append(pre + "D1909_1213_try1")
+  sams.append(pre + "D1910_1214_try1")  # 12/15
+  sams.append(pre + "D1912_1214_try1")  # 12/15
+  sams.append(pre + "D1913_1214_try1")  # 12/15
+  sams.append(pre + "D1914_1214_try1")  # 12/15
+  sams.append(pre + "D1915_1214_try1")  # 12/15
+  sams.append(pre + "D1916_1214_try1")  # 12/15
+  sams.append(pre + "D1917_1214_try1")  # 12/15
+  sams.append(pre + "D1918_1214_try1")  # 12/15
+  sams.append(pre + "D1919_1214_try1")  # 12/15
+  sams.append(pre + "D1920_1214_try1")  # 12/15
+  sams.append(pre + "D1920_1214_try1")  # 12/15
+  sams.append(pre + "D1921_1214_try1")  # 12/15
+  sams.append(pre + "D1922_1214_try1")  # 12/15
+  sams.append(pre + "D1923_1214_try1")  # 12/15
+  sams.append(pre + "D1924_1214_try1")  # 12/15
+  sams.append(pre + "D1925_1214_try1")  # 12/15
+  sams.append(pre + "D1926_1214_try1")  # 12/15
+  sams.append(pre + "D1928_1214_try1")  # 12/15
+  sams.append(pre + "D1930_1214_try1")  # 12/15
+  sams.append(pre + "D1931_1214_try1")  # 12/15
+  sams.append(pre + "D1932_1214_try1")  # 12/15
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

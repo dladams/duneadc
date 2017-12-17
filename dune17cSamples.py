@@ -1856,17 +1856,24 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1872_1211")
   samsh.append(pre + "D1873_1211")
   samsh.append(pre + "D1875_1211")
+  sams2.append(pre + "D1875_1215")  # 12/17
   samsh.append(pre + "D1877_1211")
+  samsh.append(pre + "D1877_1215")  # 12/17
   samsh.append(pre + "4v7_1213:chipD1881")
   samsh.append(pre + "D1879_1211")  # 12/17
+  sams2.append(pre + "D1879_1215")  # 12/17
+  samsh.append(pre + "D1881_1215")  # 12/17
   samsh.append(pre + "D1883_1213")
+  sams2.append(pre + "D1883_1215")  # 12/17
   sams2.append(pre + "D1884_1213")
   sams2.append(pre + "D1886_1213")
   samsh.append(pre + "D1887_1213")
   samsh.append(pre + "D1889_1213")
+  sams2.append(pre + "D1889_1215")  # 12/17
   sams2.append(pre + "D1890_1213")
   sams2.append(pre + "D1891_1213")
   samsh.append(pre + "D1892_1213")
+  sams2.append(pre + "D1892_1215")  # 12/17
   samsh.append(pre + "D1894_1213")
   samsh.append(pre + "D1896_1213")
   sams2.append(pre + "D1897_1213")
@@ -1900,6 +1907,16 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1928_1214")
   samsh.append(pre + "D1930_1214")
   samsh.append(pre + "D1931_1214")
+  samsh.append(pre + "D1933_1215")  # 12/17
+  sams2.append(pre + "D1934_1215")  # 12/17
+  sams2.append(pre + "D1937_1215")  # 12/17
+  samsh.append(pre + "D1938_1215")  # 12/17
+  sams2.append(pre + "D1941_1215")  # 12/17
+  samsh.append(pre + "D1942_1215")  # 12/17
+  sams2.append(pre + "D1943_1215")  # 12/17
+  samsh.append(pre + "D1944_1215")  # 12/17
+  sams2.append(pre + "D1945_1215")  # 12/17
+  sams2.append(pre + "D1946_1215")  # 12/17
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

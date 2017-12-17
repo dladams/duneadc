@@ -1858,6 +1858,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1875_1211")
   samsh.append(pre + "D1877_1211")
   samsh.append(pre + "4v7_1213:chipD1881")
+  samsh.append(pre + "D1879_1211")  # 12/17
   samsh.append(pre + "D1883_1213")
   sams2.append(pre + "D1884_1213")
   sams2.append(pre + "D1886_1213")
@@ -1880,25 +1881,25 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D1907_1213")
   samsh.append(pre + "D1908_1213")
   samsh.append(pre + "D1909_1213")
-  samsh.append(pre + "D1910_1214")  # 12/15
-  samsh.append(pre + "D1912_1214")  # 12/15
-  sams2.append(pre + "D1913_1214")  # 12/15
-  sams2.append(pre + "D1914_1214")  # 12/15
-  samsh.append(pre + "D1915_1214")  # 12/15
-  sams2.append(pre + "D1916_1214")  # 12/15
-  samsh.append(pre + "D1917_1214")  # 12/15
-  sams2.append(pre + "D1918_1214")  # 12/15
-  samsh.append(pre + "D1919_1214")  # 12/15
-  sams2.append(pre + "D1920_1214")  # 12/15
-  samsh.append(pre + "D1921_1214")  # 12/15
-  sams2.append(pre + "D1922_1214")  # 12/15
-  samsh.append(pre + "D1923_1214")  # 12/15
-  sams2.append(pre + "D1924_1214")  # 12/15
-  samsh.append(pre + "D1925_1214")  # 12/15
-  sams2.append(pre + "D1926_1214")  # 12/15
-  samsh.append(pre + "D1928_1214")  # 12/15
-  samsh.append(pre + "D1930_1214")  # 12/15
-  samsh.append(pre + "D1931_1214")  # 12/15
+  samsh.append(pre + "D1910_1214")
+  samsh.append(pre + "D1912_1214")
+  badsams2.append(pre + "D1913_1214")  # Bad waveforms
+  sams2.append(pre + "D1914_1214")
+  samsh.append(pre + "D1915_1214")
+  badsams2.append(pre + "D1916_1214")  # Bad waveforms
+  samsh.append(pre + "D1917_1214")
+  sams2.append(pre + "D1918_1214")  # Poor waveforms
+  samsh.append(pre + "D1919_1214")
+  sams2.append(pre + "D1920_1214")  # Poor waveforms
+  samsh.append(pre + "D1921_1214")
+  sams2.append(pre + "D1922_1214")
+  samsh.append(pre + "D1923_1214")
+  sams2.append(pre + "D1924_1214")
+  samsh.append(pre + "D1925_1214")
+  sams2.append(pre + "D1926_1214")
+  samsh.append(pre + "D1928_1214")
+  samsh.append(pre + "D1930_1214")
+  samsh.append(pre + "D1931_1214")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

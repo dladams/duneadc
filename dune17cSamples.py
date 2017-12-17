@@ -1911,7 +1911,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D1934_1215")
   sams2.append(pre + "D1937_1215")
   samsh.append(pre + "D1938_1215")
-  samsh.append(pre + "D1940_1215")  # 12/17
+  samsh.append(pre + "D1940_1215")
   sams2.append(pre + "D1941_1215")
   samsh.append(pre + "D1942_1215")
   sams2.append(pre + "D1943_1215")

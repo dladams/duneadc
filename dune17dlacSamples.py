@@ -1954,7 +1954,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1887_1213_try1")
   sams.append(pre + "D1887_1215_try1")
   sams.append(pre + "D1889_1213_try1")
-  sams.append(pre + "D1889_1215_try1")  # 12/17
+  sams.append(pre + "D1889_1215_try1")
   sams.append(pre + "D1890_1213_try1")
   sams.append(pre + "D1891_1213_try1")
   sams.append(pre + "D1892_1213_try1")

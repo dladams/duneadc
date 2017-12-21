@@ -207,6 +207,9 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
     if ( maxsam == 0 || maxsam > maxsam201703b ) maxsam = maxsam201703b;
     return findBinaryReader(ssam, icha, maxsam);
   }
+  if ( ssam.substr(0,11) == "201712-quad" ) {
+    return findBinaryReader(ssam, icha, maxsam);
+  }
   if ( ssam.substr(0,11) == "201711-quad" ) {
     return findBinaryReader(ssam, icha, maxsam);
   }
@@ -289,6 +292,28 @@ findBinaryReader(Name ssam, Index icha, SampleIndex maxsam) const {
     string subdir = "P1_S7_" + schp + "_" + sday;
     searchDirs.push_back(m_topdir + "/201703/P1_ADC_LongTermTest_03212017/" + subdir);
     searchPats.push_back(subdir + "_LN_2MHz_chn" + scha);
+  // 201712-quad_socketS_chipCCC_DDDD
+  } else if ( ssam.substr(0, 18) == "201712-quad_socket" ) {
+    dsname = ssam.substr(0, 11);
+    string::size_type ipos = 24;
+    string::size_type jpos = ssam.find("_", ipos);
+    schp = ssam.substr(ipos, jpos-ipos);
+    string ssock = ssam.substr(12,7);
+    scha = schan(icha, false);
+    if ( scha.size() == 0 ) {
+      cout << myname << "ERROR: Invalid channel: " << icha << endl;
+      return nullptr;
+    }
+    string sday = ssam.substr(jpos+1);
+    string subdir = sday + "/" + schp + "_" + ssock;
+    searchDirs.push_back(m_topdir + "/201712/quad/" + subdir);
+    searchPats.push_back("LN_2MHz_ch0x" + scha);
+    swap = true;
+    vinMin = -200.0;
+    vinMax = 1600.0;
+    ef1BorderWidth = 1500000;
+    maxRollback = 3000000;
+    maxdext = 100000;
   // 201711-quad_chipCCC_DDDD
   // 201711-quad_socketS_chipCCC_DDDD
   } else if ( int sopt = ssam.substr(0, 16) == "201711-quad_chip" ? 1

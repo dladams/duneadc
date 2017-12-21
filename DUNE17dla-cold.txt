@@ -1705,6 +1705,7 @@ DUNE17dla-cold_chipD1945_1215_try1
 DUNE17dla-cold_chipD1946_1215_try1
 DUNE17dla-cold_chipD1947_1215_try1
 DUNE17dla-cold_chipD1948_1215_try1
+DUNE17dla-cold_chipD1948_1220_try1
 DUNE17dla-cold_chipD1949_1218_try1
 DUNE17dla-cold_chipD1951_1218_try1
 DUNE17dla-cold_chipD1952_1218_try1
@@ -1715,3 +1716,15 @@ DUNE17dla-cold_chipD1957_1218_try1
 DUNE17dla-cold_chipD1958_1218_try1
 DUNE17dla-cold_chipD1959_1218_try1
 DUNE17dla-cold_chipD1960_1218_try1
+DUNE17dla-cold_chipD1961_1220_try1
+DUNE17dla-cold_chipD1962_1220_try1
+DUNE17dla-cold_chipD1963_1220_try1
+DUNE17dla-cold_chipD1964_1220_try1
+DUNE17dla-cold_chipD1965_1220_try1
+DUNE17dla-cold_chipD1966_1220_try1
+DUNE17dla-cold_chipD1967_1220_try1
+DUNE17dla-cold_chipD1968_1220_try1
+DUNE17dla-cold_chipD1969_1220_try1
+DUNE17dla-cold_chipD1970_1220_try1
+DUNE17dla-cold_chipD1971_1220_try1
+DUNE17dla-cold_chipD1973_1220_try1

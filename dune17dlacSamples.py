@@ -2012,6 +2012,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1946_1215_try1")
   sams.append(pre + "D1947_1215_try1")
   sams.append(pre + "D1948_1215_try1")
+  sams.append(pre + "D1948_1220_try1")  # 12/21
   sams.append(pre + "D1949_1218_try1")
   sams.append(pre + "D1951_1218_try1")
   sams.append(pre + "D1952_1218_try1")
@@ -2024,6 +2025,18 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1958_1218_try1")
   sams.append(pre + "D1959_1218_try1")
   sams.append(pre + "D1960_1218_try1")
+  sams.append(pre + "D1961_1220_try1")  # 12/21
+  sams.append(pre + "D1962_1220_try1")  # 12/21
+  sams.append(pre + "D1963_1220_try1")  # 12/21
+  sams.append(pre + "D1964_1220_try1")  # 12/21
+  sams.append(pre + "D1965_1220_try1")  # 12/21
+  sams.append(pre + "D1966_1220_try1")  # 12/21
+  sams.append(pre + "D1967_1220_try1")  # 12/21
+  sams.append(pre + "D1968_1220_try1")  # 12/21
+  sams.append(pre + "D1969_1220_try1")  # 12/21
+  sams.append(pre + "D1970_1220_try1")  # 12/21
+  sams.append(pre + "D1971_1220_try1")  # 12/21
+  sams.append(pre + "D1973_1220_try1")  # 12/21
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

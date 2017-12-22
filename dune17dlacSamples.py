@@ -2037,11 +2037,15 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1970_1220_try1")
   sams.append(pre + "D1971_1220_try1")
   sams.append(pre + "D1973_1220_try1")
-  sams.append(pre + "D1974_1221T1101_try1")  # 12/21
-  sams.append(pre + "D1974_1221T1101_try2")  # 12/21
-  sams.append(pre + "D1974_1221T1240_try1")  # 12/21
-  sams.append(pre + "D1975_1221_try1")  # 12/21
-  sams.append(pre + "D1975_1221_try2")  # 12/21
+  badsams.append(pre + "D1974_1221T1101_try1")  # Bad waveforms
+  badsams.append(pre + "D1974_1221T1101_try2")  # Bad waveforms
+  sams.append(pre + "D1974_1221T1240_try1")
+  badsams.append(pre + "D1975_1221_try1")  # Bad waveforms
+  sams.append(pre + "D1975_1221_try2")
+  sams.append(pre + "D1976_1221_try1")  # 12/22
+  sams.append(pre + "D1978_1221_try1")  # 12/22
+  sams.append(pre + "D1979_1221_try1")  # 12/22
+  sams.append(pre + "D1980_1221_try1")  # 12/22
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

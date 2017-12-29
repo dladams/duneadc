@@ -2053,30 +2053,30 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1985_1222_try1")
   sams.append(pre + "D1986_1226_try1")
   sams.append(pre + "D1987_1226_try1")
-  sams.append(pre + "D1988_1228_try1")  # 12/29
+  sams.append(pre + "D1988_1228_try1")
   sams.append(pre + "D1989_1226_try1")
   sams.append(pre + "D1990_1226_try1")
   sams.append(pre + "D1991_1226_try1")
   sams.append(pre + "D1992_1226_try1")
-  sams.append(pre + "D1993_1228T0935_try1")  # 12/29
-  sams.append(pre + "D1993_1228T1040_try1")  # 12/29
+  sams.append(pre + "D1993_1228T0935_try1")
+  sams.append(pre + "D1993_1228T1040_try1")
   sams.append(pre + "D1994_1227_try1")
-  sams.append(pre + "D1994_1228T1034_try1")  # 12/29
-  sams.append(pre + "D1994_1228T1125_try1")  # 12/29
-  sams.append(pre + "D1995_1228T1142_try1")  # 12/29
-  sams.append(pre + "D1995_1228T1217_try1")  # 12/29
-  sams.append(pre + "D1996_1228_try1")  # 12/29
-  sams.append(pre + "D1997_1228_try1")  # 12/29
-  sams.append(pre + "D1998_1228_try1")  # 12/29
-  sams.append(pre + "D1999_1228_try1")  # 12/29
-  sams.append(pre + "D2000_1228_try1")  # 12/29
-  sams.append(pre + "D2001_1228_try1")  # 12/29
-  sams.append(pre + "D2002_1228_try1")  # 12/29
-  sams.append(pre + "D2003_1228_try1")  # 12/29
-  sams.append(pre + "D2004_1228_try1")  # 12/29
-  sams.append(pre + "D2005_1228_try1")  # 12/29
-  sams.append(pre + "D2006_1228_try1")  # 12/29
-  sams.append(pre + "D2007_1229_try1")  # 12/29
+  sams.append(pre + "D1994_1228T1034_try1")
+  sams.append(pre + "D1994_1228T1125_try1")
+  sams.append(pre + "D1995_1228T1143_try1")  # 12/29
+  sams.append(pre + "D1995_1228T1217_try1")
+  sams.append(pre + "D1996_1228_try1")
+  sams.append(pre + "D1997_1228_try1")
+  sams.append(pre + "D1998_1228_try1")
+  sams.append(pre + "D1999_1228_try1")
+  sams.append(pre + "D2000_1228_try1")
+  sams.append(pre + "D2001_1228_try1")
+  sams.append(pre + "D2002_1228_try1")
+  sams.append(pre + "D2003_1228_try1")
+  sams.append(pre + "D2004_1228_try1")
+  sams.append(pre + "D2005_1228_try1")
+  sams.append(pre + "D2006_1228_try1")
+  sams.append(pre + "D2007_1229_try1")
   sams.append(pre + "D2008_1229_try1")  # 12/29
   # DUNE17dla-cold
   if isBad: outsams = badsams

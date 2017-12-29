@@ -1751,7 +1751,7 @@ DUNE17dla-cold_chipD1993_1228T1040_try1
 DUNE17dla-cold_chipD1994_1227_try1
 DUNE17dla-cold_chipD1994_1228T1034_try1
 DUNE17dla-cold_chipD1994_1228T1125_try1
-DUNE17dla-cold_chipD1995_1228T1142_try1
+DUNE17dla-cold_chipD1995_1228T1143_try1
 DUNE17dla-cold_chipD1995_1228T1217_try1
 DUNE17dla-cold_chipD1996_1228_try1
 DUNE17dla-cold_chipD1997_1228_try1

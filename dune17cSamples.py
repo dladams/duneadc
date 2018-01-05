@@ -1983,19 +1983,31 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2023_1229")
   samsh.append(pre + "D2024_1229")
   sams2.append(pre + "D2025_1229")
-  samsh.append(pre + "D2026_0102")  # 1/3
-  sams2.append(pre + "D2027_0102T1002")  # 1/3
-  sams2.append(pre + "D2027_0102T1036")  # 1/3
-  samsh.append(pre + "D2027_0102T1720")  # 1/3
-  samsh.append(pre + "D2028_0102")  # 1/3
-  sams2.append(pre + "D2031_0102")  # 1/3
-  sams2.append(pre + "D2032_0102")  # 1/3
-  sams2.append(pre + "D2033_0102")  # 1/3
-  samsh.append(pre + "D2034_0102")  # 1/3
-  samsh.append(pre + "D2035_0102")  # 1/3
-  sams2.append(pre + "D2036_0102")  # 1/3
-  samsh.append(pre + "D2037_0102")  # 1/3
-  sams2.append(pre + "D2038_0102")  # 1/3
+  samsh.append(pre + "D2026_0102")
+  sams2.append(pre + "D2027_0102T1002")
+  sams2.append(pre + "D2027_0102T1036")
+  samsh.append(pre + "D2027_0102T1720")
+  samsh.append(pre + "D2028_0102")
+  sams2.append(pre + "D2028_0103")  # 1/5
+  sams2.append(pre + "D2029_0103")  # 1/5
+  samsh.append(pre + "D2030_0103")  # 1/5
+  sams2.append(pre + "D2031_0102")
+  sams2.append(pre + "D2032_0102")
+  samsh.append(pre + "D2032_0103")  # 1/5
+  sams2.append(pre + "D2033_0102")
+  sams2.append(pre + "D2033_0103")  # 1/5
+  samsh.append(pre + "D2034_0102")
+  samsh.append(pre + "D2034_0103")  # 1/5
+  samsh.append(pre + "D2035_0102")
+  sams2.append(pre + "D2036_0102")
+  samsh.append(pre + "D2037_0102")
+  sams2.append(pre + "D2038_0102")
+  sams2.append(pre + "D2039_0103")  # 1/5
+  samsh.append(pre + "D2041_0103")  # 1/5
+  sams2.append(pre + "D2041_0103")  # 1/5
+  samsh.append(pre + "D2043_0103")  # 1/5
+  sams2.append(pre + "D2044_0103")  # 1/5
+  samsh.append(pre + "D2045_0103")  # 1/5
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

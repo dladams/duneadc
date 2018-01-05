@@ -2094,18 +2094,31 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2023_1229_try1")
   sams.append(pre + "D2024_1229_try1")
   sams.append(pre + "D2025_1229_try1")
-  sams.append(pre + "D2026_0102_try1")  # 1/3
-  sams.append(pre + "D2027_0102T1002_try1")  # 1/3
-  sams.append(pre + "D2027_0102T1720_try1")  # 1/3
-  sams.append(pre + "D2028_0102_try1")  # 1/3
-  sams.append(pre + "D2031_0102_try1")  # 1/3
-  sams.append(pre + "D2032_0102_try1")  # 1/3
-  sams.append(pre + "D2033_0102_try1")  # 1/3
-  sams.append(pre + "D2034_0102_try1")  # 1/3
-  sams.append(pre + "D2035_0102_try1")  # 1/3
-  sams.append(pre + "D2036_0102_try1")  # 1/3
-  sams.append(pre + "D2037_0102_try1")  # 1/3
-  sams.append(pre + "D2038_0102_try1")  # 1/3
+  sams.append(pre + "D2026_0102_try1")
+  sams.append(pre + "D2027_0102T1002_try1")
+  sams.append(pre + "D2027_0102T1720_try1")
+  sams.append(pre + "D2028_0102_try1")
+  sams.append(pre + "D2028_0103_try1")  # 1/5
+  sams.append(pre + "D2029_0103_try1")  # 1/5
+  sams.append(pre + "D2030_0103_try1")  # 1/5
+  sams.append(pre + "D2031_0102_try1")
+  sams.append(pre + "D2031_0103_try1")  # 1/5
+  sams.append(pre + "D2032_0102_try1")
+  sams.append(pre + "D2032_0103_try1")  # 1/5
+  sams.append(pre + "D2033_0102_try1")
+  sams.append(pre + "D2033_0103_try1")  # 1/5
+  sams.append(pre + "D2034_0102_try1")
+  sams.append(pre + "D2034_0103_try1")  # 1/5
+  sams.append(pre + "D2035_0102_try1")
+  sams.append(pre + "D2036_0102_try1")
+  sams.append(pre + "D2037_0102_try1")
+  sams.append(pre + "D2038_0102_try1")
+  sams.append(pre + "D2039_0103_try1")  # 1/5
+  sams.append(pre + "D2040_0103_try1")  # 1/5
+  sams.append(pre + "D2041_0103_try1")  # 1/5
+  sams.append(pre + "D2043_0103_try1")  # 1/5
+  sams.append(pre + "D2044_0103_try1")  # 1/5
+  sams.append(pre + "D2045_0103_try1")  # 1/5
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

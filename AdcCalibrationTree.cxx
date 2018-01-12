@@ -4,6 +4,7 @@
 #include "AdcSampleFinder.h"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include "TFile.h"
 #include "TTree.h"
 

@@ -19,7 +19,7 @@ from dune17 import badChips
 from dune17 import badFiles
 
 # This builds the list of quad samples.
-import findDUNE17cSamples
+#dla import findDUNE17cSamples
 
 writeDsfile = True
 

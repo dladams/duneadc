@@ -2,7 +2,7 @@
 //
 // Evaluates channel and chip metrics.
 // 
-// Virtual so subclass my implement a different metric in evalaute.
+// Virtual so subclass may implement a different metric in evalaute.
 
 #ifndef AdcChipMetric_H
 #define AdcChipMetric_H

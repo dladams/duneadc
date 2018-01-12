@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "AdcPerformanceTree.h"
 #include "AdcVoltagePerformance.h"
+#include "TSystem.h"
 
 using std::cout;
 using std::endl;
@@ -48,12 +49,41 @@ AdcChipMetric(Name a_dataset, Name a_sampleName, Index a_firstChannel, Index a_n
 
 int AdcChipMetric::evaluate() {
   const Name myname = "AdcChipMetric::evaluate: ";
-  Name fname = m_perfFileName;
-  if ( fname.size() == 0 ) fname = "perf_" + dataset() + ".root";
+  Name basefname = m_perfFileName;
+  if ( basefname.size() == 0 ) basefname = "perf_" + dataset() + ".root";
+  Name fname;
+  if ( basefname.size() == 0 ) return -1;
+  if ( basefname[0] == '.' || basefname[0] == '/' ) {
+    fname = basefname;
+  } else {
+    const char* cdirpath = gSystem->Getenv("DUNEADC_FILE_PATH");
+    string dirpath = (cdirpath == nullptr) ? "." : cdirpath;
+    string::size_type ipos = 0;
+    vector<string> dirs;
+    while ( ipos < dirpath.size() ) {
+      string::size_type jpos = dirpath.find(":", ipos);
+      string dirname = dirpath.substr(ipos, jpos-ipos);
+      string filepath = dirname + "/" + basefname;
+      if ( ! gSystem->AccessPathName(filepath.c_str()) ) {
+        fname = filepath;
+        break;
+      }
+      dirs.push_back(dirname);
+      if ( jpos == string::npos ) break;
+      ipos = jpos + 1;
+    }
+    if ( fname == "" ) {
+      cout << myname << "Unable to find file " << basefname << " in dirs:" << endl;
+      for ( string dir : dirs ) {
+        cout << myname << "  " << dir << endl;
+      }
+      return -2;
+    }
+  }
   AdcPerformanceTree apt(fname);
   if ( apt.status() != 0 ) {
     cout << myname << "Unable to find performance file " << fname << endl;
-    return -1;
+    return -3;
   }
   Index endChannel = firstChannel() + nChannel();
   Index nbad = 0;

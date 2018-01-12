@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SAMNAME=$1
+if test -z "$SAMNAME"; then
+  echo Usage: $0 SampleName
+  exit 0
+fi
+
+if -z "$DUNEADC_FILE_PATH"; then
+  export DUNEADC_FILE_PATH=".:../duneadc2/jobs/done:../duneadc5/jobs/done"
+fi
+if ! type -t root.exe 1>/dev/null; then
+  source setup_root.sh
+fi
+if ! type -t root.exe 1>/dev/null; then
+  echo Root must be set up.
+  exit 1
+fi
+root.exe -q 'showMetrics.C("'$SAMNAME'")'

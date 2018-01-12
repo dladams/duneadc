@@ -6,7 +6,7 @@ if test -z "$SAMNAME"; then
   exit 0
 fi
 
-if -z "$DUNEADC_FILE_PATH"; then
+if test -z "$DUNEADC_FILE_PATH"; then
   export DUNEADC_FILE_PATH=".:../duneadc2/jobs/done:../duneadc5/jobs/done"
 fi
 if ! type -t root.exe 1>/dev/null; then

@@ -186,7 +186,9 @@ double AdcChipMetric::chipMetric(Name name) const {
 //**********************************************************************
 
 void AdcChipMetric::print() const {
-  cout << "Metrics for dataset " << dataset() << " chip " << chip() << endl;
+  cout << "Metrics for sample " << sampleName() << " (";
+  if ( dataset().size() ) cout << "dataset " << dataset() << " ";
+  cout << "chip " << chip() << ")" << endl;
   Index endChannel = firstChannel() + nChannel();
   Index saveprec = cout.precision();
   cout.precision(4);

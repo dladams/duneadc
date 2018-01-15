@@ -2063,6 +2063,58 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2098_0111")
   samsh.append(pre + "D2099_0111")
   sams2.append(pre + "D2100_0111")
+  samsh.append(pre + "D2101_0112")  # 1/15
+  sams2.append(pre + "D2102_0112")  # 1/15
+  sams2.append(pre + "D2105_0112")  # 1/15
+  samsh.append(pre + "D2106_0112")  # 1/15
+  sams2.append(pre + "D2107_0112")  # 1/15
+  samsh.append(pre + "D2108_0112")  # 1/15
+  sams2.append(pre + "D2109_0112")  # 1/15
+  samsh.append(pre + "D2110_0112")  # 1/15
+  sams2.append(pre + "D2111_0112")  # 1/15
+  samsh.append(pre + "D2112_0112")  # 1/15
+  samsh.append(pre + "D2113_0113")  # 1/15
+  samsh.append(pre + "D2115_0112")  # 1/15
+  sams2.append(pre + "D2116_0113")  # 1/15
+  samsh.append(pre + "D2117_0112")  # 1/15
+  samsh.append(pre + "D2119_0114")  # 1/15
+  samsh.append(pre + "D2120_0112")  # 1/15
+  samsh.append(pre + "D2121_0112")  # 1/15
+  samsh.append(pre + "D2122_0112")  # 1/15
+  samsh.append(pre + "D2123_0113")  # 1/15
+  samsh.append(pre + "D2124_0113")  # 1/15
+  samsh.append(pre + "D2125_0113")  # 1/15
+  sams2.append(pre + "D2126_0113")  # 1/15
+  samsh.append(pre + "D2127_0113")  # 1/15
+  sams2.append(pre + "D2128_0113")  # 1/15
+  samsh.append(pre + "D2129_0113")  # 1/15
+  sams2.append(pre + "D2130_0113")  # 1/15
+  samsh.append(pre + "D2131_0113")  # 1/15
+  sams2.append(pre + "D2132_0113")  # 1/15
+  sams2.append(pre + "D2133_0113")  # 1/15
+  sams2.append(pre + "D2134_0113")  # 1/15
+  sams2.append(pre + "D2135_0113")  # 1/15
+  sams2.append(pre + "D2136_0113")  # 1/15
+  sams2.append(pre + "D2137_0113")  # 1/15
+  samsh.append(pre + "D2138_0113")  # 1/15
+  sams2.append(pre + "D2138_0113")  # 1/15
+  sams2.append(pre + "D2139_0113")  # 1/15
+  samsh.append(pre + "D2140_0113")  # 1/15
+  samsh.append(pre + "D2141_0113")  # 1/15
+  sams2.append(pre + "D2142_0113")  # 1/15
+  samsh.append(pre + "D2143_0113")  # 1/15
+  sams2.append(pre + "D2144_0113")  # 1/15
+  sams2.append(pre + "D2145_0114")  # 1/15
+  samsh.append(pre + "D2146_0114")  # 1/15
+  sams2.append(pre + "D2147_0114")  # 1/15
+  samsh.append(pre + "D2148_0114")  # 1/15
+  sams2.append(pre + "D2149_0114")  # 1/15
+  samsh.append(pre + "D2150_0114")  # 1/15
+  sams2.append(pre + "D2151_0114")  # 1/15
+  samsh.append(pre + "D2152_0114")  # 1/15
+  sams2.append(pre + "D2153_0114")  # 1/15
+  samsh.append(pre + "D2218_0112")  # 1/15
+  samsh.append(pre + "D2219_0112")  # 1/15
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsamsh

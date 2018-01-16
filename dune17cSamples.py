@@ -1990,6 +1990,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2028_0102")
   samsh.append(pre + "D2028_0103")  # board 20v0, good res
   badsamsh.append(pre + "D2029_0103")  # board 20v0, poor res, drop per Matt
+  samsh.append(pre + "D2029_0116")  # 1/16
   sams2.append(pre + "D2030_0103")
   sams2.append(pre + "D2031_0102")
   badsams2.append(pre + "D2031_0103")  # board 20v0, poor res, drop per Matt
@@ -2008,6 +2009,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D2041_0103")  # board 20v0, good res, drop per Matt
   sams2.append(pre + "D2043_0103")
   badsamsh.append(pre + "D2044_0103")  # board 20v0, poor res, drop per Matt
+  sams2.append(pre + "D2044_0116")  # 1/16
   sams2.append(pre + "D2045_0103")
   badsamsh.append(pre + "D2046_0108")  # board 20v0, slghtly poor res, drop per Matt
   sams2.append(pre + "D2047_0108")
@@ -2048,6 +2050,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D2081_0110")  # board 20v0, drop per Matt
   sams2.append(pre + "D2082_0110")
   badsamsh.append(pre + "D2083_0110")  # board 20v0, drop per Matt
+  sams2.append(pre + "D2084_0116")  # 1/16
   samsh.append(pre + "D2085_0110")  # board 20v0
   sams2.append(pre + "D2087_0110")
   samsh.append(pre + "D2088_0110")  # board 20v0
@@ -2065,6 +2068,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2100_0111")
   badsamsh.append(pre + "D2101_0112")  # board 20v0, drop per Matt
   sams2.append(pre + "D2102_0112")
+  samsh.append(pre + "D2104_0116")  # 1/16
   sams2.append(pre + "D2105_0112")
   badsamsh.append(pre + "D2106_0112")  # board 20v0, Bad waveforms, drop per Matt
   sams2.append(pre + "D2107_0112")

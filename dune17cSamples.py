@@ -2005,10 +2005,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2037_0102")
   sams2.append(pre + "D2038_0102")
   badsamsh.append(pre + "D2039_0103")  # board 20v0, poor res, drop per Matt
-  sams2.append(pre + "D2039_0116")  # 1/16
+  sams2.append(pre + "D2039_0116")
   sams2.append(pre + "D2040_0103")
   badsamsh.append(pre + "D2041_0103")  # board 20v0, good res, drop per Matt
-  samsh.append(pre + "D2039_0116")  # 1/16
+  samsh.append(pre + "D2041_0116")  # 1/16
   sams2.append(pre + "D2043_0103")
   badsamsh.append(pre + "D2044_0103")  # board 20v0, poor res, drop per Matt
   sams2.append(pre + "D2044_0116")

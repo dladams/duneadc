@@ -2008,7 +2008,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2039_0116")
   sams2.append(pre + "D2040_0103")
   badsamsh.append(pre + "D2041_0103")  # board 20v0, good res, drop per Matt
-  samsh.append(pre + "D2041_0116")  # 1/16
+  samsh.append(pre + "D2041_0116")
   sams2.append(pre + "D2043_0103")
   badsamsh.append(pre + "D2044_0103")  # board 20v0, poor res, drop per Matt
   sams2.append(pre + "D2044_0116")
@@ -2119,6 +2119,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2151_0114")
   samsh.append(pre + "D2152_0114")
   badsams2.append(pre + "D2153_0114")  # Bad waveform
+  sams2.append(pre + "D2154_0116")  # 1/16
   badsamsh.append(pre + "D2218_0112")  # Bad waveforms
   samsh.append(pre + "D2219_0112")
   if isNwf: outsams = nwfsams

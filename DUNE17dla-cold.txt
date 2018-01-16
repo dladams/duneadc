@@ -1901,4 +1901,5 @@ DUNE17dla-cold_chipD2150_0114_try1
 DUNE17dla-cold_chipD2151_0114_try1
 DUNE17dla-cold_chipD2152_0114_try1
 DUNE17dla-cold_chipD2153_0114_try1
+DUNE17dla-cold_chipD2154_0116_try1
 DUNE17dla-cold_chipD2219_0112_try3

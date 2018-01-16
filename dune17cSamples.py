@@ -20,15 +20,18 @@ from dune17Chip import dune17cChip
 def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=False, skipBad=True):
   pre = "DUNE17-cold_chip"
   sams1 = []       # Early samples with bad ADC clock settings
-  sams2 = []       # Subsequent good samples
-  samsh = []       # Good samples with horizontal boards
+  sams2 = []       # Subsequent good samples on hothdaq4
+  sams3 = []       # Subsequent good samples on hothdaq3
+  samsh = []       # Good samples with horizontal boards (hothdaq5)
   badsams = []     # Samples otherwise bad
   badsams2 = []    # Samples otherwise bad with vertical boards and good clock settings
+  badsams3 = []    # Samples otherwise bad with vertical boards and good clock settings
   badsamsh = []    # Samples otherwise bad with horizontal boards
   nwfsams = []     # Samples without waveforms
   rollsams = []    # Samples with severe rollback
   failsams = []    # Samples tha fail processing
   failsams2 = []    # Samples tha fail processing
+  failsams3 = []    # Samples tha fail processing
   failsamsh = []    # Samples tha fail processing
   badsams.append(pre + "1")
   badsams.append(pre + "2_0702")          # waveform very small
@@ -2016,8 +2019,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D2046_0108")  # board 20v0, slghtly poor res, drop per Matt
   sams2.append(pre + "D2047_0108")
   badsamsh.append(pre + "D2048_0108")  # board 20v0, drop per Matt
+  sams3.append(pre + "D2048_0116")  # 1/16
   sams2.append(pre + "D2049_0108")
   badsamsh.append(pre + "D2050_0108")  # board 20v0, drop per Matt
+  sams3.append(pre + "D2048_0116")  # 1/16
   sams2.append(pre + "D2051_0108")
   samsh.append(pre + "D2052_0108")  # board 20v0
   sams2.append(pre + "D2053_0108")
@@ -2119,18 +2124,19 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2151_0114")
   samsh.append(pre + "D2152_0114")
   badsams2.append(pre + "D2153_0114")  # Bad waveform
-  sams2.append(pre + "D2154_0116")  # 1/16
+  sams2.append(pre + "D2154_0116")
+  sams3.append(pre + "D2156_0116")  # 1/16
   badsamsh.append(pre + "D2218_0112")  # Bad waveforms
   samsh.append(pre + "D2219_0112")
   if isNwf: outsams = nwfsams
-  elif isBad: outsams = badsams + badsams2 + badsamsh + nwfsams + rollsams
-  elif isFail: outsams = failsams + failsams2 + failsamsh
+  elif isBad: outsams = badsams + badsams2 + badsams3 + badsamsh + nwfsams + rollsams
+  elif isFail: outsams = failsams + failsams2 + failsams3 + failsamsh
   else:
-    if   group == 0: outsams = sams1 + sams2 + samsh
+    if   group == 0: outsams = sams1 + sams2 + sams3 + samsh
     elif group == 1: outsams = sams1
-    elif group == 2: outsams = sams2 + samsh
+    elif group == 2: outsams = sams2 + sams3 + samsh
     elif group == 3: outsams = samsh
-    elif group == 4: outsams = sams2
+    elif group == 4: outsams = sams2 + sams3
     else:            outsams = []
   if skipSel or skipBad:
     skipChips = []

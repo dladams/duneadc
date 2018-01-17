@@ -1914,6 +1914,7 @@ DUNE17dla-cold_chipD2154_0116_try1
 DUNE17dla-cold_chipD2155_0116_try1
 DUNE17dla-cold_chipD2156_0116_try1
 DUNE17dla-cold_chipD2157_0116_try1
+DUNE17dla-cold_chip23v0_0116_try1:chipD2158
 DUNE17dla-cold_chipD2158_0116_try1
 DUNE17dla-cold_chipD2159_0116_try1
 DUNE17dla-cold_chipD2159_0116_try2

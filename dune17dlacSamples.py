@@ -2266,6 +2266,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2155_0116_try1")  # 1/17
   sams.append(pre + "D2156_0116_try1")  # 1/17
   sams.append(pre + "D2157_0116_try1")  # 1/17
+  sams.append(pre + "23v0_0116_try1:chipD2158")  # 1/17
   sams.append(pre + "D2158_0116_try1")  # 1/17
   sams.append(pre + "D2159_0116_try1")  # 1/17
   sams.append(pre + "D2159_0116_try2")  # 1/17

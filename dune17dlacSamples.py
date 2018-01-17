@@ -2132,10 +2132,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2045_0103_try1")
   badsams.append(pre + "D2046_0108_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2046_0116_try1")
-  sams.append(pre + "D2048_0116T1318_try1")  # 1/17
-  sams.append(pre + "D2048_0116T1427_try1")
   sams.append(pre + "D2047_0108_try1")
   badsams.append(pre + "D2048_0108_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2048_0116T1318_try1")  # 1/17
+  sams.append(pre + "D2048_0116T1427_try1")
+  sams.append(pre + "D2048_0117_try1")  # 1/17
   sams.append(pre + "D2049_0108_try1")
   badsams.append(pre + "D2050_0108_try1")  # Drop v20_0 per Matt
   badsams.append(pre + "D2050_0116T1401_try1")  # Bad waveforms
@@ -2159,15 +2160,19 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2060_0108_try1")
   sams.append(pre + "D2061_0109_try1")
   badsams.append(pre + "D2063_0109_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2063_0117_try1")  # 1/17
   sams.append(pre + "D2064_0109_try1")
   sams.append(pre + "D2065_0109_try1")
   sams.append(pre + "D2066_0109T1128_try1")
   sams.append(pre + "D2066_0109T1137_try1")
   badsams.append(pre + "D2067_0109_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2067_0117_try1")  # 1/17
   sams.append(pre + "D2068_0109_try1")
   badsams.append(pre + "D2069_0109_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2069_0116T1318_try1")  # 1/17
   sams.append(pre + "D2070_0109_try1")
   badsams.append(pre + "D2071_0109_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2071_0117_try1")  # 1/17
   sams.append(pre + "D2072_0109_try1")
   badsams.append(pre + "D2073_0109_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2073_0109_try2")
@@ -2178,6 +2183,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2077_0110_try1")
   sams.append(pre + "D2078_0109_try1")
   badsams.append(pre + "D2079_0110_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2079_0117_try1")  # 1/17
   sams.append(pre + "D2080_0110_try1")
   badsams.append(pre + "D2081_0110_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2082_0110_try1")
@@ -2265,16 +2271,22 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2154_0116_try1")
   sams.append(pre + "D2155_0116_try1")
   badsams.append(pre + "D2156_0116_try1")  # Bad waveforms
+  sams.append(pre + "D2156_0117_try1")  # 1/17
   sams.append(pre + "D2157_0116_try1")
   badsams.append(pre + "23v0_0116_try1:chipD2158")  # Bad waveforms
-  sams.append(pre + "23v0_0116_try2:chipD2158")  # 1/17
+  sams.append(pre + "23v0_0116_try2:chipD2158")
   badsams.append(pre + "D2158_0116_try1")  # Bad waveforms
+  sams.append(pre + "D2158_0117_try1")  # 1/17
   badsams.append(pre + "D2159_0116_try1")  # Bad waveforms.
   sams.append(pre + "D2159_0116_try2")
   sams.append(pre + "D2160_0116_try1")
   sams.append(pre + "D2161_0116_try1")
   sams.append(pre + "D2162_0116_try1")
   sams.append(pre + "D2163_0116_try1")
+  sams.append(pre + "D2165_0117_try1")  # 1/17
+  sams.append(pre + "D2167_0117T0946_try1")  # 1/17
+  sams.append(pre + "D2167_0117T1033_try1")  # 1/17
+  sams.append(pre + "D2168_0117_try1")  # 1/17
   badsams.append(pre + "D2218_0112_try1")  # Bad waveforms
   badsams.append(pre + "D2219_0112_try1")  # Bad waveforms
   badsams.append(pre + "D2219_0112_try2")  # Bad waveforms

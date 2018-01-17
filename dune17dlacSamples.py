@@ -2177,6 +2177,8 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D2073_0109_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2073_0109_try2")
   sams.append(pre + "D2073_0109_try3")
+  sams.append(pre + "D2073_0117_try1")  # 1/17
+  sams.append(pre + "D2073_0117_try2")  # 1/17
   sams.append(pre + "D2074_0109_try1")
   sams.append(pre + "D2075_0109_try1")
   sams.append(pre + "D2076_0109_try1")
@@ -2188,6 +2190,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D2081_0110_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2082_0110_try1")
   badsams.append(pre + "D2083_0110_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2083_0117_try1")  # 1/17
   sams.append(pre + "D2084_0110_try1")
   sams.append(pre + "D2084_0116_try1")
   sams.append(pre + "D2085_0110_try1")
@@ -2197,6 +2200,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2090_0110_try1")
   sams.append(pre + "D2091_0111_try1")
   badsams.append(pre + "D2092_0111_try1")  # Drop v20_0 per Matt
+  sams.append(pre + "D2092_0117_try1")  # 1/17
   sams.append(pre + "D2093_0111_try1")
   badsams.append(pre + "D2094_0111_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2095_0111T1051_try1")

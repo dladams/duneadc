@@ -2054,6 +2054,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2071_0117")  # 1/17
   sams2.append(pre + "D2072_0109")
   badsamsh.append(pre + "D2073_0109")  # board 20v0, drop per Matt
+  samsh.append(pre + "D2073_0117")  # 1/17
   sams2.append(pre + "D2074_0109")
   sams2.append(pre + "D2075_0109")
   samsh.append(pre + "D2076_0109")  # board 20v0
@@ -2074,6 +2075,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2090_0110")
   sams2.append(pre + "D2091_0111")
   badsamsh.append(pre + "D2092_0111")  # board 20v0, drop per Matt
+  sams2.append(pre + "D2092_0117")  # 1/17
   sams2.append(pre + "D2093_0111")
   badsamsh.append(pre + "D2094_0111")  # board 20v0, drop per Matt
   sams2.append(pre + "D2095_0111")

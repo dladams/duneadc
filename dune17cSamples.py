@@ -1976,6 +1976,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2008_0117")
   sams2.append(pre + "D2009_1229")
   samsh.append(pre + "D2010_1229")
+  sams2.append(pre + "D2010_0118")  # 1/18
   sams2.append(pre + "D2011_1229")
   samsh.append(pre + "D2012_1229")
   sams2.append(pre + "D2013_1229")
@@ -2095,6 +2096,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2097_0117")
   sams2.append(pre + "D2098_0111")
   samsh.append(pre + "D2098_0117")
+  samsh.append(pre + "D2098_0118T0909")  # 1/18
+  sams2.append(pre + "D2098_0118T1048")  # 1/18
   samsh.append(pre + "D2099_0111")  # board 20v0
   sams2.append(pre + "D2100_0111")
   badsamsh.append(pre + "D2101_0112")  # board 20v0, drop per Matt
@@ -2109,12 +2112,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2111_0112")
   samsh.append(pre + "D2112_0112")
   samsh.append(pre + "D2113_0113")
+  samsh.append(pre + "D2114_0112")  # 1/18
   samsh.append(pre + "D2115_0112")
   sams2.append(pre + "D2116_0113")
   samsh.append(pre + "D2117_0112")
   badsamsh.append(pre + "D2218_0112:chipD2118")  # Bad waveforms
   samsh.append(pre + "D2219_0112:chipD2119")
   samsh.append(pre + "D2119_0114")
+  sams2.append(pre + "D2119_0118")  # 1/18
   samsh.append(pre + "D2120_0112")
   samsh.append(pre + "D2121_0112")
   samsh.append(pre + "D2122_0112")
@@ -2138,6 +2143,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2138_0113T1936")
   sams2.append(pre + "D2139_0113")
   samsh.append(pre + "D2140_0113")
+  samsh.append(pre + "D2140_0118")  # 1/18
   samsh.append(pre + "D2141_0113")
   sams2.append(pre + "D2142_0113")
   samsh.append(pre + "D2143_0113")
@@ -2154,8 +2160,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2154_0116")
   sams2.append(pre + "D2155_0116")
   sams3.append(pre + "D2156_0117")
+  badsams3.append(pre + "D2156_0116")  # Bad waveforms
   sams2.append(pre + "D2157_0116")
   sams2.append(pre + "23v0_0116:chipD2158")
+  badsams3.append(pre + "D2158_0116")  # Bad waveforms
   sams3.append(pre + "D2158_0117")
   sams2.append(pre + "D2159_0116")
   sams2.append(pre + "D2160_0116")
@@ -2164,9 +2172,15 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2164_0117")
   sams2.append(pre + "D2165_0117")
   sams2.append(pre + "D2166_0117")
+  samsh.append(pre + "D2167_0118")  # 1/18
   sams2.append(pre + "D2168_0117")
-  badsams3.append(pre + "D2156_0116")  # Bad waveforms
-  badsams3.append(pre + "D2158_0116")  # Bad waveforms
+  samsh.append(pre + "D2169_0118")  # 1/18
+  sams2.append(pre + "D2170_0118")  # 1/18
+  sams2.append(pre + "D2171_0118")  # 1/18
+  samsh.append(pre + "D2172_0118")  # 1/18
+  samsh.append(pre + "D2173_0118")  # 1/18
+  sams2.append(pre + "D2174_0118")  # 1/18
+  samsh.append(pre + "D2307_0118")  # 1/18
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsams3 + badsamsh + nwfsams + rollsams
   elif isFail: outsams = failsams + failsams2 + failsams3 + failsamsh

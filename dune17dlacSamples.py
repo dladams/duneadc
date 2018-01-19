@@ -1947,7 +1947,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D1881_1215_try1")
   sams.append(pre + "D1882_1213_try1")
   sams.append(pre + "D1882_0117_try1")
-  sams.append(pre + "D1882_0118_try1")  # 1/19
+  sams.append(pre + "D1882_0118_try1")
   sams.append(pre + "D1883_1213_try1")
   sams.append(pre + "D1883_1213_try2")
   sams.append(pre + "D1883_1215_try1")
@@ -2127,7 +2127,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2035_0102_try1")
   sams.append(pre + "D2036_0102_try1")
   sams.append(pre + "D2037_0102_try1")
-  sams.append(pre + "D2037_0118_try1")  # 1/19
+  sams.append(pre + "D2037_0118_try1")
   sams.append(pre + "D2038_0102_try1")
   badsams.append(pre + "D2039_0103_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2040_0103_try1")
@@ -2180,7 +2180,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   badsams.append(pre + "D2069_0109_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2069_0117T1148_try1")
   badsams.append(pre + "D2069_0117T1450_try1")  # Bad waveforms
-  sams.append(pre + "D2069_0118_try1")  # 1/19
+  sams.append(pre + "D2069_0118_try1")
   sams.append(pre + "D2070_0109_try1")
   badsams.append(pre + "D2071_0109_try1")  # Drop v20_0 per Matt
   sams.append(pre + "D2071_0117_try1")
@@ -2270,13 +2270,13 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2126_0113_try1")
   sams.append(pre + "D2127_0113_try1")
   badsams.append(pre + "D2127_0117_try1")  # Bad waveforms
-  sams.append(pre + "D2127_0118_try1")  # 1/19
+  sams.append(pre + "D2127_0118_try1")
   sams.append(pre + "D2128_0113_try1")
   sams.append(pre + "D2129_0113_try1")
   sams.append(pre + "D2130_0113_try1")
   sams.append(pre + "D2131_0113_try1")
   badsams.append(pre + "D2132_0113_try1")  # Bad waveforms
-  sams.append(pre + "D2132_0113_try2")  # 1/19
+  sams.append(pre + "D2132_0113_try2")
   sams.append(pre + "D2133_0113T1656_try1")
   sams.append(pre + "D2133_0113T1714_try1")
   sams.append(pre + "D2133_0113T1754_try1")
@@ -2333,25 +2333,23 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2171_0118_try1")
   sams.append(pre + "D2172_0118_try1")
   sams.append(pre + "D2173_0118_try1")
-  sams.append(pre + "D2174_0118T1230_try1")  # 1/19
-  sams.append(pre + "D2174_0118T1514_try1")  # 1/19
-  sams.append(pre + "D2175_0118_try1")  # 1/19
-  sams.append(pre + "D2176_0118T1409_try1")  # 1/19
-  sams.append(pre + "D2176_0118T1441_try1")  # 1/19
+  sams.append(pre + "D2174_0118T1230_try1")
+  sams.append(pre + "D2174_0118T1514_try1")
+  sams.append(pre + "D2175_0118_try1")
+  sams.append(pre + "D2176_0118T1409_try1")
+  sams.append(pre + "D2176_0118T1441_try1")
   sams.append(pre + "D2177_0118_try1")  # 1/19
-  sams.append(pre + "D2179_0118_try1")  # 1/19
-  sams.append(pre + "D2180_0118_try1")  # 1/19
-  sams.append(pre + "D2181_0118_try1")  # 1/19
-  sams.append(pre + "D2182_0118_try1")  # 1/19
-  sams.append(pre + "D218x_0118_try1")  # 1/19
-  sams.append(pre + "D218x_0118_try1")  # 1/19
-  sams.append(pre + "D2183_0118_try1")  # 1/19
-  sams.append(pre + "D2184_0118_try1")  # 1/19
-  sams.append(pre + "D2184_0118_try1")  # 1/19
-  sams.append(pre + "D2186_0118_try1")  # 1/19
-  sams.append(pre + "D2187_0118_try1")  # 1/19
-  sams.append(pre + "D2178_0118_try1")  # 1/19
-  sams.append(pre + "D2179_0118_try1")  # 1/19
+  sams.append(pre + "D2179_0118_try1")
+  sams.append(pre + "D2180_0118_try1")
+  sams.append(pre + "D2181_0118_try1")
+  sams.append(pre + "D2182_0118_try1")
+  sams.append(pre + "D2183_0118_try1")
+  sams.append(pre + "D2184_0118T1649_try1")  # 1/19
+  sams.append(pre + "D2184_0118T1713_try1")  # 1/19
+  badsams.append(pre + "D2186_0118_try1")  # Bad waveform
+  sams.append(pre + "D2187_0118_try1")
+  sams.append(pre + "D2188_0118_try1")  # 1/19
+  sams.append(pre + "D2189_0118_try1")  # 1/19
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

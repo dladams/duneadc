@@ -2338,18 +2338,42 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2175_0118_try1")
   sams.append(pre + "D2176_0118T1409_try1")
   sams.append(pre + "D2176_0118T1441_try1")
-  sams.append(pre + "D2177_0118_try1")  # 1/19
+  sams.append(pre + "D2177_0118_try1")
   sams.append(pre + "D2179_0118_try1")
   sams.append(pre + "D2180_0118_try1")
   sams.append(pre + "D2181_0118_try1")
   sams.append(pre + "D2182_0118_try1")
   sams.append(pre + "D2183_0118_try1")
-  sams.append(pre + "D2184_0118T1649_try1")  # 1/19
+  sams.append(pre + "D2184_0118T1649_try1")
   sams.append(pre + "D2184_0118T1713_try1")  # 1/19
+  sams.append(pre + "D2184_0119_try1")  # 1/19
+  sams.append(pre + "D2185_0119_try1")  # 1/19
   badsams.append(pre + "D2186_0118_try1")  # Bad waveform
   sams.append(pre + "D2187_0118_try1")
   sams.append(pre + "D2188_0118_try1")  # 1/19
   sams.append(pre + "D2189_0118_try1")  # 1/19
+  sams.append(pre + "D2190_0119_try1")  # 1/19
+  sams.append(pre + "D2191_0119_try1")  # 1/19
+  sams.append(pre + "D2192_0119_try1")  # 1/19
+  sams.append(pre + "D2193_0119_try1")  # 1/19
+  sams.append(pre + "D2193_0119_try2")  # 1/19
+  sams.append(pre + "D2194_0119_try1")  # 1/19
+  sams.append(pre + "D2195_0119_try1")  # 1/19
+  sams.append(pre + "D2196_0119T1120_try1")  # 1/19
+  sams.append(pre + "D2196_0119T1140_try1")  # 1/19
+  sams.append(pre + "D2197_0119_try1")  # 1/19
+  sams.append(pre + "D2198_0119_try1")  # 1/19
+  sams.append(pre + "D2199_0119_try1")  # 1/19
+  sams.append(pre + "D2200_0119_try1")  # 1/19
+  sams.append(pre + "D2201_0119_try1")  # 1/19
+  sams.append(pre + "D2202_0119_try1")  # 1/19
+  sams.append(pre + "D2203_0119_try1")  # 1/19
+  sams.append(pre + "D2204_0119_try1")  # 1/19
+  sams.append(pre + "D2205_0119_try1")  # 1/19
+  sams.append(pre + "D2205_0119_try2")  # 1/19
+  sams.append(pre + "D2206_0119_try1")  # 1/19
+  sams.append(pre + "D2207_0119_try1")  # 1/19
+  sams.append(pre + "D2208_0119_try1")  # 1/19
   # DUNE17dla-cold
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

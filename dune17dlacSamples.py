@@ -2401,6 +2401,28 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2234_0121_try1")
   sams.append(pre + "D2235_0121T1231_try1")
   sams.append(pre + "D2235_0121T1301_try1")
+  sams.append(pre + "D2237_0121_try1")  # 1/22
+  sams.append(pre + "D2238_0121_try1")  # 1/22
+  sams.append(pre + "D2238_0121_try2")  # 1/22
+  sams.append(pre + "D2240_0121_try1")  # 1/22
+  sams.append(pre + "D2241_0121_try1")  # 1/22
+  sams.append(pre + "D2242_0121_try1")  # 1/22
+  sams.append(pre + "D2242_0121_try2")  # 1/22
+  sams.append(pre + "D2243_0121_try1")  # 1/22
+  sams.append(pre + "D2244_0121T1518_try1")  # 1/22
+  sams.append(pre + "D2244_0121T1534_try1")  # 1/22
+  sams.append(pre + "D2245_0121_try1")  # 1/22
+  sams.append(pre + "D2246_0121_try1")  # 1/22
+  sams.append(pre + "D2247_0121_try1")  # 1/22
+  sams.append(pre + "D2248_0121_try1")  # 1/22
+  sams.append(pre + "D2248_0121_try2")  # 1/22
+  sams.append(pre + "D2249_0121_try1")  # 1/22
+  sams.append(pre + "D2250_0121T1644_try1")  # 1/22
+  sams.append(pre + "D2250_0121T1807_try1")  # 1/22
+  sams.append(pre + "D2251_0121_try1")  # 1/22
+  sams.append(pre + "D2252_0121_try1")  # 1/22
+  sams.append(pre + "D2253_0121_try1")  # 1/22
+  sams.append(pre + "D2254_0121_try1")  # 1/22
   sams.append(pre + "D2307_0118_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams

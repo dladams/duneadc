@@ -2394,8 +2394,8 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2224_0121_try1")
   sams.append(pre + "D2225_0121_try1")
   sams.append(pre + "D2226_0121_try1")
-  sams.append(pre + "D2227_0122_try1")  # 1/22
-  sams.append(pre + "D2227_0122_try2")  # 1/22
+  badsams.append(pre + "D2227_0122_try1")  # Bad waveforms
+  badsams.append(pre + "D2227_0122_try2")  # Bad waveforms
   sams.append(pre + "D2228_0121_try1")
   sams.append(pre + "D2229_0121_try1")
   sams.append(pre + "D2230_0121_try1")
@@ -2425,19 +2425,19 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2252_0121_try1")
   sams.append(pre + "D2253_0121_try1")
   sams.append(pre + "D2254_0121_try1")
-  sams.append(pre + "D2257_0122_try1")  # 1/22
-  sams.append(pre + "D2258_0122_try1")  # 1/22
-  sams.append(pre + "D2259_0122_try1")  # 1/22
-  sams.append(pre + "D2259_0122_try2")  # 1/22
-  sams.append(pre + "D2261_0122_try1")  # 1/22
-  sams.append(pre + "D2262_0122T1046_try1")  # 1/22
-  sams.append(pre + "D2262_0122T1046_try1")  # 1/22
-  sams.append(pre + "D2262_0122T1046_try1")  # 1/22
-  sams.append(pre + "D2262_0122T1124_try1")  # 1/22
-  sams.append(pre + "D2263_0122T1038_try1")  # 1/22
-  sams.append(pre + "D2263_0122T1144_try1")  # 1/22
-  sams.append(pre + "D2264_0122_try1")  # 1/22
-  sams.append(pre + "D2266_0122_try1")  # 1/22
+  sams.append(pre + "D2257_0122_try1")
+  sams.append(pre + "D2258_0122_try1")
+  sams.append(pre + "D2259_0122_try1")
+  sams.append(pre + "D2259_0122_try2")
+  sams.append(pre + "D2261_0122_try1")
+  badsams.append(pre + "D2262_0122T1046_try1")  # Bad waveforms
+  sams.append(pre + "D2262_0122T1046_try2")  # 1/22
+  sams.append(pre + "D2262_0122T1046_try3")  # 1/22
+  sams.append(pre + "D2262_0122T1124_try1")
+  sams.append(pre + "D2263_0122T1038_try1")
+  sams.append(pre + "D2263_0122T1144_try1")
+  sams.append(pre + "D2264_0122_try1")
+  sams.append(pre + "D2266_0122_try1")
   sams.append(pre + "D2307_0118_try1")
   # DUNE17dla-cold
   if isBad: outsams = badsams

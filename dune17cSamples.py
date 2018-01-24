@@ -1990,7 +1990,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2021_1229")
   samsh.append(pre + "D2022_1229")
   sams2.append(pre + "D2023_1229")
-  samsh.append(pre + "D2024_1229")
+  badsamsh.append(pre + "D2024_1229")  # noisy board
   samsh.append(pre + "D2024_0117")
   sams2.append(pre + "D2025_1229")
   samsh.append(pre + "D2026_0102")
@@ -2090,7 +2090,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2093_0111")
   badsamsh.append(pre + "D2094_0111")  # board 20v0, drop per Matt
   samsh.append(pre + "D2094_0117")
-  sams2.append(pre + "D2095_0111")
+  badsams2.append(pre + "D2095_0111")  # noisy board
   samsh.append(pre + "D2095_0117T1612")
   samsh.append(pre + "D2095_0117T1628")
   badsamsh.append(pre + "D2096_0111")  # board 20v0, drop per Matt
@@ -2131,7 +2131,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2124_0113")
   samsh.append(pre + "D2125_0113")
   sams2.append(pre + "D2126_0113")
-  samsh.append(pre + "D2127_0113")
+  badsamsh.append(pre + "D2127_0113")  # noisy board
   badsamsh.append(pre + "D2127_0117")  # Bad waveforms
   samsh.append(pre + "D2127_0118")
   sams2.append(pre + "D2128_0113")
@@ -2308,14 +2308,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2292_0123")
   sams2.append(pre + "D2293_0123")
   samsh.append(pre + "D2294_0123")
-  samsh.append(pre + "D2295_0123")  # 1/24
+  samsh.append(pre + "D2295_0123")
   samsh.append(pre + "D2296_0123")
   sams2.append(pre + "D2297_0123")
-  sams2.append(pre + "D2298_0123")  # 1/24
-  samsh.append(pre + "D2299_0123")  # 1/24
-  samsh.append(pre + "D2300_0123")  # 1/24
-  samsh.append(pre + "D2301_0123")  # 1/24
-  sams2.append(pre + "D2303_0123")  # 1/24
+  sams2.append(pre + "D2298_0123")
+  samsh.append(pre + "D2299_0123")
+  samsh.append(pre + "D2300_0123")
+  samsh.append(pre + "D2301_0123")
+  sams2.append(pre + "D2303_0123")
   samsh.append(pre + "D2307_0118")
   if isNwf: outsams = nwfsams
   elif isBad: outsams = badsams + badsams2 + badsams3 + badsamsh + nwfsams + rollsams

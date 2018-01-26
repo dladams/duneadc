@@ -2537,7 +2537,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True):
   sams.append(pre + "D2344_0125T1026_try1")
   sams.append(pre + "D2344_0125T1153_try1")
   sams.append(pre + "D2345_0125_try1")
-  sams.append(pre + "D2346_0125_try1")
+  badsams.append(pre + "D2346_0125_try1")  # Bad run (Matt 1/25)
   sams.append(pre + "D2347_0125_try1")
   sams.append(pre + "D2348_0125_try1")
   sams.append(pre + "D2349_0125_try1")

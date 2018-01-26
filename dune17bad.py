@@ -37,6 +37,7 @@ def badChips():
   #chips += [12095, 12024, 12127]         # Matt: Bad bulk resolution 23jan2018
   chips += [12210, 12138, 12048]         # Matt: Bent pin 23jan2018
   chips += [12162]                       # Matt: Bad SPI readout 23jan2018
+  chips += [12336]                       # Matt: Bad pin 25jan2018
   chips.sort()
   lastchip = None
   nodups = []

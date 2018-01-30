@@ -2681,41 +2681,64 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2463_0129_try1")
   sams.append(pre + "D2463_0129_try2")
   sams.append(pre + "D2464_0129T1147_try1")
-  sams.append(pre + "D2464_0129T1205_try1")
+  badsams.append(pre + "D2464_0129T1205_try1")  # Bad waveform
   sams.append(pre + "D2465_0129T1344_try1")
   sams.append(pre + "D2465_0129T1405_try1")
-  sams.append(pre + "D2466_0129_try1")
+  pbrsams.append(pre + "D2466_0129_try1")
   sams.append(pre + "D2467_0129_try1")
   sams.append(pre + "D2468_0129_try1")
-  sams.append(pre + "D2469_0129_try1")
+  pbrsams.append(pre + "D2469_0129_try1")
   sams.append(pre + "D2470_0129_try1")
   sams.append(pre + "D2471_0129_try1")
   sams.append(pre + "D2472_0129_try1")
   sams.append(pre + "D2473_0129_try1")
-  sams.append(pre + "D2474_0129_try1")  # 1/30
-  sams.append(pre + "D2475_0129_try1")  # 1/30
-  sams.append(pre + "D2476_0129_try1")  # 1/30
-  sams.append(pre + "D2478_0129_try1")  # 1/30
-  sams.append(pre + "D2479_0129_try1")  # 1/30
-  sams.append(pre + "D2480_0129_try1")  # 1/30
-  sams.append(pre + "D2480_0129_try1")  # 1/30
-  sams.append(pre + "D2481_0129_try1")  # 1/30
-  sams.append(pre + "D2482_0129_try1")  # 1/30
-  sams.append(pre + "D2483_0129_try1")  # 1/30
-  sams.append(pre + "D2484_0129_try1")  # 1/30
-  sams.append(pre + "D2486_0129_try1")  # 1/30
-  sams.append(pre + "D2487_0129_try1")  # 1/30
-  sams.append(pre + "D2488_0129_try1")  # 1/30
-  sams.append(pre + "D2489_0129_try1")  # 1/30
-  sams.append(pre + "D2490_0129_try1")  # 1/30
-  sams.append(pre + "D2491_0129_try1")  # 1/30
-  sams.append(pre + "D2492_0129_try1")  # 1/30
-  sams.append(pre + "D2493_0129_try1")  # 1/30
-  sams.append(pre + "D2494_0129_try1")  # 1/30
-  sams.append(pre + "D2495_0129_try1")  # 1/30
-  sams.append(pre + "D2496_0129_try1")  # 1/30
-  sams.append(pre + "D2497_0129_try1")  # 1/30
-  sams.append(pre + "D2500_0130_try1")  # 1/30
+  sams.append(pre + "D2474_0129_try1")
+  sams.append(pre + "D2475_0129_try1")
+  pbrsams.append(pre + "D2476_0129_try1")
+  sams.append(pre + "D2478_0129_try1")
+  sams.append(pre + "D2479_0129_try1")
+  sams.append(pre + "D2480_0129_try1")
+  sams.append(pre + "D2481_0129_try1")
+  sams.append(pre + "D2482_0129_try1")
+  sams.append(pre + "D2483_0129_try1")
+  sams.append(pre + "D2484_0129_try1")
+  sams.append(pre + "D2486_0129_try1")
+  sams.append(pre + "D2487_0129_try1")
+  sams.append(pre + "D2488_0129_try1")
+  sams.append(pre + "D2489_0129_try1")
+  sams.append(pre + "D2490_0129_try1")
+  sams.append(pre + "D2491_0129_try1")
+  sams.append(pre + "D2492_0129_try1")
+  sams.append(pre + "D2493_0129_try1")
+  sams.append(pre + "D2494_0129_try1")
+  sams.append(pre + "D2495_0129_try1")
+  sams.append(pre + "D2496_0129_try1")
+  sams.append(pre + "D2497_0129_try1")
+  sams.append(pre + "D2500_0130_try1")
+  sams.append(pre + "D2501_0130_try1")  # 1/30
+  sams.append(pre + "D2502_0130_try1")  # 1/30
+  sams.append(pre + "D2503_0130_try1")  # 1/30
+  sams.append(pre + "D2503_0130_try2")  # 1/30
+  sams.append(pre + "D2504_0130_try1")  # 1/30
+  sams.append(pre + "D2505_0130_try1")  # 1/30
+  sams.append(pre + "D2506_0130_try1")  # 1/30
+  sams.append(pre + "D2508_0130_try1")  # 1/30
+  sams.append(pre + "D2509_0130T1404_try1")  # 1/30
+  sams.append(pre + "D2509_0130T1431_try1")  # 1/30
+  sams.append(pre + "D2510_0130_try1")  # 1/30
+  sams.append(pre + "D2511_0130_try1")  # 1/30
+  sams.append(pre + "D2512_0130_try1")  # 1/30
+  sams.append(pre + "D2513_0130_try1")  # 1/30
+  sams.append(pre + "D2514_0130_try1")  # 1/30
+  sams.append(pre + "D2515_0130_try1")  # 1/30
+  sams.append(pre + "D2516_0130_try1")  # 1/30
+  sams.append(pre + "D2517_0130_try1")  # 1/30
+  sams.append(pre + "D2518_0130_try1")  # 1/30
+  sams.append(pre + "D2519_0130_try1")  # 1/30
+  sams.append(pre + "D2520_0130_try1")  # 1/30
+  sams.append(pre + "D2521_0130_try1")  # 1/30
+  sams.append(pre + "D2522_0130_try1")  # 1/30
+  sams.append(pre + "D2523_0130_try1")  # 1/30
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

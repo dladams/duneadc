@@ -2498,6 +2498,26 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2472_0129")
   sams2.append(pre + "D2473_0129")
   samsh.append(pre + "D2474_0129")
+  sams3.append(pre + "D2475_0129")  # 1/30
+  sams2.append(pre + "D2476_0129")  # 1/30
+  sams3.append(pre + "D2478_0129")  # 1/30
+  sams2.append(pre + "D2479_0129")  # 1/30
+  samsh.append(pre + "D2480_0129")  # 1/30
+  sams3.append(pre + "D2481_0129")  # 1/30
+  sams2.append(pre + "D2482_0129")  # 1/30
+  sams3.append(pre + "D2483_0129")  # 1/30
+  samsh.append(pre + "D2486_0129")  # 1/30
+  sams2.append(pre + "D2487_0129")  # 1/30
+  sams2.append(pre + "D2488_0129")  # 1/30
+  samsh.append(pre + "D2489_0129")  # 1/30
+  sams3.append(pre + "D2490_0129")  # 1/30
+  sams2.append(pre + "D2491_0129")  # 1/30
+  sams3.append(pre + "D2492_0129")  # 1/30
+  samsh.append(pre + "D2493_0129")  # 1/30
+  sams2.append(pre + "D2494_0129")  # 1/30
+  sams3.append(pre + "D2495_0129")  # 1/30
+  samsh.append(pre + "D2496_0129")  # 1/30
+  sams2.append(pre + "D2497_0129")  # 1/30
   sams2 += sams2r
   samsh += samshr
   sams3 += sams3r

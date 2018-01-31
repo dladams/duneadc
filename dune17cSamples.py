@@ -2514,6 +2514,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2495_0129")
   samsh.append(pre + "D2496_0129")
   sams2.append(pre + "D2497_0129")
+  sams2.append(pre + "D2498_0131")  # 1/31
+  sams2.append(pre + "D2499_0131")  # 1/31
   sams2.append(pre + "D2501_0130")
   samsh.append(pre + "D2503_0130")
   sams2.append(pre + "D2504_0130")
@@ -2539,11 +2541,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2530_0131")
   sams2.append(pre + "D2531_0131")
   samsh.append(pre + "D2532_0131")
-  sams2.append(pre + "D2533_0131")  # 1/31
-  samsh.append(pre + "D2534_0131")  # 1/31
-  sams2.append(pre + "D2535_0131")  # 1/31
-  samsh.append(pre + "D2536_0131")  # 1/31
-  sams2.append(pre + "D2537_0131")  # 1/31
+  sams2.append(pre + "D2533_0131")
+  samsh.append(pre + "D2534_0131")
+  sams2.append(pre + "D2535_0131")
+  samsh.append(pre + "D2536_0131")
+  sams2.append(pre + "D2537_0131")
+  samsh.append(pre + "D2538_0131")  # 1/31
+  samsh.append(pre + "D2539_0131")  # 1/31
+  sams2.append(pre + "D2540_0131")  # 1/31
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

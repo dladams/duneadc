@@ -311,3 +311,4 @@ DUNE17dla-cold_chipD2444_0128_try1
 DUNE17dla-cold_chipD2464_0129T1205_try1
 DUNE17dla-cold_chipD2508_0130_try1
 DUNE17dla-cold_chipD2511_0130_try1
+DUNE17dla-cold_chipD2545_0131_try1

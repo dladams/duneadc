@@ -2582,7 +2582,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2553_0201")
   samsh.append(pre + "D2554_0201")
   samsh.append(pre + "D2555_0201")
-  samsh.append(pre + "D2556_0201")
+  badsamsh.append(pre + "D2556_0201")  # Bad INL/waveforms.
   sams2.append(pre + "D2557_0201")
   sams2.append(pre + "D2558_0201")
   samsh.append(pre + "D2559_0201")
@@ -2592,10 +2592,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2562_0201")
   sams2.append(pre + "D2563_0201")
   samsh.append(pre + "D2564_0201")
-  samsh.append(pre + "D2565_0201")
+  badsamsh.append(pre + "D2565_0201")  # Bad waveform
   sams3.append(pre + "D2566_0201")
   samsh.append(pre + "D2568_0201")
-  sams2.append(pre + "D2569_0201")
+  pbrsams2.append(pre + "D2569_0201")
   samsh.append(pre + "D2570_0201")
   sams2.append(pre + "D2571_0201")
   sams3.append(pre + "D2572_0201")

@@ -2500,7 +2500,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2472_0129")
   sams2.append(pre + "D2473_0129")
   samsh.append(pre + "D2474_0129")
-  sams2.append(pre + "D2474_0201")  # 2/2
+  sams2.append(pre + "D2474_0201")
   badsams3.append(pre + "D2475_0129")  # One bad Vin fit
   sams3.append(pre + "D2475_0201")
   pbrsams2.append(pre + "D2476_0129")
@@ -2577,34 +2577,34 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2548_0131")
   pbrsams2.append(pre + "D2549_0131")
   sams2.append(pre + "D2550_0131")
-  samsh.append(pre + "D2551_0201")  # 2/2
+  badsamsh.append(pre + "D2551_0201")  # Corrupt data file.
   sams2.append(pre + "D2552_0201")
-  sams3.append(pre + "D2553_0201")  # 2/2
+  sams3.append(pre + "D2553_0201")
   samsh.append(pre + "D2554_0201")
   samsh.append(pre + "D2555_0201")
-  samsh.append(pre + "D2558_0201")  # 2/2
+  samsh.append(pre + "D2556_0201")
   sams2.append(pre + "D2557_0201")
-  sams2.append(pre + "D2558_0201")  # 2/2
+  sams2.append(pre + "D2558_0201")
   samsh.append(pre + "D2559_0201")
   badsams3.append(pre + "D2560_0201")  # Bad waveforms
-  sams3.append(pre + "D2560_0201")  # 2/2
+  sams3.append(pre + "D2560_0201")
   sams2.append(pre + "D2561_0201")
-  sams2.append(pre + "D2562_0201")  # 2/2
-  sams2.append(pre + "D2563_0201")  # 2/2
-  samsh.append(pre + "D2564_0201")  # 2/2
-  samsh.append(pre + "D2565_0201")  # 2/2
-  sams3.append(pre + "D2566_0201")  # 2/2
-  samsh.append(pre + "D2568_0201")  # 2/2
-  sams2.append(pre + "D2569_0201")  # 2/2
-  samsh.append(pre + "D2570_0201")  # 2/2
-  sams2.append(pre + "D2571_0201")  # 2/2
-  sams3.append(pre + "D2572_0201")  # 2/2
-  sams2.append(pre + "D2573_0201")  # 2/2
-  samsh.append(pre + "D2574_0201")  # 2/2
-  sams3.append(pre + "D2576_0201")  # 2/2
-  sams2.append(pre + "D2575_0201")  # 2/2
-  sams2.append(pre + "D2577_0201")  # 2/2
-  sams3.append(pre + "D2578_0201")  # 2/2
+  sams2.append(pre + "D2562_0201")
+  sams2.append(pre + "D2563_0201")
+  samsh.append(pre + "D2564_0201")
+  samsh.append(pre + "D2565_0201")
+  sams3.append(pre + "D2566_0201")
+  samsh.append(pre + "D2568_0201")
+  sams2.append(pre + "D2569_0201")
+  samsh.append(pre + "D2570_0201")
+  sams2.append(pre + "D2571_0201")
+  sams3.append(pre + "D2572_0201")
+  sams2.append(pre + "D2573_0201")
+  samsh.append(pre + "D2574_0201")
+  sams2.append(pre + "D2575_0201")
+  sams3.append(pre + "D2576_0201")
+  sams2.append(pre + "D2577_0201")
+  sams3.append(pre + "D2578_0201")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

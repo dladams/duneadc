@@ -2472,7 +2472,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2446_0128")
   sams2.append(pre + "D2447_0128")
   badsams3.append(pre + "D2448_0128")  # One bad Vin fit
-  sams3.append(pre + "D2448_0201")  # 2/1
+  sams3.append(pre + "D2448_0201")
   samsh.append(pre + "D2449_0128")
   sams3.append(pre + "D2450_0129")
   sams3.append(pre + "D2451_0128")
@@ -2491,7 +2491,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2464_0129")
   sams3.append(pre + "D2465_0129")
   pbrsams2.append(pre + "D2466_0129")
-  sams2.append(pre + "D2466_0201")  # 2/1
+  sams2.append(pre + "D2466_0201")
   sams3.append(pre + "D2467_0129")
   samsh.append(pre + "D2468_0129")
   pbrsams2.append(pre + "D2469_0129")
@@ -2501,9 +2501,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2473_0129")
   samsh.append(pre + "D2474_0129")
   badsams3.append(pre + "D2475_0129")  # One bad Vin fit
-  sams3.append(pre + "D2475_0201")  # 2/1
+  sams3.append(pre + "D2475_0201")
   pbrsams2.append(pre + "D2476_0129")
-  sams3.append(pre + "D2476_0201")  # 2/1
+  sams3.append(pre + "D2476_0201")
   sams3.append(pre + "D2478_0129")
   sams2.append(pre + "D2479_0129")
   samsh.append(pre + "D2480_0129")
@@ -2524,14 +2524,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2497_0129")
   sams2.append(pre + "D2498_0131")
   sams2.append(pre + "D2499_0131")
-  sams3.append(pre + "D2500_0201")  # 2/1
+  sams3.append(pre + "D2500_0201")
   sams2.append(pre + "D2501_0130")
   samsh.append(pre + "D2502_0131")
   samsh.append(pre + "D2503_0130")
   sams2.append(pre + "D2504_0130")
   samsh.append(pre + "D2505_0130")
   sams2.append(pre + "D2506_0130")
-  sams2.append(pre + "D2508_0201")  # 2/1
+  sams2.append(pre + "D2508_0201")
   samsh.append(pre + "D2509_0130T1404")
   sams2.append(pre + "D2509_0130T1431")
   samsh.append(pre + "D2510_0130")
@@ -2540,7 +2540,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2513_0130")
   sams2.append(pre + "D2514_0131")
   pbrsams2.append(pre + "D2515_0130")
-  sams2.append(pre + "D2515_0201")  # 2/1
+  sams2.append(pre + "D2515_0201")
   samsh.append(pre + "D2516_0130")
   sams2.append(pre + "D2517_0130")
   samsh.append(pre + "D2518_0130")
@@ -2552,7 +2552,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2524_0130")
   samsh.append(pre + "D2525_0131")
   sams2.append(pre + "D2526_0131")
-  sams2.append(pre + "D2527_0201")  # 2/1
+  sams2.append(pre + "D2527_0201")
   sams2.append(pre + "D2528_0131")
   samsh.append(pre + "D2529_0131")
   sams2.append(pre + "D2530_0131")
@@ -2572,18 +2572,18 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   pbrsams2.append(pre + "D2544_0131")
   badsamsh.append(pre + "D2545_0131")  # Bad waveform? Expect low Q from other chans.
   pbrsams2.append(pre + "D2546_0131")
-  sams2.append(pre + "D2547_0201")  # 2/1
+  sams2.append(pre + "D2547_0201")
   sams2.append(pre + "D2548_0131")
   pbrsams2.append(pre + "D2549_0131")
   sams2.append(pre + "D2550_0131")
   samsh.append(pre + "D2551_0201")  # 2/1
-  sams2.append(pre + "D2552_0201")  # 2/1
-  samsh.append(pre + "D2554_0201")  # 2/1
-  samsh.append(pre + "D2555_0201")  # 2/1
-  sams2.append(pre + "D2557_0201")  # 2/1
-  samsh.append(pre + "D2559_0201")  # 2/1
-  sams3.append(pre + "D2560_0201")  # 2/1
-  sams2.append(pre + "D2561_0201")  # 2/1
+  sams2.append(pre + "D2552_0201")
+  samsh.append(pre + "D2554_0201")
+  samsh.append(pre + "D2555_0201")
+  sams2.append(pre + "D2557_0201")
+  samsh.append(pre + "D2559_0201")
+  badsams3.append(pre + "D2560_0201")  # Bad waveforms
+  sams2.append(pre + "D2561_0201")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

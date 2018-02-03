@@ -2605,40 +2605,44 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2576_0201")
   sams2.append(pre + "D2577_0201")
   sams3.append(pre + "D2578_0201")
-  samsh.append(pre + "D2579_0202")  # 2/2
-  sams2.append(pre + "D2580_0202")  # 2/2
-  sams2.append(pre + "D2581_0202")  # 2/2
-  samsh.append(pre + "D2582_0202")  # 2/2
-  sams3.append(pre + "D2583_0202")  # 2/2
-  samsh.append(pre + "D2584_0202")  # 2/2
-  sams3.append(pre + "D2585_0202T1009")  # 2/2
-  samsh.append(pre + "D2585_0202T1730")  # 2/2
-  sams2.append(pre + "D2586_0202")  # 2/2
-  samsh.append(pre + "D2587_0202")  # 2/2
-  sams3.append(pre + "D2588_0202")  # 2/2
-  samsh.append(pre + "D2589_0202T1048")  # 2/2
-  sams2.append(pre + "D2589_0202T1127")  # 2/2
-  samsh.append(pre + "D2590_0202")  # 2/2
-  sams3.append(pre + "D2591_0202")  # 2/2
-  samsh.append(pre + "D2592_0202")  # 2/2
-  sams2.append(pre + "D2593_0202")  # 2/2
-  sams3.append(pre + "D2594_0202")  # 2/2
-  samsh.append(pre + "D2595_0202")  # 2/2
-  sams2.append(pre + "D2596_0202")  # 2/2
-  sams3.append(pre + "D2597_0202")  # 2/2
-  samsh.append(pre + "D2598_0202")  # 2/2
-  samsh.append(pre + "D2600_0202")  # 2/2
-  samsh.append(pre + "D2601_0202")  # 2/2
-  sams2.append(pre + "D2603_0202")  # 2/2
-  samsh.append(pre + "D2604_0202")  # 2/2
-  sams2.append(pre + "D2606_0202")  # 2/2
-  sams2.append(pre + "D2607_0202")  # 2/2
-  sams3.append(pre + "D2608_0202")  # 2/2
-  samsh.append(pre + "D2610_0202")  # 2/2
-  sams3.append(pre + "D2611_0202")  # 2/2
-  sams2.append(pre + "2612_0202:chipD2612")  # 2/2
-  sams3.append(pre + "D2613_0202")  # 2/2
-  sams2.append(pre + "D2614_0202")  # 2/2
+  samsh.append(pre + "D2579_0202")
+  sams2.append(pre + "D2580_0202")
+  badsams2.append(pre + "D2581_0202")  # Bad waveforms
+  samsh.append(pre + "D2582_0202")
+  sams3.append(pre + "D2583_0202")
+  samsh.append(pre + "D2584_0202")
+  sams3.append(pre + "D2585_0202T1009")
+  samsh.append(pre + "D2585_0202T1730")
+  sams2.append(pre + "D2586_0202")
+  badsamsh.append(pre + "D2587_0202")  # Bad waveforms
+  badsams3.append(pre + "D2588_0202")  # Bad waveforms
+  badsamsh.append(pre + "D2589_0202T1048")  # Bad waveform
+  sams2.append(pre + "D2589_0202T1127")
+  samsh.append(pre + "D2590_0202")
+  sams3.append(pre + "D2591_0202")
+  samsh.append(pre + "D2592_0202")
+  sams2.append(pre + "D2593_0202")
+  sams3.append(pre + "D2594_0202")
+  samsh.append(pre + "D2595_0202")
+  sams2.append(pre + "D2596_0202")
+  sams3.append(pre + "D2597_0202")
+  samsh.append(pre + "D2598_0202")
+  samsh.append(pre + "D2600_0202")
+  samsh.append(pre + "D2601_0202")
+  sams2.append(pre + "D2603_0202")
+  samsh.append(pre + "D2604_0202")
+  sams2.append(pre + "D2606_0202")
+  sams2.append(pre + "D2607_0202")
+  sams3.append(pre + "D2608_0202")
+  badsamsh.append(pre + "D2610_0202")  # Bad waveforms
+  badsams3.append(pre + "D2611_0202")  # Bad waveforms
+  sams2.append(pre + "2612_0202:chipD2612")
+  sams3.append(pre + "D2613_0202")
+  sams2.append(pre + "D2614_0202")
+  sams2.append(pre + "D2616_0202")  # 2/3
+  samsh.append(pre + "D2618_0202")  # 2/3
+  sams2.append(pre + "D2619_0202")  # 2/3
+  sams3.append(pre + "D2620_0202")  # 2/3
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

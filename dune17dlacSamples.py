@@ -2871,9 +2871,12 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2618_0202_try1")
   sams.append(pre + "D2619_0202_try1")
   sams.append(pre + "D2620_0202_try1")
-  sams.append(pre + "D2621_0203_try1")  # 2/3
+  badsams.append(pre + "D2621_0203_try1")  # Bad waveforms
   sams.append(pre + "D2621_0203_try2")  # 2/3
   sams.append(pre + "D2623_0203_try1")  # 2/3
+  sams.append(pre + "D2624_0203_try1")  # 2/3
+  sams.append(pre + "D2625_0203_try1")  # 2/3
+  sams.append(pre + "D2626_0203_try1")  # 2/3
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

@@ -2639,10 +2639,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "2612_0202:chipD2612")
   sams3.append(pre + "D2613_0202")
   sams2.append(pre + "D2614_0202")
-  sams2.append(pre + "D2616_0202")  # 2/3
-  samsh.append(pre + "D2618_0202")  # 2/3
-  sams2.append(pre + "D2619_0202")  # 2/3
-  sams3.append(pre + "D2620_0202")  # 2/3
+  sams2.append(pre + "D2616_0202")
+  samsh.append(pre + "D2618_0202")
+  sams2.append(pre + "D2619_0202")
+  sams3.append(pre + "D2620_0202")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

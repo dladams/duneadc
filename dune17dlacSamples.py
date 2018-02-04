@@ -2777,7 +2777,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2537_0131_try1")
   sams.append(pre + "D2538_0131_try1")
   sams.append(pre + "D2539_0131_try1")
-  pbrsams.append(pre + "D2540_0131_try1")
+  badsams.append(pre + "D2540_0131_try1")  # PBR mark bad per Matt 2/3
   sams.append(pre + "D2542_0131_try1")
   sams.append(pre + "D2543_0131_try1")
   pbrsams.append(pre + "D2544_0131_try1")

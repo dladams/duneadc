@@ -2566,7 +2566,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2537_0131")
   samsh.append(pre + "D2538_0131")
   samsh.append(pre + "D2539_0131")
-  pbrsams2.append(pre + "D2540_0131")
+  badsams2.append(pre + "D2540_0131")  # PBR mark bad per Matt 2/3
   samsh.append(pre + "D2541_0131")
   sams2.append(pre + "D2542_0131")
   samsh.append(pre + "D2543_0131")

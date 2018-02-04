@@ -39,6 +39,8 @@ def badChips():
   chips += [12162]                       # Matt: Bad SPI readout 23jan2018
   chips += [12336]                       # Matt: Bad pin 25jan2018
   chips += [12469]                       # Matt: Bad pin 31jan2018
+  chips += [12285, 12398, 12355, 12350, 12549]   # Matt: Bad input pin 03feb18
+  chips += [12425, 12360, 12430, 12539]          # Matt: Brokent input pin 03feb18
   chips.sort()
   lastchip = None
   nodups = []

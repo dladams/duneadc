@@ -41,6 +41,7 @@ def badChips():
   chips += [12469]                       # Matt: Bad pin 31jan2018
   chips += [12285, 12398, 12355, 12350, 12549]   # Matt: Bad input pin 03feb18
   chips += [12425, 12360, 12430, 12539]          # Matt: Brokent input pin 03feb18
+  chips += [12556]          # Matt, David: Gives inconsistent cold test results. Drop. 05feb18
   chips.sort()
   lastchip = None
   nodups = []

@@ -2631,7 +2631,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2601_0202")
   pbrsams2.append(pre + "D2603_0202")
   samsh.append(pre + "D2604_0202")
-  sams3.append(pre + "D2605_0203")  # 2/3
+  sams3.append(pre + "D2605_0203")
   pbrsams2.append(pre + "D2606_0202")
   pbrsams2.append(pre + "D2607_0202")
   sams3.append(pre + "D2608_0202")
@@ -2645,7 +2645,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2619_0202")
   sams3.append(pre + "D2620_0202")
   samsh.append(pre + "D2621_0203")
-  samsh.append(pre + "D2622_0203")  # 2/3
+  samsh.append(pre + "D2622_0203")
   sams3.append(pre + "D2623_0203")
   samsh.append(pre + "D2624_0203")
   sams2.append(pre + "D2625_0203")
@@ -2656,11 +2656,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2630_0203")
   sams2.append(pre + "D2631_0203")
   sams2.append(pre + "D2632_0203")
-  sams2.append(pre + "D2633_0205")  # 2/5
-  samsh.append(pre + "D2634_0205")  # 2/5
-  sams3.append(pre + "D2635_0205")  # 2/5
-  sams2.append(pre + "D2636_0205")  # 2/5
-  samsh.append(pre + "D2637_0205")  # 2/5
+  sams2.append(pre + "D2633_0205")
+  samsh.append(pre + "D2634_0205")
+  sams3.append(pre + "D2635_0205")
+  sams2.append(pre + "D2636_0205")
+  samsh.append(pre + "D2637_0205")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

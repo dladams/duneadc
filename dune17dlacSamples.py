@@ -2886,6 +2886,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   pbrsams.append(pre + "D2631_0203_try1")
   pbrsams.append(pre + "D2631_0203_try2")
   sams.append(pre + "D2632_0203_try1")
+  sams.append(pre + "D2633_0205_try1")  # 2/5
+  sams.append(pre + "D2634_0205_try1")  # 2/5
+  sams.append(pre + "D2635_0205_try1")  # 2/5
+  sams.append(pre + "D2636_0205_try1")  # 2/5
+  sams.append(pre + "D2637_0205_try1")  # 2/5
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

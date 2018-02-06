@@ -2412,7 +2412,7 @@ DUNE17dla-cold_chipD2647_0205_try1
 DUNE17dla-cold_chipD2648_0205_try1
 DUNE17dla-cold_chipD2650_0205T1209_try1
 DUNE17dla-cold_chipD2650_0205T1209_try2
-DUNE17dla-cold_chipD2642_0205T1727_try1
+DUNE17dla-cold_chipD2650_0205T1727_try1
 DUNE17dla-cold_chipD2651_0205_try1
 DUNE17dla-cold_chipD2652_0205_try1
 DUNE17dla-cold_chipD2653_0205_try1
@@ -2434,8 +2434,6 @@ DUNE17dla-cold_chipD2668_0205_try1
 DUNE17dla-cold_chipD2670_0205_try1
 DUNE17dla-cold_chipD2671_0205T1609_try1
 DUNE17dla-cold_chipD2671_0205T1819_try1
-DUNE17dla-cold_chipD2672_0205_try1
-DUNE17dla-cold_chipD2672_0205_try2
 DUNE17dla-cold_chipD2673_0205_try1
 DUNE17dla-cold_chipD2674_0205_try1
 DUNE17dla-cold_chipD1882_0117_try1

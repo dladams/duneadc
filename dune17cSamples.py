@@ -2567,6 +2567,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2538_0131")
   samsh.append(pre + "D2539_0131")
   badsams2.append(pre + "D2540_0131")  # PBR mark bad per Matt 2/3
+  sams3.append(pre + "D2540_0205")  # 2/6
   samsh.append(pre + "D2541_0131")
   sams2.append(pre + "D2542_0131")
   samsh.append(pre + "D2543_0131")
@@ -2594,10 +2595,11 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2563_0201")
   samsh.append(pre + "D2564_0201")
   badsamsh.append(pre + "D2565_0201")  # Bad waveform
-  sams2.append(pre + "D2565_0205")  # 2/5
+  sams2.append(pre + "D2565_0205")
   sams3.append(pre + "D2566_0201")
   samsh.append(pre + "D2568_0201")
   pbrsams2.append(pre + "D2569_0201")
+  sams2.append(pre + "D2569_0205")  # 2/6
   samsh.append(pre + "D2570_0201")
   sams2.append(pre + "D2571_0201")
   sams3.append(pre + "D2572_0201")
@@ -2642,7 +2644,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "2612_0202:chipD2612")
   badsams3.append(pre + "D2613_0202")  # Bad waveform
   sams2.append(pre + "D2614_0202")
+  sams3.append(pre + "D2615_0205")  # 2/6
   sams2.append(pre + "D2616_0202")
+  sams2.append(pre + "D2617_0205")  # 2/6
   samsh.append(pre + "D2618_0202")
   sams2.append(pre + "D2619_0202")
   sams3.append(pre + "D2620_0202")
@@ -2663,31 +2667,38 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2635_0205")
   sams2.append(pre + "D2636_0205")
   samsh.append(pre + "D2637_0205")
-  sams3.append(pre + "D2638_0205")  # 2/5
-  sams2.append(pre + "D2639_0205")  # 2/5
-  sams3.append(pre + "D2641_0205")  # 2/5
-  sams2.append(pre + "D2642_0205")  # 2/5
-  sams3.append(pre + "D2645_0205")  # 2/5
-  sams2.append(pre + "D2646_0205")  # 2/5
-  samsh.append(pre + "D2647_0205")  # 2/5
-  sams2.append(pre + "D2648_0205")  # 2/5
-  sams3.append(pre + "D2649_0205")  # 2/5
-  samsh.append(pre + "D2650_0205")  # 2/5
-  sams2.append(pre + "D2651_0205")  # 2/5
-  sams2.append(pre + "D2653_0205")  # 2/5
-  samsh.append(pre + "D2654_0205")  # 2/5
-  sams3.append(pre + "D2655_0205")  # 2/5
-  sams2.append(pre + "D2656_0205")  # 2/5
-  sams3.append(pre + "D2658_0205")  # 2/5
-  sams2.append(pre + "D2659_0205")  # 2/5
-  sams3.append(pre + "D2660_0205")  # 2/5
-  samsh.append(pre + "D2661_0205")  # 2/5
-  sams2.append(pre + "D2663_0205")  # 2/5
-  sams3.append(pre + "D2665_0205")  # 2/5
-  sams3.append(pre + "D2666_0205")  # 2/5
-  samsh.append(pre + "D2667_0205")  # 2/5
-  sams2.append(pre + "D2668_0205")  # 2/5
-  sams3.append(pre + "D2670_0205")  # 2/5
+  sams3.append(pre + "D2638_0205")
+  sams2.append(pre + "D2639_0205")
+  sams3.append(pre + "D2640_0205")  # 2/6
+  sams3.append(pre + "D2641_0205")
+  sams2.append(pre + "D2642_0205")
+  sams3.append(pre + "D2645_0205")
+  sams2.append(pre + "D2646_0205")
+  samsh.append(pre + "D2647_0205")
+  sams2.append(pre + "D2648_0205")
+  sams3.append(pre + "D2649_0205")
+  badsamsh.append(pre + "D2650_0205")  # Bad waveforms
+  sams2.append(pre + "D2650_0205")  # 2/6
+  sams2.append(pre + "D2651_0205")
+  sams2.append(pre + "D2653_0205")
+  samsh.append(pre + "D2654_0205")
+  sams3.append(pre + "D2655_0205")
+  sams2.append(pre + "D2656_0205")
+  sams2.append(pre + "D2657_0205")  # 2/6
+  sams3.append(pre + "D2658_0205")
+  sams2.append(pre + "D2659_0205")
+  sams3.append(pre + "D2660_0205")
+  samsh.append(pre + "D2661_0205")
+  sams3.append(pre + "D2662_0205")  # 2/6
+  sams2.append(pre + "D2663_0205")
+  sams3.append(pre + "D2665_0205")
+  sams3.append(pre + "D2666_0205")
+  badsamsh.append(pre + "D2667_0205")  # Bad waveform
+  sams2.append(pre + "D2668_0205")
+  sams3.append(pre + "D2670_0205")
+  samsh.append(pre + "D2671_0205")  # 2/6
+  sams3.append(pre + "D2673_0205")  # 2/6
+  sams2.append(pre + "D2674_0205")  # 2/6
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

@@ -2934,18 +2934,34 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2671_0205T1819_try1")
   badsams.append(pre + "D2672_0205_try1")  # Bad waveforms
   badsams.append(pre + "D2672_0205_try2")  # Bad waveforms
+  sams.append(pre + "D2672_0206_try1")  # 2/7
+  sams.append(pre + "D2672_0206_try2")  # 2/7
   sams.append(pre + "D2673_0205_try1")
   sams.append(pre + "D2674_0205_try1")
-  sams.append(pre + "D2677_0206_try1")  # 2/6
-  sams.append(pre + "D2678_0206_try1")  # 2/6
-  sams.append(pre + "D2680_0206_try1")  # 2/6
-  sams.append(pre + "D2681_0206T1044_try1")  # 2/6
-  sams.append(pre + "D2681_0206T1211_try1")  # 2/6
-  sams.append(pre + "D2684_0206_try1")  # 2/6
-  sams.append(pre + "D2685_0206_try1")  # 2/6
-  sams.append(pre + "D2686_0206_try1")  # 2/6
-  sams.append(pre + "D2687_0206_try1")  # 2/6
-  sams.append(pre + "D2689_0206_try1")  # 2/6
+  sams.append(pre + "D2675_0206_try1")  # 2/7
+  sams.append(pre + "D2676_0206_try1")  # 2/7
+  sams.append(pre + "D2677_0206_try1")
+  sams.append(pre + "D2678_0206_try1")
+  sams.append(pre + "D2679_0206_try1")  # 2/7
+  sams.append(pre + "D2680_0206_try1")
+  sams.append(pre + "D2681_0206T1044_try1")
+  sams.append(pre + "D2681_0206T1211_try1")
+  sams.append(pre + "D2681_0206T1518_try1")  # 2/7
+  sams.append(pre + "D2682_0206_try1")  # 2/7
+  sams.append(pre + "D2683_0206_try1")  # 2/7
+  sams.append(pre + "D2684_0206_try1")
+  sams.append(pre + "D2685_0206_try1")
+  sams.append(pre + "D2686_0206_try1")
+  sams.append(pre + "D2687_0206_try1")
+  sams.append(pre + "D2688_0206_try1")  # 2/7
+  sams.append(pre + "D2689_0206_try1")
+  sams.append(pre + "D2690_0206_try1")  # 2/7
+  sams.append(pre + "D2691_0206_try1")  # 2/7
+  sams.append(pre + "D2692_0206_try1")  # 2/7
+  sams.append(pre + "D2693_0206_try1")  # 2/7
+  sams.append(pre + "D2694_0206_try1")  # 2/7
+  sams.append(pre + "D2695_0206_try1")  # 2/7
+  sams.append(pre + "D2695_0206_try2")  # 2/7
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

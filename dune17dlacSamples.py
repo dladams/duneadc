@@ -2844,6 +2844,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2587_0207_try1")
   badsams.append(pre + "D2588_0202_try1")  # Bad waveforms
   sams.append(pre + "D2588_0207_try1")
+  sams.append(pre + "D2588_0208_try1")  # 2/8
   badsams.append(pre + "D2588_0202_try2")  # Bad waveforms
   sams.append(pre + "D2589_0202T1048_try1")
   sams.append(pre + "D2589_0202T1127_try1")
@@ -2992,14 +2993,16 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2705_0207_try1")
   sams.append(pre + "D2706_0207_try1")
   badsams.append(pre + "D2707_0207_try1")  # Bad waveforms
-  sams.append(pre + "D2707_0208_try1")  # 2/8
-  sams.append(pre + "D2707_0208_try2")  # 2/8
+  sams.append(pre + "D2707_0208_try1")
+  sams.append(pre + "D2707_0208_try2")
   sams.append(pre + "D2708_0207_try1")
   sams.append(pre + "D2709_0207_try1")
   badsams.append(pre + "D2710_0207_try1")  # Bad waveforms (high INL)
   badsams.append(pre + "D2711_0207_try1")  # Bad waveforms
   sams.append(pre + "D2712_0207_try1")
-  sams.append(pre + "D2713_0208_try2")  # 2/8
+  sams.append(pre + "D2713_0208T1007_try1")  # 2/8
+  sams.append(pre + "D2713_0208T1019_try1")  # 2/8
+  sams.append(pre + "D2714_0208_try1")  # 2/8
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

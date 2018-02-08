@@ -2330,7 +2330,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2167_0117T1033_try1")
   sams.append(pre + "D2167_0118_try1")
   sams.append(pre + "D2168_0117_try1")
-  sams.append(pre + "D2169_0119_try1")  # 2/1
+  sams.append(pre + "D2169_0118_try1")  # 2/8
   sams.append(pre + "D2170_0118_try1")
   sams.append(pre + "D2171_0118_try1")
   sams.append(pre + "D2172_0118_try1")
@@ -2779,6 +2779,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2539_0131_try1")
   badsams.append(pre + "D2540_0131_try1")  # PBR mark bad per Matt 2/3
   sams.append(pre + "D2540_0205_try1")
+  sams.append(pre + "D2541_0131_try1")  # 2/8
   sams.append(pre + "D2542_0131_try1")
   sams.append(pre + "D2543_0131_try1")
   pbrsams.append(pre + "D2544_0131_try1")
@@ -2861,6 +2862,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2598_0202_try1")
   badsams.append(pre + "D2600_0202T1329_try1")  # Bad waveforms
   sams.append(pre + "D2600_0202T1530_try1")
+  sams.append(pre + "D2600_0202T1530_try2")  # 2/8
   sams.append(pre + "D2601_0202_try1")
   pbrsams.append(pre + "D2603_0202_try1")
   badsams.append(pre + "D2603_0207_try1")  # Bad waveforms
@@ -2978,9 +2980,9 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2696_0207_try1")
   badsams.append(pre + "D2697_0207_try1")  # Bad waveforms
   sams.append(pre + "D2697_0207_try2")
-  badsams.append(pre + "D2698_0207T0943_try1")  # Bad waveforms
-  badsams.append(pre + "D2698_0207T0943_try2")  # Bad waveforms
-  badsams.append(pre + "D2698_0207T1809_try1")  # 2/8
+  sams.append(pre + "D2698_0207T0943_try1")  # Bad waveforms
+  sams.append(pre + "D2698_0207T0943_try2")  # Bad waveforms
+  sams.append(pre + "D2698_0207T1809_try1")  # 2/8
   sams.append(pre + "D2699_0207_try1")
   sams.append(pre + "D2700_0207_try1")
   sams.append(pre + "D2701_0207_try1")

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# David Adams
+# February 2017
+
+STIME=$1
+if [ -z "$STIME" ]; then
+  STIME=600
+fi
+
+while true; do
+  echo
+  echo Updating git
+  git pull
+  echo
+  echo Restarting go
+  echo
+  ./go
+  NCHK=`ls -1 jobs/check | wc -l`
+  echo
+  echo "# files to check: " $NCHK
+  if [ $NCHK -gt 0 ]; then
+    beep
+    for FILE in `ls -1 jobs/check`; do
+      echo "  jobs/check/$FILE"
+    done
+  fi
+  echo 
+  echo Sleeping for $STIME sec
+  date
+  sleep $STIME
+done

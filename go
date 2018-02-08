@@ -4,7 +4,7 @@ ISRUNNING=goIsRunning
 STOPFILE=stop
 
 if [ -r $ISRUNNING ]; then
-  echo Found $ISRUNNING.
+  echo Found $ISRUNNING. Aborting.
   exit 1
 fi
 touch $ISRUNNING
@@ -59,13 +59,17 @@ fi
 if [ ! -r $LOGDIR ]; then mkdir $LOGDIR; fi
 
 echo Processing dataset $DSNAME from list $DSLIST.txt
+NSKIP=0
+NFAIL=0
+NPROC=0
 for NAME in `cat $DSLIST.txt`; do
   mkdir -p "jobs/running"
   mkdir -p "jobs/done"
   mkdir -p "jobs/failed"
   RUNDIR="jobs/running/$NAME"
   if [ -r $RUNDIR -o -r "jobs/done/$NAME" -o -r "jobs/failed/$NAME" ]; then
-    echo "Skipping sample $NAME."
+    #echo "Skipping sample $NAME."
+    NSKIP=$(( $NSKIP + 1 ))
   else
     echo "Processing sample $NAME on "`date`
     echo $NAME >$ISRUNNING
@@ -91,6 +95,7 @@ for NAME in `cat $DSLIST.txt`; do
       cd $SAVEDIR
     else 
       echo "Unable to change dir to $RUNDIR"
+      NFAIL=$(( $NFAIL + 1 ))
       break
     fi
     DONEDIR="jobs/done"
@@ -105,9 +110,11 @@ for NAME in `cat $DSLIST.txt`; do
       else
         LINE="$LINE No sync."
       fi
+      NPROC=$(( $NPROC + 1 ))
     else
       LINE="  Job failed with error $FAILED"
       mv $RUNDIR "jobs/failed"
+      NFAIL=$(( $NFAIL + 1 ))
     fi
     echo $LINE
     if test -r $STOPFILE; then
@@ -119,4 +126,7 @@ for NAME in `cat $DSLIST.txt`; do
   fi
 done
 echo Done on `date`
+echo "  # skip: $NSKIP"
+echo "  # fail: $NFAIL"
+echo "  # proc: $NPROC"
 rm $ISRUNNING

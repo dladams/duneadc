@@ -2815,12 +2815,45 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D2770_0209")  # Discontinuity in waveforms
   sams2.append(pre + "D2771_0209")
   sams3.append(pre + "D2772_0209")
-  sams3.append(pre + "D2774_0210")  # 2/10
-  sams3.append(pre + "D2775_0210")  # 2/10
-  sams3.append(pre + "D2777_0210")  # 2/10
-  sams3.append(pre + "D2779_0210")  # 2/10
-  samsh.append(pre + "D2781_0210")  # 2/10
-  sams2.append(pre + "D2782_0210")  # 2/10
+  sams3.append(pre + "D2773_0211")  # 2/11
+  sams3.append(pre + "D2774_0210")
+  sams3.append(pre + "D2775_0210")
+  sams3.append(pre + "D2777_0210")
+  sams3.append(pre + "D2779_0210")
+  samsh.append(pre + "D2781_0210")
+  sams2.append(pre + "D2782_0210")
+  samsh.append(pre + "D2783_0211")  # 2/11
+  sams2.append(pre + "D2784_0211")  # 2/11
+  samsh.append(pre + "D2785_0211")  # 2/11
+  sams2.append(pre + "D2786_0211")  # 2/11
+  sams3.append(pre + "D2787_0211")  # 2/11
+  sams2.append(pre + "D2788_0211")  # 2/11
+  samsh.append(pre + "D2789_0211")  # 2/11
+  sams2.append(pre + "D2791_0211")  # 2/11
+  samsh.append(pre + "D2792_0211")  # 2/11
+  sams3.append(pre + "D2793_0211")  # 2/11
+  sams2.append(pre + "D2794_0211")  # 2/11
+  samsh.append(pre + "D2795_0211")  # 2/11
+  sams2.append(pre + "D2796_0211")  # 2/11
+  samsh.append(pre + "D2798_0211")  # 2/11
+  sams2.append(pre + "D2799_0211")  # 2/11
+  sams3.append(pre + "D2800_0211")  # 2/11
+  samsh.append(pre + "D2801_0211")  # 2/11
+  sams2.append(pre + "D2802_0211")  # 2/11
+  sams2.append(pre + "D2803_0211")  # 2/11
+  samsh.append(pre + "D2804_0211")  # 2/11
+  sams2.append(pre + "D2805_0211")  # 2/11
+  samsh.append(pre + "D2806_0211")  # 2/11
+  sams3.append(pre + "D2807_0211")  # 2/11
+  samsh.append(pre + "D2808_0211")  # 2/11
+  sams2.append(pre + "D2809_0211")  # 2/11
+  sams3.append(pre + "D2810_0211")  # 2/11
+  samsh.append(pre + "D2811_0211T1511")  # 2/11
+  samsh.append(pre + "D2811_0211T1542")  # 2/11
+  sams2.append(pre + "D2812_0211")  # 2/11
+  sams3.append(pre + "D2813_0211")  # 2/11
+  sams2.append(pre + "D2815_0211")  # 2/11
+  sams3.append(pre + "D2816_0211")  # 2/11
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

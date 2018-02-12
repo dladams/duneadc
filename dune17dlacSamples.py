@@ -3006,7 +3006,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   badsams.append(pre + "D2711_0207_try1")  # Bad waveforms
   sams.append(pre + "D2711_0208_try1")
   sams.append(pre + "D2712_0207_try1")
-  sams.append(pre + "D2712_0211_try1")  # 2/12
+  badsams.append(pre + "D2712_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2713_0208T1007_try1")
   sams.append(pre + "D2713_0208T1019_try1")
   sams.append(pre + "D2714_0208_try1")
@@ -3066,71 +3066,70 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2764_0209_try1")
   sams.append(pre + "D2765_0209_try1")
   sams.append(pre + "D2766_0209_try1")
-  sams.append(pre + "D2767_0209_try1")  # Discontinuity in waveforms
-  sams.append(pre + "D2767_0211_try1")  # 2/12
+  badsams.append(pre + "D2767_0209_try1")  # Residual discontinuity
+  sams.append(pre + "D2767_0211_try1")
   sams.append(pre + "D2768_0209T1752_try1")
   sams.append(pre + "D2768_0209T1800_try1")
   sams.append(pre + "D2769_0209_try1")
   sams.append(pre + "D2770_0209_try1")  # Discontinuity in waveforms
-  sams.append(pre + "D2770_0211_try1")  # 2/12
+  sams.append(pre + "D2770_0211_try1")
   sams.append(pre + "D2771_0209_try1")
   sams.append(pre + "D2772_0209_try1")  # Sync problem for one waveform
-  sams.append(pre + "D2773_0210_try1")
+  badsams.append(pre + "D2773_0210_try1")  # Residual discontinuity.
   sams.append(pre + "D2773_0211_try1")
   sams.append(pre + "D2774_0210_try1")
   sams.append(pre + "D2775_0210_try1")
-  sams.append(pre + "D2776_0211_try1")  # 2/12
-  sams.append(pre + "D2778_0211_try1")  # 2/12
+  badsams.append(pre + "D2776_0211_try1")  # Residual discontinuity
+  sams.append(pre + "D2778_0211_try1")
   sams.append(pre + "D2779_0210_try1")
-  sams.append(pre + "D2780_0211_try1")  # 2/12
-  sams.append(pre + "D2781_0210_try1")
+  sams.append(pre + "D2780_0211_try1")
+  badsams.append(pre + "D2781_0210_try1")  # Residual discontinuity
   sams.append(pre + "D2782_0210_try1")
-  sams.append(pre + "D2783_0211_try1")
+  badsams.append(pre + "D2783_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2784_0211_try1")
-  sams.append(pre + "D2785_0211_try1")
+  badsams.append(pre + "D2785_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2786_0211_try1")
   sams.append(pre + "D2787_0211_try1")
   sams.append(pre + "D2788_0211_try1")
-  sams.append(pre + "D2789_0211_try1")
+  badsams.append(pre + "D2789_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2790_0211_try1")
-  sams.append(pre + "D2790_0211_try1")  # 2/12
-  sams.append(pre + "D2790_0211_try2")  # 2/12
-  sams.append(pre + "D2790_0211_try3")  # 2/12
+  sams.append(pre + "D2790_0211_try2")
+  sams.append(pre + "D2790_0211_try3")
   sams.append(pre + "D2791_0211_try1")
-  sams.append(pre + "D2792_0211_try1")
+  badsams.append(pre + "D2792_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2793_0211_try1")
   sams.append(pre + "D2794_0211_try1")
-  sams.append(pre + "D2795_0211_try1")
+  badsams.append(pre + "D2795_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2796_0211_try1")
-  sams.append(pre + "D2798_0211_try1")
+  badsams.append(pre + "D2798_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2799_0211_try1")
   sams.append(pre + "D2800_0211_try1")
-  sams.append(pre + "D2801_0211_try1")
+  badsams.append(pre + "D2801_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2802_0211_try1")
   sams.append(pre + "D2803_0211_try1")
-  sams.append(pre + "D2804_0211_try1")
+  badsams.append(pre + "D2804_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2805_0211_try1")
-  sams.append(pre + "D2806_0211_try1")
+  badsams.append(pre + "D2806_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2807_0211_try1")
-  sams.append(pre + "D2808_0211_try1")
+  badsams.append(pre + "D2808_0211_try1")  # Residual discontinuity
   sams.append(pre + "D2809_0211_try1")
-  sams.append(pre + "D2810_0211_try1")
-  sams.append(pre + "D2811_0211T1511_try1")
-  sams.append(pre + "D2811_0211T1542_try1")
-  sams.append(pre + "D2812_0211_try1")
+  badsams.append(pre + "D2810_0211_try1")  # Bad sync waveform
+  badsams.append(pre + "D2811_0211T1511_try1")  # Residual discontinuity
+  badsams.append(pre + "D2811_0211T1542_try1")  # Residual discontinuity
+  badsams.append(pre + "D2812_0211_try1")
   sams.append(pre + "D2813_0211_try1")
   sams.append(pre + "D2813_0211_try2")
   sams.append(pre + "D2815_0211_try1")
-  sams.append(pre + "D2816_0211_try1")  # 2/12
-  sams.append(pre + "D2817_0211_try1")  # 2/12
-  sams.append(pre + "D2818_0211_try1")  # 2/12
-  sams.append(pre + "D2819_0211_try1")  # 2/12
-  sams.append(pre + "D2820_0211_try1")  # 2/12
-  sams.append(pre + "D2820_0211_try2")  # 2/12
-  sams.append(pre + "D2821_0211_try1")  # 2/12
-  sams.append(pre + "D2821_0211_try2")  # 2/12
-  sams.append(pre + "D2821_0211_try3")  # 2/12
-  sams.append(pre + "D2822_0211_try1")  # 2/12
+  badsams.append(pre + "D2816_0211_try1")  # Bad waveform
+  badsams.append(pre + "D2817_0211_try1")  # Residual discontinuity
+  badsams.append(pre + "D2818_0211_try1")  # Residual discontinuity
+  sams.append(pre + "D2819_0211_try1")
+  badsams.append(pre + "D2820_0211_try1")  # Poor residual
+  sams.append(pre + "D2820_0211_try2")
+  badsams.append(pre + "D2821_0211_try1")  # Bad waveforms
+  badsams.append(pre + "D2821_0211_try2")  # Bad waveforms
+  badsams.append(pre + "D2821_0211_try3")  # Bad waveforms
+  sams.append(pre + "D2822_0211_try1")
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

@@ -2924,10 +2924,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2867_0213")
   sams2.append(pre + "D2868_0213")
   sams2.append(pre + "D2869_0213")
-  sams3.append(pre + "D2870_0213")  # 2/14
+  sams3.append(pre + "D2870_0213")
   samsh.append(pre + "D2871_0213")
   sams2.append(pre + "D2872_0213")
-  sams3.append(pre + "D2873_0213")
+  badsams3.append(pre + "D2873_0213")  # Missing waveform
   samsh.append(pre + "D2874_0213")
   sams2.append(pre + "D2875_0213")
   sams3.append(pre + "D2876_0213")

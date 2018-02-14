@@ -3207,11 +3207,28 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2865_0213_try1")  # 2/13
   sams.append(pre + "D2866_0213_try1")  # 2/13
   sams.append(pre + "D2867_0213_try1")  # 2/13
+  sams.append(pre + "D2868_0213_try1")  # 2/13
   sams.append(pre + "D2869_0213_try1")  # 2/13
   sams.append(pre + "D2870_0213_try1")  # 2/13
   sams.append(pre + "D2871_0213_try1")  # 2/13
   sams.append(pre + "D2872_0213_try1")  # 2/13
   sams.append(pre + "D2873_0213_try1")  # 2/13
+  sams.append(pre + "D2874_0213_try1")  # 2/13
+  sams.append(pre + "D2875_0213_try1")  # 2/13
+  sams.append(pre + "D2876_0213_try1")  # 2/13
+  sams.append(pre + "D2877_0213_try1")  # 2/13
+  sams.append(pre + "D2877_0213_try2")  # 2/13
+  sams.append(pre + "D2878_0213_try1")  # 2/13
+  sams.append(pre + "D2879_0213_try1")  # 2/13
+  sams.append(pre + "D2879_0213_try2")  # 2/13
+  sams.append(pre + "D2880_0213_try1")  # 2/13
+  sams.append(pre + "D2880_0213_try2")  # 2/13
+  sams.append(pre + "D2881_0213_try1")  # 2/13
+  sams.append(pre + "D2882_0213_try1")  # 2/13
+  sams.append(pre + "D2883_0213_try1")  # 2/13
+  sams.append(pre + "D2884_0213_try1")  # 2/13
+  sams.append(pre + "D2885_0213_try1")  # 2/13
+  sams.append(pre + "D2886_0213_try1")  # 2/13
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

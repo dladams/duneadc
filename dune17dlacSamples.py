@@ -3205,7 +3205,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2863_0213_try1")
   sams.append(pre + "D2864_0213_try1")
   badsams.append(pre + "D2865_0213_try1")  # Missing waveforms
-  sams.append(pre + "D2865_0214_try1")  # 2/14
+  sams.append(pre + "D2865_0214_try1")
   sams.append(pre + "D2866_0213_try1")
   sams.append(pre + "D2867_0213_try1")
   sams.append(pre + "D2868_0213_try1")
@@ -3230,12 +3230,27 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2884_0213_try1")
   sams.append(pre + "D2885_0213_try1")
   sams.append(pre + "D2886_0213_try1")
-  sams.append(pre + "D2887_0214_try1")  # 2/14
-  sams.append(pre + "D2887_0214_try1")  # 2/14
-  sams.append(pre + "D2888_0214_try1")  # 2/14
-  sams.append(pre + "D2888_0214_try2")  # 2/14
-  sams.append(pre + "D2889_0214_try1")  # 2/14
-  sams.append(pre + "D2891_0214_try1")  # 2/14
+  sams.append(pre + "D2887_0214_try1")
+  badsams.append(pre + "D2888_0214_try1")  # No waveforms
+  sams.append(pre + "D2888_0214_try2")
+  sams.append(pre + "D2889_0214_try1")
+  sams.append(pre + "D2891_0214_try1")
+  sams.append(pre + "D2892_0214_try1")  # 2/14
+  sams.append(pre + "D2893_0214_try1")  # 2/14
+  sams.append(pre + "D2894_0214_try1")  # 2/14
+  sams.append(pre + "D2895_0214_try1")  # 2/14
+  sams.append(pre + "D2896_0214T1056_try1")  # 2/14
+  sams.append(pre + "D2896_0214T1221_try1")  # 2/14
+  sams.append(pre + "D2897_0214_try1")  # 2/14
+  sams.append(pre + "D2898_0214_try1")  # 2/14
+  sams.append(pre + "D2899_0214_try1")  # 2/14
+  sams.append(pre + "D2900_0214_try1")  # 2/14
+  sams.append(pre + "D2901_0214_try1")  # 2/14
+  sams.append(pre + "D2902_0214_try1")  # 2/14
+  sams.append(pre + "D2903_0214_try1")  # 2/14
+  sams.append(pre + "D2903_0214_try2")  # 2/14
+  sams.append(pre + "D2904_0214_try1")  # 2/14
+  sams.append(pre + "D2905_0214_try1")  # 2/14
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

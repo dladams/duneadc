@@ -2845,7 +2845,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2793_0211")
   sams2.append(pre + "D2794_0211")
   badsamsh.append(pre + "D2795_0211")  # Residual discontinuity
-  samsh.append(pre + "D2795_0213")
+  badsamsh.append(pre + "D2795_0213")  # Residual discontinuity
   sams2.append(pre + "D2796_0211")
   badsamsh.append(pre + "D2798_0211")  # Residual discontinuity
   sams2.append(pre + "D2799_0211")
@@ -2909,38 +2909,38 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   pbrsams2.append(pre + "D2851_0212")
   badsamsh.append(pre + "D2852_0212")  # Residual discontinuity
   badsamsh.append(pre + "D2853_0212")  # Residual discontinuity
-  samsh.append(pre + "D2854_0213")  # 2/13
-  sams2.append(pre + "D2855_0213")  # 2/13
-  sams3.append(pre + "D2856_0213")  # 2/13
-  sams2.append(pre + "D2857_0213")  # 2/13
-  sams3.append(pre + "D2858_0213")  # 2/13
-  samsh.append(pre + "D2859_0213")  # 2/13
-  sams3.append(pre + "D2860_0213")  # 2/13
-  sams2.append(pre + "D2861_0213")  # 2/13
-  samsh.append(pre + "D2862_0213")  # 2/13
-  sams2.append(pre + "D2863_0213")  # 2/13
-  sams3.append(pre + "D2864_0213")  # 2/13
-  sams2.append(pre + "D2866_0213")  # 2/13
-  sams3.append(pre + "D2867_0213")  # 2/13
-  sams2.append(pre + "D2868_0213")  # 2/13
-  sams2.append(pre + "D2869_0213")  # 2/13
-  sams3.append(pre + "D2871_0213")  # 2/13
-  samsh.append(pre + "D2871_0213")  # 2/13
-  sams2.append(pre + "D2872_0213")  # 2/13
-  sams3.append(pre + "D2873_0213")  # 2/13
-  samsh.append(pre + "D2874_0213")  # 2/13
-  sams2.append(pre + "D2875_0213")  # 2/13
-  sams3.append(pre + "D2876_0213")  # 2/13
-  sams2.append(pre + "D2877_0213")  # 2/13
-  sams3.append(pre + "D2878_0213")  # 2/13
-  samsh.append(pre + "D2879_0213")  # 2/13
-  sams3.append(pre + "D2880_0213")  # 2/13
-  samsh.append(pre + "D2881_0213")  # 2/13
-  sams3.append(pre + "D2882_0213")  # 2/13
-  sams2.append(pre + "D2883_0213")  # 2/13
-  sams2.append(pre + "D2884_0213")  # 2/13
-  samsh.append(pre + "D2885_0213")  # 2/13
-  sams3.append(pre + "D2886_0213")  # 2/13
+  badsamsh.append(pre + "D2854_0213")  # Residual discontinuity
+  sams2.append(pre + "D2855_0213")
+  sams3.append(pre + "D2856_0213")
+  sams2.append(pre + "D2857_0213")
+  sams3.append(pre + "D2858_0213")
+  badsamsh.append(pre + "D2859_0213")  # Residual discontinuity
+  sams3.append(pre + "D2860_0213")
+  sams2.append(pre + "D2861_0213")
+  samsh.append(pre + "D2862_0213")
+  sams2.append(pre + "D2863_0213")
+  sams3.append(pre + "D2864_0213")
+  sams2.append(pre + "D2866_0213")
+  sams3.append(pre + "D2867_0213")
+  sams2.append(pre + "D2868_0213")
+  sams2.append(pre + "D2869_0213")
+  sams3.append(pre + "D2870_0213")  # 2/14
+  samsh.append(pre + "D2871_0213")
+  sams2.append(pre + "D2872_0213")
+  sams3.append(pre + "D2873_0213")
+  samsh.append(pre + "D2874_0213")
+  sams2.append(pre + "D2875_0213")
+  sams3.append(pre + "D2876_0213")
+  sams2.append(pre + "D2877_0213")
+  sams3.append(pre + "D2878_0213")
+  samsh.append(pre + "D2879_0213")
+  sams3.append(pre + "D2880_0213")
+  samsh.append(pre + "D2881_0213")
+  sams3.append(pre + "D2882_0213")
+  sams2.append(pre + "D2883_0213")
+  sams2.append(pre + "D2884_0213")
+  samsh.append(pre + "D2885_0213")
+  sams3.append(pre + "D2886_0213")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

@@ -3158,6 +3158,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   badsams.append(pre + "D2825_0212T1413_try1")  # Residual discontinuity
   sams.append(pre + "D2826_0212_try1")
   sams.append(pre + "D2827_0212_try1")
+  sams.append(pre + "D2827_0214_try1")  # 2/14
   sams.append(pre + "D2828_0212_try1")
   sams.append(pre + "D2829_0212T1018_try1")
   badsams.append(pre + "D2829_0212T1448_try1")  # Residual discontinuity
@@ -3166,6 +3167,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2832_0212_try1")
   sams.append(pre + "D2833_0212_try1")
   sams.append(pre + "D2834_0212_try1")
+  sams.append(pre + "D2834_0214_try1")  # 2/14
   sams.append(pre + "D2835_0212_try1")
   sams.append(pre + "D2835_0212_try2")
   sams.append(pre + "D2836_0212_try1")
@@ -3268,6 +3270,13 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2917_0214_try1")  # 2/14
   sams.append(pre + "D2918_0214_try1")  # 2/14
   sams.append(pre + "D2919_0214_try1")  # 2/14
+  sams.append(pre + "D2920_0214_try1")  # 2/14
+  sams.append(pre + "D2921_0214_try1")  # 2/14
+  sams.append(pre + "D2922_0214_try1")  # 2/14
+  sams.append(pre + "D2923_0214_try1")  # 2/14
+  sams.append(pre + "D2924_0214T1751_try1")  # 2/14
+  sams.append(pre + "D2924_0214T1807_try1")  # 2/14
+  sams.append(pre + "D2925_0214_try1")  # 2/14
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

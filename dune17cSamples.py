@@ -2838,7 +2838,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2787_0211")
   sams2.append(pre + "D2788_0211")
   badsamsh.append(pre + "D2789_0211")  # Residual discontinuity
-  badsams3.append(pre + "D2789_0213")  # Residual discontinuity
+  sams3.append(pre + "D2789_0213")
   sams2.append(pre + "D2790_0211")
   sams2.append(pre + "D2791_0211")
   badsamsh.append(pre + "D2792_0211")  # Residual discontinuity
@@ -2883,6 +2883,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D2825_0212")  # Residual discontinuity
   sams2.append(pre + "D2826_0212")
   badsamsh.append(pre + "D2827_0212")  # Residual discontinuity
+  sams3.append(pre + "D2827_0214")  # 2/14
   sams2.append(pre + "D2828_0212")
   badsamsh.append(pre + "D2829_0212")  # Residual discontinuity
   badsamsh.append(pre + "D2830_0212")  # Residual discontinuity
@@ -2890,14 +2891,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D2832_0212")  # Residual discontinuity
   badsamsh.append(pre + "D2833_0212")  # Residual discontinuity
   pbrsams2.append(pre + "D2834_0212")
-  sams2.append(pre + "D2834_0214")  # 2/14
+  badsams2.append(pre + "D2834_0214")  # Bad waveforms
   badsamsh.append(pre + "D2835_0212")  # Residual discontinuity
   sams2.append(pre + "D2836_0212")
   badsamsh.append(pre + "D2837_0212")  # Residual discontinuity
   sams2.append(pre + "D2838_0212")
   sams3.append(pre + "D2839_0212")
   sams3.append(pre + "D2840_0212")
-  sams2.append(pre + "D2840_0214")  # 2/14
+  sams2.append(pre + "D2840_0214")
   badsamsh.append(pre + "D2841_0212")  # Residual discontinuity
   sams2.append(pre + "D2842_0212")
   badsamsh.append(pre + "D2843_0212")  # Residual discontinuity
@@ -2909,7 +2910,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D2849_0212")  # Residual discontinuity
   sams3.append(pre + "D2850_0212")
   pbrsams2.append(pre + "D2851_0212")
-  sams2.append(pre + "D2851_0214")  # 2/14
+  sams2.append(pre + "D2851_0214")
   badsamsh.append(pre + "D2852_0212")  # Residual discontinuity
   badsamsh.append(pre + "D2853_0212")  # Residual discontinuity
   badsamsh.append(pre + "D2854_0213")  # Residual discontinuity
@@ -2949,39 +2950,38 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2888_0214")
   samsh.append(pre + "D2889_0214")
   sams3.append(pre + "D2891_0214")
-  samsh.append(pre + "D2892_0214")  # 2/14
-  sams2.append(pre + "D2893_0214")  # 2/14
-  sams3.append(pre + "D2894_0214")  # 2/14
-  samsh.append(pre + "D2895_0214")  # 2/14
-  samsh.append(pre + "D2896_0214")  # 2/14
-  sams3.append(pre + "D2897_0214")  # 2/14
-  sams2.append(pre + "D2898_0214")  # 2/14
-  sams3.append(pre + "D2900_0214")  # 2/14
-  sams2.append(pre + "D2901_0214")  # 2/14
-  sams3.append(pre + "D2902_0214")  # 2/14
-  sams2.append(pre + "D2903_0214")  # 2/14
-  sams3.append(pre + "D2904_0214")  # 2/14
-  samsh.append(pre + "D2905_0214")  # 2/14
-  sams2.append(pre + "D2906_0214")  # 2/14
-  sams3.append(pre + "D2907_0214")  # 2/14
-  sams2.append(pre + "D2909_0214")  # 2/14
-  sams3.append(pre + "D2910_0214")  # 2/14
-  samsh.append(pre + "D2911_0214")  # 2/14
-  sams2.append(pre + "D2912_0214")  # 2/14
-  sams2.append(pre + "D2913_0214")  # 2/14
-  samsh.append(pre + "D2914_0214")  # 2/14
-  sams3.append(pre + "D2915_0214")  # 2/14
-  samsh.append(pre + "D2916_0214")  # 2/14
-  sams3.append(pre + "D2917_0214")  # 2/14
-  samsh.append(pre + "D2918_0214")  # 2/14
-  sams3.append(pre + "D2919_0214")  # 2/14
-  samsh.append(pre + "D2920_0214")  # 2/14
-  sams3.append(pre + "D2921_0214")  # 2/14
-  samsh.append(pre + "D2922_0214")  # 2/14
-  sams3.append(pre + "D2923_0214")  # 2/14
-  samsh.append(pre + "D2924_0214")  # 2/14
-  samsh.append(pre + "D2925_0214")  # 2/14
-  sams3.append(pre + "D2927_0214")  # 2/14
+  samsh.append(pre + "D2892_0214")
+  sams2.append(pre + "D2893_0214")
+  sams3.append(pre + "D2894_0214")
+  samsh.append(pre + "D2895_0214")
+  samsh.append(pre + "D2896_0214")
+  sams3.append(pre + "D2897_0214")
+  sams2.append(pre + "D2898_0214")
+  badsams3.append(pre + "D2900_0214")  # Bad waveforms
+  sams2.append(pre + "D2901_0214")
+  sams3.append(pre + "D2902_0214")
+  sams2.append(pre + "D2903_0214")
+  sams3.append(pre + "D2904_0214")
+  samsh.append(pre + "D2905_0214")
+  sams2.append(pre + "D2906_0214")
+  sams3.append(pre + "D2907_0214")
+  sams2.append(pre + "D2909_0214")  # Bad waveforms
+  sams3.append(pre + "D2910_0214")
+  samsh.append(pre + "D2911_0214")
+  sams2.append(pre + "D2912_0214")
+  sams2.append(pre + "D2913_0214")  # Bad waveforms
+  samsh.append(pre + "D2914_0214")
+  sams3.append(pre + "D2915_0214")
+  samsh.append(pre + "D2916_0214")
+  sams3.append(pre + "D2917_0214")
+  samsh.append(pre + "D2918_0214")
+  sams3.append(pre + "D2919_0214")
+  samsh.append(pre + "D2920_0214")
+  sams3.append(pre + "D2921_0214")
+  samsh.append(pre + "D2922_0214")
+  sams3.append(pre + "D2923_0214")
+  samsh.append(pre + "D2924_0214")
+  samsh.append(pre + "D2925_0214")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

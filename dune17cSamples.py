@@ -2910,6 +2910,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2847_0212")
   sams3.append(pre + "D2848_0212")
   badsamsh.append(pre + "D2849_0212")  # Residual discontinuity
+  sams3.append(pre + "D2849_0216")  # 2/16
   sams3.append(pre + "D2850_0212")
   pbrsams2.append(pre + "D2851_0212")
   sams2.append(pre + "D2851_0214")
@@ -3017,6 +3018,21 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2948_0215")
   samsh.append(pre + "D2949_0215")
   sams2.append(pre + "D2950_0215")
+  sams2.append(pre + "D2951_0216")  # 2/16
+  sams3.append(pre + "D2954_0216")  # 2/16
+  sams2.append(pre + "D2955_0216")  # 2/16
+  sams2.append(pre + "D2956_0216")  # 2/16
+  sams3.append(pre + "D2957_0216")  # 2/16
+  samsh.append(pre + "D2958_0216")  # 2/16
+  sams2.append(pre + "D2959_0216")  # 2/16
+  sams3.append(pre + "D2960_0216")  # 2/16
+  sams2.append(pre + "D2963_0216")  # 2/16
+  samsh.append(pre + "D2964_0216")  # 2/16
+  sams3.append(pre + "D2965_0216")  # 2/16
+  sams2.append(pre + "D2966_0216")  # 2/16
+  samsh.append(pre + "D2970_0216")  # 2/16
+  sams2.append(pre + "D2971_0216")  # 2/16
+  sams2.append(pre + "D2972_0216")  # 2/16
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

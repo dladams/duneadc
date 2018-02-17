@@ -67,7 +67,7 @@ for NAME in `cat $DSLIST.txt`; do
   mkdir -p "jobs/done"
   mkdir -p "jobs/failed"
   RUNDIR="jobs/running/$NAME"
-  if [ -r $RUNDIR -o -r "jobs/done/$NAME" -o -r "jobs/failed/$NAME" ]; then
+  if [ -r $RUNDIR -o -r "jobs/done*/$NAME" -o -r "jobs/failed/$NAME" ]; then
     #echo "Skipping sample $NAME."
     NSKIP=$(( $NSKIP + 1 ))
   else

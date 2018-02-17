@@ -2910,7 +2910,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2847_0212")
   sams3.append(pre + "D2848_0212")
   badsamsh.append(pre + "D2849_0212")  # Residual discontinuity
-  sams3.append(pre + "D2849_0216")  # 2/16
+  sams3.append(pre + "D2849_0216")
   sams3.append(pre + "D2850_0212")
   pbrsams2.append(pre + "D2851_0212")
   sams2.append(pre + "D2851_0214")
@@ -3018,9 +3018,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D2948_0215")
   samsh.append(pre + "D2949_0215")
   sams2.append(pre + "D2950_0215")
-  sams2.append(pre + "D2951_0216")  # 2/16
-  sams3.append(pre + "D2954_0216")  # 2/16
-  sams2.append(pre + "D2955_0216")  # 2/16
+  sams2.append(pre + "D2951_0216")  # Bad waveforms
+  sams3.append(pre + "D2954_0216")
+  sams2.append(pre + "D2955_0216")  # Bad waveforms
   sams2.append(pre + "D2956_0216")  # 2/16
   sams3.append(pre + "D2957_0216")  # 2/16
   samsh.append(pre + "D2958_0216")  # 2/16

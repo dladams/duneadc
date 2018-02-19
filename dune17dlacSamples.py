@@ -3372,7 +3372,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2978_0216_try2")
   badsams.append(pre + "D2979_0216_try1")  # Sync error
   sams.append(pre + "D2980_0216_try1")
-  sams.append(pre + "D2981_0218_try1")  # 2/18
+  sams.append(pre + "D2981_0218_try1")
   sams.append(pre + "D2982_0217_try1")
   sams.append(pre + "D2983_0217_try1")
   badsams.append(pre + "D2984_0217_try1")  # Bad waveforms
@@ -3388,7 +3388,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2992_0217_try1")
   sams.append(pre + "D2993_0217T1607_try1")
   sams.append(pre + "D2993_0217T1643_try1")
-  sams.append(pre + "D2983_0218_try1")  # 2/18
+  sams.append(pre + "D2993_0218_try1")  # 2/18
   sams.append(pre + "D2994_0217_try1")
   sams.append(pre + "D2995_0217_try1")
   sams.append(pre + "D2997_0217_try1")

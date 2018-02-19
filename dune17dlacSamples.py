@@ -3388,7 +3388,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2992_0217_try1")
   sams.append(pre + "D2993_0217T1607_try1")
   sams.append(pre + "D2993_0217T1643_try1")
-  sams.append(pre + "D2993_0218_try1")  # 2/18
+  badsams.append(pre + "D2993_0218_try1")  # Sync problems
   sams.append(pre + "D2994_0217_try1")
   sams.append(pre + "D2995_0217_try1")
   sams.append(pre + "D2997_0217_try1")
@@ -3415,6 +3415,12 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3017_0218_try1")
   sams.append(pre + "D3019_0218_try1")
   sams.append(pre + "D3020_0218_try1")
+  sams.append(pre + "D3021_0219_try1")  # 2/19
+  sams.append(pre + "D3023_0219_try1")  # 2/19
+  sams.append(pre + "D3024_0219T1407_try1")  # 2/19
+  sams.append(pre + "D3024_0219T1440_try1")  # 2/19
+  sams.append(pre + "D3025_0219_try1")  # 2/19
+  sams.append(pre + "D3027_0219_try1")  # 2/19
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

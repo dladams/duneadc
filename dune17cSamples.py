@@ -3082,9 +3082,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3013_0218")
   sams2.append(pre + "D3014_0218")
   samsh.append(pre + "D3015_0218")
-  sams3.append(pre + "D3016_0219")  # 2/19
+  sams3.append(pre + "D3016_0219")
   samsh.append(pre + "D3017_0218")
-  sams3.append(pre + "D3018_0219")  # 2/19
+  sams3.append(pre + "D3018_0219")
   samsh.append(pre + "D3019_0218")
   sams2.append(pre + "D3020_0218")
   samsh.append(pre + "D3021_0219")
@@ -3093,23 +3093,28 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3024_0219T1440")
   samsh.append(pre + "D3025_0219")
   badsams3.append(pre + "D3027_0219")  # Bad waveforms
-  samsh.append(pre + "D3028_0219")  # 2/19
-  sams2.append(pre + "D3029_0219")  # 2/19
-  sams3.append(pre + "D3030_0219")  # 2/19
-  samsh.append(pre + "D3031_0219")  # 2/19
-  sams2.append(pre + "D3032_0219")  # 2/19
-  sams3.append(pre + "D3033_0219")  # 2/19
-  samsh.append(pre + "D3034_0219")  # 2/19
-  sams2.append(pre + "D3036_0219")  # 2/19
-  samsh.append(pre + "D3037_0219")  # 2/19
-  sams2.append(pre + "D3038_0219")  # 2/19
-  sams2.append(pre + "D3039_0219")  # 2/19
-  samsh.append(pre + "D3040_0219")  # 2/19
-  sams3.append(pre + "D3041_0219")  # 2/19
-  samsh.append(pre + "D3042_0219")  # 2/19
-  sams2.append(pre + "D3043_0219")  # 2/19
-  samsh.append(pre + "D3044_0219")  # 2/19
-  sams2.append(pre + "D3045_0219")  # 2/19
+  samsh.append(pre + "D3028_0219")
+  sams2.append(pre + "D3029_0219")
+  sams3.append(pre + "D3030_0219")
+  samsh.append(pre + "D3031_0219")
+  sams2.append(pre + "D3032_0219")
+  sams3.append(pre + "D3033_0219")
+  samsh.append(pre + "D3034_0219")
+  sams2.append(pre + "D3036_0219")
+  samsh.append(pre + "D3037_0219")
+  sams2.append(pre + "D3038_0219")
+  sams2.append(pre + "D3039_0219")
+  samsh.append(pre + "D3040_0219")
+  sams3.append(pre + "D3041_0219")
+  samsh.append(pre + "D3042_0219")
+  sams2.append(pre + "D3043_0219")
+  samsh.append(pre + "D3044_0219")
+  sams2.append(pre + "D3045_0219")
+  samsh.append(pre + "D3046_0220")  # 2/20
+  sams2.append(pre + "D3047_0220")  # 2/20
+  sams3.append(pre + "D3048_0220")  # 2/20
+  samsh.append(pre + "D3049_0220")  # 2/20
+  sams2.append(pre + "D3050_0220")  # 2/20
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

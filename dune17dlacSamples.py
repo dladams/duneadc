@@ -3329,7 +3329,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   badsams.append(pre + "D2952_0216T1420_try1")  # Bad waveforms
   badsams.append(pre + "D2952_0216T1509_try1")  # Bad waveforms
   badsams.append(pre + "D2952_0216T1509_try2")  # Bad waveforms
-  sams.append(pre + "D2952_0228_try1")  # 2/28
+  badsams.append(pre + "D2952_0228_try1")  # Bad waveforms
   badsams.append(pre + "D2953_0216_try1")  # Bad waveforms
   badsams.append(pre + "D2953_0216_try2")  # Bad waveforms
   badsams.append(pre + "D2953_0216_try3")  # Bad waveforms
@@ -3391,7 +3391,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2993_0217T1607_try1")
   sams.append(pre + "D2993_0217T1643_try1")
   badsams.append(pre + "D2993_0218_try1")  # Sync problems
-  sams.append(pre + "D2993_0228_try1")  # 2/28
+  sams.append(pre + "D2993_0228_try1")
   sams.append(pre + "D2994_0217_try1")
   sams.append(pre + "D2995_0217_try1")
   sams.append(pre + "D2997_0217_try1")
@@ -3399,7 +3399,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D2999_0218_try1")
   badsams.append(pre + "D3000_0217T1728_try1")  # Bad waveforms
   badsams.append(pre + "D3000_0217T1741_try1")  # Bad waveforms
-  sams.append(pre + "D3000_0228_try1")  # 2/28
+  sams.append(pre + "D3000_0228_try1")
   sams.append(pre + "D3001_0217_try1")
   sams.append(pre + "D3002_0217_try1")
   sams.append(pre + "D3002_0218_try1")
@@ -3477,7 +3477,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3072_0226_try1")
   sams.append(pre + "D3073_0226_try1")
   badsams.append(pre + "D3074_0226_try1")  # Bad waveforms
-  sams.append(pre + "D3074_0228_try1")  # 2/28
+  sams.append(pre + "D3074_0228_try1")
   sams.append(pre + "D3075_0226_try1")
   sams.append(pre + "D3076_0226_try1")
   sams.append(pre + "D3077_0226_try1")
@@ -3528,25 +3528,35 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3119_0227_try1")
   sams.append(pre + "D3120_0227_try1")
   sams.append(pre + "D3121_0227_try1")
-  sams.append(pre + "D3122_0228_try1")  # 2/28
-  sams.append(pre + "D3123_0228_try1")  # 2/28
-  sams.append(pre + "D3124_0228_try1")  # 2/28
-  sams.append(pre + "D3125_0228_try1")  # 2/28
-  sams.append(pre + "D3126_0228_try1")  # 2/28
-  sams.append(pre + "D3127_0228_try1")  # 2/28
-  sams.append(pre + "D3128_0228_try1")  # 2/28
-  sams.append(pre + "D3129_0228_try1")  # 2/28
-  sams.append(pre + "D3130_0228_try1")  # 2/28
-  sams.append(pre + "D3131_0228_try1")  # 2/28
-  sams.append(pre + "D3132_0228_try1")  # 2/28
-  sams.append(pre + "D3134_0228_try1")  # 2/28
-  sams.append(pre + "D3135_0228_try1")  # 2/28
-  sams.append(pre + "D3136_0228_try1")  # 2/28
-  sams.append(pre + "D3137_0228_try1")  # 2/28
-  sams.append(pre + "D3138_0228_try1")  # 2/28
-  sams.append(pre + "D3140_0228_try1")  # 2/28
-  sams.append(pre + "D3141_0228_try1")  # 2/28
-  sams.append(pre + "D3142_0228_try1")  # 2/28
+  sams.append(pre + "D3122_0228_try1")
+  sams.append(pre + "D3123_0228_try1")
+  sams.append(pre + "D3124_0228_try1")
+  badsams.append(pre + "D3125_0228_try1")  # Bad waveforms
+  sams.append(pre + "D3126_0228_try1")
+  sams.append(pre + "D3127_0228_try1")
+  sams.append(pre + "D3128_0228_try1")
+  sams.append(pre + "D3129_0228_try1")
+  sams.append(pre + "D3130_0228_try1")
+  sams.append(pre + "D3131_0228_try1")
+  badsams.append(pre + "D3132_0228_try1")  # Bad waveforms
+  sams.append(pre + "D3134_0228_try1")
+  sams.append(pre + "D3135_0228_try1")
+  sams.append(pre + "D3136_0228_try1")
+  sams.append(pre + "D3137_0228_try1")
+  sams.append(pre + "D3138_0228_try1")
+  sams.append(pre + "D3140_0228_try1")
+  sams.append(pre + "D3141_0228_try1")
+  sams.append(pre + "D3142_0228_try1")
+  sams.append(pre + "D3143_0228_try1")  # 3/1
+  sams.append(pre + "D3144_0228_try1")  # 3/1
+  sams.append(pre + "D3145_0228_try1")  # 3/1
+  sams.append(pre + "D3146_0228_try1")  # 3/1
+  sams.append(pre + "D3147_0228_try1")  # 3/1
+  sams.append(pre + "D3148_0228_try1")  # 3/1
+  sams.append(pre + "D3149_0228_try1")  # 3/1
+  sams.append(pre + "D3150_0228_try1")  # 3/1
+  sams.append(pre + "D3151_0228_try1")  # 3/1
+  sams.append(pre + "D3152_0228_try1")  # 3/1
   # DUNE17dla-cold
   sams += pbrsams
   if isBad: outsams = badsams

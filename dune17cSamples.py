@@ -3061,14 +3061,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D2991_0217")
   samsh.append(pre + "D2992_0217")
   sams2.append(pre + "D2993_0217")
-  sams2.append(pre + "D2993_0228")  # 2/28
+  sams2.append(pre + "D2993_0228")
   sams3.append(pre + "D2994_0217")
   samsh.append(pre + "D2995_0217")
   sams3.append(pre + "D2997_0217")
   samsh.append(pre + "D2998_0217")
   sams3.append(pre + "D2999_0218")
   badsams3.append(pre + "D3000_0217")  # Bad waveforms
-  samsh.append(pre + "D3000_0228")  # 2/28
+  samsh.append(pre + "D3000_0228")
   samsh.append(pre + "D3001_0217")
   sams3.append(pre + "D3002_0218")
   samsh.append(pre + "D3003_0217")
@@ -3141,7 +3141,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3072_0226")
   sams3.append(pre + "D3073_0226")
   badsams2.append(pre + "D3074_0226")  # Bad waveforms
-  samsh.append(pre + "D3074_0228")  # 2/28
+  samsh.append(pre + "D3074_0228")
   samsh.append(pre + "D3075_0226")
   sams3.append(pre + "D3076_0226")
   sams2.append(pre + "D3077_0226")
@@ -3188,23 +3188,33 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3119_0227")
   sams2.append(pre + "D3120_0227")
   sams3.append(pre + "D3121_0227")
-  sams2.append(pre + "D3122_0228")  # 2/28
-  sams2.append(pre + "D3123_0228")  # 2/28
-  sams3.append(pre + "D3124_0228")  # 2/28
-  sams2.append(pre + "D3126_0228")  # 2/28
-  sams3.append(pre + "D3127_0228")  # 2/28
-  samsh.append(pre + "D3128_0228")  # 2/28
-  sams2.append(pre + "D3129_0228")  # 2/28
-  sams3.append(pre + "D3130_0228")  # 2/28
-  samsh.append(pre + "D3131_0228")  # 2/28
-  sams3.append(pre + "D3134_0228")  # 2/28
-  sams3.append(pre + "D3135_0228")  # 2/28
-  samsh.append(pre + "D3136_0228")  # 2/28
-  sams2.append(pre + "D3137_0228")  # 2/28
-  sams3.append(pre + "D3138_0228")  # 2/28
-  sams2.append(pre + "D3140_0228")  # 2/28
-  sams3.append(pre + "D3141_0228")  # 2/28
-  samsh.append(pre + "D3142_0228")  # 2/28
+  sams2.append(pre + "D3122_0228")
+  sams2.append(pre + "D3123_0228")
+  sams3.append(pre + "D3124_0228")
+  sams2.append(pre + "D3126_0228")
+  sams3.append(pre + "D3127_0228")
+  samsh.append(pre + "D3128_0228")
+  sams2.append(pre + "D3129_0228")
+  sams3.append(pre + "D3130_0228")
+  samsh.append(pre + "D3131_0228")
+  sams3.append(pre + "D3134_0228")
+  sams3.append(pre + "D3135_0228")
+  samsh.append(pre + "D3136_0228")
+  sams2.append(pre + "D3137_0228")
+  sams3.append(pre + "D3138_0228")
+  sams2.append(pre + "D3140_0228")
+  sams3.append(pre + "D3141_0228")
+  samsh.append(pre + "D3142_0228")
+  sams2.append(pre + "D3143_0228")  # 3/1
+  sams3.append(pre + "D3144_0228")  # 3/1
+  samsh.append(pre + "D3145_0228")  # 3/1
+  sams2.append(pre + "D3146_0228")  # 3/1
+  sams3.append(pre + "D3147_0228")  # 3/1
+  samsh.append(pre + "D3148_0228")  # 3/1
+  sams3.append(pre + "D3149_0228")  # 3/1
+  sams2.append(pre + "D3150_0228")  # 3/1
+  samsh.append(pre + "D3151_0228")  # 3/1
+  sams3.append(pre + "D3152_0228")  # 3/1
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

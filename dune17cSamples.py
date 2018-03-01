@@ -3190,7 +3190,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3121_0227")
   sams2.append(pre + "D3122_0228")
   sams2.append(pre + "D3123_0228")
-  sams3.append(pre + "D3124_0228")
+  badsams3.append(pre + "D3124_0228")  # Chan 15 not reaching 4095
   sams2.append(pre + "D3126_0228")
   sams3.append(pre + "D3127_0228")
   samsh.append(pre + "D3128_0228")
@@ -3205,16 +3205,22 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3140_0228")
   sams3.append(pre + "D3141_0228")
   samsh.append(pre + "D3142_0228")
-  sams2.append(pre + "D3143_0228")  # 3/1
-  sams3.append(pre + "D3144_0228")  # 3/1
-  samsh.append(pre + "D3145_0228")  # 3/1
-  sams2.append(pre + "D3146_0228")  # 3/1
-  sams3.append(pre + "D3147_0228")  # 3/1
-  samsh.append(pre + "D3148_0228")  # 3/1
-  sams3.append(pre + "D3149_0228")  # 3/1
-  sams2.append(pre + "D3150_0228")  # 3/1
-  samsh.append(pre + "D3151_0228")  # 3/1
-  sams3.append(pre + "D3152_0228")  # 3/1
+  sams2.append(pre + "D3143_0228")
+  sams3.append(pre + "D3144_0228")  # Bad waveform?
+  samsh.append(pre + "D3145_0228")
+  sams2.append(pre + "D3146_0228")
+  sams3.append(pre + "D3147_0228")
+  samsh.append(pre + "D3148_0228")
+  sams3.append(pre + "D3149_0228")
+  sams2.append(pre + "D3150_0228")
+  samsh.append(pre + "D3151_0228")
+  sams3.append(pre + "D3152_0228")
+  samsh.append(pre + "D3153_0301")  # 3/1
+  sams2.append(pre + "D3154_0301")  # 3/1
+  sams3.append(pre + "D3155_0301")  # 3/1
+  samsh.append(pre + "D3156_0301")  # 3/1
+  sams3.append(pre + "D3157_0301")  # 3/1
+  sams2.append(pre + "D3158_0301")  # 3/1
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

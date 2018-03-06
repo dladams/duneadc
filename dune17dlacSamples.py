@@ -3629,27 +3629,27 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3205_0302_try1")
   sams.append(pre + "D3206_0302_try1")
   sams.append(pre + "D3207_0302_try1")
-  sams.append(pre + "D3208_0305_try1")  # 3/5
-  sams.append(pre + "D3209_0305_try1")  # 3/5
-  sams.append(pre + "D3210_0305_try1")  # 3/5
-  sams.append(pre + "D3211_0305_try1")  # 3/5
-  sams.append(pre + "D3212_0305_try1")  # 3/5
-  sams.append(pre + "D3213_0305_try1")  # 3/5
-  sams.append(pre + "D3214_0305_try1")  # 3/5
-  sams.append(pre + "D3215_0305_try1")  # 3/5
-  sams.append(pre + "D3216_0305_try1")  # 3/5
-  sams.append(pre + "D3217_0305_try1")  # 3/6
-  sams.append(pre + "D3218_0305T1537_try1")  # 3/6
-  sams.append(pre + "D3218_0305T1555_try1")  # 3/6
-  sams.append(pre + "D3219_0305_try1")  # 3/6
-  sams.append(pre + "D3220_0305_try1")  # 3/6
-  sams.append(pre + "D3221_0305_try1")  # 3/6
-  sams.append(pre + "D3222_0305_try1")  # 3/6
-  sams.append(pre + "D3223_0305_try1")  # 3/6
-  sams.append(pre + "D3224_0305_try1")  # 3/6
-  sams.append(pre + "D3225_0305_try1")  # 3/6
-  sams.append(pre + "D3225_0305_try2")  # 3/6
-  sams.append(pre + "D3226_0305_try1")  # 3/6
+  sams.append(pre + "D3208_0305_try1")
+  sams.append(pre + "D3209_0305_try1")
+  sams.append(pre + "D3210_0305_try1")
+  sams.append(pre + "D3211_0305_try1")
+  sams.append(pre + "D3212_0305_try1")
+  sams.append(pre + "D3213_0305_try1")
+  sams.append(pre + "D3214_0305_try1")
+  sams.append(pre + "D3215_0305_try1")
+  sams.append(pre + "D3216_0305_try1")
+  sams.append(pre + "D3217_0305_try1")
+  sams.append(pre + "D3218_0305T1537_try1")
+  sams.append(pre + "D3218_0305T1555_try1")
+  sams.append(pre + "D3219_0305_try1")
+  sams.append(pre + "D3220_0305_try1")
+  sams.append(pre + "D3221_0305_try1")
+  sams.append(pre + "D3222_0305_try1")
+  sams.append(pre + "D3223_0305_try1")
+  sams.append(pre + "D3224_0305_try1")
+  sams.append(pre + "D3225_0305_try1")
+  sams.append(pre + "D3225_0305_try2")
+  sams.append(pre + "D3226_0305_try1")
   sams.append(pre + "D3227_0305_try1")  # 3/6
   sams.append(pre + "D3227_0305_try2")  # 3/6
   sams.append(pre + "D3228_0305_try1")  # 3/6

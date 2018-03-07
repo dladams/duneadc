@@ -3309,11 +3309,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3239_0306")
   samsh.append(pre + "D329_0306:chipD3239")
   samsh.append(pre + "D3240_0306")
-  sams2.append(pre + "D3241_0306")  # 3/6
-  sams3.append(pre + "D3242_0306")  # 3/6
-  samsh.append(pre + "D3243_0306")  # 3/6
-  sams2.append(pre + "D3244_0306")  # 3/6
-  sams3.append(pre + "D3245_0306")  # 3/6
+  sams2.append(pre + "D3241_0306")
+  sams3.append(pre + "D3242_0306")
+  samsh.append(pre + "D3243_0306")
+  sams2.append(pre + "D3244_0306")
+  sams3.append(pre + "D3245_0306")
+  samsh.append(pre + "D3246_0307")  # 3/7
+  sams2.append(pre + "D3247_0307")  # 3/7
+  sams3.append(pre + "D3248_0307")  # 3/7
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

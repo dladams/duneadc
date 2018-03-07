@@ -3032,7 +3032,7 @@ DUNE17dla-cold_chipD3235_0306_try1
 DUNE17dla-cold_chipD3237_0306_try1
 DUNE17dla-cold_chipD3238_0306_try1
 DUNE17dla-cold_chipD3238_0306_try2
-DUNE17dla-cold_chipD329_0306_try1:chid3239
+DUNE17dla-cold_chipD329_0306_try1:chip3239
 DUNE17dla-cold_chipD3239_0306_try1
 DUNE17dla-cold_chipD3240_0306_try1
 DUNE17dla-cold_chipD3241_0306_try1

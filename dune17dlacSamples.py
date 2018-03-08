@@ -3533,6 +3533,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3123_0228_try1")
   badsams.append(pre + "D3124_0228_try1")  # Chan 11 not reaching 4095
   badsams.append(pre + "D3125_0228_try1")  # Bad waveforms
+  sams.append(pre + "D3125_0228_try2")  # 3/8
   sams.append(pre + "D3126_0228_try1")
   sams.append(pre + "D3127_0228_try1")
   sams.append(pre + "D3128_0228_try1")
@@ -3595,6 +3596,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3178_0301_try1")
   sams.append(pre + "D3178_0302_try1")
   sams.append(pre + "D3179_0301_try1")
+  sams.append(pre + "D3180_0301_try1")  # 3/8
   sams.append(pre + "D3180_0302_try1")
   sams.append(pre + "D3181_0301_try1")
   sams.append(pre + "D3182_0301_try1")

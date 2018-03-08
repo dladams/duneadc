@@ -3672,19 +3672,22 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3243_0306_try1")
   sams.append(pre + "D3244_0306_try1")
   sams.append(pre + "D3245_0306_try1")
-  sams.append(pre + "D3246_0307_try1")  # 3/7
-  sams.append(pre + "D3247_0307_try1")  # 3/7
-  sams.append(pre + "D3248_0307_try1")  # 3/7
-  sams.append(pre + "D3249_0307_try1")  # 3/7
-  sams.append(pre + "D3250_0307_try1")  # 3/7
-  sams.append(pre + "D3251_0307_try1")  # 3/7
-  sams.append(pre + "D3252_0307_try1")  # 3/7
-  sams.append(pre + "D3253_0307_try1")  # 3/7
-  sams.append(pre + "D3254_0307_try1")  # 3/7
-  sams.append(pre + "D3255_0307_try1")  # 3/7
-  sams.append(pre + "D3256_0307_try1")  # 3/7
-  sams.append(pre + "D3257_0307_try1")  # 3/7
-  sams.append(pre + "D3259_0307_try1")  # 3/7
+  badsams.append(pre + "D3246_0307_try1")  # Large INL
+  sams.append(pre + "D3247_0307_try1")
+  sams.append(pre + "D3248_0307_try1")
+  sams.append(pre + "D3249_0307_try1")
+  sams.append(pre + "D3250_0307_try1")
+  sams.append(pre + "D3251_0307_try1")
+  sams.append(pre + "D3252_0307_try1")  # Noisy
+  sams.append(pre + "D3253_0307_try1")
+  sams.append(pre + "D3254_0307_try1")
+  sams.append(pre + "D3255_0307_try1")
+  sams.append(pre + "D3256_0307_try1")
+  sams.append(pre + "D3257_0307_try1")
+  sams.append(pre + "D3259_0307_try1")
+  sams.append(pre + "D3260_0308_try1")  # 3/8
+  sams.append(pre + "D3261_0308_try1")  # 3/8
+  sams.append(pre + "D3262_0308_try1")  # 3/8
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

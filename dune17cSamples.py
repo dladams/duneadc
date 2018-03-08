@@ -3314,19 +3314,22 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3243_0306")
   sams2.append(pre + "D3244_0306")
   sams3.append(pre + "D3245_0306")
-  samsh.append(pre + "D3246_0307")  # 3/7
-  sams2.append(pre + "D3247_0307")  # 3/7
-  sams3.append(pre + "D3248_0307")  # 3/7
-  sams2.append(pre + "D3249_0307")  # 3/7
-  samsh.append(pre + "D3250_0307")  # 3/7
-  sams3.append(pre + "D3251_0307")  # 3/7
-  sams2.append(pre + "D3252_0307")  # 3/7
-  sams2.append(pre + "D3253_0307")  # 3/7
-  sams3.append(pre + "D3254_0307")  # 3/7
-  sams3.append(pre + "D3255_0307")  # 3/7
-  sams2.append(pre + "D3256_0307")  # 3/7
-  sams3.append(pre + "D3257_0307")  # 3/7
-  samsh.append(pre + "D3259_0307")  # 3/7
+  badsamsh.append(pre + "D3246_0307")  # Large INL
+  sams2.append(pre + "D3247_0307")
+  sams3.append(pre + "D3248_0307")
+  sams2.append(pre + "D3249_0307")
+  samsh.append(pre + "D3250_0307")
+  sams3.append(pre + "D3251_0307")  # Noisy?
+  sams2.append(pre + "D3252_0307")  # Noisy?
+  sams2.append(pre + "D3253_0307")
+  sams3.append(pre + "D3254_0307")
+  sams3.append(pre + "D3255_0307")
+  sams2.append(pre + "D3256_0307")
+  sams3.append(pre + "D3257_0307")
+  samsh.append(pre + "D3259_0307")
+  samsh.append(pre + "D3260_0308")  # 3/8
+  sams2.append(pre + "D3261_0308")  # 3/8
+  sams3.append(pre + "D3262_0308")  # 3/8
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

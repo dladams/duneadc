@@ -3335,14 +3335,14 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3265_0308")
   samsh.append(pre + "D3266_0308")
   sams2.append(pre + "D3267_0308")
-  sams3.append(pre + "D3270_0308")  # 3/8
-  samsh.append(pre + "D3271_0308")  # 3/8
-  samsh.append(pre + "D3272_0308")  # 3/8
-  sams2.append(pre + "D3273_0308")  # 3/8
-  sams3.append(pre + "D3274_0308")  # 3/8
-  samsh.append(pre + "D3275_0308")  # 3/8
-  sams2.append(pre + "D3276_0308")  # 3/8
-  sams3.append(pre + "D3277_0308")  # 3/8
+  badsams3.append(pre + "D3270_0308")  # Bad waveforms
+  samsh.append(pre + "D3271_0308")
+  samsh.append(pre + "D3272_0308")
+  sams2.append(pre + "D3273_0308")
+  badsams3.append(pre + "D3274_0308")  # Bad waveforms
+  samsh.append(pre + "D3275_0308")
+  sams2.append(pre + "D3276_0308")  # Big INL
+  sams3.append(pre + "D3277_0308")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

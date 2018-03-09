@@ -3694,17 +3694,17 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   badsams.append(pre + "D3264_0308_try1")  # Bad waveforms
   sams.append(pre + "D3264_0308_try2")
   sams.append(pre + "D3265_0308_try1")
-  sams.append(pre + "D3266_0308_try1")  # 3/8
-  sams.append(pre + "D3267_0308_try1")  # 3/8
-  sams.append(pre + "D3269_0308_try1")  # 3/8
-  sams.append(pre + "D3270_0308_try1")  # 3/8
-  sams.append(pre + "D3271_0308_try1")  # 3/8
-  sams.append(pre + "D3272_0308_try1")  # 3/8
-  sams.append(pre + "D3273_0308_try1")  # 3/8
-  sams.append(pre + "D3274_0308_try1")  # 3/8
-  sams.append(pre + "D3275_0308_try1")  # 3/8
-  sams.append(pre + "D3276_0308_try1")  # 3/8
-  sams.append(pre + "D3277_0308_try1")  # 3/8
+  sams.append(pre + "D3266_0308_try1")
+  sams.append(pre + "D3267_0308_try1")
+  sams.append(pre + "D3269_0308_try1")  # Little noisy
+  sams.append(pre + "D3270_0308_try1")
+  sams.append(pre + "D3271_0308_try1")
+  sams.append(pre + "D3272_0308_try1")
+  sams.append(pre + "D3273_0308_try1")
+  sams.append(pre + "D3274_0308_try1")
+  sams.append(pre + "D3275_0308_try1")
+  sams.append(pre + "D3276_0308_try1")  # Big INL
+  sams.append(pre + "D3277_0308_try1")
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

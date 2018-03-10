@@ -3694,11 +3694,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   badsams.append(pre + "D3264_0308_try1")  # Bad waveforms
   sams.append(pre + "D3264_0308_try2")
   sams.append(pre + "D3265_0308_try1")
-  sams.append(pre + "D3265_0309_try1")  # 3/9
+  sams.append(pre + "D3265_0309_try1")
   sams.append(pre + "D3266_0308_try1")
   sams.append(pre + "D3267_0308_try1")
   sams.append(pre + "D3269_0308_try1")  # Little noisy
-  sams.append(pre + "D3269_0309_try1")  # 3/9
+  sams.append(pre + "D3269_0309_try1")
   sams.append(pre + "D3270_0308_try1")
   sams.append(pre + "D3271_0308_try1")
   sams.append(pre + "D3272_0308_try1")
@@ -3707,11 +3707,11 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3275_0308_try1")
   sams.append(pre + "D3276_0308_try1")  # Big INL
   sams.append(pre + "D3277_0308_try1")
-  sams.append(pre + "D3278_0309_try1")  # 3/9
-  sams.append(pre + "D3279_0309_try1")  # 3/9
-  sams.append(pre + "D3281_0309_try1")  # 3/9
-  sams.append(pre + "D3282_0309_try1")  # 3/9
-  sams.append(pre + "D3282_0309_try1")  # 3/9
+  sams.append(pre + "D3278_0309_try1")
+  sams.append(pre + "D3279_0309_try1")
+  sams.append(pre + "D3281_0309_try1")
+  sams.append(pre + "D3282_0309T1118_try1")  # 3/9
+  sams.append(pre + "D3282_0309T1204_try1")  # 3/9
   sams.append(pre + "D3283_0309_try1")  # 3/9
   sams.append(pre + "D3284_0309T1118_try1")  # 3/9
   sams.append(pre + "D3285_0309T1204_try1")  # 3/9

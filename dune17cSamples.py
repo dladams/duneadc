@@ -3371,24 +3371,27 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3303_0309")
   sams2.append(pre + "D3304_0309")
   samsh.append(pre + "D3305_0309")
-  samsh.append(pre + "D3308_0312")  # 3/12
-  sams3.append(pre + "D3309_0312")  # 3/12
-  samsh.append(pre + "D3310_0312")  # 3/12
-  sams2.append(pre + "D3311_0312")  # 3/12
-  sams3.append(pre + "D3312_0312")  # 3/12
-  samsh.append(pre + "D3313_0312")  # 3/12
-  sams2.append(pre + "D3314_0312")  # 3/12
-  sams3.append(pre + "D3315_0312")  # 3/12
-  samsh.append(pre + "D3316_0312")  # 3/12
-  sams3.append(pre + "D3318_0312")  # 3/12
-  samsh.append(pre + "D3319_0312")  # 3/12
-  sams2.append(pre + "D3320_0312")  # 3/12
-  sams3.append(pre + "D3321_0312")  # 3/12
-  samsh.append(pre + "D3322_0312")  # 3/12
-  sams3.append(pre + "D3324_0312")  # 3/12
-  sams2.append(pre + "D3325_0312")  # 3/12
-  samsh.append(pre + "D3326_0312")  # 3/12
-  sams2.append(pre + "D3327_0312")  # 3/12
+  samsh.append(pre + "D3308_0312")
+  sams3.append(pre + "D3309_0312")
+  samsh.append(pre + "D3310_0312")
+  sams2.append(pre + "D3311_0312")
+  sams3.append(pre + "D3312_0312")
+  samsh.append(pre + "D3313_0312")
+  sams2.append(pre + "D3314_0312")
+  sams3.append(pre + "D3315_0312")
+  samsh.append(pre + "D3316_0312")
+  sams3.append(pre + "D3318_0312")
+  samsh.append(pre + "D3319_0312")
+  sams2.append(pre + "D3320_0312")
+  sams3.append(pre + "D3321_0312")
+  samsh.append(pre + "D3322_0312")
+  sams3.append(pre + "D3324_0312")
+  sams2.append(pre + "D3325_0312")
+  samsh.append(pre + "D3326_0312")
+  sams2.append(pre + "D3327_0312")
+  samsh.append(pre + "D3328_0313")  # 3/13
+  sams2.append(pre + "D3329_0313")  # 3/13
+  sams3.append(pre + "D3330_0313")  # 3/13
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

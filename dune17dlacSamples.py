@@ -3734,8 +3734,10 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3304_0309_try1")
   sams.append(pre + "D3305_0309_try1")
   sams.append(pre + "D3306_0309_try1")
+  sams.append(pre + "D3306_0314_try1")  # 3/14
   badsams.append(pre + "D3307_0312_try1")  # Bad waveforms
   badsams.append(pre + "D3307_0312_try2")  # Bad waveforms
+  sams.append(pre + "D3307_0314_try1")  # 3/14
   sams.append(pre + "D3308_0312_try1")
   sams.append(pre + "D3309_0312_try1")
   sams.append(pre + "D3310_0312_try1")
@@ -3745,6 +3747,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3314_0312_try1")
   sams.append(pre + "D3315_0312_try1")
   sams.append(pre + "D3316_0312_try1")
+  sams.append(pre + "D3317_0314_try1")  # 3/14
   sams.append(pre + "D3318_0312_try1")
   sams.append(pre + "D3319_0312_try1")
   sams.append(pre + "D3320_0312_try1")
@@ -3774,16 +3777,19 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3344_0313_try1")
   badsams.append(pre + "D3345_0313_try1")  # Bad waveforms
   badsams.append(pre + "D3345_0313_try2")  # Bad waveforms
+  sams.append(pre + "D3345_0314_try1")  # 3/14
   sams.append(pre + "D3346_0313_try1")
   sams.append(pre + "D3347_0313_try1")
   sams.append(pre + "D3348_0313_try1")
   sams.append(pre + "D3349_0313_try1")
   sams.append(pre + "D3349_0313_try2")
   sams.append(pre + "D3350_0313_try1")
+  sams.append(pre + "D3351_0314_try1")  # 3/14
   sams.append(pre + "D3352_0314T0929_try1")  # 3/14
   sams.append(pre + "D3352_0314T0941_try1")  # 3/14
   sams.append(pre + "D3352_0314T0941_try2")  # 3/14
-  sams.append(pre + "D3352_0314T1020_try1")  # 3/14
+  sams.append(pre + "D3352_0314T1242_try1")  # 3/14
+  sams.append(pre + "D3351_0314_try1")  # 3/14
   sams.append(pre + "D3353_0314_try1")  # 3/14
   sams.append(pre + "D3354_0314_try1")  # 3/14
   sams.append(pre + "D3354_0314_try2")  # 3/14
@@ -3796,6 +3802,12 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3357_0314T1208_try1")  # 3/14
   sams.append(pre + "D3358_0314_try1")  # 3/14
   sams.append(pre + "D3359_0314_try1")  # 3/14
+  sams.append(pre + "D3360_0314_try1")  # 3/14
+  sams.append(pre + "D3361_0314_try1")  # 3/14
+  sams.append(pre + "D3362_0314_try1")  # 3/14
+  sams.append(pre + "D3363_0314_try1")  # 3/14
+  sams.append(pre + "D3364_0314_try1")  # 3/14
+  sams.append(pre + "D3365_0314_try1")  # 3/14
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

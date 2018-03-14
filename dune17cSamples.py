@@ -3404,6 +3404,12 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3340_0313")  # 3/13
   sams2.append(pre + "D3341_0313")  # 3/13
   sams3.append(pre + "D3342_0313")  # 3/13
+  samsh.append(pre + "D3343_0313")  # 3/13
+  sams2.append(pre + "D3344_0313")  # 3/13
+  samsh.append(pre + "D3346_0313")  # 3/13
+  sams2.append(pre + "D3347_0313")  # 3/13
+  samsh.append(pre + "D3349_0313")  # 3/13
+  sams2.append(pre + "D3350_0313")  # 3/13
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

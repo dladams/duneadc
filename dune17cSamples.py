@@ -3389,27 +3389,31 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3325_0312")
   samsh.append(pre + "D3326_0312")
   sams2.append(pre + "D3327_0312")
-  samsh.append(pre + "D3328_0313")  # 3/13
-  sams2.append(pre + "D3329_0313")  # 3/13
-  sams3.append(pre + "D3330_0313")  # 3/13
-  samsh.append(pre + "D3331_0313")  # 3/13
-  sams2.append(pre + "D3332_0313")  # 3/13
-  sams3.append(pre + "D3333_0313")  # 3/13
-  samsh.append(pre + "D3334_0313")  # 3/13
-  sams2.append(pre + "D3335_0313")  # 3/13
-  sams3.append(pre + "D3336_0313")  # 3/13
-  samsh.append(pre + "D3337_0313")  # 3/13
-  sams2.append(pre + "D3338_0313")  # 3/13
-  sams3.append(pre + "D3339_0313")  # 3/13
-  samsh.append(pre + "D3340_0313")  # 3/13
-  sams2.append(pre + "D3341_0313")  # 3/13
-  sams3.append(pre + "D3342_0313")  # 3/13
-  samsh.append(pre + "D3343_0313")  # 3/13
-  sams2.append(pre + "D3344_0313")  # 3/13
-  samsh.append(pre + "D3346_0313")  # 3/13
-  sams2.append(pre + "D3347_0313")  # 3/13
-  samsh.append(pre + "D3349_0313")  # 3/13
-  sams2.append(pre + "D3350_0313")  # 3/13
+  badsamsh.append(pre + "D3328_0313")  # Bad waveform
+  sams2.append(pre + "D3329_0313")  # noisy?
+  sams3.append(pre + "D3330_0313")
+  samsh.append(pre + "D3331_0313")
+  sams2.append(pre + "D3332_0313")
+  sams3.append(pre + "D3333_0313")
+  samsh.append(pre + "D3334_0313")
+  sams2.append(pre + "D3335_0313")  # noisy?
+  sams3.append(pre + "D3336_0313")
+  samsh.append(pre + "D3337_0313")
+  sams2.append(pre + "D3338_0313")  # noisy?
+  badsams3.append(pre + "D3339_0313")  # Bad waveforms
+  samsh.append(pre + "D3340_0313")
+  sams2.append(pre + "D3341_0313")
+  sams3.append(pre + "D3342_0313")
+  samsh.append(pre + "D3343_0313")
+  sams2.append(pre + "D3344_0313")
+  samsh.append(pre + "D3346_0313")
+  sams2.append(pre + "D3347_0313")
+  samsh.append(pre + "D3349_0313")
+  sams2.append(pre + "D3350_0313")
+  sams2.append(pre + "D3353_0314")  # 3/14
+  samsh.append(pre + "D3354_0314")  # 3/14
+  sams2.append(pre + "D3356_0314T0948")  # 3/14
+  sams2.append(pre + "D3356_0314T1059")  # 3/14
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

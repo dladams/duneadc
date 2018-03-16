@@ -47,7 +47,7 @@ def badChips():
   chips += [12610, 12484]   # Matt: Cold setup errors 16feb2018.
   chips += [12770, 12712]   # Matt: Bent pin 16feb2018.
   chips += [13097, 12953, 13240]   # Matt: Bad input pin 09mar2018.
-  chips += [13439, 13440, 13441, 13442, 13444, 13446, 13447, 13451, 13452]   # Matt: Bad input pins 16mar2018.
+  chips += [13439, 13440, 13441, 13442, 13444, 13446, 13447, 13449, 13451, 13452]   # Matt: Bad input pins 16mar2018.
   chips.sort()
   lastchip = None
   nodups = []

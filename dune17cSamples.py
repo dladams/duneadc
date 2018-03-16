@@ -3513,30 +3513,35 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3448_0316")
   sams2.append(pre + "D3449_0316")
   sams3.append(pre + "D3450_0316")
-  samsh.append(pre + "D3451_0316")  # 3/16
-  sams2.append(pre + "D3452_0316")  # 3/16
-  sams3.append(pre + "D3453_0316")  # 3/16
-  samsh.append(pre + "3454_0316:chipD3454")  # 3/16
-  sams2.append(pre + "D3455_0316")  # 3/16
-  sams3.append(pre + "D3456_0316")  # 3/16
-  samsh.append(pre + "3457_0316:chipD3457")  # 3/16
-  sams2.append(pre + "D3458_0316")  # 3/16
-  sams3.append(pre + "D3459_0316")  # 3/16
-  samsh.append(pre + "3460_0316:chipD3460")  # 3/16
-  sams2.append(pre + "D3461_0316")  # 3/16
-  sams3.append(pre + "D3462_0316")  # 3/16
+  samsh.append(pre + "D3451_0316")
+  sams2.append(pre + "D3452_0316")
+  sams3.append(pre + "D3453_0316")
+  samsh.append(pre + "3454_0316:chipD3454")
+  sams2.append(pre + "D3455_0316")
+  sams3.append(pre + "D3456_0316")
+  samsh.append(pre + "3457_0316:chipD3457")
+  sams2.append(pre + "D3458_0316")
+  sams3.append(pre + "D3459_0316")
+  samsh.append(pre + "3460_0316:chipD3460")
+  sams2.append(pre + "D3461_0316")
+  sams3.append(pre + "D3462_0316")
   samsh.append(pre + "3463_0316:chipD3463")  # 3/16
-  sams2.append(pre + "D3464_0316")  # 3/16
-  sams3.append(pre + "D3465_0316")  # 3/16
+  sams2.append(pre + "D3464_0316")
+  sams3.append(pre + "D3465_0316")
   samsh.append(pre + "D3466_0316")  # 3/16
-  sams2.append(pre + "D3467_0316")  # 3/16
-  sams3.append(pre + "D3468_0316")  # 3/16
+  sams2.append(pre + "D3467_0316")
+  sams3.append(pre + "D3468_0316")
   samsh.append(pre + "D3469_0316")  # 3/16
-  sams2.append(pre + "D3470_0316")  # 3/16
+  sams2.append(pre + "D3470_0316")
   sams3.append(pre + "D3461_0316")  # 3/16
   samsh.append(pre + "D3472_0316")  # 3/16
-  sams2.append(pre + "D3473_0316")  # 3/16
-  sams3.append(pre + "D3464_0316")  # 3/16
+  sams2.append(pre + "D3473_0316")
+  sams3.append(pre + "D3474_0316")  # 3/16
+  samsh.append(pre + "D3475_0316")  # 3/16
+  sams2.append(pre + "D3476_0316")  # 3/16
+  sams3.append(pre + "D3477_0316")  # 3/16
+  samsh.append(pre + "D3478_0316")  # 3/16
+  sams2.append(pre + "D3479_0316")  # 3/16
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

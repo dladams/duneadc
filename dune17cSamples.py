@@ -3525,7 +3525,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "3460_0316:chipD3460")
   sams2.append(pre + "D3461_0316")
   sams3.append(pre + "D3462_0316")
-  samsh.append(pre + "3463_0316:chipD3463")  # 3/16
+  samsh.append(pre + "3463_0316:chipD3463")
   sams2.append(pre + "D3464_0316")
   sams3.append(pre + "D3465_0316")
   samsh.append(pre + "D3466_0316")
@@ -3533,22 +3533,26 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3468_0316")
   samsh.append(pre + "D3469_0316")
   sams2.append(pre + "D3470_0316")
-  sams3.append(pre + "D3471_0316")  # 3/16
+  sams3.append(pre + "D3471_0316")
   samsh.append(pre + "D3472_0316")
   sams2.append(pre + "D3473_0316")
-  sams3.append(pre + "D3474_0316")  # 3/16
-  samsh.append(pre + "D3475_0316")  # 3/16
-  sams2.append(pre + "D3476_0316")  # 3/16
-  sams3.append(pre + "D3477_0316")  # 3/16
-  samsh.append(pre + "D3478_0316")  # 3/16
-  sams2.append(pre + "D3479_0316")  # 3/16
-  samsh.append(pre + "D3481_0316")  # 3/16
-  sams2.append(pre + "D3482_0316")  # 3/16
-  samsh.append(pre + "D3483_0316")  # 3/16
-  sams2.append(pre + "D3484_0316")  # 3/16
-  sams3.append(pre + "D3485_0316")  # 3/16
-  samsh.append(pre + "D3486_0316")  # 3/16
-  sams2.append(pre + "D3487_0316")  # 3/16
+  sams3.append(pre + "D3474_0316")
+  samsh.append(pre + "D3475_0316")
+  sams2.append(pre + "D3476_0316")
+  sams3.append(pre + "D3477_0316")
+  samsh.append(pre + "D3478_0316")
+  sams2.append(pre + "D3479_0316")
+  samsh.append(pre + "D3481_0316")
+  sams2.append(pre + "D3482_0316")
+  samsh.append(pre + "D3483_0316")
+  badsams2.append(pre + "D3484_0316")  # Bad sync
+  sams3.append(pre + "D3485_0316")
+  samsh.append(pre + "D3486_0316")
+  sams2.append(pre + "D3487_0316")
+  samsh.append(pre + "D3488_0317")  # 3/17
+  sams2.append(pre + "D3489_0317")  # 3/17
+  sams3.append(pre + "D3490_0317")  # 3/17
+  sams3.append(pre + "D3492_0317")  # 3/17
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

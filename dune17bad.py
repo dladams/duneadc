@@ -50,6 +50,7 @@ def badChips():
   chips += [13439, 13440, 13441, 13442, 13444, 13446, 13447, 13449, 13451, 13452]   # Matt: Bad input pins 16mar2018.
   chips += [13265, 13357, 13444, 13447, 13448, 13440, 13439, 13442, 13446, 13449]   # Matt: Bad 17mar2018.
   chips += [13265, 13357, 13448]   # Matt: Bad 17mar2018.
+  chips += [13339, 13274]   # Matt: Bad due to inconsistent test results 20mar2018.
   chips.sort()
   lastchip = None
   nodups = []

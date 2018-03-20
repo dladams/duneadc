@@ -3987,54 +3987,61 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3536_0319_try1")  # 3/19
   sams.append(pre + "D3537_0319T909_try1")  # 3/19
   sams.append(pre + "D3537_0319T926_try1")  # 3/19
-  sams.append(pre + "D3538_0319_try1")  # 3/19
-  sams.append(pre + "D3539_0319_try1")  # 3/19
-  sams.append(pre + "D3540_0319_try1")  # 3/19
-  sams.append(pre + "D3541_0319_try1")  # 3/19
-  sams.append(pre + "D3542_0319_try1")  # 3/19
-  sams.append(pre + "D3543_0319_try1")  # 3/19
-  sams.append(pre + "D3544_0319_try1")  # 3/19
-  sams.append(pre + "D3545_0319_try1")  # 3/19
-  sams.append(pre + "D3546_0319_try1")  # 3/19
-  sams.append(pre + "D3546_0319_try2")  # 3/19
-  sams.append(pre + "D3547_0319_try1")  # 3/19
-  sams.append(pre + "D3548_0319_try1")  # 3/19
-  sams.append(pre + "D3549_0319_try1")  # 3/19
-  sams.append(pre + "D3550_0319_try1")  # 3/19
-  sams.append(pre + "D3551_0319_try1")  # 3/19
-  sams.append(pre + "D3552_0319T1213_try1")  # 3/19
-  sams.append(pre + "D3552_0319T1243_try1")  # 3/19
-  sams.append(pre + "D3552_0319T1313_try1")  # 3/19
-  sams.append(pre + "D3553_0319_try1")  # 3/19
-  sams.append(pre + "D3555_0319_try1")  # 3/19
-  sams.append(pre + "D3556_0319_try1")  # 3/19
-  sams.append(pre + "D3557_0319_try1")  # 3/19
-  sams.append(pre + "D3558_0319T1358_try1")  # 3/19
-  sams.append(pre + "D3558_0319T1529_try1")  # 3/19
-  sams.append(pre + "D3559_0319_try1")  # 3/19
-  sams.append(pre + "D3560_0319_try1")  # 3/19
-  sams.append(pre + "D3561_0319_try1")  # 3/19
-  sams.append(pre + "D3562_0319_try1")  # 3/19
-  sams.append(pre + "D3563_0319_try1")  # 3/19
-  sams.append(pre + "D3564_0319_try1")  # 3/19
-  sams.append(pre + "D3565_0319_try1")  # 3/19
-  sams.append(pre + "D3566_0319_try1")  # 3/19
-  sams.append(pre + "D3567_0319_try1")  # 3/19
-  sams.append(pre + "D3568_0319_try1")  # 3/19
-  sams.append(pre + "D3568_0319_try1")  # 3/19
-  sams.append(pre + "D3569_0319_try1")  # 3/19
-  sams.append(pre + "D3570_0319_try1")  # 3/19
-  sams.append(pre + "D3572_0319_try1")  # 3/19
-  sams.append(pre + "D3573_0319_try1")  # 3/19
-  sams.append(pre + "D3574_0319_try1")  # 3/19
-  sams.append(pre + "D3575_0319_try1")  # 3/19
-  sams.append(pre + "D3576_0319_try1")  # 3/19
-  sams.append(pre + "D3577_0319_try1")  # 3/19
+  sams.append(pre + "D3538_0319_try1")
+  sams.append(pre + "D3539_0319_try1")
+  sams.append(pre + "D3540_0319_try1")
+  sams.append(pre + "D3541_0319_try1")
+  sams.append(pre + "D3542_0319_try1")
+  badsams.append(pre + "D3543_0319_try1")  # Bad waveforms
+  sams.append(pre + "D3544_0319_try1")
+  sams.append(pre + "D3545_0319_try1")
+  sams.append(pre + "D3546_0319_try1")
+  sams.append(pre + "D3546_0319_try2")
+  sams.append(pre + "D3547_0319_try1")
+  sams.append(pre + "D3548_0319_try1")
+  sams.append(pre + "D3549_0319_try1")
+  sams.append(pre + "D3550_0319_try1")
+  sams.append(pre + "D3551_0319_try1")
+  sams.append(pre + "D3552_0319T1213_try1")
+  sams.append(pre + "D3552_0319T1243_try1")
+  sams.append(pre + "D3552_0319T1313_try1")
+  sams.append(pre + "D3553_0319_try1")
+  sams.append(pre + "D3555_0319_try1")
+  sams.append(pre + "D3556_0319_try1")
+  sams.append(pre + "D3557_0319_try1")
+  sams.append(pre + "D3558_0319T1358_try1")
+  sams.append(pre + "D3558_0319T1529_try1")
+  sams.append(pre + "D3559_0319_try1")
+  sams.append(pre + "D3560_0319_try1")
+  sams.append(pre + "D3561_0319_try1")
+  sams.append(pre + "D3562_0319_try1")
+  sams.append(pre + "D3563_0319_try1")
+  sams.append(pre + "D3564_0319_try1")
+  sams.append(pre + "D3565_0319_try1")
+  sams.append(pre + "D3566_0319_try1")
+  sams.append(pre + "D3567_0319_try1")
+  sams.append(pre + "D3568_0319_try1")  # Bad waveforms
+  sams.append(pre + "D3568_0319_try2")  # 3/19
+  sams.append(pre + "D3569_0319_try1")
+  sams.append(pre + "D3570_0319_try1")
+  sams.append(pre + "D3572_0319_try1")
+  sams.append(pre + "D3573_0319_try1")
+  sams.append(pre + "D3574_0319_try1")
+  sams.append(pre + "D3575_0319_try1")
+  sams.append(pre + "D3576_0319_try1")
+  sams.append(pre + "D3577_0319_try1")
   sams.append(pre + "D3578_0319_try1")  # 3/19
-  sams.append(pre + "D3579_0319_try1")  # 3/19
-  sams.append(pre + "D3580_0319_try1")  # 3/19
-  sams.append(pre + "D3581_0319_try1")  # 3/19
-  sams.append(pre + "D3582_0319_try1")  # 3/19
+  sams.append(pre + "D3579_0319_try1")
+  sams.append(pre + "D3580_0319_try1")
+  sams.append(pre + "D3581_0319_try1")
+  sams.append(pre + "D3582_0319_try1")
+  sams.append(pre + "D3583_0319_try1")  # 3/20
+  sams.append(pre + "D3583_0319_try2")  # 3/20
+  sams.append(pre + "D3584_0319_try1")  # 3/20
+  sams.append(pre + "D3585_0319_try1")  # 3/20
+  sams.append(pre + "D3586_0320_try1")  # 3/20
+  sams.append(pre + "D3587_0320_try1")  # 3/20
+  sams.append(pre + "D3588_0320_try1")  # 3/20
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

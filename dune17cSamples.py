@@ -3599,47 +3599,53 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3533_0318")
   sams2.append(pre + "D3534_0318")
   sams3.append(pre + "D3535_0318")
-  samsh.append(pre + "D3536_0319")  # 3/19
-  sams2.append(pre + "D3537_0319")  # 3/19
-  sams3.append(pre + "D3538_0319")  # 3/19
-  samsh.append(pre + "D3539_0319")  # 3/19
-  sams3.append(pre + "D3541_0319")  # 3/19
-  samsh.append(pre + "D3542_0319")  # 3/19
-  sams3.append(pre + "D3544_0319")  # 3/19
-  sams2.append(pre + "D3545_0319")  # 3/19
-  samsh.append(pre + "D3546_0319")  # 3/19
-  sams3.append(pre + "D3547_0319")  # 3/19
-  sams2.append(pre + "D3548_0319")  # 3/19
-  sams3.append(pre + "D3549_0319")  # 3/19
-  sams3.append(pre + "D3550_0319")  # 3/19
-  sams2.append(pre + "D3551_0319")  # 3/19
-  sams2.append(pre + "D3552_0319")  # 3/19
-  sams2.append(pre + "D3553_0319")  # 3/19
-  samsh.append(pre + "D3555_0319")  # 3/19
-  sams2.append(pre + "D3556_0319")  # 3/19
-  sams3.append(pre + "D3557_0319")  # 3/19
-  sams2.append(pre + "D3558_0319")  # 3/19
-  sams2.append(pre + "D3559_0319")  # 3/19
-  sams3.append(pre + "D3560_0319")  # 3/19
-  sams3.append(pre + "D3561_0319")  # 3/19
-  sams2.append(pre + "D3562_0319")  # 3/19
-  sams3.append(pre + "D3563_0319")  # 3/19
-  samsh.append(pre + "D3564_0319")  # 3/19
-  samsh.append(pre + "D3565_0319")  # 3/19
-  sams2.append(pre + "D3566_0319")  # 3/19
-  sams3.append(pre + "D3567_0319")  # 3/19
-  samsh.append(pre + "D3568_0319")  # 3/19
-  sams2.append(pre + "D3569_0319")  # 3/19
-  sams3.append(pre + "D3570_0319")  # 3/19
-  sams2.append(pre + "D3572_0319")  # 3/19
-  sams3.append(pre + "D3573_0319")  # 3/19
-  samsh.append(pre + "D3574_0319")  # 3/19
-  sams2.append(pre + "D3575_0319")  # 3/19
-  sams3.append(pre + "D3576_0319")  # 3/19
-  samsh.append(pre + "D3577_0319")  # 3/19
-  sams3.append(pre + "D3579_0319")  # 3/19
-  samsh.append(pre + "D3581_0319")  # 3/19
-  sams3.append(pre + "D3582_0319")  # 3/19
+  samsh.append(pre + "D3536_0319")
+  sams2.append(pre + "D3537_0319")
+  sams3.append(pre + "D3538_0319")
+  samsh.append(pre + "D3539_0319")
+  sams3.append(pre + "D3541_0319")
+  samsh.append(pre + "D3542_0319")
+  sams3.append(pre + "D3544_0319")
+  sams2.append(pre + "D3545_0319")
+  samsh.append(pre + "D3546_0319")
+  sams3.append(pre + "D3547_0319")
+  sams2.append(pre + "D3548_0319")
+  sams3.append(pre + "D3549_0319")
+  sams3.append(pre + "D3550_0319")
+  sams2.append(pre + "D3551_0319")
+  sams2.append(pre + "D3552_0319")
+  sams2.append(pre + "D3553_0319")
+  samsh.append(pre + "D3555_0319")
+  sams2.append(pre + "D3556_0319")
+  sams3.append(pre + "D3557_0319")
+  sams2.append(pre + "D3558_0319")
+  sams2.append(pre + "D3559_0319")
+  sams3.append(pre + "D3560_0319")
+  sams3.append(pre + "D3561_0319")
+  sams2.append(pre + "D3562_0319")
+  sams3.append(pre + "D3563_0319")
+  samsh.append(pre + "D3564_0319")
+  badsamsh.append(pre + "D3565_0319")  # Bad waveforms
+  sams2.append(pre + "D3566_0319")
+  sams3.append(pre + "D3567_0319")
+  badsamsh.append(pre + "D3568_0319")  # Bad waveforms
+  sams2.append(pre + "D3569_0319")
+  sams3.append(pre + "D3570_0319")
+  sams2.append(pre + "D3572_0319")
+  sams3.append(pre + "D3573_0319")
+  samsh.append(pre + "D3574_0319")
+  sams2.append(pre + "D3575_0319")
+  sams3.append(pre + "D3576_0319")
+  samsh.append(pre + "D3577_0319")
+  sams3.append(pre + "D3579_0319")
+  samsh.append(pre + "D3581_0319")
+  sams3.append(pre + "D3582_0319")
+  samsh.append(pre + "D3583_0319")  # 3/20
+  sams2.append(pre + "D3584_0319")  # 3/20
+  sams3.append(pre + "D3585_0319")  # 3/20
+  samsh.append(pre + "D3586_0320")  # 3/20
+  sams2.append(pre + "D3587_0320")  # 3/20
+  sams3.append(pre + "D3588_0320")  # 3/20
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

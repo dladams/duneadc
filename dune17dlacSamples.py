@@ -3990,6 +3990,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3538_0319_try1")
   sams.append(pre + "D3539_0319_try1")
   sams.append(pre + "D3540_0319_try1")
+  sams.append(pre + "D3540_0320_try1")  # 3/20
   sams.append(pre + "D3541_0319_try1")
   sams.append(pre + "D3542_0319_try1")
   badsams.append(pre + "D3543_0319_try1")  # Bad waveforms
@@ -4022,6 +4023,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3567_0319_try1")
   badsams.append(pre + "D3568_0319_try1")  # Bad waveforms
   badsams.append(pre + "D3568_0319_try2")  # Bad waveforms
+  sams.append(pre + "D3568_0320_try1")  # 3/20
   sams.append(pre + "D3569_0319_try1")
   sams.append(pre + "D3570_0319_try1")
   sams.append(pre + "D3572_0319_try1")
@@ -4037,11 +4039,25 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3582_0319_try1")
   badsams.append(pre + "D3583_0319_try1")  # Bad waveforms
   badsams.append(pre + "D3583_0319_try2")  # Bad waveforms
+  sams.append(pre + "D3583_0320_try1")  # 3/20
   sams.append(pre + "D3584_0319_try1")
   sams.append(pre + "D3585_0319_try1")
   sams.append(pre + "D3586_0320_try1")
   sams.append(pre + "D3587_0320_try1")
-  sams.append(pre + "D3588_0320_try1")  # 3/20
+  sams.append(pre + "D3588_0320_try1")
+  sams.append(pre + "D3589_0320_try1")  # 3/20
+  sams.append(pre + "D3590_0320_try1")  # 3/20
+  sams.append(pre + "D3890_0320_try1:chipD3590")  # 3/20
+  sams.append(pre + "D3591_0320_try1")  # 3/20
+  sams.append(pre + "D3592_0320_try1")  # 3/20
+  sams.append(pre + "D3893_0320T1029_try1:chipD3593")  # 3/20
+  sams.append(pre + "D3893_0320T1059_try1:chipD3593")  # 3/20
+  sams.append(pre + "D3594_0320_try1")  # 3/20
+  sams.append(pre + "D3895_0320_try1:chipD3595")  # 3/20
+  sams.append(pre + "D3596_0320_try1")  # 3/20
+  sams.append(pre + "D3597_0320_try1")  # 3/20
+  sams.append(pre + "D3899_0320_try1:chipD3599")  # 3/20
+  sams.append(pre + "D3600_0320_try1")  # 3/20
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

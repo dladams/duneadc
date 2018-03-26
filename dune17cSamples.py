@@ -3713,7 +3713,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3641_0322")
   samsh.append(pre + "D3642_0322")
   samsh.append(pre + "D3643_0323")
-  sams2.append(pre + "D3644_0323")
+  badsams2.append(pre + "D3644_0323")  # Bad sync
   sams3.append(pre + "D3645_0323")
   samsh.append(pre + "D3646_0323")
   sams2.append(pre + "D3647_0323")

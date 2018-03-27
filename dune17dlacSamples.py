@@ -4165,7 +4165,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3682_0326_try1")
   sams.append(pre + "D3683_0326_try1")
   sams.append(pre + "D3684_0326_try1")
-  sams.append(pre + "D3685_0326_try1")
+  sams.append(pre + "D3685_0326_try1")  # Big INL
   sams.append(pre + "D3686_0326_try1")
   sams.append(pre + "D3687_0326_try1")
   badsams.append(pre + "D3688_0326_try1")  # Bad waveforms

@@ -3746,26 +3746,26 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3676_0323")
   sams3.append(pre + "D3677_0323")
   samsh.append(pre + "D3678_0323")
-  samsh.append(pre + "D3679_0326")  # 3/26
-  sams2.append(pre + "D3680_0326")  # 3/26
-  sams3.append(pre + "D3681_0326")  # 3/26
-  samsh.append(pre + "D3682_0326")  # 3/26
-  sams2.append(pre + "D3683_0326")  # 3/26
-  sams3.append(pre + "D3684_0326")  # 3/26
-  samsh.append(pre + "D3685_0326")  # 3/26
-  sams2.append(pre + "D3686_0326")  # 3/26
-  sams3.append(pre + "D3687_0326")  # 3/26
-  samsh.append(pre + "D3688_0326")  # 3/26
+  samsh.append(pre + "D3679_0326")
+  sams2.append(pre + "D3680_0326")
+  sams3.append(pre + "D3681_0326")
+  samsh.append(pre + "D3682_0326")
+  sams2.append(pre + "D3683_0326")
+  sams3.append(pre + "D3684_0326")
+  samsh.append(pre + "D3685_0326")
+  sams2.append(pre + "D3686_0326")
+  sams3.append(pre + "D3687_0326")
+  badsamsh.append(pre + "D3688_0326")  # Bad waveforms
   sams2.append(pre + "D3689_0326")  # 3/26
-  sams3.append(pre + "D3690_0326")  # 3/26
-  samsh.append(pre + "D3691_0326")  # 3/26
-  sams2.append(pre + "D3692_0326")  # 3/26
-  samsh.append(pre + "D3693_0326")  # 3/26
-  sams2.append(pre + "D3694_0326")  # 3/26
-  sams3.append(pre + "D3695_0326")  # 3/26
-  samsh.append(pre + "D3696_0326")  # 3/26
-  samsh.append(pre + "D3698_0326")  # 3/26
-  sams3.append(pre + "D3700_0326")  # 3/26
+  badsams3.append(pre + "D3690_0326")  # Bad waveforms
+  samsh.append(pre + "D3691_0326")
+  sams2.append(pre + "D3692_0326")
+  samsh.append(pre + "D3693_0326")
+  sams2.append(pre + "D3694_0326")
+  sams3.append(pre + "D3695_0326")
+  samsh.append(pre + "D3696_0326")
+  samsh.append(pre + "D3698_0326")
+  badsams3.append(pre + "D3700_0326")  # Bad waveforms
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

@@ -3291,9 +3291,9 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3218_0305")
   sams3.append(pre + "D3219_0305")
   sams3.append(pre + "D3220_0305")
-  samsh.append(pre + "D3220_0327")  # 3/27
+  samsh.append(pre + "D3220_0327")
   samsh.append(pre + "D3221_0305")
-  sams2.append(pre + "D3222_0327")  # 3/27
+  sams2.append(pre + "D3222_0327")
   badsams3.append(pre + "D3223_0305")  # Big INL
   samsh.append(pre + "D3224_0305")
   sams3.append(pre + "D3225_0305")
@@ -3307,7 +3307,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3233_0306")
   sams2.append(pre + "D3234_0306")
   sams3.append(pre + "D3235_0306")
-  sams3.append(pre + "D3236_0327")  # 3/27
+  sams3.append(pre + "D3236_0327")
   sams2.append(pre + "D3237_0306")
   sams3.append(pre + "D3238_0306")
   samsh.append(pre + "D3239_0306")
@@ -3453,7 +3453,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3379_0315")
   sams2.append(pre + "D3380_0315")
   sams3.append(pre + "D3381_0315")
-  sams3.append(pre + "D3382_0327")  # 3/27
+  sams3.append(pre + "D3382_0327")
   sams2.append(pre + "D3383_0315")
   sams3.append(pre + "D3384_0315")
   samsh.append(pre + "34v1_0315T1058:chipD3385")
@@ -3548,7 +3548,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3477_0316")
   samsh.append(pre + "D3478_0316")
   sams2.append(pre + "D3479_0316")
-  sams2.append(pre + "D3480_0327")  # 3/27
+  sams2.append(pre + "D3480_0327")
   samsh.append(pre + "D3481_0316")
   sams2.append(pre + "D3482_0316")
   samsh.append(pre + "D3483_0316")
@@ -3642,7 +3642,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3569_0319")
   sams3.append(pre + "D3570_0319")
   badsams3.append(pre + "D3571_0322")  # Bad waveforms: spikes
-  sams2.append(pre + "D3571_0327")  # 3/27
+  sams2.append(pre + "D3571_0327")
   sams2.append(pre + "D3572_0319")
   sams3.append(pre + "D3573_0319")
   samsh.append(pre + "D3574_0319")
@@ -3770,10 +3770,43 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3694_0326")
   sams3.append(pre + "D3695_0326")
   samsh.append(pre + "D3696_0326")
-  samsh.append(pre + "D3697_0327")  # 3/27
+  samsh.append(pre + "D3697_0327")
   samsh.append(pre + "D3698_0326")
-  sams3.append(pre + "D3699_0327")  # 3/27
+  sams3.append(pre + "D3699_0327")
   badsams3.append(pre + "D3700_0326")  # Bad waveforms
+  samsh.append(pre + "D3701_0328")  # 3/30
+  sams2.append(pre + "D3702_0328")  # 3/30
+  sams3.append(pre + "D3703_0328")  # 3/30
+  samsh.append(pre + "D3704_0328")  # 3/30
+  sams2.append(pre + "D3705_0328")  # 3/30
+  sams3.append(pre + "D3706_0328")  # 3/30
+  samsh.append(pre + "D3707_0328")  # 3/30
+  sams2.append(pre + "D3708_0328")  # 3/30
+  sams3.append(pre + "D3709_0328")  # 3/30
+  sams2.append(pre + "D3711_0328")  # 3/30
+  sams3.append(pre + "D3712_0328")  # 3/30
+  samsh.append(pre + "D3713_0328")  # 3/30
+  samsh.append(pre + "D3714_0329")  # 3/30
+  sams2.append(pre + "D3715_0329")  # 3/30
+  sams3.append(pre + "D3716_0329")  # 3/30
+  samsh.append(pre + "D3717_0329")  # 3/30
+  sams2.append(pre + "D3718_0329")  # 3/30
+  sams3.append(pre + "D3719_0329")  # 3/30
+  samsh.append(pre + "D3720_0329")  # 3/30
+  sams2.append(pre + "D3721_0329")  # 3/30
+  sams3.append(pre + "D3722_0329")  # 3/30
+  sams2.append(pre + "D3724_0329")  # 3/30
+  sams3.append(pre + "D3725_0329")  # 3/30
+  samsh.append(pre + "D3726_0329")  # 3/30
+  samsh.append(pre + "D3727_0329")  # 3/30
+  samsh.append(pre + "D3728_0329")  # 3/30
+  sams2.append(pre + "D3729_0329")  # 3/30
+  sams3.append(pre + "D3730_0329")  # 3/30
+  samsh.append(pre + "D3732_0329")  # 3/30
+  sams2.append(pre + "D3733_0329")  # 3/30
+  sams3.append(pre + "D3724_0329")  # 3/30
+  sams2.append(pre + "D3735_0329")  # 3/30
+  sams3.append(pre + "D3726_0329")  # 3/30
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

@@ -4202,29 +4202,29 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3709_0328_try1")
   sams.append(pre + "D3711_0328_try1")
   sams.append(pre + "D3712_0328_try1")
-  sams.append(pre + "D3712_0328_try2")  # 3/30
+  sams.append(pre + "D3712_0328_try2")
   sams.append(pre + "D3713_0328_try1")
-  sams.append(pre + "D3714_0329_try1")
+  badsams.append(pre + "D3714_0329_try1")  # Bad INL
   sams.append(pre + "D3715_0329_try1")  # 3/30
   sams.append(pre + "D3716_0329_try1")
   sams.append(pre + "D3717_0329_try1")
-  sams.append(pre + "D3718_0329_try1")  # 3/30
-  sams.append(pre + "D3719_0329_try1")  # 3/30
-  sams.append(pre + "D3720_0329_try1")  # 3/30
-  sams.append(pre + "D3721_0329_try1")  # 3/30
-  sams.append(pre + "D3722_0329_try1")  # 3/30
-  sams.append(pre + "D3724_0329_try1")  # 3/30
-  sams.append(pre + "D3725_0329_try1")  # 3/30
-  sams.append(pre + "D3726_0329_try1")  # 3/30
-  sams.append(pre + "D3727_0329_try1")  # 3/30
-  sams.append(pre + "D3728_0329_try1")  # 3/30
-  sams.append(pre + "D3729_0329_try1")  # 3/30
-  sams.append(pre + "D3730_0329_try1")  # 3/30
-  sams.append(pre + "D3732_0329_try1")  # 3/30
-  sams.append(pre + "D3733_0329_try1")  # 3/30
-  sams.append(pre + "D3734_0329_try1")  # 3/30
-  sams.append(pre + "D3735_0329_try1")  # 3/30
-  sams.append(pre + "D3736_0329_try1")  # 3/30
+  sams.append(pre + "D3718_0329_try1")
+  sams.append(pre + "D3719_0329_try1")
+  sams.append(pre + "D3720_0329_try1")
+  sams.append(pre + "D3721_0329_try1")
+  sams.append(pre + "D3722_0329_try1")
+  sams.append(pre + "D3724_0329_try1")
+  sams.append(pre + "D3725_0329_try1")
+  sams.append(pre + "D3726_0329_try1")
+  sams.append(pre + "D3727_0329_try1")
+  sams.append(pre + "D3728_0329_try1")
+  sams.append(pre + "D3729_0329_try1")
+  sams.append(pre + "D3730_0329_try1")
+  sams.append(pre + "D3732_0329_try1")
+  sams.append(pre + "D3733_0329_try1")
+  sams.append(pre + "D3734_0329_try1")
+  sams.append(pre + "D3735_0329_try1")
+  sams.append(pre + "D3736_0329_try1")
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

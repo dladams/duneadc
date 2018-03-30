@@ -3786,26 +3786,26 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3711_0328")
   sams3.append(pre + "D3712_0328")
   samsh.append(pre + "D3713_0328")
-  samsh.append(pre + "D3714_0329")  # 3/30
-  sams2.append(pre + "D3715_0329")  # 3/30
-  sams3.append(pre + "D3716_0329")  # 3/30
-  samsh.append(pre + "D3717_0329")  # 3/30
-  sams2.append(pre + "D3718_0329")  # 3/30
-  sams3.append(pre + "D3719_0329")  # 3/30
-  samsh.append(pre + "D3720_0329")  # 3/30
-  sams2.append(pre + "D3721_0329")  # 3/30
-  sams3.append(pre + "D3722_0329")  # 3/30
-  sams2.append(pre + "D3724_0329")  # 3/30
-  sams3.append(pre + "D3725_0329")  # 3/30
-  samsh.append(pre + "D3726_0329")  # 3/30
-  samsh.append(pre + "D3727_0329")  # 3/30
-  samsh.append(pre + "D3728_0329")  # 3/30
-  sams2.append(pre + "D3729_0329")  # 3/30
-  sams3.append(pre + "D3730_0329")  # 3/30
-  samsh.append(pre + "D3732_0329")  # 3/30
-  sams2.append(pre + "D3733_0329")  # 3/30
-  sams3.append(pre + "D3724_0329")  # 3/30
-  sams2.append(pre + "D3735_0329")  # 3/30
+  badsamsh.append(pre + "D3714_0329")  # Bad INL
+  sams2.append(pre + "D3715_0329")
+  sams3.append(pre + "D3716_0329")
+  samsh.append(pre + "D3717_0329")
+  sams2.append(pre + "D3718_0329")
+  sams3.append(pre + "D3719_0329")
+  badsamsh.append(pre + "D3720_0329")  # Bad waveforms
+  sams2.append(pre + "D3721_0329")
+  sams3.append(pre + "D3722_0329")
+  sams2.append(pre + "D3724_0329")
+  sams3.append(pre + "D3725_0329")
+  samsh.append(pre + "D3726_0329")
+  samsh.append(pre + "D3727_0329")
+  samsh.append(pre + "D3728_0329")  # Bad waveforms
+  sams2.append(pre + "D3729_0329")
+  sams3.append(pre + "D3730_0329")
+  samsh.append(pre + "D3732_0329")
+  badsams2.append(pre + "D3733_0329")  # Bad waveforms
+  sams3.append(pre + "D3734_0329")  # 3/30
+  sams2.append(pre + "D3735_0329")
   sams3.append(pre + "D3726_0329")  # 3/30
   sams2 += pbrsams2
   samsh += pbrsamsh

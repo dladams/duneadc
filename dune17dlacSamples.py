@@ -4205,7 +4205,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3712_0328_try2")
   sams.append(pre + "D3713_0328_try1")
   badsams.append(pre + "D3714_0329_try1")  # Bad INL
-  sams.append(pre + "D3715_0329_try1")  # 3/30
+  sams.append(pre + "D3715_0329_try1")
   sams.append(pre + "D3716_0329_try1")
   sams.append(pre + "D3717_0329_try1")
   sams.append(pre + "D3718_0329_try1")

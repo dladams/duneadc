@@ -3802,14 +3802,58 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D3728_0329")  # Bad waveforms
   sams2.append(pre + "D3729_0329")
   sams3.append(pre + "D3730_0329")
+  samsh.append(pre + "D3731_0404")  # 4/6
   samsh.append(pre + "D3732_0329")
   badsams2.append(pre + "D3733_0329")  # Bad waveforms
+  samsh.append(pre + "D3733_0404")  # 4/6
   sams3.append(pre + "D3734_0329")
   sams2.append(pre + "D3735_0329")
   sams3.append(pre + "D3736_0329")  # 3/30
   samsh.append(pre + "D3737_0330")  # 3/30
+  sams3.append(pre + "D3738_0405")  # 4/6
   sams3.append(pre + "D3739_0330")  # 3/30
   samsh.append(pre + "D3740_0330")  # 3/30
+  sams2.append(pre + "D3741_0404")  # 4/6
+  samsh.append(pre + "D3741_0405")  # 4/6
+  sams2.append(pre + "D3742_0404")  # 4/6
+  sams3.append(pre + "D3743_0404")  # 4/6
+  samsh.append(pre + "D3744_0404")  # 4/6
+  sams3.append(pre + "D3744_0404")  # 4/6
+  samsh.append(pre + "D3746_0404")  # 4/6
+  samsh.append(pre + "D3747_0404")  # 4/6
+  samsh.append(pre + "D3748_0404")  # 4/6
+  sams3.append(pre + "D3749_0404")  # 4/6
+  samsh.append(pre + "D3750_0404")  # 4/6
+  sams2.append(pre + "D3751_0404")  # 4/6
+  sams3.append(pre + "D3751_0404")  # 4/6
+  sams3.append(pre + "D3752_0404")  # 4/6
+  sams2.append(pre + "D3753_0405")  # 4/6
+  samsh.append(pre + "D3754_0405")  # 4/6
+  sams3.append(pre + "D3755_0405")  # 4/6
+  sams3.append(pre + "D3755_0405")  # 4/6
+  samsh.append(pre + "D3756_0405")  # 4/6
+  sams2.append(pre + "D3757_0405")  # 4/6
+  sams3.append(pre + "D3758_0405")  # 4/6
+  sams2.append(pre + "D3760_0405")  # 4/6
+  sams3.append(pre + "D3761_0405")  # 4/6
+  samsh.append(pre + "D3762_0405")  # 4/6
+  samsh.append(pre + "D3763_0405")  # 4/6
+  sams2.append(pre + "D3764_0405")  # 4/6
+  sams3.append(pre + "D3765_0405")  # 4/6
+  sams2.append(pre + "D3767_0405")  # 4/6
+  sams3.append(pre + "D3768_0405")  # 4/6
+  samsh.append(pre + "D3769_0405")  # 4/6
+  samsh.append(pre + "D3770_0405")  # 4/6
+  sams2.append(pre + "D3771_0405")  # 4/6
+  sams3.append(pre + "D3772_0405")  # 4/6
+  samsh.append(pre + "D3773_0405")  # 4/6
+  sams2.append(pre + "D3774_0405")  # 4/6
+  sams3.append(pre + "D3775_0405")  # 4/6
+  samsh.append(pre + "D3776_0405")  # 4/6
+  sams2.append(pre + "D3777_0405")  # 4/6
+  sams3.append(pre + "D3778_0405")  # 4/6
+  sams2.append(pre + "D3779_0405")  # 4/6
+  sams3.append(pre + "D3780_0405")  # 4/6
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

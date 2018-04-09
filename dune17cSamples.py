@@ -3787,7 +3787,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3712_0328")
   samsh.append(pre + "D3713_0328")
   badsamsh.append(pre + "D3714_0329")  # Bad INL/waveforms
-  samsh.append(pre + "D3714_0406")  # 4/9
+  samsh.append(pre + "D3714_0406")
   sams2.append(pre + "D3715_0329")
   sams3.append(pre + "D3716_0329")
   samsh.append(pre + "D3717_0329")
@@ -3807,8 +3807,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3732_0329")
   badsams2.append(pre + "D3733_0329")  # Bad waveforms
   samsh.append(pre + "D3733_0405")
-  sams2.append(pre + "D3733_0406T1719")  # 4/9
-  sams2.append(pre + "D3733_0406T1735")  # 4/9
+  badsams2.append(pre + "D3733_0406T1719")  # Bad waveforms
+  badsams2.append(pre + "D3733_0406T1735")  # Bad waveforms
   sams3.append(pre + "D3734_0329")
   sams2.append(pre + "D3735_0329")
   sams3.append(pre + "D3736_0329")
@@ -3855,24 +3855,24 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams3.append(pre + "D3778_0405")
   sams2.append(pre + "D3779_0405")
   sams3.append(pre + "D3780_0405")
-  samsh.append(pre + "D3781_0406")  # 4/9
-  sams2.append(pre + "D3782_0406")  # 4/9
-  sams3.append(pre + "D3783_0406")  # 4/9
-  samsh.append(pre + "D3784_0406")  # 4/9
-  sams3.append(pre + "D3786_0406")  # 4/9
-  samsh.append(pre + "D3787_0406")  # 4/9
-  sams2.append(pre + "D3788_0406")  # 4/9
-  sams3.append(pre + "D3789_0406")  # 4/9
-  samsh.append(pre + "D3790_0406")  # 4/9
-  sams2.append(pre + "D3791_0406")  # 4/9
-  sams3.append(pre + "D3792_0406")  # 4/9
-  samsh.append(pre + "D3793_0406")  # 4/9
-  sams2.append(pre + "D3794_0406")  # 4/9
-  sams3.append(pre + "D3795_0406")  # 4/9
-  sams2.append(pre + "D3797_0406")  # 4/9
-  sams3.append(pre + "D3798_0406")  # 4/9
-  samsh.append(pre + "D3799_0406")  # 4/9
-  sams3.append(pre + "D3801_0406")  # 4/9
+  samsh.append(pre + "D3781_0406")
+  sams2.append(pre + "D3782_0406")
+  sams3.append(pre + "D3783_0406")
+  samsh.append(pre + "D3784_0406")
+  sams3.append(pre + "D3786_0406")
+  samsh.append(pre + "D3787_0406")
+  badsams2.append(pre + "D3788_0406")  # Bad waveform
+  sams3.append(pre + "D3789_0406")
+  samsh.append(pre + "D3790_0406")
+  sams2.append(pre + "D3791_0406")
+  sams3.append(pre + "D3792_0406")
+  samsh.append(pre + "D3793_0406")
+  sams2.append(pre + "D3794_0406")
+  sams3.append(pre + "D3795_0406")
+  sams2.append(pre + "D3797_0406")
+  sams3.append(pre + "D3798_0406")
+  samsh.append(pre + "D3799_0408")  # 4/9
+  sams3.append(pre + "D3801_0408")  # 4/9
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

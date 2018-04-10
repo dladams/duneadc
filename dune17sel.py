@@ -73,6 +73,8 @@ def selectedChips(sel=0):
   # Build ouput list for this request.
   # 28. Selection 17mar2018 from Matt.
   selChipLists.append([13520, 13545, 13548, 13569, 13525, 13483, 13494, 13538, 13503, 13588, 13465, 13468, 13514, 13532, 13518, 13472, 13527, 13470, 13504, 13535, 13489, 13529, 13476, 13572, 13536, 13500, 13539, 13501, 13551, 13495, 13553, 13485, 13576, 13574, 13552, 13573, 13178, 13462, 13497, 13473])
+  # 29. Selected as replacement 06apr2018 from Matt.
+  selChipLists.append([13632])
   # Build ouput list for this request.
   chips = []
   if sel == 0:

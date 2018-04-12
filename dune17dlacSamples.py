@@ -4227,7 +4227,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3733_0405_try1")
   sams.append(pre + "D3733_0406T1719_try1")
   sams.append(pre + "D3733_0406T1735_try1")
-  sams.append(pre + "D3733_0410_try1")  # 4/10
+  sams.append(pre + "D3733_0410_try1")
   sams.append(pre + "D3734_0329_try1")
   sams.append(pre + "D3735_0329_try1")
   sams.append(pre + "D3736_0329_try1")
@@ -4314,20 +4314,23 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3818_0409_try1")
   sams.append(pre + "D3819_0409_try1")
   sams.append(pre + "D3820_0409_try1")
-  sams.append(pre + "D3821_0410_try1")  # 4/10
-  sams.append(pre + "D3822_0410_try1")  # 4/10
-  sams.append(pre + "D3823_0410_try1")  # 4/10
-  sams.append(pre + "D3824_0410_try1")  # 4/10
-  sams.append(pre + "D3825_0410_try1")  # 4/10
-  sams.append(pre + "D3826_0410_try1")  # 4/10
-  sams.append(pre + "D3827_0410_try1")  # 4/10
-  sams.append(pre + "D3828_0410_try1")  # 4/10
-  sams.append(pre + "D3829_0410_try1")  # 4/10
-  sams.append(pre + "D3830_0410_try1")  # 4/10
-  sams.append(pre + "D3831_0410_try1")  # 4/10
-  sams.append(pre + "D3832_0410_try1")  # 4/10
-  sams.append(pre + "D3833_0410_try1")  # 4/10
-  sams.append(pre + "D3834_0410_try1")  # 4/10
+  sams.append(pre + "D3821_0410_try1")
+  sams.append(pre + "D3822_0410_try1")
+  sams.append(pre + "D3823_0410_try1")
+  sams.append(pre + "D3824_0410_try1")
+  sams.append(pre + "D3825_0410_try1")
+  sams.append(pre + "D3826_0410_try1")
+  sams.append(pre + "D3827_0410_try1")
+  sams.append(pre + "D3828_0410_try1")
+  sams.append(pre + "D3829_0410_try1")
+  sams.append(pre + "D3830_0410_try1")
+  sams.append(pre + "D3831_0410_try1")
+  sams.append(pre + "D3832_0410_try1")
+  sams.append(pre + "D3833_0410_try1")
+  sams.append(pre + "D3834_0410_try1")
+  sams.append(pre + "D3835_0412_try1")  # 4/12
+  sams.append(pre + "D3837_0412_try1")  # 4/12
+  sams.append(pre + "D3838_0412_try1")  # 4/12
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

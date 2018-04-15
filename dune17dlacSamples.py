@@ -4328,9 +4328,17 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3832_0410_try1")
   sams.append(pre + "D3833_0410_try1")
   sams.append(pre + "D3834_0410_try1")
-  sams.append(pre + "D3835_0412_try1")  # 4/12
-  sams.append(pre + "D3837_0412_try1")  # 4/12
-  sams.append(pre + "D3838_0412_try1")  # 4/12
+  sams.append(pre + "D3835_0412_try1")
+  sams.append(pre + "D3837_0412_try1")
+  sams.append(pre + "D3838_0412_try1")
+  sams.append(pre + "D3840_0413_try1")  # 4/15
+  sams.append(pre + "D3841_0413_try1")  # 4/15
+  sams.append(pre + "D3843_0413_try1")  # 4/15
+  sams.append(pre + "D3843_0413_try1")  # 4/15
+  sams.append(pre + "D3844_0413_try1")  # 4/15
+  sams.append(pre + "D3845_0413_try1")  # 4/15
+  sams.append(pre + "D3846_0413_try1")  # 4/15
+  sams.append(pre + "D3847_0413_try1")  # 4/15
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

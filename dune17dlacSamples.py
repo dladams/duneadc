@@ -4333,8 +4333,8 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3838_0412_try1")
   sams.append(pre + "D3840_0413_try1")  # 4/15
   sams.append(pre + "D3841_0413_try1")  # 4/15
-  sams.append(pre + "D3843_0413_try1")  # 4/15
-  sams.append(pre + "D3843_0413_try1")  # 4/15
+  sams.append(pre + "D3843_0413T1235_try1")  # 4/15
+  sams.append(pre + "D3843_0413T1352_try1")  # 4/15
   sams.append(pre + "D3844_0413_try1")  # 4/15
   sams.append(pre + "D3845_0413_try1")  # 4/15
   sams.append(pre + "D3846_0413_try1")  # 4/15

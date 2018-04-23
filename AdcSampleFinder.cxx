@@ -33,7 +33,7 @@ using AdcSampleReaderPtr = AdcSampleFinder::AdcSampleReaderPtr;
 
 namespace {
 
-// Function that finds extrema with two extreama finders and returns the
+// Function that finds extrema with two extrema finders and returns the
 // results of one if they are consistent.
 int findExtrema(const AdcSampleReader* prdr, AdcExtrema& exts,
                 AdcExtremaFinder& finder1,
@@ -234,7 +234,8 @@ AdcSampleReaderPtr AdcSampleFinder::find(Name ssam, Index icha, SampleIndex maxs
   }
   // DUNE test data summer 2017
   if ( ssam.substr(0,7) == "DUNE17-" || ssam.substr(0,10) == "DUNE17dla-" ||
-       ssam.substr(0,11) == "DUNE17test_" ) {
+       ssam.substr(0,11) == "DUNE17test_" ||
+       ssam.substr(0,13) == "DUNE17carlos_" ) {
     prdr = findFembReader(ssam, icha, maxsam, calculateVin);
   }
   // DUNE quad test data summer 2017
@@ -647,7 +648,8 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam, bool calculateVin) 
     fname = AdcSampleFinder::defaultTopdir() + "/justin3/" + basename;
     ipos = 14;
     dsname += "-test2";
-  } else if ( dsname == "DUNE17-cold" || dsname=="DUNE17dla-cold" || dsname=="DUNE17test" ) {
+  } else if ( dsname == "DUNE17-cold" || dsname=="DUNE17dla-cold" || dsname=="DUNE17test"
+           || dsname == "DUNE17-carlos" ) {
     bool isdla = dsname=="DUNE17dla-cold";
     string subdir = "DUNE17";
     if ( dsname=="DUNE17test" ) subdir = "DUNE17test";
@@ -658,6 +660,10 @@ findFembReader(Name asample, Index icha, SampleIndex maxsam, bool calculateVin) 
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_cold/");
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_hothdaq4_cold/");
     dirs.push_back(AdcSampleFinder::defaultTopdir() + "/" + subdir + "/adcTest_P1single_hothdaq5_cold/");
+    if ( dsname=="DUNE17-carlos" ) {
+      dirs.clear();
+      dirs.push_back(AdcSampleFinder::defaultTopdir() + "/DUNE17-carlos");
+    }
     if ( fsample.substr(ipos, 5) != "_chip" ) {
       cout << myname << "Chip ID not found." << endl;
       return nullptr;

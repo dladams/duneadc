@@ -4410,35 +4410,35 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3909_0426T1418_try1")
   sams.append(pre + "D3909_0426T1436_try1")
   sams.append(pre + "D3910_0426_try1")
-  sams.append(pre + "D3911_0504_try1")  # 5/25
-  sams.append(pre + "D3912_0504_try1")  # 5/25
-  sams.append(pre + "D3913_0504_try1")  # 5/25
-  sams.append(pre + "D3914_0504_try1")  # 5/25
-  sams.append(pre + "D3915_0504_try1")  # 5/25
-  sams.append(pre + "D3916_0504_try1")  # 5/25
-  sams.append(pre + "D3917_0504_try1")  # 5/25
-  sams.append(pre + "D3918_0504_try1")  # 5/25
-  sams.append(pre + "D3918_0507_try1")  # 5/25
-  sams.append(pre + "D3919_0504_try1")  # 5/25
-  sams.append(pre + "D3920_0507_try1")  # 5/25
+  sams.append(pre + "D3911_0504_try1")
+  sams.append(pre + "D3912_0504_try1")
+  sams.append(pre + "D3913_0504_try1")
+  sams.append(pre + "D3914_0504_try1")
+  sams.append(pre + "D3915_0504_try1")
+  sams.append(pre + "D3916_0504_try1")
+  sams.append(pre + "D3917_0504_try1")
+  sams.append(pre + "D3918_0504_try1")
+  sams.append(pre + "D3918_0507_try1")
+  sams.append(pre + "D3919_0504_try1")
+  sams.append(pre + "D3920_0507_try1")
   sams.append(pre + "D3921_0508_try1")  # 5/25
   sams.append(pre + "D3922_0508_try1")  # 5/25
-  sams.append(pre + "D3923_0507_try1")  # 5/25
+  badsams.append(pre + "D3923_0507_try1")  # Bad waveforms
   sams.append(pre + "D3923_0508_try1")  # 5/25
   sams.append(pre + "D3923_0509_try1")  # 5/25
-  sams.append(pre + "D3924_0507_try1")  # 5/25
+  badsams.append(pre + "D3924_0507_try1")  # Bad waveforms
   sams.append(pre + "D3924_0508_try1")  # 5/25
   sams.append(pre + "D3925_0508T1333_try1")  # 5/25
   sams.append(pre + "D3925_0508T1344_try1")  # 5/25
-  sams.append(pre + "D3926_0507T1252_try1")  # 5/25
-  sams.append(pre + "D3926_0507T1300_try1")  # 5/25
-  sams.append(pre + "D3926_0507T1300_try2")  # 5/25
+  badsams.append(pre + "D3926_0507T1252_try1")  # Bad waveforms
+  badsams.append(pre + "D3926_0507T1300_try1")  # Bad waveforms
+  sams.append(pre + "D3926_0507T1300_try2")
   sams.append(pre + "D3926_0508_try1")  # 5/25
-  sams.append(pre + "D3927_0507_try1")  # 5/25
-  sams.append(pre + "D3928_0507_try1")  # 5/25
-  sams.append(pre + "D3929_0507T1450_try1")  # 5/25
-  sams.append(pre + "D3929_0507T1500_try1")  # 5/25
-  sams.append(pre + "D3930_0507T1412_try1")  # 5/25
+  sams.append(pre + "D3927_0507_try1")
+  sams.append(pre + "D3928_0507_try1")
+  sams.append(pre + "D3929_0507T1450_try1")
+  sams.append(pre + "D3929_0507T1500_try1")
+  sams.append(pre + "D3930_0507T1450_try1")  # 5/28
   sams.append(pre + "D3930_0507T1503_try1")  # 5/25
   sams.append(pre + "D3930_0508_try1")  # 5/25
   sams.append(pre + "D3931_0508_try1")  # 5/25

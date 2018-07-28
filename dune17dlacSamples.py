@@ -4342,7 +4342,7 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3845_0416_try1")  # Noisy?
   sams.append(pre + "D3846_0413_try1")
   sams.append(pre + "D3847_0413_try1")
-  sams.append(pre + "D3848_180711_try1")  # 0727
+  sams.append(pre + "D3848_180711_try1")
   sams.append(pre + "D3849_0416_try1")
   sams.append(pre + "D3850_0416_try1")
   sams.append(pre + "D3851_0416_try1")  # Noisy?
@@ -4462,45 +4462,45 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3943_0514T1149_try1")
   sams.append(pre + "D3943_0514T1313_try1")
   sams.append(pre + "D3944_0514_try1")
-  sams.append(pre + "D3944_180628_try1")  # 0727
+  sams.append(pre + "D3944_180628_try1")
   sams.append(pre + "D3945_0514_try1")
   sams.append(pre + "D3946_0514T1237_try1")
   sams.append(pre + "D3946_0514T1314_try1")
   sams.append(pre + "D3947_0514_try1")
-  sams.append(pre + "D3948_180628_try1")  # 0727
-  sams.append(pre + "D3950_180628_try1")  # 0727
+  badsams.append(pre + "D3948_180628_try1")  # Bad waveform
+  sams.append(pre + "D3950_180628_try1")
   sams.append(pre + "D3951_0514_try1")
   sams.append(pre + "D3952_0514_try1")
-  sams.append(pre + "D3953_180703_try1")  # 0727
-  sams.append(pre + "D3954_180703_try1")  # 0727
-  sams.append(pre + "D3955_180628T1345_try1")  # 0727
-  sams.append(pre + "D3955_180628T1432_try1")  # 0727
-  sams.append(pre + "D3955_180628T1432_try2")  # 0727
-  sams.append(pre + "D3956_180703_try1")  # 0727
-  sams.append(pre + "D3957_180628_try1")  # 0727
-  sams.append(pre + "D3958_180628T1507_try1")  # 0727
-  sams.append(pre + "D3958_180628T1609_try1")  # 0727
-  sams.append(pre + "D3958_180628T1630_try1")  # 0727
-  sams.append(pre + "D3959_18629T1004_try1")  # 0727
-  sams.append(pre + "D3959_18629T1421_try1")  # 0727
-  sams.append(pre + "D3959_18629T1516_try1")  # 0727
-  sams.append(pre + "D3960_180702_try1")  # 0727
-  sams.append(pre + "D3960_180703_try1")  # 0727
-  sams.append(pre + "D3962_180629_try1")  # 0727
-  sams.append(pre + "D3963_180629_try1")  # 0727
-  sams.append(pre + "D3964_180629T1249_try1")  # 0727
-  sams.append(pre + "D3964_180629T1354_try1")  # 0727
-  sams.append(pre + "D3965_180629_try1")  # 0727
-  sams.append(pre + "D3966_180702_try1")  # 0727
-  sams.append(pre + "D3967_180702_try1")  # 0727
-  sams.append(pre + "D3968_180702_try1")  # 0727
-  sams.append(pre + "D3969_180702_try1")  # 0727
-  sams.append(pre + "D3970_180702_try1")  # 0727
-  sams.append(pre + "D3971_180702_try1")  # 0727
-  sams.append(pre + "D3972_180703_try1")  # 0727
-  sams.append(pre + "D3972_180705T1445_try1")  # 0727
-  sams.append(pre + "D3972_180705T1518_try1")  # 0727
-  sams.append(pre + "D3973_180702_try1")  # 0727
+  sams.append(pre + "D3953_180703_try1")
+  badsams.append(pre + "D3954_180703_try1")  # Bad sync
+  sams.append(pre + "D3955_180628T1345_try1")
+  badsams.append(pre + "D3955_180628T1432_try1")  # Bad waveforms
+  badsams.append(pre + "D3955_180628T1432_try2")  # Bad waveforms
+  badsams.append(pre + "D3956_180703_try1")  # Bad waveforms
+  sams.append(pre + "D3957_180628_try1")
+  sams.append(pre + "D3958_180628T1507_try1")
+  sams.append(pre + "D3958_180628T1609_try1")
+  sams.append(pre + "D3958_180628T1630_try1")
+  sams.append(pre + "D3959_180629T1004_try1")  # 0727
+  sams.append(pre + "D3959_180629T1421_try1")  # 0727
+  sams.append(pre + "D3959_180629T1516_try1")  # 0727
+  sams.append(pre + "D3960_180702_try1")
+  sams.append(pre + "D3960_180703_try1")
+  sams.append(pre + "D3962_180629_try1")
+  sams.append(pre + "D3963_180629_try1")
+  sams.append(pre + "D3964_180629T1249_try1")
+  sams.append(pre + "D3964_180629T1354_try1")
+  sams.append(pre + "D3965_180629_try1")
+  badsams.append(pre + "D3966_180702_try1")  # Bad waveforms
+  sams.append(pre + "D3967_180702_try1")  # 
+  sams.append(pre + "D3968_180702_try1")  # 
+  badsams.append(pre + "D3969_180702_try1")  # Board noise?
+  badsams.append(pre + "D3970_180702_try1")  # Board noise?
+  sams.append(pre + "D3971_180702_try1")
+  sams.append(pre + "D3972_180703_try1")
+  sams.append(pre + "D3972_180705T1445_try1")
+  sams.append(pre + "D3972_180705T1518_try1")
+  sams.append(pre + "D3973_180702_try1")
   sams.append(pre + "D3974_180702_try1")  # 0727
   sams.append(pre + "D3974_180703_try1")  # 0727
   sams.append(pre + "D3975_180703_try1")  # 0727

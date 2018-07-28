@@ -4121,8 +4121,33 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D4058_180716")  # 7/27
   samsh.append(pre + "D4059_180716")  # 7/27
   samsh.append(pre + "D4060_180719")  # 7/27
+  samsh.append(pre + "D4061_180717")  # 7/27
   sams2.append(pre + "D4062_180719")  # 7/27
+  samsh.append(pre + "D4063_180723")  # 7/27
+  samsh.append(pre + "D4064_180717")  # 7/27
+  samsh.append(pre + "D4065_180724")  # 7/27
   sams2.append(pre + "D4066_180723")  # 7/27
+  samsh.append(pre + "D4067_180723")  # 7/27
+  samsh.append(pre + "D4068_180723")  # 7/27
+  samsh.append(pre + "D4069_180723")  # 7/27
+  samsh.append(pre + "D4070_180724")  # 7/27
+  samsh.append(pre + "D4071_180723")  # 7/27
+  samsh.append(pre + "D4072_180724")  # 7/27
+  samsh.append(pre + "D4073_180723")  # 7/27
+  samsh.append(pre + "D4074_180723")  # 7/27
+  samsh.append(pre + "D4075_180724")  # 7/27
+  samsh.append(pre + "D4076_180724")  # 7/27
+  samsh.append(pre + "D4077_180724")  # 7/27
+  samsh.append(pre + "D4078_180724")  # 7/27
+  samsh.append(pre + "D4079_180724")  # 7/27
+  samsh.append(pre + "D4080_180725")  # 7/27
+  samsh.append(pre + "D4081_180727")  # 7/27
+  samsh.append(pre + "D4082_180727")  # 7/27
+  samsh.append(pre + "D4083_180726")  # 7/27
+  samsh.append(pre + "D4084_180726")  # 7/27
+  samsh.append(pre + "D4085_180727")  # 7/27
+  samsh.append(pre + "D4086_180727")  # 7/27
+  samsh.append(pre + "D4087_180727")  # 7/27
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

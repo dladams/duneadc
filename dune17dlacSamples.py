@@ -4501,34 +4501,34 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D3972_180705T1445_try1")
   sams.append(pre + "D3972_180705T1518_try1")
   sams.append(pre + "D3973_180702_try1")
-  sams.append(pre + "D3974_180702_try1")  # 0727
-  sams.append(pre + "D3974_180703_try1")  # 0727
-  sams.append(pre + "D3975_180703_try1")  # 0727
-  sams.append(pre + "D3976_180703_try1")  # 0727
-  sams.append(pre + "D3977_180703_try1")  # 0727
-  sams.append(pre + "D3978_180703_try1")  # 0727
-  sams.append(pre + "D3979_180705_try1")  # 0727
-  sams.append(pre + "D3980_180705_try1")  # 0727
-  sams.append(pre + "D3981_180705_try1")  # 0727
-  sams.append(pre + "D3982_180705_try1")  # 0727
-  sams.append(pre + "D3983_180705_try1")  # 0727
-  sams.append(pre + "D3984_180705_try1")  # 0727
-  sams.append(pre + "D3985_180705T1245_try1")  # 0727
-  sams.append(pre + "D3985_180705T1431_try1")  # 0727
-  sams.append(pre + "D3986_180705_try1")  # 0727
-  sams.append(pre + "D3987_180705_try1")  # 0727
-  sams.append(pre + "D3988_180705_try1")  # 0727
-  sams.append(pre + "D3988_180706T1022_try1")  # 0727
-  sams.append(pre + "D3988_180706T1108_try1")  # 0727
-  sams.append(pre + "D3989_180705_try1")  # 0727
-  sams.append(pre + "D3989_180706_try1")  # 0727
-  sams.append(pre + "D3990_180706T1021_try1")  # 0727
-  sams.append(pre + "D3990_180706T1110_try1")  # 0727
-  sams.append(pre + "D3991_180706T1200_try1")  # 0727
-  sams.append(pre + "D3991_180706T1355_try1")  # 0727
-  sams.append(pre + "D3992_180706_try1")  # 0727
-  sams.append(pre + "D3993_180706_try1")  # 0727
-  sams.append(pre + "D3993_180706_try2")  # 0727
+  sams.append(pre + "D3974_180702_try1")
+  badsams.append(pre + "D3974_180703_try1")  # Bad sync
+  sams.append(pre + "D3975_180703_try1")
+  sams.append(pre + "D3976_180703_try1")
+  badsams.append(pre + "D3977_180703_try1")  # Bad waveforms
+  sams.append(pre + "D3978_180703_try1")
+  sams.append(pre + "D3979_180705_try1")
+  sams.append(pre + "D3980_180705_try1")
+  sams.append(pre + "D3981_180705_try1")
+  sams.append(pre + "D3982_180705_try1")
+  sams.append(pre + "D3983_180705_try1")
+  sams.append(pre + "D3984_180705_try1")
+  sams.append(pre + "D3985_180705T1245_try1")
+  sams.append(pre + "D3985_180705T1431_try1")
+  sams.append(pre + "D3986_180705_try1")
+  sams.append(pre + "D3987_180705_try1")
+  sams.append(pre + "D3988_180705_try1")
+  sams.append(pre + "D3988_180706T1022_try1")
+  sams.append(pre + "D3988_180706T1108_try1")
+  badsams.append(pre + "D3989_180705_try1")  # Bad waveforms
+  sams.append(pre + "D3989_180706_try1")
+  sams.append(pre + "D3990_180706T1021_try1")
+  sams.append(pre + "D3990_180706T1110_try1")
+  sams.append(pre + "D3991_180706T1200_try1")
+  badsams.append(pre + "D3991_180706T1355_try1")  # Bad sync
+  badsams.append(pre + "D3992_180706_try1")  # Bad sync
+  sams.append(pre + "D3993_180706_try1")
+  sams.append(pre + "D3993_180706_try2")
   sams += pbrsams
   if isBad: outsams = badsams
   elif isFail: outsams = failsams

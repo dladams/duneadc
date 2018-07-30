@@ -4611,9 +4611,8 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D4049_180713T1410_try1")  # 7/30
   sams.append(pre + "D4049_180713T1611_try1")  # 7/30
   badsams.append(pre + "D4050_180713_try1")  # Noisy
-  sams.append(pre + "D4051_180713_try1")  # 7/30
-  sams.append(pre + "D4052_180713_try1")  # 7/30
-  sams.append(pre + "D4052_180716_try1")  # 7/30
+  sams.append(pre + "D4051_180713_try1")
+  #sams.append(pre + "D4052_180713_try1")  # Noisy
   sams.append(pre + "D4052_180716_try1")  # 7/30
   sams.append(pre + "D4053_180713_try1")  # 7/30
   sams.append(pre + "D4054_180716T0929_try1")  # 7/30
@@ -4622,10 +4621,10 @@ def dune17dlacSamples(isBad =False, isFail=False, skipSel=False, skipBad=True, i
   sams.append(pre + "D4055_180716T1036_try1")  # 7/30
   sams.append(pre + "D4055_180716T1311_try1")  # 7/30
   sams.append(pre + "D4055_180717_try1")  # 7/30
-  sams.append(pre + "D4056_180717_try1")  # 7/30
-  sams.append(pre + "D4057_180717_try1")  # 7/30
-  sams.append(pre + "D4058_180717_try1")  # 7/30
-  sams.append(pre + "D4059_180717_try1")  # 7/30
+  sams.append(pre + "D4056_180716_try1")  # 7/30
+  sams.append(pre + "D4057_180716_try1")  # 7/30
+  sams.append(pre + "D4058_180716_try1")  # 7/30
+  sams.append(pre + "D4059_180716_try1")  # 7/30
   sams.append(pre + "D4060_180719_try1")  # 7/30
   sams.append(pre + "D4061_180717_try1")  # 7/30
   sams.append(pre + "D4062_180717_try1")  # 7/30

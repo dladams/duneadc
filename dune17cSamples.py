@@ -4148,6 +4148,8 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   badsamsh.append(pre + "D4085_180727")  # Bad waveform
   samsh.append(pre + "D4086_180727")
   samsh.append(pre + "D4087_180727")
+  samsh.append(pre + "D4088_180730")  # 8/1
+  samsh.append(pre + "D4089_180730")  # 8/1
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3

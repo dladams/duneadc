@@ -3864,7 +3864,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3787_0406")
   badsams2.append(pre + "D3788_0406")  # Bad waveform
   sams3.append(pre + "D3789_0406")
-  samsh.append(pre + "D3789_180802")  # 8/4
+  samsh.append(pre + "D3789_180802")
   samsh.append(pre + "D3790_0406")
   sams2.append(pre + "D3791_0406")
   sams3.append(pre + "D3792_0406")
@@ -4005,10 +4005,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3931_0508")
   sams2.append(pre + "D3932_0508")
   sams2.append(pre + "D3933_0509")
-  samsh.append(pre + "D3933_180803")  # 8/4
+  samsh.append(pre + "D3933_180803")  # Poor waveforms?
   samsh.append(pre + "D3934_0509")
   sams2.append(pre + "D3935_0509")
-  samsh.append(pre + "D3935_180803")  # 8/4
+  samsh.append(pre + "D3935_180803")
   samsh.append(pre + "D3936_0509")
   badsams2.append(pre + "D3937_0509")  # Bad waveform
   badsamsh.append(pre + "D3938_0509")  # Bad waveforms?
@@ -4034,7 +4034,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   sams2.append(pre + "D3958_180628T1630")
   samsh.append(pre + "D3959_180629T1421")  # Noisy board?
   samsh.append(pre + "D3959_180629T1516")
-  samsh.append(pre + "D3959_180801")  # 8/4
+  samsh.append(pre + "D3959_180801")
   samsh.append(pre + "D3963_180629")
   sams2.append(pre + "D3964_180629")
   samsh.append(pre + "D3965_180629")
@@ -4053,7 +4053,7 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D3978_180703")
   samsh.append(pre + "D3979_180705")
   badsamsh.append(pre + "D3980_180705")  # Bad waveforms
-  samsh.append(pre + "D3980_180803")  # 8/4
+  samsh.append(pre + "D3980_180803")
   sams2.append(pre + "D3981_180705")
   samsh.append(pre + "D3982_180705")
   samsh.append(pre + "D3983_180705")
@@ -4140,10 +4140,10 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D4072_180724")
   samsh.append(pre + "D4073_180723")
   badsamsh.append(pre + "D4074_180723")  # Noisy board?
-  samsh.append(pre + "D4075_180724")  # 7/27
+  samsh.append(pre + "D4075_180724")
   samsh.append(pre + "D4076_180724")
   samsh.append(pre + "D4077_180724")  # Bad waveforms?
-  samsh.append(pre + "D4078_180724")  # 7/27
+  samsh.append(pre + "D4078_180724")
   badsamsh.append(pre + "D4079_180724")  # Bad waveforms
   samsh.append(pre + "D4080_180725")
   samsh.append(pre + "D4081_180727")
@@ -4155,13 +4155,13 @@ def dune17cSamples(group=0, isNwf=False, isBad=False, isFail=False, skipSel=Fals
   samsh.append(pre + "D4087_180727")
   samsh.append(pre + "D4088_180730")
   samsh.append(pre + "D4089_180730")
-  samsh.append(pre + "D4090_180801")  # 8/4
-  samsh.append(pre + "D4091_180801")  # 8/4
-  samsh.append(pre + "D4092_180801")  # 8/4
-  samsh.append(pre + "D4093_180801")  # 8/4
-  samsh.append(pre + "D4094_180801")  # 8/4
-  samsh.append(pre + "D4095_180801")  # 8/4
-  samsh.append(pre + "D4096_180801")  # 8/4
+  samsh.append(pre + "D4090_180801")
+  samsh.append(pre + "D4091_180801")  # Some board noise
+  samsh.append(pre + "D4092_180801")
+  samsh.append(pre + "D4093_180801")
+  samsh.append(pre + "D4094_180801")
+  samsh.append(pre + "D4095_180801")
+  samsh.append(pre + "D4096_180801")
   sams2 += pbrsams2
   samsh += pbrsamsh
   sams3 += pbrsams3
